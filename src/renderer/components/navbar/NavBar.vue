@@ -134,13 +134,27 @@ const router = useRouter();
 const allRoutes = router.getRoutes();
 const primaryRoutes = computed(() => {
     return allRoutes
-        .filter((r) => ["/play", "/watch", "/news", "/library"].includes(r.path))
+        .filter((r) => ["/play", "/watch", "/news", "/library", "/styles"].includes(r.path))
         .filter(
             (r) => (r.meta.hide === false || r.meta.hide === undefined) && ((r.meta.devOnly && settingsStore.devMode) || !r.meta.devOnly)
         )
         .sort((a, b) => (a.meta.order ?? 99) - (b.meta.order ?? 99));
 });
 const secondaryRoutes = computed(() => {
+    const currentPrimaryRouteSegment = router.currentRoute.value.path.split("/")[1];
+    if (currentPrimaryRouteSegment === "styles") {
+        return [
+            {
+                path: "/styles/default-styles",
+                meta: { title: "Default Styles" },
+            },
+            {
+                path: "/styles/new-styles",
+                meta: { title: "New Styles" },
+            },
+        ];
+    }
+
     return allRoutes
         .filter((r) => r.path.startsWith(`/${router.currentRoute.value.path.split("/")[1]}/`))
         .filter(

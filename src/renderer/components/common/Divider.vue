@@ -21,6 +21,8 @@ defineProps<Props>();
     &:before {
         border-left-width: 1px;
         border-left-color: rgba(255, 255, 255, 0.1);
+        border-top-width: 1px;
+        border-top-color: rgba(255, 255, 255, 0.5);
     }
 }
 </style>

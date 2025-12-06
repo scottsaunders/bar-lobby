@@ -1,0 +1,1598 @@
+<!--
+SPDX-FileCopyrightText: 2025 The BAR Lobby Authors
+
+SPDX-License-Identifier: MIT
+-->
+
+<route lang="json5">
+{ meta: { title: "New Styles", order: 2, transition: { name: "slide-left" } } }
+</route>
+
+<template>
+    <Panel class="flex-grow style-panel" no-padding>
+        <div class="scroll-container">
+            <div class="scroll-content flex-col gap-xl padding-xxl">
+                <!-- Design System Constants Section -->
+                <div class="flex-col gap-md">
+                    <h2>Design System Constants</h2>
+                    
+                    <div class="flex-col gap-md">
+                        <div class="flex-col gap-sm">
+                            <h3>Spacing Scale</h3>
+                            <div class="design-constants">
+                                <div class="constant-item">
+                                    <code>xxs</code> = <span class="constant-value">1px</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>xs</code> = <span class="constant-value">2px</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>sm</code> = <span class="constant-value">5px</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>md</code> = <span class="constant-value">10px</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>lg</code> = <span class="constant-value">15px</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>xl</code> = <span class="constant-value">20px</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>xxl</code> = <span class="constant-value">25px</span>
+                                </div>
+                                <p class="text-sm">Available classes: <code>gap-*</code>, <code>padding-*</code>, <code>margin-*</code>, <code>padding-top-*</code>, <code>padding-right-*</code>, <code>padding-bottom-*</code>, <code>padding-left-*</code>, <code>margin-top-*</code>, etc.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex-col gap-sm">
+                            <h3>Typography Scale</h3>
+                            <div class="design-constants">
+                                <div class="constant-item">
+                                    <code>h1</code> = <span class="constant-value">48px</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>h2</code> = <span class="constant-value">42px</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>h3</code> = <span class="constant-value">36px</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>h4</code> = <span class="constant-value">30px</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>h5</code> = <span class="constant-value">24px</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>h6</code> = <span class="constant-value">18px</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>p</code> = <span class="constant-value">16px</span> (default)
+                                </div>
+                                <div class="constant-item">
+                                    <code>.txt-xs</code> = <span class="constant-value">12px</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>.txt-sm</code> = <span class="constant-value">14px</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>.txt-md</code> = <span class="constant-value">16px</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>.txt-lg</code> = <span class="constant-value">18px</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>.txt-xl</code> = <span class="constant-value">20px</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex-col gap-sm">
+                            <h3>Button Colors</h3>
+                            <div class="design-constants">
+                                <div class="constant-item">
+                                    <code>blue</code> = <span class="constant-value">rgb(37, 99, 235)</span> <span class="color-swatch" style="background-color: rgb(37, 99, 235);"></span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>red</code> = <span class="constant-value">rgb(165, 30, 30)</span> <span class="color-swatch" style="background-color: rgb(165, 30, 30);"></span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>green</code> = <span class="constant-value">rgb(34, 197, 94)</span> <span class="color-swatch" style="background-color: rgb(34, 197, 94);"></span> <span class="text-sm">(#22c55e)</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>yellow</code> = <span class="constant-value">rgb(243, 213, 79)</span> <span class="color-swatch" style="background-color: rgb(243, 213, 79);"></span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>purple</code> = <span class="constant-value">rgb(199, 14, 199)</span> <span class="color-swatch" style="background-color: rgb(199, 14, 199);"></span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>orange</code> = <span class="constant-value">rgb(199, 109, 14)</span> <span class="color-swatch" style="background-color: rgb(199, 109, 14);"></span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>black</code> = <span class="constant-value">rgb(0, 0, 0)</span> <span class="color-swatch" style="background-color: rgb(0, 0, 0); border: 1px solid rgba(255, 255, 255, 0.3);"></span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>white</code> = <span class="constant-value">rgb(255, 255, 255)</span> <span class="color-swatch" style="background-color: rgb(255, 255, 255); border: 1px solid rgba(0, 0, 0, 0.3);"></span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>grey</code> = <span class="constant-value">rgb(128, 128, 128)</span> <span class="color-swatch" style="background-color: rgb(128, 128, 128);"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex-col gap-sm">
+                            <h3>Alert/Notification Colors</h3>
+                            <div class="design-constants">
+                                <div class="constant-item">
+                                    <code>default/info</code> = <span class="constant-value">linear-gradient(to bottom, rgb(84, 94, 110), rgb(63, 69, 99))</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>error</code> = <span class="constant-value">linear-gradient(to bottom, rgb(204, 22, 22), rgb(155, 0, 0))</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>warning</code> = <span class="constant-value">linear-gradient(to bottom, rgb(216, 168, 11), rgb(167, 124, 6))</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex-col gap-sm">
+                            <h3>Text Colors</h3>
+                            <div class="design-constants">
+                                <div class="constant-item">
+                                    <code>.txt-error</code> = <span class="constant-value">rgb(255, 100, 100)</span> <span class="color-swatch" style="background-color: rgb(255, 100, 100);"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex-col gap-sm">
+                            <h3>Tooltip Colors</h3>
+                            <div class="design-constants">
+                                <div class="constant-item">
+                                    <code>background</code> = <span class="constant-value">#222</span> <span class="color-swatch" style="background-color: #222;"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex-col gap-sm">
+                            <h3>Panel Defaults</h3>
+                            <div class="design-constants">
+                                <div class="constant-item">
+                                    <code>default padding</code> = <span class="constant-value">30px</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>background</code> = <span class="constant-value">linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6))</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>border</code> = <span class="constant-value">1px solid rgba(255, 255, 255, 0.2)</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>border-top</code> = <span class="constant-value">1px solid rgba(255, 255, 255, 0.3)</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>border-bottom</code> = <span class="constant-value">1px solid rgba(124, 124, 124, 0.3)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex-col gap-sm">
+                            <h3>Global Root Variables</h3>
+                            <div class="design-constants">
+                                <div class="constant-item">
+                                    <code>--background</code> = <span class="constant-value">#000</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>color</code> = <span class="constant-value">#fff</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>font-family</code> = <span class="constant-value">Poppins, sans-serif</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>font-size</code> = <span class="constant-value">16px</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>text-shadow</code> = <span class="constant-value">1px 1px 0 rgba(0, 0, 0, 0.6)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex-col gap-sm">
+                            <h3>Scrollbar</h3>
+                            <div class="design-constants">
+                                <div class="constant-item">
+                                    <code>width</code> = <span class="constant-value">10px</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>track</code> = <span class="constant-value">rgba(0, 0, 0, 0.2)</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>thumb</code> = <span class="constant-value">rgba(255, 255, 255, 0.1)</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>thumb-hover</code> = <span class="constant-value">rgba(255, 255, 255, 0.2)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex-col gap-sm">
+                            <h3>Other Constants</h3>
+                            <div class="design-constants">
+                                <div class="constant-item">
+                                    <code>border-radius (buttons)</code> = <span class="constant-value">2px</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>border-radius (tooltips, panels)</code> = <span class="constant-value">3px</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>selection background</code> = <span class="constant-value">rgba(255, 255, 255, 0.3)</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>divider/hr</code> = <span class="constant-value">rgba(255, 255, 255, 0.1)</span>, height: <span class="constant-value">1px</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>special green gradient</code> = <span class="constant-value">linear-gradient(90deg, #22c55e, #16a34a)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <Divider />
+
+                <!-- Typography Section -->
+                <div class="flex-col gap-md">
+                    <h2>Typography</h2>
+                    <div class="flex-col gap-sm">
+                        <div>
+                            <h1>Heading 1</h1>
+                            <span class="typography-spec">48px Regular (Poppins)</span>
+                        </div>
+                        <div>
+                            <h2>Heading 2</h2>
+                            <span class="typography-spec">42px Regular (Poppins)</span>
+                        </div>
+                        <div>
+                            <h3>Heading 3</h3>
+                            <span class="typography-spec">36px Regular (Poppins)</span>
+                        </div>
+                        <div>
+                            <h4>Heading 4</h4>
+                            <span class="typography-spec">30px Regular (Poppins)</span>
+                        </div>
+                        <div>
+                            <h5>Heading 5</h5>
+                            <span class="typography-spec">24px Regular (Poppins)</span>
+                        </div>
+                        <div>
+                            <h6>Heading 6</h6>
+                            <span class="typography-spec">18px Regular (Poppins)</span>
+                        </div>
+                        <div>
+                            <p>
+                                This is a standard paragraph. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                                incididunt ut labore et dolore magna aliqua.
+                            </p>
+                            <span class="typography-spec">16px Regular (Poppins)</span>
+                        </div>
+                        <div>
+                            <div class="txt-sm">Small text (txt-sm)</div>
+                            <span class="typography-spec">14px Regular (Poppins)</span>
+                        </div>
+                        <div>
+                            <div class="txt-xs">Extra small text (txt-xs)</div>
+                            <span class="typography-spec">12px Regular (Poppins)</span>
+                        </div>
+                        <div>
+                            <div class="txt-sm" style="font-family: monospace;">Monospaced text</div>
+                            <span class="typography-spec">14px Regular (monospace)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <Divider />
+
+                <!-- Buttons Section -->
+                <div class="flex-col gap-md">
+                    <h2>Buttons</h2>
+                    
+                    <!-- Slim Buttons -->
+                    <div class="flex-col gap-sm">
+                        <h3>Slim</h3>
+                        <div class="flex-row gap-md flex-center-items flex-wrap">
+                            <Button class="blue slim">Primary</Button>
+                            <Button class="grey slim">Secondary</Button>
+                            <Button class="black slim tertiary">Tertiary</Button>
+                            <Button class="green slim">Positive</Button>
+                            <Button class="red slim">Alert</Button>
+                            <Button disabled class="slim">Disabled</Button>
+                        </div>
+                    </div>
+
+                    <!-- Small Buttons (default size) -->
+                    <div class="flex-col gap-sm">
+                        <h3>Small</h3>
+                        <div class="flex-row gap-md flex-center-items flex-wrap">
+                            <Button class="blue text-shadow">Primary</Button>
+                            <Button class="grey text-shadow">Secondary</Button>
+                            <Button class="black text-shadow tertiary">Tertiary</Button>
+                            <Button class="green text-shadow">Positive</Button>
+                            <Button class="red text-shadow">Alert</Button>
+                            <Button disabled class="text-shadow">Disabled</Button>
+                            <div class="download-button-wrapper">
+                                <div
+                                    class="download-button"
+                                    :class="{
+                                        'download-button--small': true,
+                                        'download-button--ready': downloadButtonState.small.isReady.value,
+                                        'download-button--downloading': downloadButtonState.small.isDownloading.value,
+                                        'download-button--default': !downloadButtonState.small.isReady.value && !downloadButtonState.small.isDownloading.value
+                                    }"
+                                >
+                                    <!-- Progress bar overlay during download -->
+                                    <div
+                                        v-if="downloadButtonState.small.isDownloading.value"
+                                        class="download-button__progress"
+                                        :style="{ width: `${downloadButtonState.small.progress.value * 100}%` }"
+                                    ></div>
+                                    <!-- Button text -->
+                                    <span class="download-button__text">
+                                        <span v-if="downloadButtonState.small.isReady.value">Ready</span>
+                                        <span v-else-if="downloadButtonState.small.isDownloading.value">Downloading...</span>
+                                        <span v-else>Download</span>
+                                    </span>
+                                    <!-- Click handler -->
+                                    <button
+                                        v-if="downloadButtonState.small.isReady.value"
+                                        class="download-button__clickable"
+                                        @click="resetDownloadDemo('small')"
+                                    ></button>
+                                    <button
+                                        v-else
+                                        class="download-button__clickable"
+                                        @click="startDownloadDemo('small')"
+                                    ></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Large Buttons -->
+                    <div class="flex-col gap-sm">
+                        <h3>Large</h3>
+                        <div class="flex-row gap-md flex-center-items flex-wrap">
+                            <Button class="blue text-shadow large">Primary</Button>
+                            <Button class="grey text-shadow large">Secondary</Button>
+                            <Button class="black text-shadow tertiary large">Tertiary</Button>
+                            <Button class="green text-shadow large">Positive</Button>
+                            <Button class="red text-shadow large">Alert</Button>
+                            <div class="download-button-wrapper">
+                                <div
+                                    class="download-button"
+                                    :class="{
+                                        'download-button--large': true,
+                                        'download-button--ready': downloadButtonState.large.isReady.value,
+                                        'download-button--downloading': downloadButtonState.large.isDownloading.value,
+                                        'download-button--default': !downloadButtonState.large.isReady.value && !downloadButtonState.large.isDownloading.value
+                                    }"
+                                >
+                                    <!-- Progress bar overlay during download -->
+                                    <div
+                                        v-if="downloadButtonState.large.isDownloading.value"
+                                        class="download-button__progress"
+                                        :style="{ width: `${downloadButtonState.large.progress.value * 100}%` }"
+                                    ></div>
+                                    <!-- Button text -->
+                                    <span class="download-button__text">
+                                        <span v-if="downloadButtonState.large.isReady.value">Ready</span>
+                                        <span v-else-if="downloadButtonState.large.isDownloading.value">Downloading...</span>
+                                        <span v-else>Download</span>
+                                    </span>
+                                    <!-- Click handler -->
+                                    <button
+                                        v-if="downloadButtonState.large.isReady.value"
+                                        class="download-button__clickable"
+                                        @click="resetDownloadDemo('large')"
+                                    ></button>
+                                    <button
+                                        v-else
+                                        class="download-button__clickable"
+                                        @click="startDownloadDemo('large')"
+                                    ></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Other Buttons -->
+                    <div class="flex-col gap-sm">
+                        <h3>Other</h3>
+                        <div class="flex-row gap-md flex-center-items flex-wrap">
+                            <div 
+                                class="close-button"
+                                v-tooltip.bottom="{ value: 'Close' }"
+                            >
+                                <Icon :icon="closeThick" height="25" />
+                            </div>
+                            <Button 
+                                tooltip="Back"
+                                :show-tooltip="true"
+                                class="grey text-shadow"
+                            >
+                                <Icon :icon="arrow_back" height="40" />
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+
+                <Divider />
+
+                <!-- Interactive Tile Section -->
+                <div class="flex-col gap-md">
+                    <h2>Interactive Tile</h2>
+                    <div class="flex-row gap-md" style="height: 200px">
+                        <div style="width: 300px">
+                            <InteractiveTile textPersistent>
+                                <template #media>
+                                    <img src="/src/renderer/assets/images/backgrounds/5.jpg" />
+                                </template>
+                                <template #content>
+                                    <h3>Persistent Text</h3>
+                                    <p>Text stays on hover</p>
+                                </template>
+                            </InteractiveTile>
+                        </div>
+                        <div style="width: 300px">
+                            <InteractiveTile textFade>
+                                <template #media>
+                                    <img src="/src/renderer/assets/images/backgrounds/5.jpg" />
+                                </template>
+                                <template #content>
+                                    <h3>Fade Text</h3>
+                                    <p>Text fades on hover</p>
+                                </template>
+                            </InteractiveTile>
+                        </div>
+                        <div style="width: 300px">
+                            <InteractiveTile>
+                                <template #content>
+                                    <h3>Tile without Image</h3>
+                                    <p>Just text content here</p>
+                                </template>
+                            </InteractiveTile>
+                        </div>
+                        <div style="width: 300px">
+                            <InteractiveTile>
+                                <template #media>
+                                    <img src="/src/renderer/assets/images/backgrounds/5.jpg" />
+                                </template>
+                            </InteractiveTile>
+                        </div>
+                        <div style="width: 300px">
+                            <InteractiveTile>
+                                <template #media>
+                                    <div :style="`background-image: url('/src/renderer/assets/images/backgrounds/5.jpg')`"></div>
+                                </template>
+                                <template #content>
+                                    <h3>Background Image</h3>
+                                    <p>Using background-image style</p>
+                                </template>
+                            </InteractiveTile>
+                        </div>
+                        <div style="width: 300px">
+                            <InteractiveTile>
+                                <template #media>
+                                    <video autoplay loop muted playsinline>
+                                        <source src="/src/renderer/assets/videos/intros/placeholder_intro.mp4" type="video/mp4" />
+                                    </video>
+                                </template>
+                                <template #content>
+                                    <h3>Video Background</h3>
+                                    <p>Animated video background</p>
+                                </template>
+                            </InteractiveTile>
+                        </div>
+                    </div>
+                </div>
+
+                <Divider />
+
+                <!-- Inputs Section -->
+                <div class="flex-col gap-md">
+                    <h2>Inputs</h2>
+                    <div class="gridform standardized-inputs">
+                        <div>Textbox</div>
+                        <Textbox v-model="textValue" placeholder="Enter text..." />
+
+                        <div>Textbox (Label)</div>
+                        <Textbox v-model="textValue" label="With Label" />
+
+                        <div>Textbox (Disabled)</div>
+                        <Textbox v-model="textValue" disabled />
+
+                        <div>Number</div>
+                        <Number v-model="numValue" :min="0" :max="100" />
+
+                        <div>SearchBox</div>
+                        <SearchBox v-model="searchValue" />
+
+                        <div>Textarea</div>
+                        <Textarea v-model="areaValue" placeholder="Multi-line text..." />
+                    </div>
+                </div>
+
+                <Divider />
+
+                <!-- Selection Controls -->
+                <div class="flex-col gap-md">
+                    <h2>Selection Controls</h2>
+                    <div class="gridform standardized-inputs">
+                        <div>Select (Dropdown)</div>
+                        <Select
+                            v-model="selectedValue"
+                            :options="selectOptions"
+                            optionLabel="label"
+                            optionValue="value"
+                            placeholder="Select an option"
+                        />
+
+                        <div>Select (Filter)</div>
+                        <Select
+                            v-model="selectedFilterValue"
+                            :options="selectOptions"
+                            optionLabel="label"
+                            optionValue="value"
+                            filter
+                            placeholder="Search options..."
+                        />
+
+                        <div>Checkbox</div>
+                        <div class="flex-row gap-md">
+                            <Checkbox v-model="checked" label="Check me" />
+                            <Checkbox v-model="checkedNoLabel" />
+                            <Checkbox v-model="checkedDisabled" label="Disabled" disabled />
+                        </div>
+
+                        <div>Toggle Switch</div>
+                        <div class="flex-row gap-md">
+                            <InputSwitch v-model="toggleChecked" />
+                        </div>
+
+                        <div>Radio Buttons (Circular)</div>
+                        <div class="radio-button-list">
+                            <div
+                                v-for="option in radioButtonOptions"
+                                :key="option.value"
+                                class="radio-button-item"
+                                :class="{ selected: radioButtonValue === option.value }"
+                                @click="radioButtonValue = option.value"
+                            >
+                                <div class="radio-button-circle">
+                                    <div v-if="radioButtonValue === option.value" class="radio-button-dot"></div>
+                                </div>
+                                <span class="radio-button-label">{{ option.label }}</span>
+                            </div>
+                        </div>
+
+                        <div>Radio Buttons (Square)</div>
+                        <div class="radio-button-list">
+                            <div
+                                v-for="option in radioButtonOptions"
+                                :key="'square-' + option.value"
+                                class="radio-button-item"
+                                :class="{ selected: radioButtonValueSquare === option.value }"
+                                @click="radioButtonValueSquare = option.value"
+                            >
+                                <div class="radio-button-square">
+                                    <div v-if="radioButtonValueSquare === option.value" class="radio-button-check"></div>
+                                </div>
+                                <span class="radio-button-label">{{ option.label }}</span>
+                            </div>
+                        </div>
+
+                        <div>Segmented Controller</div>
+                        <Options v-model="radioValue" :options="['Option A', 'Option B', 'Option C']" />
+
+                        <div>Range Slider</div>
+                        <Range v-model="rangeValue" :min="0" :max="100" />
+
+                        <div>Double Range Slider</div>
+                        <Range v-model="doubleRangeValue" :min="0" :max="100" range />
+                    </div>
+                </div>
+
+                <Divider />
+
+                <!-- Panels Section -->
+                <div class="flex-col gap-md">
+                    <h2>Panels</h2>
+                    <div class="flex-col gap-md">
+                        <div class="flex-col gap-sm">
+                            <h3>1. Content Panel (Default)</h3>
+                            <p class="text-sm">Use for: Main content areas, primary sections, card-like containers. This is the standard panel with gradient background and blur effect.</p>
+                            <Panel class="flex-grow" style="min-height: 100px;">
+                                <div class="flex-col gap-sm">
+                                    <p>This is a default content panel.</p>
+                                    <p class="text-sm">Background: rgba(0, 0, 0, 0.5) gradient with backdrop-filter blur(10px)</p>
+                                </div>
+                            </Panel>
+                        </div>
+
+                        <div class="flex-col gap-sm">
+                            <h3>2. Nested Panel (Secondary Content)</h3>
+                            <p class="text-sm">Use for: Secondary content within a panel, grouped sections, nested information. Same style as Content Panel but nested for visual hierarchy.</p>
+                            <Panel class="flex-grow" style="min-height: 100px;">
+                                <div class="flex-col gap-sm">
+                                    <p>Outer Content Panel</p>
+                                    <Panel style="min-height: 60px;">
+                                        <p class="text-sm">Nested Panel - Secondary content within a panel</p>
+                                    </Panel>
+                                </div>
+                            </Panel>
+                        </div>
+
+                        <div class="flex-col gap-sm">
+                            <h3>3. Modal Overlay + Modal Panel</h3>
+                            <p class="text-sm">Use for: Dialog boxes, popups, confirmations. The overlay dims the background, and the modal panel appears on top.</p>
+                            <div class="modal-demo-container" style="position: relative; height: 450px; border: 1px dashed rgba(255, 255, 255, 0.3); overflow: visible;">
+                                <div class="modal-overlay-demo" style="position: absolute; inset: 0; background-color: rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; overflow: visible;">
+                                    <Panel class="modal-panel-demo" no-padding style="width: 450px; max-height: 420px; display: flex; flex-direction: column;">
+                                        <template #header>
+                                            <div class="modal-title">Modal Title</div>
+                                            <div class="modal-close">
+                                                <Icon :icon="closeThick" height="23" />
+                                            </div>
+                                        </template>
+                                        <div class="modal-content-scrollable flex-col gap-md padding-xl">
+                                            <div class="flex-col gap-sm">
+                                                <h4 class="modal-section-header">Section Header</h4>
+                                                <p class="modal-body-copy">
+                                                    This is body copy text used in modals. It provides detailed information, descriptions, or instructions to the user. Body copy should be clear, concise, and easy to read.
+                                                </p>
+                                                <p class="modal-body-copy">
+                                                    Additional paragraphs of body copy can be added to provide more context or details about the modal's purpose or content.
+                                                </p>
+                                            </div>
+                                            <div class="flex-col gap-sm">
+                                                <h4 class="modal-section-header">Another Section</h4>
+                                                <p class="modal-body-copy">
+                                                    Modal content can be organized into multiple sections, each with its own header and body copy. This helps structure information clearly.
+                                                </p>
+                                                <p class="modal-body-copy">
+                                                    When modal content becomes lengthy, the content area should scroll while keeping the header and close button fixed at the top. This ensures users can always access the close button regardless of scroll position.
+                                                </p>
+                                            </div>
+                                            <div class="flex-col gap-sm">
+                                                <h4 class="modal-section-header">Third Section</h4>
+                                                <p class="modal-body-copy">
+                                                    This section demonstrates how scrolling works when there is more content than can fit in the visible area. As you scroll down, you'll notice the header remains fixed at the top.
+                                                </p>
+                                                <p class="modal-body-copy">
+                                                    The scrollable area uses the standard 30px padding that matches other panels throughout the application, ensuring visual consistency across all components.
+                                                </p>
+                                            </div>
+                                            <div class="flex-col gap-sm">
+                                                <h4 class="modal-section-header">Fourth Section</h4>
+                                                <p class="modal-body-copy">
+                                                    Continuing to add more content helps visualize how the modal handles longer forms, detailed information, or extensive lists. The scrolling behavior should feel smooth and natural.
+                                                </p>
+                                                <p class="modal-body-copy">
+                                                    Notice how the content flows naturally and the header stays accessible. This pattern works well for settings dialogs, information modals, and forms that require more vertical space.
+                                                </p>
+                                            </div>
+                                            <div class="flex-col gap-sm">
+                                                <h4 class="modal-section-header">Final Section</h4>
+                                                <p class="modal-body-copy">
+                                                    This is the last section of content in the modal demo. By the time you reach this point, you should have scrolled past the initial viewport, demonstrating that the header remains fixed while the content scrolls smoothly.
+                                                </p>
+                                                <p class="modal-body-copy">
+                                                    The modal maintains its structure and usability even with extensive content, making it suitable for a wide variety of use cases throughout the application.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </Panel>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <Divider />
+
+                <!-- Progress Section -->
+                <div class="flex-col gap-md">
+                    <h2>Progress</h2>
+                    <div class="flex-col gap-sm">
+                        <h3>Standard Progress</h3>
+                        <p class="text-sm">Use for: Download progress, loading states, completion indicators. Shows progress from 0% to 100%.</p>
+                        <div class="flex-col gap-md" style="width: 100%; max-width: 500px;">
+                            <div class="flex-col gap-sm">
+                                <span class="text-sm">0% - Empty</span>
+                                <Progress :percent="0" />
+                            </div>
+                            <div class="flex-col gap-sm">
+                                <span class="text-sm">25% - Quarter</span>
+                                <Progress :percent="0.25" />
+                            </div>
+                            <div class="flex-col gap-sm">
+                                <span class="text-sm">50% - Half</span>
+                                <Progress :percent="0.5" />
+                            </div>
+                            <div class="flex-col gap-sm">
+                                <span class="text-sm">75% - Three Quarters</span>
+                                <Progress :percent="0.75" />
+                            </div>
+                            <div class="flex-col gap-sm">
+                                <span class="text-sm">100% - Complete</span>
+                                <Progress :percent="1" />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-col gap-sm">
+                        <h3>Progress with Text</h3>
+                        <p class="text-sm">Progress bars can display text overlay showing the percentage or status.</p>
+                        <div class="flex-col gap-md" style="width: 100%; max-width: 500px;">
+                            <Progress :percent="0.42" text="42%" />
+                            <Progress :percent="0.67" text="67%" />
+                            <Progress :percent="0.89" text="89%" />
+                        </div>
+                    </div>
+                    
+                    <div class="flex-col gap-sm">
+                        <h3>Themed Progress</h3>
+                        <p class="text-sm">Themed progress bars use a yellow/green gradient, typically for download operations.</p>
+                        <div class="flex-col gap-md" style="width: 100%; max-width: 500px;">
+                            <Progress :percent="0.5" themed />
+                            <Progress :percent="0.75" themed text="75%" />
+                        </div>
+                    </div>
+                    
+                    <div class="flex-col gap-sm">
+                        <h3>Pulsating Progress</h3>
+                        <p class="text-sm">Pulsating animation indicates active loading or processing.</p>
+                        <div class="flex-col gap-md" style="width: 100%; max-width: 500px;">
+                            <Progress :percent="0.5" pulsating />
+                            <Progress :percent="0.5" pulsating text="Loading..." />
+                        </div>
+                    </div>
+                    
+                    <div class="flex-col gap-sm">
+                        <h3>Different Heights</h3>
+                        <p class="text-sm">Progress bars can be customized with different heights for various contexts.</p>
+                        <div class="flex-col gap-md" style="width: 100%; max-width: 500px;">
+                            <div class="flex-col gap-sm">
+                                <span class="text-sm">Height: 10px</span>
+                                <Progress :percent="0.6" :height="10" />
+                            </div>
+                            <div class="flex-col gap-sm">
+                                <span class="text-sm">Height: 20px (Default)</span>
+                                <Progress :percent="0.6" :height="20" />
+                            </div>
+                            <div class="flex-col gap-sm">
+                                <span class="text-sm">Height: 40px</span>
+                                <Progress :percent="0.6" :height="40" text="60%" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <Divider />
+
+                <!-- Loader Section -->
+                <div class="flex-col gap-md">
+                    <h2>Loader</h2>
+                    <div class="flex-col gap-sm">
+                        <h3>Loading Spinner</h3>
+                        <p class="text-sm">Use for: Loading states, async operations, data fetching. The loader appears centered on the screen or within a container.</p>
+                        <div style="position: relative; height: 200px; border: 1px dashed rgba(255, 255, 255, 0.3);">
+                            <Loader />
+                        </div>
+                    </div>
+                    
+                    <div class="flex-col gap-sm">
+                        <h3>Loader in Container</h3>
+                        <p class="text-sm">Loader without absolute positioning, for inline use within content areas.</p>
+                        <div class="flex-row gap-md flex-center-items" style="padding: 20px; border: 1px dashed rgba(255, 255, 255, 0.3);">
+                            <Loader :absolute-position="false" />
+                            <span>Loading content...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <Divider />
+
+                <!-- Accordion Section -->
+                <div class="flex-col gap-md">
+                    <h2>Accordion</h2>
+                    <div class="flex-col gap-sm">
+                        <h3>Multiple Open Sections</h3>
+                        <p class="text-sm">Use for: Grouping related content, collapsible lists, expandable sections. Multiple sections can be open simultaneously.</p>
+                        <div style="width: 100%; max-width: 600px;">
+                            <Accordion multiple>
+                                <AccordionTab header="Outgoing Requests">
+                                    <div class="flex-col gap-sm">
+                                        <p>Friend requests you've sent</p>
+                                        <p class="text-sm">This section shows pending friend requests that you have initiated.</p>
+                                    </div>
+                                </AccordionTab>
+                                <AccordionTab header="Incoming Requests">
+                                    <div class="flex-col gap-sm">
+                                        <p>Friend requests you've received</p>
+                                        <p class="text-sm">This section shows friend requests from other users waiting for your response.</p>
+                                    </div>
+                                </AccordionTab>
+                                <AccordionTab header="Blocked Users">
+                                    <div class="flex-col gap-sm">
+                                        <p>Users you've blocked</p>
+                                        <p class="text-sm">This section displays users you have blocked from contacting you.</p>
+                                    </div>
+                                </AccordionTab>
+                            </Accordion>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </Panel>
+</template>
+
+<script lang="ts" setup>
+import { ref, onMounted, onUnmounted, computed, watch } from "vue";
+import { Icon } from "@iconify/vue";
+import closeThick from "@iconify-icons/mdi/close-thick";
+import arrowLeft from "@iconify-icons/mdi/arrow-left";
+import arrowRight from "@iconify-icons/mdi/arrow-right";
+import arrow_back from "@iconify-icons/mdi/arrow-back";
+import Panel from "@renderer/components/common/Panel.vue";
+import Button from "@renderer/components/controls/Button.vue";
+import Textbox from "@renderer/components/controls/Textbox.vue";
+import Number from "@renderer/components/controls/Number.vue";
+import SearchBox from "@renderer/components/controls/SearchBox.vue";
+import Textarea from "@renderer/components/controls/Textarea.vue";
+import Select from "@renderer/components/controls/Select.vue";
+import Checkbox from "@renderer/components/controls/Checkbox.vue";
+import Options from "@renderer/components/controls/Options.vue";
+import Range from "@renderer/components/controls/Range.vue";
+import Divider from "@renderer/components/common/Divider.vue";
+import InteractiveTile from "@renderer/components/common/InteractiveTile.vue";
+import InputSwitch from "primevue/inputswitch";
+import Progress from "@renderer/components/common/Progress.vue";
+import Loader from "@renderer/components/common/Loader.vue";
+import Accordion from "@renderer/components/common/Accordion.vue";
+import AccordionTab from "primevue/accordiontab";
+
+// State for inputs
+const textValue = ref("");
+const numValue = ref(42);
+const searchValue = ref("");
+const areaValue = ref("");
+const selectedValue = ref(1);
+const selectedFilterValue = ref(1);
+const checked = ref(false);
+const toggleChecked = ref(false);
+const checkedNoLabel = ref(false);
+const checkedDisabled = ref(false);
+const radioButtonValue = ref("option1");
+const radioButtonValueSquare = ref("option1");
+const radioValue = ref("Option A");
+const rangeValue = ref(50);
+const doubleRangeValue = ref([20, 80]);
+
+const radioButtonOptions = [
+    { label: "Option 1", value: "option1" },
+    { label: "Option 2", value: "option2" },
+    { label: "Option 3", value: "option3" },
+];
+
+const selectOptions = [
+    { label: "Option 1", value: 1 },
+    { label: "Option 2", value: 2 },
+    { label: "Option 3", value: 3 },
+    { label: "Long Option Name That Might Wrap", value: 4 },
+];
+
+// Download button demo state - separate state for each button
+const downloadButtonState = {
+    small: {
+        isDownloading: ref(false),
+        isReady: ref(false),
+        progress: ref(0),
+        interval: null as ReturnType<typeof setInterval> | null
+    },
+    large: {
+        isDownloading: ref(false),
+        isReady: ref(false),
+        progress: ref(0),
+        interval: null as ReturnType<typeof setInterval> | null
+    }
+};
+
+function startDownloadDemo(size: 'small' | 'large') {
+    const state = downloadButtonState[size];
+    state.isDownloading.value = true;
+    state.isReady.value = false;
+    state.progress.value = 0;
+    
+    if (state.interval) {
+        clearInterval(state.interval);
+    }
+    
+    state.interval = setInterval(() => {
+        state.progress.value += 0.02; // Increment by 2% each interval
+        if (state.progress.value >= 1) {
+            state.progress.value = 1;
+            state.isDownloading.value = false;
+            state.isReady.value = true;
+            if (state.interval) {
+                clearInterval(state.interval);
+                state.interval = null;
+            }
+        }
+    }, 100); // Update every 100ms (total ~5 seconds)
+}
+
+function resetDownloadDemo(size: 'small' | 'large') {
+    const state = downloadButtonState[size];
+    state.isDownloading.value = false;
+    state.isReady.value = false;
+    state.progress.value = 0;
+    if (state.interval) {
+        clearInterval(state.interval);
+        state.interval = null;
+    }
+}
+
+onUnmounted(() => {
+    // Clean up download button intervals
+    if (downloadButtonState.small.interval) {
+        clearInterval(downloadButtonState.small.interval);
+    }
+    if (downloadButtonState.large.interval) {
+        clearInterval(downloadButtonState.large.interval);
+    }
+});
+</script>
+
+<style lang="scss">
+// Toggle Switch Styles
+.p-inputswitch {
+    width: 3rem;
+    height: 1.75rem;
+
+    &.p-inputswitch-checked {
+        .p-inputswitch-slider {
+            background: #22c55e;
+            &:before {
+                transform: translateX(1.25rem);
+            }
+        }
+    }
+
+    .p-inputswitch-slider {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+        border-radius: 4px; // Rectangular style
+
+        &:before {
+            background: #ffffff;
+            width: 1.25rem;
+            height: 1.25rem;
+            left: 0.25rem;
+            margin-top: -0.625rem;
+            border-radius: 2px; // Rectangular thumb
+            transition-duration: 0.2s;
+        }
+    }
+}
+
+// Range Slider text alignment
+.p-slider-handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 50% !important; // Force center alignment
+}
+</style>
+
+<style lang="scss" scoped>
+.scroll-container {
+    overflow-y: auto;
+    height: 0;
+    flex-grow: 1;
+    position: relative;
+    
+    // Fade effects at top and bottom
+    mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black 20px,
+        black calc(100% - 20px),
+        transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black 20px,
+        black calc(100% - 20px),
+        transparent 100%
+    );
+}
+
+
+.gridform {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 10px;
+    align-items: center;
+}
+
+h2 {
+    padding-bottom: 5px;
+}
+
+.typography-spec {
+    display: block;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 4px;
+    font-family: monospace;
+}
+
+.padding-md {
+    padding: 20px;
+}
+
+.style-panel {
+    min-height: 0;
+}
+
+// Tertiary button style - maintains special transparent/underline treatment
+:deep(.button.tertiary) {
+    box-shadow: none !important;
+    background: none !important;
+    border: none !important;
+    .p-button {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        text-decoration: underline;
+        color: inherit;
+    }
+    &:hover {
+        background: none !important;
+        box-shadow: none !important;
+        .p-button {
+            background: transparent !important;
+            box-shadow: none !important;
+            color: #fff;
+        }
+    }
+}
+
+// Large button style
+:deep(.button.large) {
+    .p-button {
+        font-size: 18px; // txt-lg
+        padding: 0 8px; // Unified padding
+        height: 50px;
+    }
+}
+
+// Regular button font size (apply to all buttons that aren't large)
+:deep(.button:not(.large)) {
+    .p-button {
+        font-size: 16px; // txt-md
+    }
+}
+
+// Modal Close Button Style
+.close-button {
+    display: flex;
+    padding: 5px 10px;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+
+    &:hover {
+        background: rgba(219, 20, 20, 0.6);
+        color: #fff;
+        box-shadow:
+            1px 0 0 rgba(255, 47, 47, 0.418),
+            -1px 0 0 rgba(255, 47, 47, 0.418),
+            0 1px 0 rgba(255, 47, 47, 0.418),
+            7px -3px 10px rgba(0, 0, 0, 0.5),
+            -7px -3px 10px rgba(0, 0, 0, 0.5) !important;
+    }
+}
+
+// Quick Play Button
+:deep(.button.quick-play-button) {
+    .p-button {
+        text-transform: uppercase;
+        font-family: Rajdhani;
+        font-weight: bold;
+        font-size: 1.4rem;
+        padding: 10px 40px;
+        color: #fff;
+        background: linear-gradient(90deg, #22c55e, #16a34a);
+        border: none;
+        border-radius: 2px;
+        box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+        transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease;
+
+        &:hover {
+            box-shadow: 0 0 25px rgba(34, 197, 94, 0.6);
+        }
+    }
+}
+
+// Native button with quick-play-button class (for Ready state)
+button.quick-play-button {
+    align-self: center;
+    font-family: Rajdhani;
+    font-weight: bold;
+    font-size: 1.4rem;
+    padding: 10px 40px;
+    color: #fff;
+    background: linear-gradient(90deg, #22c55e, #16a34a);
+    border: none;
+    border-radius: 2px;
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+    text-transform: uppercase;
+
+    &:hover {
+        box-shadow: 0 0 25px rgba(34, 197, 94, 0.6);
+    }
+
+    &::before {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 200%;
+        height: 200%;
+        background: rgba(255, 255, 255, 0.2);
+        transform: translate(-50%, -50%) scale(0);
+        border-radius: 50%;
+        transition: transform 0.4s ease;
+    }
+
+    &:hover::before {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+// Quick Download Button
+:deep(.button.quick-download-button) {
+    .p-button {
+        font-family: Rajdhani;
+        font-weight: bold;
+        font-size: 1.4rem;
+        padding: 10px 40px;
+        color: #fff;
+        border: none;
+        border-radius: 2px;
+        transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease;
+    }
+}
+
+// Cancel Button
+:deep(.button.cancel-button) {
+    .p-button {
+        text-transform: uppercase;
+        font-family: Rajdhani;
+        font-weight: bold;
+        font-size: 1.5rem;
+        padding: 20px 40px;
+        color: #fff;
+        border: none;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+
+        &:hover {
+            color: #eee;
+            text-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
+        }
+    }
+}
+
+// Standardize input heights
+.standardized-inputs {
+    :deep(.control),
+    :deep(.p-inputtext),
+    :deep(.p-dropdown) {
+        height: 40px;
+        .p-dropdown-label {
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    :deep(.options) {
+        height: 40px;
+    }
+
+    :deep(.textarea .control) {
+        height: auto; // Textareas should grow
+    }
+}
+
+// Radio Button List
+.radio-button-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 300px;
+    width: 100%;
+}
+
+.radio-button-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 12px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    &.selected {
+        background-color: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+}
+
+.radio-button-circle {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    min-height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+    
+    .radio-button-item.selected & {
+        border-color: rgba(255, 255, 255, 0.8);
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+}
+
+.radio-button-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #fff;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+}
+
+.radio-button-label {
+    color: rgba(255, 255, 255, 0.9);
+    user-select: none;
+    
+    .radio-button-item.selected & {
+        color: #fff;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
+    }
+}
+
+// Square Radio Button
+.radio-button-square {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    min-height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+    
+    .radio-button-item.selected & {
+        border-color: rgba(255, 255, 255, 0.8);
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+}
+
+.radio-button-check {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    background-color: #fff;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+}
+
+// Download button demo
+.download-button-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+.download-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Poppins; // Use same font as other buttons
+    font-weight: 400; // Regular weight
+    text-transform: capitalize; // Title Case
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.15); // Unified border
+    border-radius: 2px; // Unified corner radius
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.6); // Unified text shadow
+    
+    // Size variants - match regular and large button sizes
+    &--small {
+        font-size: 16px; // txt-md - same as regular buttons
+        padding: 0 8px; // Unified padding
+        width: 180px; // Fixed width to accommodate "Downloading..."
+        min-height: 35px; // Match regular button height (33px + 2px for border)
+        height: 35px;
+    }
+    
+    &--large {
+        font-size: 18px; // txt-lg - same as large buttons
+        padding: 0 8px; // Unified padding
+        width: 220px; // Fixed width to accommodate "Downloading..."
+        height: 52px; // Match large button height (50px + 2px for border)
+    }
+    
+    // State: Default (Red - Download) - use solid rgba color matching danger button
+    &--default {
+        background-color: rgba(165, 30, 30, 0.6); // Match red button color
+        box-shadow:
+            1px 1px 3px rgba(49, 47, 47, 0.1),
+            inset 0 -17px 0 rgba(0, 0, 0, 0.05); // Standard inset shadow
+        
+        &:hover {
+            background-color: rgba(165, 30, 30, 0.8);
+            box-shadow:
+                1px 1px 3px rgba(0, 0, 0, 0.1),
+                inset 0 -17px 0 rgba(0, 0, 0, 0.05);
+        }
+    }
+    
+    // State: Downloading (Grey with progress fill) - use standard shadow
+    &--downloading {
+        background-color: rgba(107, 114, 128, 0.6);
+        box-shadow:
+            1px 1px 3px rgba(49, 47, 47, 0.1),
+            inset 0 -17px 0 rgba(0, 0, 0, 0.05);
+        
+        &:hover {
+            background-color: rgba(107, 114, 128, 0.8);
+            box-shadow:
+                1px 1px 3px rgba(0, 0, 0, 0.1),
+                inset 0 -17px 0 rgba(0, 0, 0, 0.05);
+        }
+    }
+    
+    // State: Ready (Green) - use solid rgba color matching success button
+    &--ready {
+        background-color: rgba(34, 197, 94, 0.6); // Match green button color (#22c55e)
+        box-shadow:
+            1px 1px 3px rgba(49, 47, 47, 0.1),
+            inset 0 -17px 0 rgba(0, 0, 0, 0.05); // Standard inset shadow
+        
+        &:hover {
+            background-color: rgba(34, 197, 94, 0.8);
+            box-shadow:
+                1px 1px 3px rgba(0, 0, 0, 0.1),
+                inset 0 -17px 0 rgba(0, 0, 0, 0.05);
+        }
+        
+        &:active {
+            transform: translateY(1px);
+        }
+    }
+    
+    // Progress bar fill during download - grey color
+    &__progress {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        background: rgba(107, 114, 128, 0.6); // Grey progress bar
+        transition: width 0.1s ease;
+        z-index: 1;
+    }
+    
+    // Text overlay - scale down if text doesn't fit
+    &__text {
+        position: relative;
+        z-index: 2;
+        pointer-events: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+        width: 100%;
+        text-align: center;
+    }
+    
+    // Scale down text for downloading state to ensure it fits
+    &--downloading &__text {
+        font-size: 0.85em; // Scale down "Downloading..." to fit
+    }
+    
+    // Small button specific scaling for downloading
+    &--small {
+        &.download-button--downloading &__text {
+            font-size: 0.75em; // More scaling for small button
+        }
+    }
+    
+    // Large button specific scaling for downloading  
+    &--large {
+        &.download-button--downloading &__text {
+            font-size: 0.9em; // Less scaling needed for large button
+        }
+    }
+    
+    // Invisible clickable overlay
+    &__clickable {
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        margin: 0;
+    }
+    
+    // Active state (when button is pressed/down)
+    &:active {
+        transform: translateY(1px);
+    }
+    
+    // Active state for ready state specifically
+    &--ready:active {
+        box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+        transform: translateY(1px);
+    }
+}
+
+// Modal Panel Demo Styles
+.modal-panel-demo {
+    background: rgba(0, 0, 0, 0.5) !important;
+    
+    :deep(.header) {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        flex-shrink: 0; // Prevent header from shrinking
+    }
+    
+    :deep(.content) {
+        overflow-y: auto;
+        flex: 1;
+        min-height: 0; // Allow content to shrink and scroll
+        
+        // Fade effect only at the bottom (top stays cut off by header)
+        mask-image: linear-gradient(
+            to bottom,
+            black 0%,
+            black calc(100% - 20px),
+            transparent 100%
+        );
+        -webkit-mask-image: linear-gradient(
+            to bottom,
+            black 0%,
+            black calc(100% - 20px),
+            transparent 100%
+        );
+    }
+}
+
+.modal-title {
+    padding: 5px 10px;
+    flex-grow: 1;
+    text-transform: capitalize;
+    font-weight: 600;
+}
+
+.modal-close {
+    display: flex;
+    margin-left: auto;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    
+    &:hover {
+        background: rgba(219, 20, 20, 0.6);
+    }
+}
+
+.modal-section-header {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+    padding: 0;
+}
+
+.modal-body-copy {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.modal-content-scrollable {
+    height: 100%;
+}
+
+// Design Constants Section
+.design-constants {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.constant-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.9);
+    
+    code {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 2px 6px;
+        border-radius: 2px;
+        font-size: 13px;
+        color: #fff;
+    }
+    
+    .constant-value {
+        color: rgba(255, 255, 255, 0.7);
+        font-weight: normal;
+    }
+}
+
+.color-swatch {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    vertical-align: middle;
+    margin-left: 5px;
+}
+
+</style>

@@ -44,7 +44,8 @@ function onMouseEnter() {
     align-items: center;
     justify-self: flex-start;
     background-color: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
     &:hover {
         background-color: rgba(255, 255, 255, 0.2);
         border-color: rgba(255, 255, 255, 0.2);

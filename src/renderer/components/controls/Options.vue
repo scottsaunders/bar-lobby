@@ -32,7 +32,7 @@ import Control from "@renderer/components/controls/Control.vue";
     gap: 1px;
     .p-button {
         height: 100%;
-        padding: 0 7px;
+        padding: 0 10px;
         position: relative;
         flex-grow: 1;
         &:not(:last-child) {

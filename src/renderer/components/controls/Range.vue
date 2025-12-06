@@ -55,7 +55,7 @@ const high = computed(() => (props.modelValue instanceof Array ? props.modelValu
 const min = computed<number>(() => props?.min ?? 0);
 const minInputWidth = computed(() => `${min.value.toString().length + 1}ch`);
 const max = computed<number>(() => props?.max ?? 100);
-const maxInputWidth = computed(() => `${max.value.toString().length + 1}ch`);
+const maxInputWidth = computed(() => `${Math.max(min.value.toString().length, max.value.toString().length)}ch`);
 
 const stepValue = computed(() => props.step ?? 1);
 const maxFractionDigits = computed(() => {
@@ -78,8 +78,15 @@ function onInput(input: number | number[]) {
 .range {
     width: 100%;
     align-self: center;
+    display: flex;
+    align-items: center;
     .disabled {
         opacity: 0.4;
+    }
+    :deep(.p-inputtext) {
+        text-align: center !important;
+        line-height: normal !important;
+        padding: 0 !important; // Reset internal padding
     }
 }
 :deep(.p-slider) {
@@ -119,7 +126,7 @@ function onInput(input: number | number[]) {
     }
 }
 .min :deep(.p-inputtext) {
-    width: v-bind(minInputWidth);
+    width: v-bind(maxInputWidth);
     text-align: center;
 }
 .max :deep(.p-inputtext) {
@@ -129,7 +136,9 @@ function onInput(input: number | number[]) {
 .p-inputwrapper {
     position: relative;
     height: 100%;
-    padding: 5px;
+    display: flex;
+    align-items: center;
+    padding: 0 5px;
     &:before {
         position: absolute;
         height: 100%;
@@ -139,9 +148,15 @@ function onInput(input: number | number[]) {
         top: 0;
         background: rgba(255, 255, 255, 0.1);
     }
-    &.min:before {
-        left: unset;
-        right: 0;
+    &.min {
+        padding: 0 10px;
+        &:before {
+            left: unset;
+            right: 0;
+        }
+    }
+    &.max {
+        padding: 0 10px;
     }
 }
 </style>

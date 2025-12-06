@@ -1953,6 +1953,10 @@
                 "download": "Download map"
             }
         },
+        "styles": {
+            "title": "Styles",
+            "description": "A showcase of standard UI components and styles used throughout the application."
+        },
         "multiplayer": {
             "title": "Multiplayer",
             "ranked": {
