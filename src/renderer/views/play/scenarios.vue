@@ -252,6 +252,11 @@ async function launch() {
 
 .scenario-controls {
     flex-shrink: 0;
+    
+    // Ensure DownloadContentButton extends full width
+    :deep(.download-button-wrapper) {
+        width: 100%;
+    }
 }
 
 .scenario-conditions {

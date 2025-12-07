@@ -9,7 +9,7 @@ SPDX-License-Identifier: MIT
 </route>
 
 <template>
-    <div class="view">
+    <div class="view" style="position: relative;">
         <div class="view-container">
             <div class="view-title">
                 <h1>{{ t("lobby.views.play.skirmish") }}</h1>
@@ -17,53 +17,82 @@ SPDX-License-Identifier: MIT
             </div>
             <div class="skirmish-layout flex-row gap-xl">
                 <!-- Left Panel: Map Information -->
-                <Panel class="map-panel" no-padding>
+                <div class="map-panel flex-col fullheight">
+                    <div class="map-panel-content flex-grow flex-col gap-md">
+                        <div class="flex-row gap-md">
+                            <Select
+                                :modelValue="battleStore.battleOptions.map"
+                                :options="mapListOptions"
+                                data-key="springName"
+                                label="Map"
+                                optionLabel="springName"
+                                :filter="true"
+                                class="fullwidth"
+                                @update:model-value="onMapSelected"
+                            />
+                            <Button v-tooltip.left="'Open map selector'" @click="openMapList">
+                                <Icon :icon="listIcon" height="23" />
+                            </Button>
+                            <MapListModal
+                                v-model="mapListOpen"
+                                :title="t('lobby.components.battle.offlineBattleComponent.maps')"
+                                @map-selected="onMapSelected"
+                            />
+                        </div>
+                        <div class="map-preview-container">
+                            <MapBattlePreview />
+                        </div>
+                        <div class="map-features-row flex-row flex-align-start">
+                            <div class="flex-row flex-center-items gap-sm body-1 map-feature-item">
+                                <Icon :icon="personIcon" />
+                                <span>{{ map?.playerCountMin }} - {{ map?.playerCountMax }}</span>
+                            </div>
+                            <div class="flex-row flex-center-items gap-sm body-1 map-feature-item">
+                                <Icon :icon="gridIcon" />
+                                <span>{{ map?.mapWidth }} x {{ map?.mapHeight }}</span>
+                            </div>
+                            <div class="terrain-icons-container flex-row flex-center-items gap-sm flex-wrap flex-grow">
+                                <TerrainIcon v-for="terrain in map?.terrain" :terrain="terrain" v-bind:key="terrain" />
+                            </div>
+                            <div class="map-options-wrapper">
+                                <Button v-tooltip.left="'Configure map options'" class="grey slim" @click="openMapOptions">
+                                    Options
+                                </Button>
+                            </div>
+                            <MapOptionsModal v-if="battleStore.battleOptions.map" v-model="mapOptionsOpen" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Center Panel: Teams and Spectators -->
+                <Panel class="teams-settings-panel flex-grow" no-padding>
                     <div class="panel-content flex-col fullheight">
                         <div class="panel-body flex-grow padding-left-xxl padding-right-xxl padding-top-xxl padding-bottom-xxl flex-col gap-md">
-                            <div class="flex-row gap-md">
+                            <div class="game-mode-selector">
                                 <Select
-                                    :modelValue="battleStore.battleOptions.map"
-                                    :options="mapListOptions"
-                                    data-key="springName"
-                                    label="Map"
-                                    optionLabel="springName"
-                                    :filter="true"
-                                    class="fullwidth"
-                                    @update:model-value="onMapSelected"
+                                    :modelValue="gameModeOption"
+                                    :options="gameModeOptions"
+                                    data-key="id"
+                                    optionLabel="label"
+                                    label="Game Mode"
+                                    @update:model-value="onGameModeChanged"
                                 />
-                                <Button v-tooltip.left="'Open map selector'" @click="openMapList">
-                                    <Icon :icon="listIcon" height="23" />
-                                </Button>
-                                <Button v-tooltip.left="'Configure map options'" @click="openMapOptions">
-                                    <Icon :icon="cogIcon" height="23" />
-                                </Button>
-                                <MapListModal
-                                    v-model="mapListOpen"
-                                    :title="t('lobby.components.battle.offlineBattleComponent.maps')"
-                                    @map-selected="onMapSelected"
-                                />
-                                <MapOptionsModal v-if="battleStore.battleOptions.map" v-model="mapOptionsOpen" />
                             </div>
-                            <div class="map-preview-container">
-                                <MapBattlePreview />
+                            <div class="playerlist-container flex-grow">
+                                <Playerlist :is-team-mode="isTeamMode" />
                             </div>
-                            <div class="flex-row flex-space-between">
-                                <div class="flex-row gap-lg flex-center-items">
-                                    <div class="flex-row flex-center-items gap-sm body-1">
-                                        <Icon :icon="personIcon" />
-                                        <span>{{ map?.playerCountMin }} - {{ map?.playerCountMax }}</span>
-                                    </div>
-                                    <div class="flex-row flex-center-items gap-sm body-1">
-                                        <Icon :icon="gridIcon" />
-                                        <span>{{ map?.mapWidth }} x {{ map?.mapHeight }}</span>
-                                    </div>
-                                </div>
-                                <div class="flex-row flex-justify-end">
-                                    <div class="flex-row flex-center-items gap-sm">
-                                        <TerrainIcon v-for="terrain in map?.terrain" :terrain="terrain" v-bind:key="terrain" />
-                                    </div>
-                                </div>
-                            </div>
+                            <Button v-if="isTeamMode" class="fullwidth" @click="addTeam">
+                                Add Team
+                            </Button>
+                        </div>
+                    </div>
+                </Panel>
+
+                <!-- Right Panel: Teams and Settings -->
+                <Panel class="tbd-panel" no-padding>
+                    <div class="panel-content flex-col fullheight">
+                        <h2 class="title-2 padding-left-xxl padding-top-xxl padding-right-xxl padding-bottom-lg">Teams & Settings</h2>
+                        <div class="panel-body flex-grow padding-left-xxl padding-right-xxl padding-bottom-xxl flex-col gap-md">
                             <GameModeComponent />
                             <div v-if="settingsStore.devMode">
                                 <Select
@@ -89,52 +118,39 @@ SPDX-License-Identifier: MIT
                                     class="fullwidth"
                                 />
                             </div>
-                            <div class="flex-row flex-bottom gap-md flex-grow">
-                                <div class="fullwidth" v-if="map">
-                                    <Button v-if="gameStore.status === GameStatus.LOADING" class="fullwidth grey" disabled>{{
-                                        t("lobby.components.battle.offlineBattleComponent.gameIsStarting")
-                                    }}</Button>
-                                    <Button v-else-if="gameStore.status === GameStatus.RUNNING" class="fullwidth grey" disabled>{{
-                                        t("lobby.components.battle.offlineBattleComponent.gameIsRunning")
-                                    }}</Button>
-                                    <DownloadContentButton
-                                        v-else
-                                        :maps="[map.springName]"
-                                        :engines="battleStore.battleOptions.engineVersion ? [battleStore.battleOptions.engineVersion] : []"
-                                        :games="battleStore.battleOptions.gameVersion ? [battleStore.battleOptions.gameVersion] : []"
-                                        class="fullwidth large"
-                                        @click="battleActions.startBattle"
-                                        >{{ t("lobby.components.battle.offlineBattleComponent.startTheGame") }}</DownloadContentButton
-                                    >
-                                </div>
-                                <Button v-else class="fullwidth green" disabled>{{
-                                    t("lobby.components.battle.offlineBattleComponent.startTheGame")
-                                }}</Button>
-                            </div>
-                        </div>
-                    </div>
-                </Panel>
-
-                <!-- Center Panel: Teams and Settings -->
-                <Panel class="teams-settings-panel flex-grow" no-padding>
-                    <div class="panel-content flex-col fullheight">
-                        <h2 class="title-2 padding-left-xxl padding-top-xxl padding-right-xxl padding-bottom-lg">Teams & Settings</h2>
-                        <div class="panel-body flex-grow padding-left-xxl padding-right-xxl padding-bottom-xxl">
-                            <p class="body-1">Teams and settings will go here</p>
-                        </div>
-                    </div>
-                </Panel>
-
-                <!-- Right Panel: TBD Content -->
-                <Panel class="tbd-panel" no-padding>
-                    <div class="panel-content flex-col fullheight">
-                        <h2 class="title-2 padding-left-xxl padding-top-xxl padding-right-xxl padding-bottom-lg">Additional Options</h2>
-                        <div class="panel-body flex-grow padding-left-xxl padding-right-xxl padding-bottom-xxl">
-                            <p class="body-1">TBD content will go here</p>
                         </div>
                     </div>
                 </Panel>
             </div>
+            <!-- Bottom Panel: Action Button -->
+            <Panel class="bottom-action-panel" no-padding>
+                <div class="bottom-action-content flex-row flex-space-between padding-left-lg padding-right-lg padding-top-lg padding-bottom-lg">
+                    <Button class="blue large" @click="generateRandomSkirmish">
+                        Generate Random Skirmish
+                    </Button>
+                    <div v-if="map" style="display: flex; align-items: center;">
+                        <Button v-if="gameStore.status === GameStatus.LOADING" class="grey large" disabled>{{
+                            t("lobby.components.battle.offlineBattleComponent.gameIsStarting")
+                        }}</Button>
+                        <Button v-else-if="gameStore.status === GameStatus.RUNNING" class="grey large" disabled>{{
+                            t("lobby.components.battle.offlineBattleComponent.gameIsRunning")
+                        }}</Button>
+                        <DownloadContentButton
+                            v-else
+                            :maps="[map.springName]"
+                            :engines="battleStore.battleOptions.engineVersion ? [battleStore.battleOptions.engineVersion] : []"
+                            :games="battleStore.battleOptions.gameVersion ? [battleStore.battleOptions.gameVersion] : []"
+                            download-text="Download Map"
+                            class="large"
+                            @click="battleActions.startBattle"
+                            >Start Game</DownloadContentButton
+                        >
+                    </div>
+                    <Button v-else class="green large" disabled>{{
+                        t("lobby.components.battle.offlineBattleComponent.startTheGame")
+                    }}</Button>
+                </div>
+            </Panel>
         </div>
     </div>
 </template>
@@ -164,6 +180,9 @@ import TerrainIcon from "@renderer/components/maps/filters/TerrainIcon.vue";
 import personIcon from "@iconify-icons/mdi/person-multiple";
 import gridIcon from "@iconify-icons/mdi/grid";
 import { getRandomMap } from "@renderer/store/maps.store";
+import Playerlist from "@renderer/components/battle/Playerlist.vue";
+import { GameModeID, type GameModeWithOptions } from "@main/game/battle/battle-types";
+import { getTranslatedGameMode } from "@renderer/store/battle.store";
 
 const { t } = useTypedI18n();
 
@@ -197,12 +216,67 @@ function onMapSelected(map: MapData) {
     mapListOpen.value = false;
 }
 
-// Initialize a map if none is selected
+async function generateRandomSkirmish() {
+    try {
+        const randomMap = await getRandomMap();
+        if (randomMap) {
+            battleStore.battleOptions.map = randomMap;
+        }
+    } catch (error) {
+        console.error("Failed to generate random skirmish:", error);
+    }
+}
+
+// Game mode management
+const gameModeOptions: GameModeWithOptions[] = [
+    { id: GameModeID.CLASSIC, label: "Teams", options: {} },
+    { id: GameModeID.FFA, label: getTranslatedGameMode(GameModeID.FFA), options: {} },
+];
+
+const gameModeOption = computed(() => {
+    return gameModeOptions.find(mode => mode.id === battleStore.battleOptions.gameMode.id) || gameModeOptions[0];
+});
+
+const isTeamMode = computed(() => {
+    return battleStore.battleOptions.gameMode.id === GameModeID.CLASSIC;
+});
+
+async function onGameModeChanged(mode: GameModeWithOptions) {
+    await battleActions.loadGameMode(mode.id);
+}
+
+function addTeam() {
+    battleActions.addTeam();
+}
+
+// Initialize battle store and ensure game mode is Teams (CLASSIC)
 onMounted(async () => {
+    // Get a map first if we don't have one
     if (!battleStore.battleOptions.map) {
         const randomMap = await getRandomMap();
         if (randomMap) {
             battleStore.battleOptions.map = randomMap;
+        }
+    }
+    
+    // Always initialize/reset the battle store to ensure teams are created
+    if (battleStore.teams.length === 0) {
+        battleActions.resetToDefaultBattle(
+            enginesStore.selectedEngineVersion,
+            gameStore.selectedGameVersion,
+            battleStore.battleOptions.map
+        );
+    }
+    
+    // Ensure game mode is set to Teams (CLASSIC)
+    if (battleStore.battleOptions.gameMode.id !== GameModeID.CLASSIC) {
+        await battleActions.loadGameMode(GameModeID.CLASSIC);
+    }
+    
+    // Ensure we have at least 2 teams for classic mode
+    if (battleStore.teams.length < 2) {
+        while (battleStore.teams.length < 2) {
+            battleActions.addTeam();
         }
     }
 });
@@ -231,14 +305,22 @@ onMounted(async () => {
     height: 100%;
     min-height: 0;
     align-items: stretch; // Ensure all panels have the same height
+    // Account for button bar: button bar is at bottom 140px, has padding lg (16px) top/bottom, button height 72px
+    // Total button bar height: 72px + 16px + 16px = 104px
+    // Add gap of lg (16px) between panels and button bar
+    // Total space needed: 104px + 16px = 120px
+    padding-bottom: calc(104px + #{map-get($spacing, "lg")}); // Button bar height + gap
+    box-sizing: border-box;
 }
 
 .map-panel {
     width: 400px;
     min-height: 0;
     flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
+}
+
+.map-panel-content {
+    min-height: 0;
 }
 
 .teams-settings-panel {
@@ -268,10 +350,64 @@ onMounted(async () => {
     flex-direction: column;
 }
 
+.playerlist-container {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
 .map-preview-container {
     flex-shrink: 0;
     width: 100%;
     min-height: 200px;
     max-height: 400px;
+}
+
+.bottom-action-panel {
+    position: absolute;
+    bottom: 140px; // 0 margin + view's bottom padding (140px for chat)
+    left: map-get($spacing, "xxl");
+    right: map-get($spacing, "xxl");
+    width: calc(100% - #{map-get($spacing, "xxl") * 2});
+    flex-shrink: 0;
+    z-index: 2;
+}
+
+.bottom-action-content {
+    display: flex;
+    align-items: center;
+    
+    // Override DownloadContentButton wrapper width in button bar
+    :deep(.download-button-wrapper) {
+        width: auto;
+    }
+    
+    // Set fixed width for download button in skirmish view only
+    :deep(.download-button--large) {
+        width: 240px; // Fixed width to ensure consistency across all states (Download/Downloading/Start)
+        min-width: 240px;
+    }
+}
+
+.map-features-row {
+    gap: map-get($spacing, "md");
+    flex-wrap: nowrap; // Don't wrap the row itself
+}
+
+.map-feature-item {
+    flex-shrink: 0; // Player count and map size hug their contents
+    white-space: nowrap; // Prevent text wrapping
+}
+
+.terrain-icons-container {
+    flex-grow: 1; // Terrain icons fill the remaining space
+    min-width: 0; // Allow shrinking below content size
+}
+
+.map-options-wrapper {
+    flex-shrink: 0; // Options button wrapper hugs its contents
+    align-self: flex-start; // Align wrapper to top
+    display: flex;
+    align-items: flex-start; // Align button to top within wrapper
 }
 </style>

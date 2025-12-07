@@ -134,10 +134,17 @@ async function onClick() {
     &.inline {
         align-self: flex-start;
     }
-    &:not(.slim) {
+    &:not(.slim):not(.large) {
         min-height: 48px; // Set min-height on Control wrapper (includes border with box-sizing: border-box)
         .p-button {
             min-height: 48px;
+        }
+    }
+    &.large {
+        height: 72px; // Set height on Control wrapper (includes border with box-sizing: border-box)
+        .p-button {
+            padding: 0 24px; // Triple padding for large buttons
+            height: 100%;
         }
     }
     &.slim {
@@ -157,10 +164,11 @@ async function onClick() {
     height: 100%;
     display: flex;
     justify-content: center;
-    padding: 0 8px;
+    padding: 0 8px; // Default padding, overridden by large/slim variants
     border-radius: 2px;
     text-transform: capitalize;
     text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.6);
+    font-size: inherit; // Allow typography classes to control font size
 }
 
 .button-content {
@@ -169,6 +177,27 @@ async function onClick() {
     justify-content: center;
     gap: 8px;
     width: 100%;
+    font-size: inherit; // Ensure typography classes work correctly
+    
+    // Ensure typography classes override any default font sizes
+    &.subtitle-1 {
+        font-size: 20px;
+        font-weight: 600;
+        font-family: Poppins, sans-serif;
+        line-height: 1.4;
+    }
+    &.body-1-strong {
+        font-size: 16px;
+        font-weight: 600;
+        font-family: Poppins, sans-serif;
+        line-height: 1.4;
+    }
+    &.body-2-strong {
+        font-size: 14px;
+        font-weight: 600;
+        font-family: Poppins, sans-serif;
+        line-height: 1.4;
+    }
 }
 
 .icon {

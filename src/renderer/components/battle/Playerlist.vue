@@ -15,7 +15,7 @@ SPDX-License-Identifier: MIT
         @bot-selected="onBotSelected"
     />
     <div class="scroll-container padding-right-sm">
-        <div class="playerlist" :class="{ dragging: draggedBot || draggedPlayer }">
+        <div class="playerlist" :class="{ dragging: draggedBot || draggedPlayer, 'team-mode': isTeamMode }">
             <TeamComponent
                 v-for="(team, teamId) in battleWithMetadataStore.teams"
                 :key="teamId"
@@ -53,6 +53,12 @@ import { Bot, isBot, isRaptor, isScavenger, Player } from "@main/game/battle/bat
 import { battleWithMetadataStore, battleStore, battleActions } from "@renderer/store/battle.store";
 import SpectatorsComponent from "@renderer/components/battle/SpectatorsComponent.vue";
 import { GameAI } from "@main/content/game/game-version";
+
+const props = withDefaults(defineProps<{
+    isTeamMode?: boolean;
+}>(), {
+    isTeamMode: true,
+});
 
 const { t } = useTypedI18n();
 
@@ -178,6 +184,8 @@ function onDropSpectators(event: DragEvent) {
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .playerlist {
     display: grid;
     grid-template-columns: 1fr;
@@ -185,6 +193,10 @@ function onDropSpectators(event: DragEvent) {
     gap: 10px;
     &.dragging .group > * {
         pointer-events: none;
+    }
+    &.team-mode {
+        grid-template-columns: repeat(2, 1fr);
+        gap: map-get($spacing, "md");
     }
 }
 </style>

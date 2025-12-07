@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT
 -->
 
 <template>
-    <div class="download-button-wrapper fullwidth">
+    <div class="download-button-wrapper fullwidth" :class="$attrs.class">
         <div class="progress-bar-outer margin-left-md margin-right-md">
             <DownloadProgress
                 :maps="maps"
@@ -37,7 +37,7 @@ SPDX-License-Identifier: MIT
                     <slot>Ready</slot>
                 </span>
                 <span v-else-if="isDownloading">{{ t("lobby.components.controls.downloadContentButton.downloading") }}</span>
-                <span v-else>{{ t("lobby.components.controls.downloadContentButton.download") }}</span>
+                <span v-else>{{ downloadText || t("lobby.components.controls.downloadContentButton.download") }}</span>
             </span>
             <!-- Click handler -->
             <button
@@ -75,17 +75,18 @@ const attrs = useAttrs();
 
 export interface Props extends /* @vue-ignore */ ButtonProps {
     disabled?: boolean;
-    class?: string;
     onClick?: (event: MouseEvent) => void;
     maps?: string[];
     engines?: string[];
     games?: string[];
+    downloadText?: string;
 }
-const { maps = [], engines = [], games = [] } = defineProps<Props>();
+const { maps = [], engines = [], games = [], downloadText } = defineProps<Props>();
 
 const isDownloading = ref(false);
 
-// Detect if button should be large based on class
+// Detect if button should be large based on class from attrs
+// class is a special attribute in Vue, so it's in attrs.class
 const attrsClass = computed(() => {
     const classes = attrs.class;
     if (typeof classes === 'string') {
@@ -171,6 +172,7 @@ async function beginDownload(maps?: string[], engines?: string[], games?: string
     text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.6); // Unified text shadow
     box-sizing: border-box; // Include border in height calculation
     width: 100%;
+    min-width: fit-content; // Ensure button is at least as wide as its content
     
     // Size variants - match regular and large button sizes
     &--small {
