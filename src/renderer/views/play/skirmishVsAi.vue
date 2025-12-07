@@ -42,24 +42,26 @@ SPDX-License-Identifier: MIT
                         <div class="map-preview-container">
                             <MapBattlePreview />
                         </div>
-                        <div class="map-features-row flex-row flex-align-start">
-                            <div class="flex-row flex-center-items gap-sm body-1 map-feature-item">
-                                <Icon :icon="personIcon" />
-                                <span>{{ map?.playerCountMin }} - {{ map?.playerCountMax }}</span>
+                        <div class="map-features-container">
+                            <div class="map-features-row flex-row flex-align-start">
+                                <div class="flex-row flex-center-items gap-sm body-1 map-feature-item">
+                                    <Icon :icon="personIcon" />
+                                    <span>{{ map?.playerCountMin }} - {{ map?.playerCountMax }}</span>
+                                </div>
+                                <div class="flex-row flex-center-items gap-sm body-1 map-feature-item">
+                                    <Icon :icon="gridIcon" />
+                                    <span>{{ map?.mapWidth }} x {{ map?.mapHeight }}</span>
+                                </div>
+                                <div class="terrain-icons-container flex-row flex-center-items gap-sm flex-wrap flex-grow">
+                                    <TerrainIcon v-for="terrain in map?.terrain" :terrain="terrain" v-bind:key="terrain" />
+                                </div>
+                                <div class="map-options-wrapper">
+                                    <Button v-tooltip.left="'Configure map options'" class="grey slim" @click="openMapOptions">
+                                        Options
+                                    </Button>
+                                </div>
+                                <MapOptionsModal v-if="battleStore.battleOptions.map" v-model="mapOptionsOpen" />
                             </div>
-                            <div class="flex-row flex-center-items gap-sm body-1 map-feature-item">
-                                <Icon :icon="gridIcon" />
-                                <span>{{ map?.mapWidth }} x {{ map?.mapHeight }}</span>
-                            </div>
-                            <div class="terrain-icons-container flex-row flex-center-items gap-sm flex-wrap flex-grow">
-                                <TerrainIcon v-for="terrain in map?.terrain" :terrain="terrain" v-bind:key="terrain" />
-                            </div>
-                            <div class="map-options-wrapper">
-                                <Button v-tooltip.left="'Configure map options'" class="grey slim" @click="openMapOptions">
-                                    Options
-                                </Button>
-                            </div>
-                            <MapOptionsModal v-if="battleStore.battleOptions.map" v-model="mapOptionsOpen" />
                         </div>
                     </div>
                 </div>
@@ -394,13 +396,52 @@ onMounted(async () => {
 }
 
 .map-panel {
-    width: 400px;
+    width: 440px;
     min-height: 0;
     flex-shrink: 0;
 }
 
 .map-panel-content {
     min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: map-get($spacing, "md"); // Ensure spacing between children
+}
+
+.map-preview-container {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+    min-height: 200px;
+    max-height: 440px; // Increased max height to ensure all maps fit
+    order: 1; // Ensure map preview comes first
+    overflow: hidden; // Prevent content from overflowing
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    // Ensure the map container inside respects the parent size
+    :deep(.map-container) {
+        max-width: 100%;
+        max-height: 100%;
+    }
+}
+
+.map-features-container {
+    flex-shrink: 0;
+    order: 2; // Ensure map features come after map preview
+    position: relative; // Ensure it's in normal flow
+    width: 100%; // Ensure it takes full width
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: map-get($spacing, "md");
+    border-radius: 2px;
+}
+
+.map-features-row {
+    flex-shrink: 0;
+    gap: map-get($spacing, "md");
+    flex-wrap: nowrap; // Don't wrap the row itself
 }
 
 .teams-settings-panel {
@@ -411,7 +452,7 @@ onMounted(async () => {
 }
 
 .tbd-panel {
-    width: 400px;
+    width: 440px;
     min-height: 0;
     flex-shrink: 0;
     display: flex;
@@ -434,13 +475,6 @@ onMounted(async () => {
     min-height: 0;
     display: flex;
     flex-direction: column;
-}
-
-.map-preview-container {
-    flex-shrink: 0;
-    width: 100%;
-    min-height: 200px;
-    max-height: 400px;
 }
 
 .bottom-action-panel {
@@ -467,11 +501,6 @@ onMounted(async () => {
         width: 240px; // Fixed width to ensure consistency across all states (Download/Downloading/Start)
         min-width: 240px;
     }
-}
-
-.map-features-row {
-    gap: map-get($spacing, "md");
-    flex-wrap: nowrap; // Don't wrap the row itself
 }
 
 .map-feature-item {
