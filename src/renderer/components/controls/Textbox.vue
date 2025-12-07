@@ -18,7 +18,7 @@ import Control from "@renderer/components/controls/Control.vue";
 
 <style lang="scss" scoped>
 .textbox {
-    align-items: unset;
+    align-items: baseline;
 }
 .p-inputtext {
     width: 100%;

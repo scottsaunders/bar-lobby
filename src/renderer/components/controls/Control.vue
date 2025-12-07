@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT
 
 <template>
     <div ref="control" class="control" :class="{ disabled }" @mouseenter="onMouseEnter" @click.self="focus">
-        <div v-if="label" class="label" @click="focus">{{ label }}</div>
+        <div v-if="label" class="label body-2-strong" @click="focus">{{ label }}</div>
         <slot />
     </div>
 </template>
@@ -46,6 +46,7 @@ function onMouseEnter() {
     background-color: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 2px;
+    box-sizing: border-box; // Include border in height calculation
     &:hover {
         background-color: rgba(255, 255, 255, 0.2);
         border-color: rgba(255, 255, 255, 0.2);
@@ -59,6 +60,7 @@ function onMouseEnter() {
         justify-content: center;
         display: flex;
         white-space: nowrap;
+        margin-top: 4px;
     }
     &.disabled {
         opacity: 0.5;

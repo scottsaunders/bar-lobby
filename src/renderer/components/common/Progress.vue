@@ -28,7 +28,7 @@ const props = withDefaults(
     }>(),
     {
         text: undefined,
-        height: 15,
+        height: 16,
     }
 );
 

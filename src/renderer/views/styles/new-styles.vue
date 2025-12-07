@@ -21,27 +21,33 @@ SPDX-License-Identifier: MIT
                             <h3>Spacing Scale</h3>
                             <div class="design-constants">
                                 <div class="constant-item">
-                                    <code>xxs</code> = <span class="constant-value">1px</span>
+                                    <code>xxs</code> = <span class="constant-value">2px</span>
                                 </div>
                                 <div class="constant-item">
-                                    <code>xs</code> = <span class="constant-value">2px</span>
+                                    <code>xs</code> = <span class="constant-value">4px</span>
                                 </div>
                                 <div class="constant-item">
-                                    <code>sm</code> = <span class="constant-value">5px</span>
+                                    <code>sm</code> = <span class="constant-value">8px</span>
                                 </div>
                                 <div class="constant-item">
-                                    <code>md</code> = <span class="constant-value">10px</span>
+                                    <code>md</code> = <span class="constant-value">12px</span>
                                 </div>
                                 <div class="constant-item">
-                                    <code>lg</code> = <span class="constant-value">15px</span>
+                                    <code>lg</code> = <span class="constant-value">16px</span>
                                 </div>
                                 <div class="constant-item">
-                                    <code>xl</code> = <span class="constant-value">20px</span>
+                                    <code>xl</code> = <span class="constant-value">24px</span>
                                 </div>
                                 <div class="constant-item">
-                                    <code>xxl</code> = <span class="constant-value">25px</span>
+                                    <code>xxl</code> = <span class="constant-value">32px</span>
                                 </div>
-                                <p class="text-sm">Available classes: <code>gap-*</code>, <code>padding-*</code>, <code>margin-*</code>, <code>padding-top-*</code>, <code>padding-right-*</code>, <code>padding-bottom-*</code>, <code>padding-left-*</code>, <code>margin-top-*</code>, etc.</p>
+                                <div class="constant-item">
+                                    <code>xxxl</code> = <span class="constant-value">48px</span>
+                                </div>
+                                <div class="constant-item">
+                                    <code>xxxxl</code> = <span class="constant-value">56px</span>
+                                </div>
+                                <p class="body-2">Available classes: <code>gap-*</code>, <code>padding-*</code>, <code>margin-*</code>, <code>padding-top-*</code>, <code>padding-right-*</code>, <code>padding-bottom-*</code>, <code>padding-left-*</code>, <code>margin-top-*</code>, etc.</p>
                             </div>
                         </div>
 
@@ -49,41 +55,60 @@ SPDX-License-Identifier: MIT
                             <h3>Typography Scale</h3>
                             <div class="design-constants">
                                 <div class="constant-item">
-                                    <code>h1</code> = <span class="constant-value">48px</span>
+                                    <code>.display</code> = <span class="constant-value">68px Semibold</span> (Poppins)
                                 </div>
                                 <div class="constant-item">
-                                    <code>h2</code> = <span class="constant-value">42px</span>
+                                    <code>.large-title</code> = <span class="constant-value">40px Semibold</span> (Poppins)
                                 </div>
                                 <div class="constant-item">
-                                    <code>h3</code> = <span class="constant-value">36px</span>
+                                    <code>.title-1</code> = <span class="constant-value">32px Semibold</span> (Poppins)
                                 </div>
                                 <div class="constant-item">
-                                    <code>h4</code> = <span class="constant-value">30px</span>
+                                    <code>.title-2</code> = <span class="constant-value">28px Semibold</span> (Poppins)
                                 </div>
                                 <div class="constant-item">
-                                    <code>h5</code> = <span class="constant-value">24px</span>
+                                    <code>.title-3</code> = <span class="constant-value">24px Semibold</span> (Poppins)
                                 </div>
                                 <div class="constant-item">
-                                    <code>h6</code> = <span class="constant-value">18px</span>
+                                    <code>.subtitle-1</code> = <span class="constant-value">20px Semibold</span> (Poppins)
                                 </div>
                                 <div class="constant-item">
-                                    <code>p</code> = <span class="constant-value">16px</span> (default)
+                                    <code>.subtitle-2</code> = <span class="constant-value">16px Semibold</span> (Poppins)
                                 </div>
                                 <div class="constant-item">
-                                    <code>.txt-xs</code> = <span class="constant-value">12px</span>
+                                    <code>.subtitle-2-stronger</code> = <span class="constant-value">16px Bold</span> (Poppins)
                                 </div>
                                 <div class="constant-item">
-                                    <code>.txt-sm</code> = <span class="constant-value">14px</span>
+                                    <code>.body-1</code> = <span class="constant-value">16px Regular</span> (Poppins) - Default body copy
                                 </div>
                                 <div class="constant-item">
-                                    <code>.txt-md</code> = <span class="constant-value">16px</span>
+                                    <code>.body-1-strong</code> = <span class="constant-value">16px Semibold</span> (Poppins)
                                 </div>
                                 <div class="constant-item">
-                                    <code>.txt-lg</code> = <span class="constant-value">18px</span>
+                                    <code>.body-2</code> = <span class="constant-value">14px Regular</span> (Poppins)
                                 </div>
                                 <div class="constant-item">
-                                    <code>.txt-xl</code> = <span class="constant-value">20px</span>
+                                    <code>.body-2-strong</code> = <span class="constant-value">14px Semibold</span> (Poppins)
                                 </div>
+                                <div class="constant-item">
+                                    <code>.body-2-stronger</code> = <span class="constant-value">14px Bold</span> (Poppins)
+                                </div>
+                                <div class="constant-item">
+                                    <code>.caption-1</code> = <span class="constant-value">12px Regular</span> (Poppins)
+                                </div>
+                                <div class="constant-item">
+                                    <code>.caption-1-strong</code> = <span class="constant-value">12px Semibold</span> (Poppins)
+                                </div>
+                                <div class="constant-item">
+                                    <code>.caption-1-stronger</code> = <span class="constant-value">12px Bold</span> (Poppins)
+                                </div>
+                                <div class="constant-item">
+                                    <code>.caption-2</code> = <span class="constant-value">10px Regular</span> (Poppins)
+                                </div>
+                                <div class="constant-item">
+                                    <code>.caption-2-strong</code> = <span class="constant-value">10px Semibold</span> (Poppins)
+                                </div>
+                                <p class="body-2" style="margin-top: 10px;">Heading mappings: <code>h1</code> = Large Title, <code>h2</code> = Title 1, <code>h3</code> = Title 2, <code>h4</code> = Title 3, <code>h5</code> = Subtitle 1, <code>h6</code> = Subtitle 2, <code>p</code> = Body 1 Regular</p>
                             </div>
                         </div>
 
@@ -97,7 +122,7 @@ SPDX-License-Identifier: MIT
                                     <code>red</code> = <span class="constant-value">rgb(165, 30, 30)</span> <span class="color-swatch" style="background-color: rgb(165, 30, 30);"></span>
                                 </div>
                                 <div class="constant-item">
-                                    <code>green</code> = <span class="constant-value">rgb(34, 197, 94)</span> <span class="color-swatch" style="background-color: rgb(34, 197, 94);"></span> <span class="text-sm">(#22c55e)</span>
+                                    <code>green</code> = <span class="constant-value">rgb(34, 197, 94)</span> <span class="color-swatch" style="background-color: rgb(34, 197, 94);"></span> <span class="caption-1">(#22c55e)</span>
                                 </div>
                                 <div class="constant-item">
                                     <code>yellow</code> = <span class="constant-value">rgb(243, 213, 79)</span> <span class="color-swatch" style="background-color: rgb(243, 213, 79);"></span>
@@ -243,47 +268,76 @@ SPDX-License-Identifier: MIT
                     <h2>Typography</h2>
                     <div class="flex-col gap-sm">
                         <div>
-                            <h1>Heading 1</h1>
-                            <span class="typography-spec">48px Regular (Poppins)</span>
+                            <div class="display">Display</div>
+                            <span class="typography-spec">68px Semibold (Poppins)</span>
                         </div>
                         <div>
-                            <h2>Heading 2</h2>
-                            <span class="typography-spec">42px Regular (Poppins)</span>
+                            <div class="large-title">Large Title</div>
+                            <span class="typography-spec">40px Semibold (Poppins)</span>
                         </div>
                         <div>
-                            <h3>Heading 3</h3>
-                            <span class="typography-spec">36px Regular (Poppins)</span>
+                            <div class="title-1">Title 1</div>
+                            <span class="typography-spec">32px Semibold (Poppins)</span>
                         </div>
                         <div>
-                            <h4>Heading 4</h4>
-                            <span class="typography-spec">30px Regular (Poppins)</span>
+                            <div class="title-2">Title 2</div>
+                            <span class="typography-spec">28px Semibold (Poppins)</span>
                         </div>
                         <div>
-                            <h5>Heading 5</h5>
-                            <span class="typography-spec">24px Regular (Poppins)</span>
+                            <div class="title-3">Title 3</div>
+                            <span class="typography-spec">24px Semibold (Poppins)</span>
                         </div>
                         <div>
-                            <h6>Heading 6</h6>
-                            <span class="typography-spec">18px Regular (Poppins)</span>
+                            <div class="subtitle-1">Subtitle 1</div>
+                            <span class="typography-spec">20px Semibold (Poppins)</span>
                         </div>
                         <div>
-                            <p>
-                                This is a standard paragraph. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                                incididunt ut labore et dolore magna aliqua.
-                            </p>
-                            <span class="typography-spec">16px Regular (Poppins)</span>
+                            <div class="subtitle-2">Subtitle 2</div>
+                            <span class="typography-spec">16px Semibold (Poppins)</span>
                         </div>
                         <div>
-                            <div class="txt-sm">Small text (txt-sm)</div>
-                            <span class="typography-spec">14px Regular (Poppins)</span>
+                            <div class="subtitle-2-stronger">Subtitle 2 Stronger</div>
+                            <span class="typography-spec">16px Bold (Poppins)</span>
                         </div>
                         <div>
-                            <div class="txt-xs">Extra small text (txt-xs)</div>
+                            <p class="body-1">Body 1</p>
+                            <span class="typography-spec caption-1">16px Regular (Poppins) - Default paragraph</span>
+                        </div>
+                        <div>
+                            <div class="body-1-strong">Body 1 Strong</div>
+                            <span class="typography-spec caption-1">16px Semibold (Poppins)</span>
+                        </div>
+                        <div>
+                            <p class="body-2">Body 2</p>
+                            <span class="typography-spec caption-1">14px Regular (Poppins)</span>
+                        </div>
+                        <div>
+                            <div class="body-2-strong">Body 2 Strong</div>
+                            <span class="typography-spec caption-1">14px Semibold (Poppins)</span>
+                        </div>
+                        <div>
+                            <div class="body-2-stronger">Body 2 Stronger</div>
+                            <span class="typography-spec caption-1">14px Bold (Poppins)</span>
+                        </div>
+                        <div>
+                            <div class="caption-1">Caption 1</div>
                             <span class="typography-spec">12px Regular (Poppins)</span>
                         </div>
                         <div>
-                            <div class="txt-sm" style="font-family: monospace;">Monospaced text</div>
-                            <span class="typography-spec">14px Regular (monospace)</span>
+                            <div class="caption-1-strong">Caption 1 Strong</div>
+                            <span class="typography-spec">12px Semibold (Poppins)</span>
+                        </div>
+                        <div>
+                            <div class="caption-1-stronger">Caption 1 Stronger</div>
+                            <span class="typography-spec">12px Bold (Poppins)</span>
+                        </div>
+                        <div>
+                            <div class="caption-2">Caption 2</div>
+                            <span class="typography-spec">10px Regular (Poppins)</span>
+                        </div>
+                        <div>
+                            <div class="caption-2-strong">Caption 2 Strong</div>
+                            <span class="typography-spec">10px Semibold (Poppins)</span>
                         </div>
                     </div>
                 </div>
@@ -334,7 +388,7 @@ SPDX-License-Identifier: MIT
                                         :style="{ width: `${downloadButtonState.small.progress.value * 100}%` }"
                                     ></div>
                                     <!-- Button text -->
-                                    <span class="download-button__text">
+                                    <span class="download-button__text body-1-strong">
                                         <span v-if="downloadButtonState.small.isReady.value">Ready</span>
                                         <span v-else-if="downloadButtonState.small.isDownloading.value">Downloading...</span>
                                         <span v-else>Download</span>
@@ -381,7 +435,7 @@ SPDX-License-Identifier: MIT
                                         :style="{ width: `${downloadButtonState.large.progress.value * 100}%` }"
                                     ></div>
                                     <!-- Button text -->
-                                    <span class="download-button__text">
+                                    <span class="download-button__text subtitle-1">
                                         <span v-if="downloadButtonState.large.isReady.value">Ready</span>
                                         <span v-else-if="downloadButtonState.large.isDownloading.value">Downloading...</span>
                                         <span v-else>Download</span>
@@ -428,7 +482,7 @@ SPDX-License-Identifier: MIT
                 <!-- Interactive Tile Section -->
                 <div class="flex-col gap-md">
                     <h2>Interactive Tile</h2>
-                    <div class="flex-row gap-md" style="height: 200px">
+                    <div class="flex-row gap-md" style="height: 192px">
                         <div style="width: 300px">
                             <InteractiveTile textPersistent>
                                 <template #media>
@@ -436,7 +490,7 @@ SPDX-License-Identifier: MIT
                                 </template>
                                 <template #content>
                                     <h3>Persistent Text</h3>
-                                    <p>Text stays on hover</p>
+                                    <p class="body-1">Text stays on hover</p>
                                 </template>
                             </InteractiveTile>
                         </div>
@@ -447,7 +501,7 @@ SPDX-License-Identifier: MIT
                                 </template>
                                 <template #content>
                                     <h3>Fade Text</h3>
-                                    <p>Text fades on hover</p>
+                                    <p class="body-1">Text fades on hover</p>
                                 </template>
                             </InteractiveTile>
                         </div>
@@ -455,7 +509,7 @@ SPDX-License-Identifier: MIT
                             <InteractiveTile>
                                 <template #content>
                                     <h3>Tile without Image</h3>
-                                    <p>Just text content here</p>
+                                    <p class="body-1">Just text content here</p>
                                 </template>
                             </InteractiveTile>
                         </div>
@@ -473,7 +527,7 @@ SPDX-License-Identifier: MIT
                                 </template>
                                 <template #content>
                                     <h3>Background Image</h3>
-                                    <p>Using background-image style</p>
+                                    <p class="body-1">Using background-image style</p>
                                 </template>
                             </InteractiveTile>
                         </div>
@@ -486,7 +540,7 @@ SPDX-License-Identifier: MIT
                                 </template>
                                 <template #content>
                                     <h3>Video Background</h3>
-                                    <p>Animated video background</p>
+                                    <p class="body-1">Animated video background</p>
                                 </template>
                             </InteractiveTile>
                         </div>
@@ -499,22 +553,22 @@ SPDX-License-Identifier: MIT
                 <div class="flex-col gap-md">
                     <h2>Inputs</h2>
                     <div class="gridform standardized-inputs">
-                        <div>Textbox</div>
+                        <div class="subtitle-2">Textbox</div>
                         <Textbox v-model="textValue" placeholder="Enter text..." />
 
-                        <div>Textbox (Label)</div>
+                        <div class="subtitle-2">Textbox (Label)</div>
                         <Textbox v-model="textValue" label="With Label" />
 
-                        <div>Textbox (Disabled)</div>
+                        <div class="subtitle-2">Textbox (Disabled)</div>
                         <Textbox v-model="textValue" disabled />
 
-                        <div>Number</div>
+                        <div class="subtitle-2">Number</div>
                         <Number v-model="numValue" :min="0" :max="100" />
 
-                        <div>SearchBox</div>
+                        <div class="subtitle-2">SearchBox</div>
                         <SearchBox v-model="searchValue" />
 
-                        <div>Textarea</div>
+                        <div class="subtitle-2">Textarea</div>
                         <Textarea v-model="areaValue" placeholder="Multi-line text..." />
                     </div>
                 </div>
@@ -525,7 +579,7 @@ SPDX-License-Identifier: MIT
                 <div class="flex-col gap-md">
                     <h2>Selection Controls</h2>
                     <div class="gridform standardized-inputs">
-                        <div>Select (Dropdown)</div>
+                        <div class="subtitle-2">Select (Dropdown)</div>
                         <Select
                             v-model="selectedValue"
                             :options="selectOptions"
@@ -534,7 +588,7 @@ SPDX-License-Identifier: MIT
                             placeholder="Select an option"
                         />
 
-                        <div>Select (Filter)</div>
+                        <div class="subtitle-2">Select (Filter)</div>
                         <Select
                             v-model="selectedFilterValue"
                             :options="selectOptions"
@@ -544,19 +598,19 @@ SPDX-License-Identifier: MIT
                             placeholder="Search options..."
                         />
 
-                        <div>Checkbox</div>
+                        <div class="subtitle-2">Checkbox</div>
                         <div class="flex-row gap-md">
                             <Checkbox v-model="checked" label="Check me" />
                             <Checkbox v-model="checkedNoLabel" />
                             <Checkbox v-model="checkedDisabled" label="Disabled" disabled />
                         </div>
 
-                        <div>Toggle Switch</div>
+                        <div class="subtitle-2">Toggle Switch</div>
                         <div class="flex-row gap-md">
                             <InputSwitch v-model="toggleChecked" />
                         </div>
 
-                        <div>Radio Buttons (Circular)</div>
+                        <div class="subtitle-2">Radio Buttons (Circular)</div>
                         <div class="radio-button-list">
                             <div
                                 v-for="option in radioButtonOptions"
@@ -572,7 +626,7 @@ SPDX-License-Identifier: MIT
                             </div>
                         </div>
 
-                        <div>Radio Buttons (Square)</div>
+                        <div class="subtitle-2">Radio Buttons (Square)</div>
                         <div class="radio-button-list">
                             <div
                                 v-for="option in radioButtonOptions"
@@ -588,13 +642,13 @@ SPDX-License-Identifier: MIT
                             </div>
                         </div>
 
-                        <div>Segmented Controller</div>
+                        <div class="subtitle-2">Segmented Controller</div>
                         <Options v-model="radioValue" :options="['Option A', 'Option B', 'Option C']" />
 
-                        <div>Range Slider</div>
+                        <div class="subtitle-2">Range Slider</div>
                         <Range v-model="rangeValue" :min="0" :max="100" />
 
-                        <div>Double Range Slider</div>
+                        <div class="subtitle-2">Double Range Slider</div>
                         <Range v-model="doubleRangeValue" :min="0" :max="100" range />
                     </div>
                 </div>
@@ -607,23 +661,23 @@ SPDX-License-Identifier: MIT
                     <div class="flex-col gap-md">
                         <div class="flex-col gap-sm">
                             <h3>1. Content Panel (Default)</h3>
-                            <p class="text-sm">Use for: Main content areas, primary sections, card-like containers. This is the standard panel with gradient background and blur effect.</p>
-                            <Panel class="flex-grow" style="min-height: 100px;">
+                            <p class="body-1">Use for: Main content areas, primary sections, card-like containers. This is the standard panel with gradient background and blur effect.</p>
+                            <Panel class="flex-grow" style="min-height: 96px;">
                                 <div class="flex-col gap-sm">
-                                    <p>This is a default content panel.</p>
-                                    <p class="text-sm">Background: rgba(0, 0, 0, 0.5) gradient with backdrop-filter blur(10px)</p>
+                                    <p class="body-1">This is a default content panel.</p>
+                                    <p class="body-1">Background: rgba(0, 0, 0, 0.5) gradient with backdrop-filter blur(10px)</p>
                                 </div>
                             </Panel>
                         </div>
 
                         <div class="flex-col gap-sm">
                             <h3>2. Nested Panel (Secondary Content)</h3>
-                            <p class="text-sm">Use for: Secondary content within a panel, grouped sections, nested information. Same style as Content Panel but nested for visual hierarchy.</p>
-                            <Panel class="flex-grow" style="min-height: 100px;">
+                            <p class="body-1">Use for: Secondary content within a panel, grouped sections, nested information. Same style as Content Panel but nested for visual hierarchy.</p>
+                            <Panel class="flex-grow" style="min-height: 96px;">
                                 <div class="flex-col gap-sm">
-                                    <p>Outer Content Panel</p>
-                                    <Panel style="min-height: 60px;">
-                                        <p class="text-sm">Nested Panel - Secondary content within a panel</p>
+                                    <p class="body-1">Outer Content Panel</p>
+                                    <Panel style="min-height: 56px;">
+                                        <p class="body-1">Nested Panel - Secondary content within a panel</p>
                                     </Panel>
                                 </div>
                             </Panel>
@@ -631,59 +685,59 @@ SPDX-License-Identifier: MIT
 
                         <div class="flex-col gap-sm">
                             <h3>3. Modal Overlay + Modal Panel</h3>
-                            <p class="text-sm">Use for: Dialog boxes, popups, confirmations. The overlay dims the background, and the modal panel appears on top.</p>
-                            <div class="modal-demo-container" style="position: relative; height: 450px; border: 1px dashed rgba(255, 255, 255, 0.3); overflow: visible;">
+                            <p class="body-1">Use for: Dialog boxes, popups, confirmations. The overlay dims the background, and the modal panel appears on top.</p>
+                            <div class="modal-demo-container" style="position: relative; height: 448px; border: 1px dashed rgba(255, 255, 255, 0.3); overflow: visible;">
                                 <div class="modal-overlay-demo" style="position: absolute; inset: 0; background-color: rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; overflow: visible;">
-                                    <Panel class="modal-panel-demo" no-padding style="width: 450px; max-height: 420px; display: flex; flex-direction: column;">
+                                    <Panel class="modal-panel-demo" no-padding style="width: 450px; max-height: 416px; display: flex; flex-direction: column;">
                                         <template #header>
-                                            <div class="modal-title">Modal Title</div>
+                                            <div class="modal-title subtitle-1">Modal Title</div>
                                             <div class="modal-close">
                                                 <Icon :icon="closeThick" height="23" />
                                             </div>
                                         </template>
                                         <div class="modal-content-scrollable flex-col gap-md padding-xl">
-                                            <div class="flex-col gap-sm">
-                                                <h4 class="modal-section-header">Section Header</h4>
-                                                <p class="modal-body-copy">
+                                            <div class="flex-col gap-md">
+                                                <h4 class="modal-section-header subtitle-2">Section Header</h4>
+                                                <p class="modal-body-copy body-1">
                                                     This is body copy text used in modals. It provides detailed information, descriptions, or instructions to the user. Body copy should be clear, concise, and easy to read.
                                                 </p>
-                                                <p class="modal-body-copy">
+                                                <p class="modal-body-copy body-1">
                                                     Additional paragraphs of body copy can be added to provide more context or details about the modal's purpose or content.
                                                 </p>
                                             </div>
-                                            <div class="flex-col gap-sm">
+                                            <div class="flex-col gap-md">
                                                 <h4 class="modal-section-header">Another Section</h4>
-                                                <p class="modal-body-copy">
+                                                <p class="modal-body-copy body-1">
                                                     Modal content can be organized into multiple sections, each with its own header and body copy. This helps structure information clearly.
                                                 </p>
-                                                <p class="modal-body-copy">
+                                                <p class="modal-body-copy body-1">
                                                     When modal content becomes lengthy, the content area should scroll while keeping the header and close button fixed at the top. This ensures users can always access the close button regardless of scroll position.
                                                 </p>
                                             </div>
-                                            <div class="flex-col gap-sm">
+                                            <div class="flex-col gap-md">
                                                 <h4 class="modal-section-header">Third Section</h4>
-                                                <p class="modal-body-copy">
+                                                <p class="modal-body-copy body-1">
                                                     This section demonstrates how scrolling works when there is more content than can fit in the visible area. As you scroll down, you'll notice the header remains fixed at the top.
                                                 </p>
-                                                <p class="modal-body-copy">
+                                                <p class="modal-body-copy body-1">
                                                     The scrollable area uses the standard 30px padding that matches other panels throughout the application, ensuring visual consistency across all components.
                                                 </p>
                                             </div>
-                                            <div class="flex-col gap-sm">
+                                            <div class="flex-col gap-md">
                                                 <h4 class="modal-section-header">Fourth Section</h4>
-                                                <p class="modal-body-copy">
+                                                <p class="modal-body-copy body-1">
                                                     Continuing to add more content helps visualize how the modal handles longer forms, detailed information, or extensive lists. The scrolling behavior should feel smooth and natural.
                                                 </p>
-                                                <p class="modal-body-copy">
+                                                <p class="modal-body-copy body-1">
                                                     Notice how the content flows naturally and the header stays accessible. This pattern works well for settings dialogs, information modals, and forms that require more vertical space.
                                                 </p>
                                             </div>
-                                            <div class="flex-col gap-sm">
+                                            <div class="flex-col gap-md">
                                                 <h4 class="modal-section-header">Final Section</h4>
-                                                <p class="modal-body-copy">
+                                                <p class="modal-body-copy body-1">
                                                     This is the last section of content in the modal demo. By the time you reach this point, you should have scrolled past the initial viewport, demonstrating that the header remains fixed while the content scrolls smoothly.
                                                 </p>
-                                                <p class="modal-body-copy">
+                                                <p class="modal-body-copy body-1">
                                                     The modal maintains its structure and usability even with extensive content, making it suitable for a wide variety of use cases throughout the application.
                                                 </p>
                                             </div>
@@ -702,74 +756,74 @@ SPDX-License-Identifier: MIT
                     <h2>Progress</h2>
                     <div class="flex-col gap-sm">
                         <h3>Standard Progress</h3>
-                        <p class="text-sm">Use for: Download progress, loading states, completion indicators. Shows progress from 0% to 100%.</p>
+                        <p class="body-1">Use for: Download progress, loading states, completion indicators. Shows progress from 0% to 100%.</p>
                         <div class="flex-col gap-md" style="width: 100%; max-width: 500px;">
                             <div class="flex-col gap-sm">
-                                <span class="text-sm">0% - Empty</span>
-                                <Progress :percent="0" />
+                                <span class="body-1">0% - Empty</span>
+                                <Progress :percent="0" :height="16" />
                             </div>
                             <div class="flex-col gap-sm">
                                 <span class="text-sm">25% - Quarter</span>
-                                <Progress :percent="0.25" />
+                                <Progress :percent="0.25" :height="16" />
                             </div>
                             <div class="flex-col gap-sm">
                                 <span class="text-sm">50% - Half</span>
-                                <Progress :percent="0.5" />
+                                <Progress :percent="0.5" :height="16" />
                             </div>
                             <div class="flex-col gap-sm">
                                 <span class="text-sm">75% - Three Quarters</span>
-                                <Progress :percent="0.75" />
+                                <Progress :percent="0.75" :height="16" />
                             </div>
                             <div class="flex-col gap-sm">
                                 <span class="text-sm">100% - Complete</span>
-                                <Progress :percent="1" />
+                                <Progress :percent="1" :height="16" />
                             </div>
                         </div>
                     </div>
                     
                     <div class="flex-col gap-sm">
                         <h3>Progress with Text</h3>
-                        <p class="text-sm">Progress bars can display text overlay showing the percentage or status.</p>
+                        <p class="body-1">Progress bars can display text overlay showing the percentage or status.</p>
                         <div class="flex-col gap-md" style="width: 100%; max-width: 500px;">
-                            <Progress :percent="0.42" text="42%" />
-                            <Progress :percent="0.67" text="67%" />
-                            <Progress :percent="0.89" text="89%" />
+                            <Progress :percent="0.42" text="42%" :height="16" />
+                            <Progress :percent="0.67" text="67%" :height="16" />
+                            <Progress :percent="0.89" text="89%" :height="16" />
                         </div>
                     </div>
                     
                     <div class="flex-col gap-sm">
                         <h3>Themed Progress</h3>
-                        <p class="text-sm">Themed progress bars use a yellow/green gradient, typically for download operations.</p>
+                        <p class="body-1">Themed progress bars use a yellow/green gradient, typically for download operations.</p>
                         <div class="flex-col gap-md" style="width: 100%; max-width: 500px;">
-                            <Progress :percent="0.5" themed />
-                            <Progress :percent="0.75" themed text="75%" />
+                            <Progress :percent="0.5" themed :height="16" />
+                            <Progress :percent="0.75" themed text="75%" :height="16" />
                         </div>
                     </div>
                     
                     <div class="flex-col gap-sm">
                         <h3>Pulsating Progress</h3>
-                        <p class="text-sm">Pulsating animation indicates active loading or processing.</p>
+                        <p class="body-1">Pulsating animation indicates active loading or processing.</p>
                         <div class="flex-col gap-md" style="width: 100%; max-width: 500px;">
-                            <Progress :percent="0.5" pulsating />
-                            <Progress :percent="0.5" pulsating text="Loading..." />
+                            <Progress :percent="0.5" pulsating :height="16" />
+                            <Progress :percent="0.5" pulsating text="Loading..." :height="16" />
                         </div>
                     </div>
                     
                     <div class="flex-col gap-sm">
                         <h3>Different Heights</h3>
-                        <p class="text-sm">Progress bars can be customized with different heights for various contexts.</p>
+                        <p class="body-1">Progress bars can be customized with different heights for various contexts.</p>
                         <div class="flex-col gap-md" style="width: 100%; max-width: 500px;">
                             <div class="flex-col gap-sm">
-                                <span class="text-sm">Height: 10px</span>
-                                <Progress :percent="0.6" :height="10" />
+                                <span class="body-1">Height: 8px</span>
+                                <Progress :percent="0.6" :height="8" />
                             </div>
                             <div class="flex-col gap-sm">
-                                <span class="text-sm">Height: 20px (Default)</span>
-                                <Progress :percent="0.6" :height="20" />
+                                <span class="body-1">Height: 16px (Default)</span>
+                                <Progress :percent="0.6" :height="16" />
                             </div>
                             <div class="flex-col gap-sm">
-                                <span class="text-sm">Height: 40px</span>
-                                <Progress :percent="0.6" :height="40" text="60%" />
+                                <span class="body-1">Height: 32px</span>
+                                <Progress :percent="0.6" :height="32" text="60%" />
                             </div>
                         </div>
                     </div>
@@ -782,18 +836,18 @@ SPDX-License-Identifier: MIT
                     <h2>Loader</h2>
                     <div class="flex-col gap-sm">
                         <h3>Loading Spinner</h3>
-                        <p class="text-sm">Use for: Loading states, async operations, data fetching. The loader appears centered on the screen or within a container.</p>
-                        <div style="position: relative; height: 200px; border: 1px dashed rgba(255, 255, 255, 0.3);">
+                        <p class="body-1">Use for: Loading states, async operations, data fetching. The loader appears centered on the screen or within a container.</p>
+                        <div style="position: relative; height: 192px; border: 1px dashed rgba(255, 255, 255, 0.3);">
                             <Loader />
                         </div>
                     </div>
                     
                     <div class="flex-col gap-sm">
                         <h3>Loader in Container</h3>
-                        <p class="text-sm">Loader without absolute positioning, for inline use within content areas.</p>
+                        <p class="body-1">Loader without absolute positioning, for inline use within content areas.</p>
                         <div class="flex-row gap-md flex-center-items" style="padding: 20px; border: 1px dashed rgba(255, 255, 255, 0.3);">
                             <Loader :absolute-position="false" />
-                            <span>Loading content...</span>
+                            <span class="body-1">Loading content...</span>
                         </div>
                     </div>
                 </div>
@@ -805,25 +859,25 @@ SPDX-License-Identifier: MIT
                     <h2>Accordion</h2>
                     <div class="flex-col gap-sm">
                         <h3>Multiple Open Sections</h3>
-                        <p class="text-sm">Use for: Grouping related content, collapsible lists, expandable sections. Multiple sections can be open simultaneously.</p>
+                        <p class="body-1">Use for: Grouping related content, collapsible lists, expandable sections. Multiple sections can be open simultaneously.</p>
                         <div style="width: 100%; max-width: 600px;">
                             <Accordion multiple>
                                 <AccordionTab header="Outgoing Requests">
                                     <div class="flex-col gap-sm">
-                                        <p>Friend requests you've sent</p>
-                                        <p class="text-sm">This section shows pending friend requests that you have initiated.</p>
+                                        <p class="body-1">Friend requests you've sent</p>
+                                        <p class="body-1">This section shows pending friend requests that you have initiated.</p>
                                     </div>
                                 </AccordionTab>
                                 <AccordionTab header="Incoming Requests">
                                     <div class="flex-col gap-sm">
-                                        <p>Friend requests you've received</p>
-                                        <p class="text-sm">This section shows friend requests from other users waiting for your response.</p>
+                                        <p class="body-1">Friend requests you've received</p>
+                                        <p class="body-1">This section shows friend requests from other users waiting for your response.</p>
                                     </div>
                                 </AccordionTab>
                                 <AccordionTab header="Blocked Users">
                                     <div class="flex-col gap-sm">
-                                        <p>Users you've blocked</p>
-                                        <p class="text-sm">This section displays users you have blocked from contacting you.</p>
+                                        <p class="body-1">Users you've blocked</p>
+                                        <p class="body-1">This section displays users you have blocked from contacting you.</p>
                                     </div>
                                 </AccordionTab>
                             </Accordion>
@@ -956,7 +1010,7 @@ onUnmounted(() => {
 // Toggle Switch Styles
 .p-inputswitch {
     width: 3rem;
-    height: 1.75rem;
+    height: 32px;
 
     &.p-inputswitch-checked {
         .p-inputswitch-slider {
@@ -1071,17 +1125,21 @@ h2 {
 
 // Large button style
 :deep(.button.large) {
+    height: 72px; // Set height on Control wrapper (includes border with box-sizing: border-box)
     .p-button {
-        font-size: 18px; // txt-lg
-        padding: 0 8px; // Unified padding
-        height: 50px;
+        padding: 0 24px; // Triple padding for large buttons
+        height: 100%;
     }
 }
 
-// Regular button font size (apply to all buttons that aren't large)
-:deep(.button:not(.large)) {
+// Regular button (apply to all buttons that aren't large and aren't slim)
+:deep(.button:not(.large):not(.slim)) {
+    height: 48px; // Set height on Control wrapper (includes border with box-sizing: border-box)
+    min-height: 48px;
     .p-button {
-        font-size: 16px; // txt-md
+        padding: 0 16px; // Double padding for small buttons
+        height: 100%;
+        min-height: 48px;
     }
 }
 
@@ -1212,7 +1270,7 @@ button.quick-play-button {
     :deep(.control),
     :deep(.p-inputtext),
     :deep(.p-dropdown) {
-        height: 40px;
+        height: 32px;
         .p-dropdown-label {
             display: flex;
             align-items: center;
@@ -1220,7 +1278,7 @@ button.quick-play-button {
     }
 
     :deep(.options) {
-        height: 40px;
+        height: 32px;
     }
 
     :deep(.textarea .control) {
@@ -1242,7 +1300,7 @@ button.quick-play-button {
     align-items: center;
     gap: 12px;
     padding: 0 12px;
-    height: 40px;
+    height: 32px;
     background-color: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.1);
     cursor: pointer;
@@ -1337,8 +1395,6 @@ button.quick-play-button {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: Poppins; // Use same font as other buttons
-    font-weight: 400; // Regular weight
     text-transform: capitalize; // Title Case
     color: #fff;
     border: 1px solid rgba(255, 255, 255, 0.15); // Unified border
@@ -1347,21 +1403,20 @@ button.quick-play-button {
     overflow: hidden;
     transition: all 0.3s ease;
     text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.6); // Unified text shadow
+    box-sizing: border-box; // Include border in height calculation
     
     // Size variants - match regular and large button sizes
     &--small {
-        font-size: 16px; // txt-md - same as regular buttons
-        padding: 0 8px; // Unified padding
+        padding: 0 16px; // Double padding for small buttons
         width: 180px; // Fixed width to accommodate "Downloading..."
-        min-height: 35px; // Match regular button height (33px + 2px for border)
-        height: 35px;
+        min-height: 48px; // Match regular button height
+        height: 48px;
     }
     
     &--large {
-        font-size: 18px; // txt-lg - same as large buttons
-        padding: 0 8px; // Unified padding
+        padding: 0 24px; // Triple padding for large buttons
         width: 220px; // Fixed width to accommodate "Downloading..."
-        height: 52px; // Match large button height (50px + 2px for border)
+        height: 72px; // Match large button height
     }
     
     // State: Default (Red - Download) - use solid rgba color matching danger button
@@ -1518,7 +1573,9 @@ button.quick-play-button {
     padding: 5px 10px;
     flex-grow: 1;
     text-transform: capitalize;
+    font-size: 20px;
     font-weight: 600;
+    font-family: Poppins, sans-serif;
 }
 
 .modal-close {
@@ -1534,15 +1591,14 @@ button.quick-play-button {
 }
 
 .modal-section-header {
-    font-size: 1.1rem;
+    font-size: 16px;
     font-weight: 600;
+    font-family: Poppins, sans-serif;
     margin: 0;
     padding: 0;
 }
 
 .modal-body-copy {
-    font-size: 1rem;
-    line-height: 1.5;
     margin: 0;
     padding: 0;
     color: rgba(255, 255, 255, 0.9);

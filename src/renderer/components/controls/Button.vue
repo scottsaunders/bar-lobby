@@ -6,6 +6,7 @@ SPDX-License-Identifier: MIT
 
 <template>
     <Control 
+        ref="controlRef"
         class="button" 
         :class="[{ active }, $attrs.class]" 
         :style="$attrs.style" 
@@ -16,7 +17,7 @@ SPDX-License-Identifier: MIT
             v-bind="$attrs"
             v-tooltip.bottom="tooltipValue"
         >
-            <div class="button-content">
+            <div class="button-content" :class="buttonTextClass">
                 <div v-if="$slots.icon" class="icon leading">
                     <slot name="icon" />
                 </div>
@@ -39,7 +40,7 @@ export default {
 // https://primevue.org/button
 
 import PrimeVueButton, { ButtonProps } from "primevue/button";
-import { computed } from "vue";
+import { computed, ref, useAttrs, watch, nextTick } from "vue";
 
 import Control from "@renderer/components/controls/Control.vue";
 import { useRouter } from "vue-router";
@@ -56,9 +57,60 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const router = useRouter();
+const attrs = useAttrs();
+const controlRef = ref<InstanceType<typeof Control> | null>(null);
 const active = computed(() => props?.to && router.currentRoute.value.path.includes(props.to));
 
 const tooltipEnabled = computed(() => props.showTooltip && !!props.tooltip);
+
+// Get class string from attrs - handle string, array, or object
+const getClassString = computed(() => {
+    const classes = attrs.class;
+    if (typeof classes === 'string') {
+        return classes;
+    }
+    if (Array.isArray(classes)) {
+        return classes.filter(c => typeof c === 'string').join(' ');
+    }
+    if (typeof classes === 'object' && classes !== null) {
+        return Object.keys(classes).filter(key => classes[key]).join(' ');
+    }
+    return '';
+});
+
+const isSlim = ref(false);
+const isLarge = ref(false);
+
+const updateButtonClasses = () => {
+    const classStr = getClassString.value;
+    isSlim.value = classStr.includes('slim');
+    isLarge.value = classStr.includes('large');
+    
+    // Also check DOM element as fallback
+    nextTick(() => {
+        if (controlRef.value) {
+            const el = (controlRef.value as any).$el;
+            if (el?.classList) {
+                if (!isSlim.value) isSlim.value = el.classList.contains('slim');
+                if (!isLarge.value) isLarge.value = el.classList.contains('large');
+            }
+        }
+    });
+};
+
+// Watch for class changes
+watch(() => attrs.class, updateButtonClasses, { immediate: true, deep: true });
+watch(controlRef, updateButtonClasses, { immediate: true });
+
+const buttonTextClass = computed(() => {
+    if (isSlim.value) {
+        return 'body-2-strong';
+    }
+    if (isLarge.value) {
+        return 'subtitle-1';
+    }
+    return 'body-1-strong';
+});
 
 // Provide tooltip text when enabled
 const tooltipValue = computed(() => {
@@ -83,16 +135,21 @@ async function onClick() {
         align-self: flex-start;
     }
     &:not(.slim) {
+        min-height: 48px; // Set min-height on Control wrapper (includes border with box-sizing: border-box)
         .p-button {
-            min-height: 33px;
+            min-height: 48px;
         }
     }
     &.slim {
         min-height: unset;
+        height: auto; // Let padding determine height
         align-self: center;
         border-radius: 2px;
-        font-size: 14px;
-        font-weight: 300;
+        .p-button {
+            height: auto; // Let padding determine height
+            min-height: unset;
+            padding: 4px 8px; // Use padding to define height
+        }
     }
 }
 .p-button {

@@ -251,17 +251,21 @@ h2 {
 
 // Large button style
 :deep(.button.large) {
+    height: 72px; // Set height on Control wrapper (includes border with box-sizing: border-box)
     .p-button {
-        font-size: 18px; // txt-lg
-        padding: 0 8px; // Unified padding
-        height: 50px;
+        padding: 0 24px; // Triple padding for large buttons
+        height: 100%;
     }
 }
 
-// Regular button font size (apply to all buttons that aren't large)
-:deep(.button:not(.large)) {
+// Regular button (apply to all buttons that aren't large and aren't slim)
+:deep(.button:not(.large):not(.slim)) {
+    height: 48px; // Set height on Control wrapper (includes border with box-sizing: border-box)
+    min-height: 48px;
     .p-button {
-        font-size: 16px; // txt-md
+        padding: 0 16px; // Double padding for small buttons
+        height: 100%;
+        min-height: 48px;
     }
 }
 

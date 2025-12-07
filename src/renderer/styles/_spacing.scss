@@ -5,13 +5,15 @@
  */
 
 $spacing: (
-    "xxs": 1px,
-    "xs": 2px,
-    "sm": 5px,
-    "md": 10px,
-    "lg": 15px,
-    "xl": 20px,
-    "xxl": 25px,
+    "xxs": 2px,
+    "xs": 4px,
+    "sm": 8px,
+    "md": 12px,
+    "lg": 16px,
+    "xl": 24px,
+    "xxl": 32px,
+    "xxxl": 48px,
+    "xxxxl": 56px,
 );
 
 @each $key, $value in $spacing {
@@ -22,7 +24,7 @@ $spacing: (
         padding: $value;
     }
     .margin-#{$key} {
-        padding: $value;
+        margin: $value;
     }
     @each $dir in top, left, bottom, right {
         .padding-#{$dir}-#{$key} {

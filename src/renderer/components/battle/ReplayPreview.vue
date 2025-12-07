@@ -62,12 +62,12 @@ SPDX-License-Identifier: MIT
                             <div>
                                 <div :class="getStripeResult(index)">
                                     <div class="margin-left-sm padding-top-sm padding-bottom-sm">
-                                        <p class="txt-xs">
+                                        <p class="text-xs">
                                             <b>{{ item.title }}</b>
                                         </p>
                                     </div>
                                     <div class="margin-right-sm padding-top-sm padding-bottom-sm txt-right">
-                                        <p class="txt-xs">{{ item.data }}</p>
+                                        <p class="text-xs">{{ item.data }}</p>
                                     </div>
                                 </div>
                             </div>

@@ -257,8 +257,6 @@ function toggleFullscreen() {
 .primary,
 .logo {
     .button {
-        font-size: 25px;
-        font-weight: 600;
         background: radial-gradient(rgba(73, 49, 49, 0), rgba(255, 255, 255, 0.05));
         color: rgba(255, 255, 255, 0.8);
         box-shadow:
@@ -267,9 +265,14 @@ function toggleFullscreen() {
         border: none;
         flex-grow: 0;
         height: 100%;
-        font-weight: 600;
         text-transform: uppercase;
         max-height: unset;
+        :deep(.button-content) {
+            font-size: 24px; // Title 3 - appropriate size for main navigation
+            font-weight: 400; // Regular weight
+            font-family: Poppins, sans-serif;
+            line-height: 1.3;
+        }
         :deep(.p-button) {
             padding: 0 22px;
         }
@@ -333,15 +336,23 @@ function toggleFullscreen() {
     box-shadow: inset 2px 2px 10px rgba(0, 0, 0, 0.5);
     border-top: 1px solid rgba(255, 255, 255, 0.15);
     display: flex;
-    height: 36px;
-    font-size: 18px;
+    align-items: center; // Align buttons vertically
+    min-height: 48px; // Match small button height (48px including border)
     .button {
         background: none;
         border: none;
         color: rgba(255, 255, 255, 0.5);
         flex-grow: 0;
+        height: 48px; // Match small button height
+        :deep(.button-content) {
+            font-size: 16px; // Body 1 - appropriate for subtabs
+            font-weight: 400; // Regular weight
+            font-family: Poppins, sans-serif;
+            line-height: 1.4;
+        }
         :deep(> button) {
             padding: 0 20px;
+            height: 100%;
         }
         &:hover,
         &.active {
@@ -355,6 +366,12 @@ function toggleFullscreen() {
     &-right {
         .button {
             padding: 0;
+            :deep(.button-content) {
+                font-size: 16px; // Body 1 - for player name and server status
+                font-weight: 400; // Regular weight
+                font-family: Poppins, sans-serif;
+                line-height: 1.4;
+            }
         }
     }
 }
