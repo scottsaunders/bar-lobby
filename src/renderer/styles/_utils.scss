@@ -52,3 +52,25 @@
     flex-basis: auto;
     will-change: scroll-position;
 }
+
+// Primary scrollview style for main panels (with fade effects)
+// Use this class in addition to .scroll-container for main panel scrollviews
+.scroll-container.main-panel-scroll {
+    position: relative;
+    
+    // Fade effects at top and bottom
+    mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black 20px,
+        black calc(100% - 20px),
+        transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black 20px,
+        black calc(100% - 20px),
+        transparent 100%
+    );
+}

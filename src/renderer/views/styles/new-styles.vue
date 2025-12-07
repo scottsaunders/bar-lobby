@@ -10,7 +10,7 @@ SPDX-License-Identifier: MIT
 
 <template>
     <Panel class="flex-grow style-panel" no-padding>
-        <div class="scroll-container">
+        <div class="scroll-container main-panel-scroll">
             <div class="scroll-content flex-col gap-xl padding-xxl">
                 <!-- Design System Constants Section -->
                 <div class="flex-col gap-md">
@@ -545,6 +545,108 @@ SPDX-License-Identifier: MIT
                             </InteractiveTile>
                         </div>
                     </div>
+                    <div class="flex-row gap-md" style="height: 192px; margin-top: 24px">
+                        <div style="width: 300px">
+                            <InteractiveTile saturate>
+                                <template #media>
+                                    <img src="/src/renderer/assets/images/backgrounds/5.jpg" />
+                                </template>
+                                <template #content>
+                                    <h3>Saturation Transition</h3>
+                                    <p class="body-1">Desaturated by default, saturates on hover</p>
+                                </template>
+                            </InteractiveTile>
+                        </div>
+                        <div style="width: 300px">
+                            <InteractiveTile saturate :selected="true">
+                                <template #media>
+                                    <img src="/src/renderer/assets/images/backgrounds/5.jpg" />
+                                </template>
+                                <template #content>
+                                    <h3>Selected with Saturation</h3>
+                                    <p class="body-1">Green highlight + saturation</p>
+                                </template>
+                            </InteractiveTile>
+                        </div>
+                        <div style="width: 300px">
+                            <InteractiveTile :selected="true">
+                                <template #media>
+                                    <img src="/src/renderer/assets/images/backgrounds/5.jpg" />
+                                </template>
+                                <template #content>
+                                    <h3>Selected (No Saturation)</h3>
+                                    <p class="body-1">Green highlight only</p>
+                                </template>
+                            </InteractiveTile>
+                        </div>
+                    </div>
+                </div>
+
+                <Divider />
+
+                <!-- Status Card Section -->
+                <div class="flex-col gap-md">
+                    <h2>Status Card</h2>
+                    <p class="body-1">Use for: Displaying status information, conditions, alerts, or key-value pairs with color-coded variants. Each card shows a label and value with semantic color coding.</p>
+                    <div class="flex-col gap-md" style="max-width: 600px;">
+                        <div class="flex-col gap-sm">
+                            <h3>Variants</h3>
+                            <div class="flex-col gap-sm">
+                                <StatusCard variant="victory" label="Victory Condition" value="Destroy all enemy units" />
+                                <StatusCard variant="lose" label="Lose Condition" value="Lose all production facilities" />
+                                <StatusCard variant="success" label="Status" value="Operation successful" />
+                                <StatusCard variant="error" label="Error" value="Connection failed" />
+                                <StatusCard variant="warning" label="Warning" value="Low resources detected" />
+                                <StatusCard variant="info" label="Information" value="System update available" />
+                            </div>
+                        </div>
+                        <div class="flex-col gap-sm">
+                            <h3>With Slots</h3>
+                            <p class="body-2">StatusCard supports slots for custom label and value content:</p>
+                            <StatusCard variant="victory">
+                                <template #label>Custom Label</template>
+                                <template>Custom value with <strong>HTML content</strong></template>
+                            </StatusCard>
+                        </div>
+                    </div>
+                </div>
+
+                <Divider />
+
+                <!-- Scrolling Text Panel Section -->
+                <div class="flex-col gap-md">
+                    <h2>Scrolling Text Panel</h2>
+                    <p class="body-1">Use for: Scrollable text content within a contained panel. Features a dark background container with border and a fade effect at the bottom to indicate scrollable content.</p>
+                    <div class="flex-col gap-md" style="max-width: 600px;">
+                        <div class="flex-col gap-sm">
+                            <h3>Basic Usage</h3>
+                            <div style="height: 200px; width: 100%;">
+                                <ScrollingTextPanel>
+                                    <div class="flex-col gap-md">
+                                        <p class="body-1">This is a scrolling text panel. When the content exceeds the available height, it becomes scrollable with a fade effect at the bottom.</p>
+                                        <p class="body-1">The panel has a dark background (rgba(0, 0, 0, 0.3)) and a subtle border to contain the content visually.</p>
+                                        <p class="body-1">You can add any content inside using slots, including markdown, formatted text, or other components.</p>
+                                    </div>
+                                </ScrollingTextPanel>
+                            </div>
+                        </div>
+                        <div class="flex-col gap-sm">
+                            <h3>With More Content (Scrollable)</h3>
+                            <div style="height: 200px; width: 100%;">
+                                <ScrollingTextPanel>
+                                    <div class="flex-col gap-md">
+                                        <p class="body-1">This example demonstrates the scrolling behavior when there's more content than can fit in the visible area.</p>
+                                        <p class="body-1">As you scroll down, you'll notice the fade effect at the bottom becomes more apparent.</p>
+                                        <p class="body-1">The panel automatically handles overflow and provides smooth scrolling.</p>
+                                        <p class="body-1">This is additional content to demonstrate scrolling.</p>
+                                        <p class="body-1">More paragraphs help visualize how the scrollable area works.</p>
+                                        <p class="body-1">The fade effect at the bottom indicates there's more content below.</p>
+                                        <p class="body-1">This is the last paragraph in this example.</p>
+                                    </div>
+                                </ScrollingTextPanel>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <Divider />
@@ -908,6 +1010,8 @@ import Options from "@renderer/components/controls/Options.vue";
 import Range from "@renderer/components/controls/Range.vue";
 import Divider from "@renderer/components/common/Divider.vue";
 import InteractiveTile from "@renderer/components/common/InteractiveTile.vue";
+import StatusCard from "@renderer/components/common/StatusCard.vue";
+import ScrollingTextPanel from "@renderer/components/common/ScrollingTextPanel.vue";
 import InputSwitch from "primevue/inputswitch";
 import Progress from "@renderer/components/common/Progress.vue";
 import Loader from "@renderer/components/common/Loader.vue";
@@ -1049,28 +1153,7 @@ onUnmounted(() => {
 </style>
 
 <style lang="scss" scoped>
-.scroll-container {
-    overflow-y: auto;
-    height: 0;
-    flex-grow: 1;
-    position: relative;
-    
-    // Fade effects at top and bottom
-    mask-image: linear-gradient(
-        to bottom,
-        transparent 0%,
-        black 20px,
-        black calc(100% - 20px),
-        transparent 100%
-    );
-    -webkit-mask-image: linear-gradient(
-        to bottom,
-        transparent 0%,
-        black 20px,
-        black calc(100% - 20px),
-        transparent 100%
-    );
-}
+// Using global .main-panel-scroll class now
 
 
 .gridform {

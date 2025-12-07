@@ -14,7 +14,7 @@ SPDX-License-Identifier: MIT
         <div class="flex-col flex-grow">
             <div class="primary flex-row flex-space-between gap-xxs">
                 <div class="primary-left">
-                    <Button v-for="view in primaryRoutes" :key="view.path" :to="view.path">
+                    <Button v-for="view in primaryRoutes" :key="view.path" :to="view.path === '/play' ? '/play/menu' : view.path">
                         {{ view.meta.title }}
                     </Button>
                 </div>

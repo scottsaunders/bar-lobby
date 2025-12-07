@@ -10,64 +10,80 @@ SPDX-License-Identifier: MIT
 
 <template>
     <div class="view">
-        <div class="scenarios-container">
+        <div class="view-container">
             <div class="view-title">
                 <h1>{{ t("lobby.singleplayer.scenarios.title") }}</h1>
                 <p>{{ t("lobby.singleplayer.scenarios.description") }}</p>
             </div>
-            <Panel class="scenarios-main-panel" noPadding>
-                <div class="flex-row gap-lg fullheight">
-                    <div class="fullwidth flex-col">
-                        <div class="scenarios scroll-container">
+            <div class="scenarios-layout flex-row gap-xl">
+                <Panel class="flex-grow scenarios-panel" no-padding>
+                    <div class="scroll-container main-panel-scroll">
+                        <div class="scenarios-grid">
                             <TransitionGroup name="fade">
-                                <ScenarioTile
+                                <div
                                     v-for="scenario in scenarios"
                                     :key="scenario.title"
-                                    :scenario="scenario"
-                                    :class="{ selected: selectedScenario.scenarioid === scenario.scenarioid }"
-                                    @click="selectedScenario = scenario"
-                                />
+                                    style="height: 200px"
+                                >
+                                    <InteractiveTile
+                                        :saturate="true"
+                                        :selected="selectedScenario.scenarioid === scenario.scenarioid"
+                                        @click="selectedScenario = scenario"
+                                    >
+                                        <template #media>
+                                            <div :style="`background-image: url('bar://${encodeURIComponent(scenario.imagepath)}')`"></div>
+                                        </template>
+                                        <template #content>
+                                            <h3 class="title-3">{{ scenario.title }}</h3>
+                                        </template>
+                                    </InteractiveTile>
+                                </div>
                             </TransitionGroup>
                         </div>
                     </div>
-                    <div class="scenario-preview flex-col gap-md">
-                        <h4>{{ selectedScenario.title }}</h4>
-                        <div class="scroll-container flex-grow">
-                            <Markdown :source="selectedScenario.summary" />
-                            <Markdown :source="selectedScenario.briefing" />
+                </Panel>
+                <Panel class="scenario-details-panel" no-padding>
+                    <div class="scenario-details-layout flex-col fullheight">
+                        <h2 class="title-2 padding-left-xxl padding-top-xxl padding-right-xxl padding-bottom-lg">{{ selectedScenario.title }}</h2>
+                        <div class="description-scroll scroll-container flex-grow">
+                            <ScrollingTextPanel>
+                                <div class="flex-col gap-md">
+                                    <Markdown :source="selectedScenario.summary" />
+                                    <Markdown :source="selectedScenario.briefing" />
+                                </div>
+                            </ScrollingTextPanel>
                         </div>
-                        <div class="gridform">
-                            <div>{{ t("lobby.singleplayer.scenarios.victoryCondition") }}</div>
-                            <div>{{ selectedScenario.victorycondition }}</div>
-
-                            <div>{{ t("lobby.singleplayer.scenarios.loseCondition") }}</div>
-                            <div>{{ selectedScenario.losscondition }}</div>
+                        <div class="scenario-controls flex-col gap-md padding-left-xxl padding-right-xxl padding-top-lg padding-bottom-xxl">
+                            <div class="scenario-conditions flex-col gap-sm">
+                                <StatusCard variant="victory" :label="t('lobby.singleplayer.scenarios.victoryCondition')" :value="selectedScenario.victorycondition" />
+                                <StatusCard variant="lose" :label="t('lobby.singleplayer.scenarios.loseCondition')" :value="selectedScenario.losscondition" />
+                            </div>
+                            <div>
+                                <Select v-model="selectedFaction" :label="t('lobby.singleplayer.scenarios.faction')" :options="factions" />
+                            </div>
+                            <div>
+                                <Select
+                                    v-model="selectedDifficulty"
+                                    :label="t('lobby.singleplayer.scenarios.difficulty')"
+                                    :options="difficulties"
+                                    optionLabel="name"
+                                />
+                            </div>
+                            <DownloadContentButton
+                                v-if="map"
+                                :maps="[map.springName]"
+                                :games="gameVersion ? [gameVersion] : []"
+                                :engines="enginesStore.selectedEngineVersion ? [enginesStore.selectedEngineVersion.id] : []"
+                                class="fullwidth large"
+                                :disabled="gameStore.status !== GameStatus.CLOSED"
+                                @click="launch"
+                                >{{ t("lobby.singleplayer.scenarios.start") }}</DownloadContentButton
+                            >
+                            <Button v-else class="fullwidth green" disabled>{{ t("lobby.singleplayer.scenarios.start") }}</Button>
                         </div>
-                        <div>
-                            <Select v-model="selectedFaction" :label="t('lobby.singleplayer.scenarios.faction')" :options="factions" />
-                        </div>
-                        <div>
-                            <Select
-                                v-model="selectedDifficulty"
-                                :label="t('lobby.singleplayer.scenarios.difficulty')"
-                                :options="difficulties"
-                                optionLabel="name"
-                            />
-                        </div>
-                        <DownloadContentButton
-                            v-if="map"
-                            :maps="[map.springName]"
-                            :games="gameVersion ? [gameVersion] : []"
-                            :engines="enginesStore.selectedEngineVersion ? [enginesStore.selectedEngineVersion.id] : []"
-                            class="fullwidth green"
-                            :disabled="gameStore.status !== GameStatus.CLOSED"
-                            @click="launch"
-                            >{{ t("lobby.singleplayer.scenarios.launch") }}</DownloadContentButton
-                        >
-                        <Button v-else class="fullwidth green" disabled>{{ t("lobby.singleplayer.scenarios.launch") }}</Button>
                     </div>
-                </div>
-            </Panel>
+                </Panel>
+            </div>
         </div>
     </div>
 </template>
@@ -77,7 +93,9 @@ import { computed, ref, watch } from "vue";
 
 import Button from "@renderer/components/controls/Button.vue";
 import Select from "@renderer/components/controls/Select.vue";
-import ScenarioTile from "@renderer/components/misc/ScenarioTile.vue";
+import InteractiveTile from "@renderer/components/common/InteractiveTile.vue";
+import StatusCard from "@renderer/components/common/StatusCard.vue";
+import ScrollingTextPanel from "@renderer/components/common/ScrollingTextPanel.vue";
 import { Scenario } from "@main/content/game/scenario";
 import { LATEST_GAME_VERSION } from "@main/config/default-versions";
 import Panel from "@renderer/components/common/Panel.vue";
@@ -173,39 +191,73 @@ async function launch() {
 </script>
 
 <style lang="scss" scoped>
-.scenarios-container {
+@use "@renderer/styles/spacing" as *;
+
+.view-container {
     display: flex;
     flex-direction: column;
-    height: 100%;
-    align-self: center;
-    width: 1600px;
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    padding: 0 map-get($spacing, "xxl") map-get($spacing, "sm") map-get($spacing, "xxl"); // xxl (32px) for left/right, sm (8px) for bottom
+    overflow: hidden;
+    box-sizing: border-box;
+    
+    .view-title {
+        padding-left: 0; // Ensure title isn't cut off - padding is handled by view-container
+    }
 }
 
-.scenarios-main-panel {
-    padding: 30px;
-    padding-left: 0;
-    padding-bottom: 0;
+.scenarios-layout {
+    width: 100%;
     height: 100%;
+    min-height: 0;
+    align-items: stretch; // Ensure both panels have the same height
 }
 
-.scenarios {
-    padding-left: 30px;
-    padding-bottom: 30px;
-    margin-bottom: 30px;
+.scenarios-panel {
+    min-height: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.scenarios-grid {
     width: 100%;
     display: grid;
-    grid-gap: 15px;
+    grid-gap: map-get($spacing, "lg"); // lg spacing
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    padding-right: 10px;
+    padding: map-get($spacing, "xxl"); // xxl spacing (doubled from lg/16px) - padding on all sides to prevent clipping of box-shadow/outline effects
 }
 
-.scenario-preview {
+.scenario-details-panel {
     width: 600px;
-    height: 100%;
-    padding-bottom: 30px;
+    min-height: 0;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
 }
 
-.launch-button {
-    flex-grow: 0;
+.scenario-details-layout {
+    min-height: 0;
+}
+
+.description-scroll {
+    min-height: 0;
+    padding-top: 0; // No top padding
+    padding-bottom: 0; // No bottom padding
+    margin-left: map-get($spacing, "xxl"); // Left margin to prevent touching panel edge
+    margin-right: map-get($spacing, "xxl"); // Right margin to prevent touching panel edge
+}
+
+.scenario-controls {
+    flex-shrink: 0;
+}
+
+.scenario-conditions {
+    padding: map-get($spacing, "md");
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div class="interactive-tile" :class="{ active }">
+    <div class="interactive-tile" :class="{ active, selected, saturate }">
         <div class="media">
             <slot name="media" />
         </div>
@@ -13,6 +13,8 @@
 <script lang="ts" setup>
 defineProps<{
     active?: boolean;
+    selected?: boolean;
+    saturate?: boolean;
     textFade?: boolean;
     textPersistent?: boolean;
 }>();
@@ -53,6 +55,12 @@ defineProps<{
         }
     }
 
+    // Green highlight on hover when saturate variant is used (matches ScenarioTile behavior)
+    &.saturate:hover {
+        outline: 1px solid #22c55e;
+        box-shadow: 0 8px 15px rgba(34, 197, 94, 0.4);
+    }
+
     .media {
         width: 100%;
         height: 100%;
@@ -84,6 +92,33 @@ defineProps<{
             will-change: transform;
             transition: transform 0.2s ease-in-out;
         }
+    }
+
+    // Saturation transition variant
+    &.saturate {
+        .media :deep(img),
+        .media :deep(video),
+        .media :deep(div[style*="background-image"]) {
+            filter: saturate(0) brightness(0.8) contrast(1);
+            transition: transform 0.1s ease, filter 0.1s ease;
+        }
+
+        &:hover,
+        &.active,
+        &.selected {
+            .media :deep(img),
+            .media :deep(video),
+            .media :deep(div[style*="background-image"]) {
+                transform: scale(1);
+                filter: saturate(1) brightness(1.1) contrast(1.1);
+            }
+        }
+    }
+
+    // Selected state with green highlight
+    &.selected {
+        outline: 1px solid #22c55e;
+        box-shadow: 0 8px 15px rgba(34, 197, 94, 0.4);
     }
 
     .overlay {

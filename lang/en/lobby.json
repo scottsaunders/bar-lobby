@@ -169,7 +169,8 @@
                 "loseCondition": "Lose condition",
                 "faction": "Faction",
                 "difficulty": "Difficulty",
-                "launch": "Launch"
+                "launch": "Launch",
+                "start": "Start"
             }
         },
         "navbar": {
