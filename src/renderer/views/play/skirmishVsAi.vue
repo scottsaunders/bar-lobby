@@ -219,8 +219,88 @@ function onMapSelected(map: MapData) {
 async function generateRandomSkirmish() {
     try {
         const randomMap = await getRandomMap();
-        if (randomMap) {
-            battleStore.battleOptions.map = randomMap;
+        if (!randomMap) {
+            return;
+        }
+        
+        // Set the map
+        battleStore.battleOptions.map = randomMap;
+        
+        // Ensure we have the required engine and game versions
+        if (!enginesStore.selectedEngineVersion || !gameStore.selectedGameVersion) {
+            return;
+        }
+        
+        // Get the default AI (BARb)
+        const barbAi = enginesStore.selectedEngineVersion.ais.find((ai) => ai.shortName === "BARb");
+        if (!barbAi) {
+            return;
+        }
+        
+        // Ensure game mode is Teams (CLASSIC)
+        if (battleStore.battleOptions.gameMode.id !== GameModeID.CLASSIC) {
+            await battleActions.loadGameMode(GameModeID.CLASSIC);
+        }
+        
+        // Reset battle to ensure clean state
+        battleActions.resetToDefaultBattle(
+            enginesStore.selectedEngineVersion,
+            gameStore.selectedGameVersion,
+            randomMap
+        );
+        
+        // Use updateTeams to ensure we have the correct number of teams based on the map
+        // This will create teams based on the map's start boxes
+        try {
+            battleActions.updateTeams();
+        } catch (error) {
+            console.warn("Could not update teams based on map, using default 2 teams");
+        }
+        
+        // Get the recommended team size from the map
+        let recommendedTeamSize: number;
+        try {
+            recommendedTeamSize = battleActions.getMaxPlayersPerTeam();
+        } catch (error) {
+            // If we can't get the team size, default to 3
+            recommendedTeamSize = 3;
+        }
+        
+        // Get the total number of teams (this should match the map's team count)
+        const numberOfTeams = battleStore.teams.length;
+        
+        // Ensure player is in team 0
+        if (battleStore.me && battleStore.teams[0]) {
+            const playerInTeam0 = battleStore.teams[0].participants.find(
+                (p) => "user" in p && p.user.userId === battleStore.me?.user.userId
+            );
+            if (!playerInTeam0) {
+                battleActions.movePlayerToTeam(battleStore.me, 0);
+            }
+        }
+        
+        // Fill ALL teams with bots to reach recommended team size
+        // General rule: loop through every team (0 to numberOfTeams-1) and fill each one
+        for (let teamId = 0; teamId < numberOfTeams; teamId++) {
+            // Ensure the team exists
+            if (!battleStore.teams[teamId]) {
+                continue;
+            }
+            
+            const team = battleStore.teams[teamId];
+            
+            // Count current participants (excluding scavengers/raptors)
+            const currentParticipants = team.participants.filter(
+                (p) => !("aiShortName" in p && (p.aiShortName === "RaptorsAI" || p.aiShortName === "ScavengersAI"))
+            );
+            
+            // Calculate how many bots we need to add to reach recommended team size
+            const botsNeeded = recommendedTeamSize - currentParticipants.length;
+            
+            // Add bots to fill the team (always ensure team has bots if needed)
+            for (let i = 0; i < botsNeeded; i++) {
+                battleActions.addBot(barbAi, teamId);
+            }
         }
     } catch (error) {
         console.error("Failed to generate random skirmish:", error);

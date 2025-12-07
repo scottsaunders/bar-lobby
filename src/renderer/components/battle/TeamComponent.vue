@@ -40,8 +40,8 @@ SPDX-License-Identifier: MIT
         </div>
         <div v-if="!isRaptorTeam(teamId) && !isScavengerTeam(teamId)">
             <div v-for="(_, i) in getAmountOfJoinButtons(maxPlayersPerTeam, memberCount)" :key="i">
-                <button class="join-button" :class="{ first: i === 0 }" @click="onJoinClicked(teamId)">
-                    {{ t("lobby.components.battle.teamComponent.join") }}
+                <button class="join-button" :class="{ first: i === 0 }" @click="addBotClicked(teamId)">
+                    {{ t("lobby.components.battle.teamComponent.addBot") }}
                 </button>
             </div>
         </div>

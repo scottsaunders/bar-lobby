@@ -5,14 +5,19 @@ SPDX-License-Identifier: MIT
 -->
 
 <template>
-    <div @contextmenu="onRightClick">
+    <div @contextmenu="onRightClick" class="bot-participant-wrapper">
         <TeamParticipant>
-            <div class="flex-row flex-center">
-                <GameIconsVelociraptor v-if="isRaptor(bot)" />
-                <Icon v-else-if="isScavenger(bot)" :icon="robotAngry" />
-                <Icon v-else :icon="robot" />
+            <div class="bot-content flex-row flex-center-items">
+                <div class="flex-row flex-center">
+                    <GameIconsVelociraptor v-if="isRaptor(bot)" />
+                    <Icon v-else-if="isScavenger(bot)" :icon="robotAngry" />
+                    <Icon v-else :icon="robot" />
+                </div>
+                <div class="flex-grow">{{ bot.name }}</div>
+                <button class="delete-bot-button" @click.stop="kickBot" :title="t('lobby.components.battle.botParticipant.kick')">
+                    <Icon :icon="closeIcon" />
+                </button>
             </div>
-            <div>{{ bot.name }}</div>
         </TeamParticipant>
         <LuaOptionsModal
             :id="`configure-bot-${bot.name}`"
@@ -30,6 +35,7 @@ SPDX-License-Identifier: MIT
 import { Icon } from "@iconify/vue";
 import robot from "@iconify-icons/mdi/robot";
 import robotAngry from "@iconify-icons/mdi/robot-angry";
+import closeIcon from "@iconify-icons/mdi/close";
 import { Ref, ref } from "vue";
 import { useTypedI18n } from "@renderer/i18n";
 
@@ -100,5 +106,41 @@ function setBotOptions(options: Record<string, unknown>) {
 <style lang="scss" scoped>
 .bot-type {
     opacity: 0.5;
+}
+
+.bot-participant-wrapper {
+    width: 100%;
+}
+
+.bot-content {
+    width: 100%;
+    gap: 8px;
+}
+
+.delete-bot-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+    opacity: 0;
+    
+    .bot-participant-wrapper:hover & {
+        opacity: 1;
+    }
+    
+    &:hover {
+        color: rgba(239, 68, 68, 0.9);
+        background: rgba(239, 68, 68, 0.1);
+    }
+    
+    &:active {
+        transform: scale(0.95);
+    }
 }
 </style>
