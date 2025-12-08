@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT
 -->
 
 <template>
-    <div ref="boxElement" class="box-container box highlight" :style="boxStyles" :class="{ dragging: isDragging, resizing: isResizing }">
+    <div ref="boxElement" class="box-container box highlight" :style="boxStyles" :class="{ dragging: isDragging, resizing: isResizing, 'raptor-box': isSpecialTeamBox && isRaptorsMode, 'scavenger-box': isSpecialTeamBox && isScavengersMode }">
         <div class="box-tooltip" @mousedown="startDrag">
             <div class="box-tooltip-side n-side" @mousedown.stop="startResize('n', null, $event)"></div>
             <div class="box-tooltip-side e-side" @mousedown.stop="startResize(null, 'e', $event)"></div>
@@ -15,7 +15,7 @@ SPDX-License-Identifier: MIT
             <div class="box-tooltip-corner se-corner" @mousedown.stop="startResize('s', 'e', $event)"></div>
             <div class="box-tooltip-corner nw-corner" @mousedown.stop="startResize('s', 'e', $event)"></div>
             <div class="box-tooltip-corner sw-corner" @mousedown.stop="startResize('s', 'w', $event)"></div>
-            <span>{{ id + 1 }}</span>
+            <span v-if="boxLabel">{{ boxLabel }}</span>
         </div>
     </div>
 </template>
@@ -25,6 +25,7 @@ import { ref, computed } from "vue";
 import { StartBox } from "tachyon-protocol/types";
 import { battleStore } from "@renderer/store/battle.store";
 import { spadsBoxToStartBox } from "@renderer/utils/start-boxes";
+import { GameModeID } from "@main/game/battle/battle-types";
 
 const props = defineProps({
     id: {
@@ -50,14 +51,62 @@ const startPos = ref({ x: 0, y: 0 });
 const startBox = ref<StartBox | null>(null);
 const parentRect = ref<DOMRect | null>(null);
 
+// Check if we're in Raptors or Scavengers mode
+const isRaptorsMode = computed(() => battleStore.battleOptions.gameMode.id === GameModeID.RAPTORS);
+const isScavengersMode = computed(() => battleStore.battleOptions.gameMode.id === GameModeID.SCAVENGERS);
+const isSpecialMode = computed(() => isRaptorsMode.value || isScavengersMode.value);
+
+// Determine if this box is for the special team (team 1) or players (team 0)
+const isSpecialTeamBox = computed(() => isSpecialMode.value && props.id === 1);
+const isPlayerTeamBox = computed(() => isSpecialMode.value && props.id === 0);
+
+// Box label: "1" for player team in special modes, hide for special team, otherwise show number
+const boxLabel = computed(() => {
+    if (isSpecialTeamBox.value) {
+        return ""; // No label for Raptors/Scavengers box
+    }
+    if (isSpecialMode.value) {
+        // In special modes: box 0 shows "1", box 2+ shows their box ID (2, 3, etc.)
+        if (props.id === 0) {
+            return "1"; // Players team
+        } else {
+            return String(props.id); // Additional teams start at "2"
+        }
+    }
+    return String(props.id + 1); // Default: show box number (1, 2, 3, etc.)
+});
+
 // Computed styles to directly manipulate the DOM during drag/resize
 const boxStyles = computed(() => {
-    return {
+    const baseStyles = {
         top: `${props.box.top * 100}%`,
         left: `${props.box.left * 100}%`,
         width: `${(props.box.right - props.box.left) * 100}%`,
         height: `${(props.box.bottom - props.box.top) * 100}%`,
     };
+
+    // Apply tint colors for special modes
+    if (isSpecialTeamBox.value) {
+        if (isRaptorsMode.value) {
+            // Orange tint for Raptors with brighter border
+            return {
+                ...baseStyles,
+                backgroundColor: "rgba(206, 73, 73, 0.3)",
+                borderColor: "rgba(255, 180, 180, 0.95)", // Lighter orange/red for better visibility
+                borderStyle: "dashed", // Keep dashed style but with brighter orange color
+            };
+        } else if (isScavengersMode.value) {
+            // Purple tint for Scavengers with brighter border
+            return {
+                ...baseStyles,
+                backgroundColor: "rgba(135, 69, 176, 0.3)",
+                borderColor: "rgba(220, 180, 255, 0.95)", // Lighter purple for better visibility
+                borderStyle: "dashed", // Keep dashed style but with brighter purple color
+            };
+        }
+    }
+
+    return baseStyles;
 });
 
 // Main box drag handler
@@ -487,5 +536,19 @@ $sideLength: calc(100% - $sideWidth);
     // animation: subtleGlow 1.5s infinite ease-in-out; // super resource intensive unfortunately
     transition: all 0.2s ease;
     will-change: width, height, top, left;
+}
+
+.raptor-box {
+    // Orange tint for Raptors - inline styles will override, but this ensures consistency
+    box-shadow:
+        0 0 15px rgba(206, 73, 73, 0.5),
+        0 0 25px rgba(206, 73, 73, 0.4) !important;
+}
+
+.scavenger-box {
+    // Purple tint for Scavengers - inline styles will override, but this ensures consistency
+    box-shadow:
+        0 0 15px rgba(135, 69, 176, 0.5),
+        0 0 25px rgba(135, 69, 176, 0.4) !important;
 }
 </style>

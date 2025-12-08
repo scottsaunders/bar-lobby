@@ -17,7 +17,7 @@ SPDX-License-Identifier: MIT
     <div class="scroll-container padding-right-sm">
         <div class="playerlist" :class="{ dragging: draggedBot || draggedPlayer, 'team-mode': isTeamMode }">
             <TeamComponent
-                v-for="(team, teamId) in battleWithMetadataStore.teams"
+                v-for="(teamId) in orderedTeamIds"
                 :key="teamId"
                 :teamId="teamId"
                 @add-bot-clicked="openBotList"
@@ -45,13 +45,13 @@ SPDX-License-Identifier: MIT
 </template>
 
 <script lang="ts" setup>
-import { Ref, ref } from "vue";
+import { Ref, ref, computed } from "vue";
 import { useTypedI18n } from "@renderer/i18n";
 
 import AddBotModal from "@renderer/components/battle/AddBotModal.vue";
 import TeamComponent from "@renderer/components/battle/TeamComponent.vue";
 import { EngineAI } from "@main/content/engine/engine-version";
-import { Bot, isBot, isRaptor, isScavenger, Player } from "@main/game/battle/battle-types";
+import { Bot, isBot, isRaptor, isScavenger, Player, GameModeID } from "@main/game/battle/battle-types";
 import { battleWithMetadataStore, battleStore, battleActions } from "@renderer/store/battle.store";
 import SpectatorsComponent from "@renderer/components/battle/SpectatorsComponent.vue";
 import { GameAI } from "@main/content/game/game-version";
@@ -65,6 +65,49 @@ const props = withDefaults(defineProps<{
 });
 
 const { t } = useTypedI18n();
+
+// Helper functions to check if a team is Raptor/Scavenger team
+function isRaptorTeam(teamId: number) {
+    return battleWithMetadataStore.teams[teamId]?.participants.some((member) => isBot(member) && isRaptor(member));
+}
+
+function isScavengerTeam(teamId: number) {
+    return battleWithMetadataStore.teams[teamId]?.participants.some((member) => isBot(member) && isScavenger(member));
+}
+
+// Reorder teams so Raptors/Scavengers appear first when in those modes
+const orderedTeamIds = computed(() => {
+    const gameMode = battleStore.battleOptions.gameMode.id;
+    const isRaptorsOrScavengers = gameMode === GameModeID.RAPTORS || gameMode === GameModeID.SCAVENGERS;
+    
+    if (!isRaptorsOrScavengers) {
+        // Normal order: 0, 1, 2, ...
+        return battleWithMetadataStore.teams.map((_, index) => index);
+    }
+    
+    // For Raptors/Scavengers: put team 1 (special team) first, then team 0 (players), then rest
+    const teamIds = battleWithMetadataStore.teams.map((_, index) => index);
+    const reordered = [];
+    
+    // Team 1 (Raptors/Scavengers) first
+    if (teamIds.includes(1)) {
+        reordered.push(1);
+    }
+    
+    // Team 0 (players) second
+    if (teamIds.includes(0)) {
+        reordered.push(0);
+    }
+    
+    // Add remaining teams (2, 3, 4, ...)
+    teamIds.forEach(id => {
+        if (id !== 0 && id !== 1) {
+            reordered.push(id);
+        }
+    });
+    
+    return reordered;
+});
 
 const botListOpen = ref(false);
 const botModalTeamId = ref(0);

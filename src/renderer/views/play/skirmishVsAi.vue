@@ -335,7 +335,8 @@ const gameModeOption = computed(() => {
 });
 
 const isTeamMode = computed(() => {
-    return battleStore.battleOptions.gameMode.id === GameModeID.CLASSIC;
+    const gameMode = battleStore.battleOptions.gameMode.id;
+    return gameMode === GameModeID.CLASSIC || gameMode === GameModeID.RAPTORS || gameMode === GameModeID.SCAVENGERS;
 });
 
 async function onGameModeChanged(mode: GameModeWithOptions) {
