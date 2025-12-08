@@ -52,7 +52,7 @@ SPDX-License-Identifier: MIT
                     <MapOptionsModal v-if="battleStore.battleOptions.map" v-model="mapOptionsOpen" />
                 </div>
                 <GameModeComponent />
-                <div v-if="settingsStore.devMode">
+                <div v-if="settingsStore.devMode" class="dev-only">
                     <Select
                         :modelValue="battleStore.battleOptions.gameVersion"
                         :options="gameListOptions"
@@ -64,7 +64,7 @@ SPDX-License-Identifier: MIT
                         @update:model-value="onGameSelected"
                     />
                 </div>
-                <div v-if="settingsStore.devMode">
+                <div v-if="settingsStore.devMode" class="dev-only">
                     <Select
                         :modelValue="enginesStore.selectedEngineVersion"
                         @update:model-value="(engine) => (enginesStore.selectedEngineVersion = engine)"

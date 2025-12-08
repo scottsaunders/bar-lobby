@@ -11,104 +11,129 @@ SPDX-License-Identifier: MIT
                 <MapBattlePreview />
             </div>
             <div class="options flex-col gap-md">
-                <div v-if="battleStore.battleOptions.map?.startboxesSet">
-                    <h4>{{ t("lobby.components.battle.mapOptionsModal.boxesPresets") }}</h4>
-                    <div class="box-buttons">
-                        <Button
-                            v-for="(boxSet, i) in battleStore.battleOptions.map.startboxesSet"
-                            :key="i"
-                            @click="() => setPresetStartBoxes(i)"
-                            :disabled="battleStore.battleOptions.mapOptions.startBoxesIndex === i"
-                        >
-                            <span>{{ i + 1 }}</span>
-                        </Button>
-                    </div>
-                </div>
+                <!-- Start Style Selection -->
                 <div class="flex-col gap-sm">
-                    <h4>{{ t("lobby.components.battle.mapOptionsModal.customBoxes") }}</h4>
-                    <div class="box-buttons">
-                        <Button @click="() => setCustomStartBoxes(StartBoxOrientation.EastVsWest)">
-                            <img src="/src/renderer/assets/images/icons/east-vs-west.png" />
-                        </Button>
-                        <Button @click="() => setCustomStartBoxes(StartBoxOrientation.NorthVsSouth)">
-                            <img src="/src/renderer/assets/images/icons/north-vs-south.png" />
-                        </Button>
-                        <Button @click="() => setCustomStartBoxes(StartBoxOrientation.NortheastVsSouthwest)">
-                            <img src="/src/renderer/assets/images/icons/northeast-vs-southwest.png" />
-                        </Button>
-                        <Button @click="() => setCustomStartBoxes(StartBoxOrientation.NorthwestVsSoutheast)">
-                            <img src="/src/renderer/assets/images/icons/northwest-vs-southeast.png" />
-                        </Button>
-                    </div>
-                    <div class="box-buttons">
-                        <Range v-model="customBoxRange" :min="5" :max="100" :step="5" />
-                    </div>
+                    <h3 class="subtitle-2">Choose Start Style</h3>
+                    <Select
+                        v-model="selectedStartStyle"
+                        :options="startStyleOptions"
+                        optionLabel="label"
+                        optionValue="value"
+                        label="Start Style"
+                        @update:model-value="onStartStyleChanged"
+                    />
                 </div>
-                <div v-if="hasCustomStartBoxes">
-                    <div v-for="(teamBox, teamBoxId) in teamBoxes" :key="`delete-box-${teamBoxId}`">
-                        <Button
-                            :disabled="!canDeleteTeamBox(teamBox)"
-                            :class="{ red: canDeleteTeamBox(teamBox) }"
-                            class="fullwidth"
-                            @click="() => battleActions.removeTeam(teamBoxId)"
-                        >
-                            <span v-if="canDeleteTeamBox(teamBox)"
-                                >{{ t("lobby.components.battle.mapOptionsModal.deleteTeam") }} {{ teamBoxId + 1 }}</span
-                            >
-                            <span v-else>
-                                <Icon :icon="lockOutlineIcon" :inline="true"></Icon>
-                                {{ t("lobby.components.battle.mapOptionsModal.team") }} {{ teamBoxId + 1 }} (<template
-                                    v-if="participantCounts[teamBoxId] != undefined"
-                                >
-                                    <span v-if="participantCounts[teamBoxId].playerCount > 0">
-                                        {{ participantCounts[teamBoxId].playerCount }}
-                                        {{
-                                            pluralize(
-                                                t("lobby.components.battle.mapOptionsModal.player"),
-                                                participantCounts[teamBoxId].playerCount || 0
-                                            )
-                                        }}
-                                    </span>
-                                    <span v-if="participantCounts[teamBoxId].botCount > 0 && participantCounts[teamBoxId].playerCount > 0"
-                                        >&nbsp;-&nbsp;</span
-                                    >
-                                    <span v-if="participantCounts[teamBoxId].botCount > 0">
-                                        {{ participantCounts[teamBoxId].botCount }}
-                                        {{
-                                            pluralize(
-                                                t("lobby.components.battle.mapOptionsModal.ai"),
-                                                participantCounts[teamBoxId].botCount || 0
-                                            )
-                                        }}
-                                    </span> </template
-                                >)
-                            </span>
-                        </Button>
-                    </div>
 
-                    <Button class="green fullwidth" @click="() => battleActions.addTeam()">{{
-                        t("lobby.components.battle.mapOptionsModal.addTeam")
-                    }}</Button>
-                </div>
-                <div v-else>
-                    <div>
+                <!-- Start Boxes Configuration -->
+                <div v-if="selectedStartStyle === StartPosType.Boxes" class="flex-col gap-md">
+                    <div v-if="battleStore.battleOptions.map?.startboxesSet" class="flex-col gap-sm">
+                        <h3 class="subtitle-2">{{ t("lobby.components.battle.mapOptionsModal.boxesPresets") }}</h3>
+                        <div class="box-buttons">
+                            <Button
+                                v-for="(boxSet, i) in battleStore.battleOptions.map.startboxesSet"
+                                :key="i"
+                                class="grey slim"
+                                @click="() => setPresetStartBoxes(i)"
+                                :disabled="battleStore.battleOptions.mapOptions.startBoxesIndex === i"
+                            >
+                                <span>{{ i + 1 }}</span>
+                            </Button>
+                        </div>
+                    </div>
+                    <div class="flex-col gap-sm">
+                        <h3 class="subtitle-2">{{ t("lobby.components.battle.mapOptionsModal.customBoxes") }}</h3>
+                        <div class="box-buttons">
+                            <Button class="grey slim" @click="() => setCustomStartBoxes(StartBoxOrientation.EastVsWest)">
+                                <img src="/src/renderer/assets/images/icons/east-vs-west.png" />
+                            </Button>
+                            <Button class="grey slim" @click="() => setCustomStartBoxes(StartBoxOrientation.NorthVsSouth)">
+                                <img src="/src/renderer/assets/images/icons/north-vs-south.png" />
+                            </Button>
+                            <Button class="grey slim" @click="() => setCustomStartBoxes(StartBoxOrientation.NortheastVsSouthwest)">
+                                <img src="/src/renderer/assets/images/icons/northeast-vs-southwest.png" />
+                            </Button>
+                            <Button class="grey slim" @click="() => setCustomStartBoxes(StartBoxOrientation.NorthwestVsSoutheast)">
+                                <img src="/src/renderer/assets/images/icons/northwest-vs-southeast.png" />
+                            </Button>
+                        </div>
+                        <div class="box-buttons">
+                            <Range v-model="customBoxRange" :min="5" :max="100" :step="5" />
+                        </div>
+                    </div>
+                    <div v-if="hasCustomStartBoxes" class="flex-col gap-sm">
+                        <div v-for="(teamBox, teamBoxId) in teamBoxes" :key="`delete-box-${teamBoxId}`">
+                            <Button
+                                :disabled="!canDeleteTeamBox(teamBox, teamBoxId)"
+                                :class="{ red: canDeleteTeamBox(teamBox, teamBoxId) }"
+                                class="fullwidth"
+                                @click="() => battleActions.removeTeam(teamBoxId)"
+                            >
+                                <span v-if="canDeleteTeamBox(teamBox, teamBoxId)"
+                                    >{{ t("lobby.components.battle.mapOptionsModal.deleteTeam") }} {{ teamBoxId + 1 }}</span
+                                >
+                                <span v-else>
+                                    <Icon :icon="lockOutlineIcon" :inline="true"></Icon>
+                                    {{ t("lobby.components.battle.mapOptionsModal.team") }} {{ teamBoxId + 1 }} (<template
+                                        v-if="participantCounts[teamBoxId] != undefined"
+                                    >
+                                        <span v-if="participantCounts[teamBoxId].playerCount > 0">
+                                            {{ participantCounts[teamBoxId].playerCount }}
+                                            {{
+                                                pluralize(
+                                                    t("lobby.components.battle.mapOptionsModal.player"),
+                                                    participantCounts[teamBoxId].playerCount || 0
+                                                )
+                                            }}
+                                        </span>
+                                        <span v-if="participantCounts[teamBoxId].botCount > 0 && participantCounts[teamBoxId].playerCount > 0"
+                                            >&nbsp;-&nbsp;</span
+                                        >
+                                        <span v-if="participantCounts[teamBoxId].botCount > 0">
+                                            {{ participantCounts[teamBoxId].botCount }}
+                                            {{
+                                                pluralize(
+                                                    t("lobby.components.battle.mapOptionsModal.ai"),
+                                                    participantCounts[teamBoxId].botCount || 0
+                                                )
+                                            }}
+                                        </span> </template
+                                    >)
+                                </span>
+                            </Button>
+                        </div>
+
+                        <Button class="green fullwidth" @click="() => battleActions.addTeam()">{{
+                            t("lobby.components.battle.mapOptionsModal.addTeam")
+                        }}</Button>
+                    </div>
+                    <div v-else-if="battleStore.battleOptions.mapOptions.startBoxesIndex !== undefined" class="flex-col gap-sm">
                         <Button class="fullwidth" @click="setCustomBoxesFromPresetBoxes">{{
                             t("lobby.components.battle.mapOptionsModal.editPresetTeams")
                         }}</Button>
                     </div>
                 </div>
-                <div v-if="battleStore.battleOptions.map?.startPos">
-                    <h4>{{ t("lobby.components.battle.mapOptionsModal.fixedPositions") }}</h4>
-                    <div class="box-buttons">
+
+                <!-- Fixed Positions Configuration -->
+                <div v-if="selectedStartStyle === StartPosType.Fixed || selectedStartStyle === StartPosType.Random" class="flex-col gap-sm">
+                    <h3 class="subtitle-2">{{ t("lobby.components.battle.mapOptionsModal.fixedPositions") }}</h3>
+                    <StatusCard 
+                        v-if="!supportsFixedPositions" 
+                        variant="warning"
+                        label="Notice"
+                        value="This map doesn't support fixed positions"
+                    />
+                    <div v-else class="box-buttons">
                         <Button
                             v-for="(teamSet, i) in battleStore.battleOptions.map.startPos?.team"
                             :key="`team${i}`"
+                            class="grey slim"
                             @click="() => setFixedStartBoxes(i)"
-                            :disabled="battleStore.battleOptions.mapOptions.startPosType === StartPosType.Fixed"
+                            :disabled="battleStore.battleOptions.mapOptions.startPosType === StartPosType.Fixed && battleStore.battleOptions.mapOptions.fixedPositionsIndex === i"
                         >
                             <span>{{ i + 1 }}</span>
                         </Button>
                         <Button
+                            class="grey slim"
                             @click="setRandomStartBoxes"
                             :disabled="battleStore.battleOptions.mapOptions.startPosType === StartPosType.Random"
                         >
@@ -117,7 +142,7 @@ SPDX-License-Identifier: MIT
                     </div>
                 </div>
                 <div class="actions">
-                    <Button class="green fullwidth" @click="close">{{ t("lobby.components.battle.mapOptionsModal.close") }}</Button>
+                    <Button class="blue fullwidth" @click="close" :disabled="!isStartStyleSupported">Save</Button>
                 </div>
             </div>
         </div>
@@ -130,6 +155,8 @@ import { Ref, ref, watch, computed } from "vue";
 import Modal from "@renderer/components/common/Modal.vue";
 import Button from "@renderer/components/controls/Button.vue";
 import Range from "@renderer/components/controls/Range.vue";
+import Select from "@renderer/components/controls/Select.vue";
+import StatusCard from "@renderer/components/common/StatusCard.vue";
 import { battleStore, battleActions } from "@renderer/store/battle.store";
 import { isPlayer, StartBoxOrientation, StartPosType, Team } from "@main/game/battle/battle-types";
 import MapBattlePreview from "@renderer/components/maps/MapBattlePreview.vue";
@@ -178,7 +205,13 @@ const participantCounts = computed(() => {
     });
 });
 
-const canDeleteTeamBox = (teamBox: StartBox & Team) => teamBoxes.value.length >= 3 && teamBox.participants.length == 0;
+const canDeleteTeamBox = (teamBox: StartBox & Team, teamBoxId: number) => {
+    // Can't delete teams 1 and 2 (teamBoxId 0 and 1)
+    if (teamBoxId === 0 || teamBoxId === 1) {
+        return false;
+    }
+    return teamBoxes.value.length >= 3 && teamBox.participants.length == 0;
+};
 
 const hasCustomStartBoxes = computed(() => {
     const customStartBoxes = battleStore.battleOptions.mapOptions.customStartBoxes;
@@ -188,6 +221,75 @@ const hasCustomStartBoxes = computed(() => {
 
     return true;
 });
+
+// Start style selection
+const startStyleOptions = [
+    { label: "Start Boxes", value: StartPosType.Boxes },
+    { label: "Fixed Positions", value: StartPosType.Fixed },
+];
+
+// Map Random to Fixed for the selector (since Random is a Fixed position variant)
+const selectedStartStyle = computed({
+    get: () => {
+        const type = battleStore.battleOptions.mapOptions.startPosType;
+        // If Random, show as Fixed in the selector
+        return type === StartPosType.Random ? StartPosType.Fixed : type;
+    },
+    set: (value: StartPosType) => {
+        onStartStyleChanged(value);
+    },
+});
+
+// Check if the map supports fixed positions
+const supportsFixedPositions = computed(() => {
+    const map = battleStore.battleOptions.map;
+    return map?.startPos?.team && map.startPos.team.length > 0;
+});
+
+// Check if the currently selected start style is supported by the map
+const isStartStyleSupported = computed(() => {
+    const style = selectedStartStyle.value;
+    if (style === StartPosType.Boxes) {
+        // Start boxes are always supported
+        return true;
+    } else if (style === StartPosType.Fixed || style === StartPosType.Random) {
+        // Fixed positions are only supported if the map has them
+        return supportsFixedPositions.value;
+    }
+    return true;
+});
+
+// Handle start style change
+function onStartStyleChanged(newType: StartPosType) {
+    if (newType === StartPosType.Boxes) {
+        // Switch to boxes mode - preserve existing selection if possible
+        if (battleStore.battleOptions.mapOptions.startBoxesIndex !== undefined) {
+            // Already using a preset, just switch the type
+            battleStore.battleOptions.mapOptions.startPosType = StartPosType.Boxes;
+        } else if (battleStore.battleOptions.mapOptions.customStartBoxes !== undefined) {
+            // Already using custom boxes, just switch the type
+            battleStore.battleOptions.mapOptions.startPosType = StartPosType.Boxes;
+        } else if (battleStore.battleOptions.map?.startboxesSet && battleStore.battleOptions.map.startboxesSet.length > 0) {
+            // Use first preset if available
+            setPresetStartBoxes(0);
+        } else {
+            // No presets available, set up custom boxes
+            setCustomStartBoxes(StartBoxOrientation.EastVsWest);
+        }
+    } else if (newType === StartPosType.Fixed) {
+        // Switch to fixed positions mode - preserve existing selection if possible
+        if (battleStore.battleOptions.mapOptions.fixedPositionsIndex !== undefined) {
+            // Already have a fixed position selected, just switch the type
+            battleStore.battleOptions.mapOptions.startPosType = StartPosType.Fixed;
+        } else if (battleStore.battleOptions.map?.startPos?.team && battleStore.battleOptions.map.startPos.team.length > 0) {
+            // Use first fixed position preset
+            setFixedStartBoxes(0);
+        } else {
+            // No fixed positions available, use random
+            setRandomStartBoxes();
+        }
+    }
+}
 
 function setPresetStartBoxes(startBoxIndex: number) {
     delete battleStore.battleOptions.mapOptions.fixedPositionsIndex;
@@ -234,23 +336,32 @@ function close() {
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .container {
     height: 80vh;
+    max-height: 80vh;
     position: relative;
     display: flex;
-    gap: 10px;
+    gap: map-get($spacing, "md");
+    min-height: 0;
+    overflow: hidden;
 }
 
 .map-preview-container {
     aspect-ratio: 1;
+    flex-shrink: 0;
+    max-height: 100%;
+    overflow: hidden;
 }
 
 .box-buttons {
     display: flex;
     flex-direction: row;
-    gap: 5px;
+    gap: map-get($spacing, "xs");
+    flex-wrap: wrap;
     :deep(button) {
-        padding: 5px;
+        padding: map-get($spacing, "xs");
         &:hover {
             img {
                 opacity: 1;
@@ -273,7 +384,15 @@ function close() {
 }
 
 .options {
-    width: 100%;
+    width: 400px;
+    min-width: 400px;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex-shrink: 0;
 }
 
 .control {

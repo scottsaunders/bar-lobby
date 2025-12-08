@@ -28,17 +28,19 @@ SPDX-License-Identifier: MIT
                 @on-drop="onDropTeam"
             />
         </div>
-        <hr class="margin-top-sm margin-bottom-sm" />
-        <div class="playerlist" :class="{ dragging: draggedBot || draggedPlayer }">
-            <SpectatorsComponent
-                class="spectators"
-                @on-join-clicked="joinSpectators"
-                @on-drag-start="dragStart"
-                @on-drag-end="dragEnd"
-                @on-drag-enter="dragEnterSpectators"
-                @on-drop="onDropSpectators"
-            />
-        </div>
+        <template v-if="!hideSpectators">
+            <hr class="margin-top-sm margin-bottom-sm" />
+            <div class="playerlist" :class="{ dragging: draggedBot || draggedPlayer }">
+                <SpectatorsComponent
+                    class="spectators"
+                    @on-join-clicked="joinSpectators"
+                    @on-drag-start="dragStart"
+                    @on-drag-end="dragEnd"
+                    @on-drag-enter="dragEnterSpectators"
+                    @on-drop="onDropSpectators"
+                />
+            </div>
+        </template>
     </div>
 </template>
 
@@ -56,8 +58,10 @@ import { GameAI } from "@main/content/game/game-version";
 
 const props = withDefaults(defineProps<{
     isTeamMode?: boolean;
+    hideSpectators?: boolean;
 }>(), {
     isTeamMode: true,
+    hideSpectators: false,
 });
 
 const { t } = useTypedI18n();
@@ -190,7 +194,7 @@ function onDropSpectators(event: DragEvent) {
     display: grid;
     grid-template-columns: 1fr;
     grid-auto-rows: max-content;
-    gap: 10px;
+    gap: map-get($spacing, "sm");
     &.dragging .group > * {
         pointer-events: none;
     }

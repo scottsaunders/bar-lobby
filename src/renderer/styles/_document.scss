@@ -61,3 +61,19 @@ svg,
 path {
     pointer-events: none;
 }
+
+// Dev-only elements styling - orange border/outline to indicate dev mode only
+.dev-only {
+    position: relative;
+    
+    &::before {
+        content: "";
+        position: absolute;
+        inset: -2px;
+        border: 2px solid rgba(255, 165, 0, 0.7); // Orange border
+        border-radius: 2px;
+        pointer-events: none;
+        z-index: 1;
+        box-shadow: 0 0 4px rgba(255, 165, 0, 0.4); // Subtle glow
+    }
+}

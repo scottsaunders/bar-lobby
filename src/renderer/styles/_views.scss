@@ -14,6 +14,8 @@
     flex-grow: 1;
     gap: 10px;
     overflow: hidden;
+    position: relative;
+    contain: layout style paint;
 }
 
 .view-title {

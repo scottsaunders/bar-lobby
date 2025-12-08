@@ -27,8 +27,8 @@ const imageUrl = new URL(`/src/renderer/assets/images/icons/terrains/${terrainIn
     justify-content: center;
     img.icon {
         display: block;
-        width: 24px;
-        height: 24px;
+        width: 16px;
+        height: 16px;
     }
 
     &.lg {

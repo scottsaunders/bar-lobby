@@ -7,8 +7,8 @@ SPDX-License-Identifier: MIT
 <template>
     <div key="spectators" class="group" data-type="group" @dragenter.prevent="onDragEnter($event)" @dragover.prevent @drop="onDrop($event)">
         <div class="flex-row flex-center-items gap-md">
-            <div class="title">{{ title }}</div>
-            <div v-if="memberCount > 0" class="member-count">
+            <div class="title subtitle-1">{{ title }}</div>
+            <div v-if="memberCount > 0" class="member-count body-2">
                 {{ t("lobby.components.battle.spectatorsComponent.memberCount", memberCount) }}
             </div>
             <Button v-if="showJoin" class="slim black" @click="onJoinClicked()">
@@ -73,12 +73,14 @@ function onDrop(event: DragEvent) {
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .group {
     border: 1px inset rgba(255, 255, 255, 0.1);
     background: radial-gradient(circle, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8));
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 1);
     min-height: 100px;
-    padding: 10px;
+    padding: map-get($spacing, "sm");
     position: relative;
     &.highlight {
         &:before {
@@ -102,7 +104,7 @@ function onDrop(event: DragEvent) {
     }
 }
 .title {
-    font-size: 20px;
+    // Typography handled by subtitle-1 class
 }
 .member-count {
     display: inline-block;
@@ -112,9 +114,9 @@ function onDrop(event: DragEvent) {
 .participants {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: map-get($spacing, "xs");
     flex-wrap: wrap;
-    margin-top: 5px;
+    margin-top: map-get($spacing, "xs");
     .spectators & {
         display: grid;
         grid-template-columns: 1fr 1fr;

@@ -14,7 +14,12 @@ SPDX-License-Identifier: MIT
         <div class="flex-col flex-grow">
             <div class="primary flex-row flex-space-between gap-xxs">
                 <div class="primary-left">
-                    <Button v-for="view in primaryRoutes" :key="view.path" :to="view.path === '/play' ? '/play/menu' : view.path">
+                    <Button 
+                        v-for="view in primaryRoutes" 
+                        :key="view.path" 
+                        :to="view.path === '/play' ? '/play/menu' : view.path"
+                        :class="{ 'dev-only': view.meta.devOnly }"
+                    >
                         {{ view.meta.title }}
                     </Button>
                 </div>
@@ -24,7 +29,7 @@ SPDX-License-Identifier: MIT
                         v-if="me.isAuthenticated && settingsStore.devMode"
                         v-tooltip.bottom="t('lobby.navbar.tooltips.directMessages')"
                         v-click-away:messages="() => (messagesOpen = false)"
-                        :class="['icon', { active: messagesOpen }]"
+                        :class="['icon', 'dev-only', { active: messagesOpen }]"
                         @click="messagesOpen = true"
                     >
                         <Icon :icon="messageIcon" :height="40" />
@@ -34,7 +39,7 @@ SPDX-License-Identifier: MIT
                         v-if="settingsStore.devMode"
                         v-tooltip.bottom="t('lobby.navbar.tooltips.friends')"
                         v-click-away:friends="() => (friendsOpen = false)"
-                        :class="['icon', { active: friendsOpen }]"
+                        :class="['icon', 'dev-only', { active: friendsOpen }]"
                         @click="handleFriendsClick"
                     >
                         <Icon :icon="accountMultiple" :height="40" />
@@ -68,7 +73,12 @@ SPDX-License-Identifier: MIT
             </div>
             <div class="secondary">
                 <div class="secondary-left flex-row flex-left">
-                    <Button v-for="view in secondaryRoutes" :key="view.path" :to="view.path">
+                    <Button 
+                        v-for="view in secondaryRoutes" 
+                        :key="view.path" 
+                        :to="view.path"
+                        :class="{ 'dev-only': view.meta.devOnly }"
+                    >
                         {{ view.meta.title ?? view.name }}
                     </Button>
                 </div>

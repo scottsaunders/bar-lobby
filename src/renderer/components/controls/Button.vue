@@ -15,6 +15,7 @@ SPDX-License-Identifier: MIT
     >
         <PrimeVueButton 
             v-bind="$attrs"
+            :disabled="disabled"
             v-tooltip.bottom="tooltipValue"
         >
             <div class="button-content" :class="buttonTextClass">
@@ -230,6 +231,12 @@ $btnColors: (
             box-shadow:
                 1px 1px 3px rgba(0, 0, 0, 0.1),
                 inset 0 -17px 0 rgba(0, 0, 0, 0.05);
+        }
+        // Override color when disabled
+        &.disabled {
+            background-color: rgba(128, 128, 128, 0.3) !important;
+            border-color: rgba(128, 128, 128, 0.2) !important;
+            box-shadow: none !important;
         }
     }
 }

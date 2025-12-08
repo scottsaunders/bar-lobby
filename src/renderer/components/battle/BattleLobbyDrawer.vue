@@ -40,7 +40,7 @@ onKeyDown(
     height: 100%;
     padding-top: 96px;
     width: 900px;
-    transform: translateX(-100%);
+    transform: translateX(calc(-100% - 50px));
     transition: all 0.4s ease-out;
     z-index: 2;
     &.is-open {

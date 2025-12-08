@@ -366,15 +366,18 @@
                 "mapOptionsModal": {
                     "title": "Map Options",
                     "mapOptionsTitle": "Map Options",
+                    "startPositionType": "Start Position Type",
+                    "startBoxes": "Start Boxes",
+                    "fixedPositions": "Fixed Positions",
                     "boxesPresets": "Boxes presets",
                     "customBoxes": "Custom boxes",
+                    "teamManagement": "Team Management",
                     "deleteTeam": "Delete Team",
                     "team": "Team",
                     "player": "player",
                     "ai": "AI",
                     "addTeam": "Add Team",
                     "editPresetTeams": "Edit Preset Teams",
-                    "fixedPositions": "Fixed positions",
                     "random": "Random",
                     "close": "Close"
                 },
@@ -415,7 +418,8 @@
                     "players": "({count} / {maxCount} players)",
                     "scavengers": "Scavengers",
                     "raptors": "Raptors",
-                    "teamId": "Team {id}"
+                    "teamId": "Team {id}",
+                    "deleteTeam": "Delete Team"
                 },
                 "spectatorsComponent": {
                     "spectators": "Spectators",

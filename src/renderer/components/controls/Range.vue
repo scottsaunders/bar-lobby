@@ -10,7 +10,7 @@ SPDX-License-Identifier: MIT
             v-bind="$attrs"
             :modelValue="low"
             @update:modelValue="(input: number) => onInput([input, high ?? min])"
-            @focus="(event: Event) => (event.target as HTMLInputElement)?.select()"
+            @focus="onFocus"
             class="min"
             :minFractionDigits="0"
             :maxFractionDigits="maxFractionDigits"
@@ -23,7 +23,7 @@ SPDX-License-Identifier: MIT
             v-bind="$attrs"
             :modelValue="typeof modelValue === 'number' ? modelValue : high"
             @update:modelValue="(input: number) => (typeof modelValue === 'number' ? onInput(input) : onInput([low ?? min, input]))"
-            @focus="(event: Event) => (event.target as HTMLInputElement)?.select()"
+            @focus="onFocus"
             class="max"
             :minFractionDigits="0"
             :maxFractionDigits="maxFractionDigits"
@@ -72,6 +72,21 @@ function onInput(input: number | number[]) {
     const clamp = (v: number) => Math.max(props.min ?? 0, Math.min(props.max ?? 100, v));
     emits("update:modelValue", Array.isArray(input) ? input.map(clamp).sort((a, b) => a - b) : clamp(input));
 }
+
+function onFocus(event: Event) {
+    // Only select text when user explicitly clicks into the field
+    // This prevents auto-selection on programmatic focus
+    const target = event.target as HTMLInputElement;
+    if (target) {
+        // Use a small delay to ensure the input is fully focused
+        // This allows selection when user clicks, but not on initial render
+        setTimeout(() => {
+            if (document.activeElement === target) {
+                target.select();
+            }
+        }, 0);
+    }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -87,6 +102,13 @@ function onInput(input: number | number[]) {
         text-align: center !important;
         line-height: normal !important;
         padding: 0 !important; // Reset internal padding
+        user-select: none; // Prevent text selection by default
+        caret-color: transparent; // Hide cursor by default
+        
+        &:focus {
+            user-select: text; // Allow selection when focused
+            caret-color: auto; // Show cursor when focused
+        }
     }
 }
 :deep(.p-slider) {

@@ -183,6 +183,8 @@ if (!settingsStore.devMode) {
 .view-container {
     flex: auto;
     transition: transform 0.4s ease-out;
+    overflow: hidden;
+    position: relative;
     &.translated-right {
         transform: translateX(10%);
     }
@@ -190,6 +192,7 @@ if (!settingsStore.devMode) {
 
 .wrapper {
     overflow: hidden;
+    position: relative;
 }
 
 .lobby-version {

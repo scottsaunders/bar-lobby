@@ -18,13 +18,18 @@ SPDX-License-Identifier: MIT
         @drop="onDrop($event, teamId)"
     >
         <div class="group-header flex-row flex-center-items gap-md">
-            <div class="title">{{ title }}</div>
-            <div class="member-count" v-if="!isRaptorTeam(teamId) && !isScavengerTeam(teamId)">
+            <div class="title subtitle-1">{{ title }}</div>
+            <div class="member-count body-2" v-if="!isRaptorTeam(teamId) && !isScavengerTeam(teamId)">
                 {{ t("lobby.components.battle.teamComponent.players", { count: memberCount, maxCount: maxPlayersPerTeam }) }}
             </div>
-            <Button class="slim black" @click="addBotClicked(teamId)" v-if="!isRaptorTeam(teamId) && !isScavengerTeam(teamId)">
-                {{ t("lobby.components.battle.teamComponent.addBot") }}
-            </Button>
+            <button 
+                v-if="canDeleteTeam" 
+                class="delete-team-button" 
+                @click.stop="deleteTeam"
+                :title="t('lobby.components.battle.teamComponent.deleteTeam')"
+            >
+                <Icon :icon="closeIcon" />
+            </button>
             <!-- <Button v-if="showJoin" class="slim black" @click="onJoinClicked(teamId)">Join</Button> -->
         </div>
         <div
@@ -38,23 +43,28 @@ SPDX-License-Identifier: MIT
             <PlayerParticipant v-if="isPlayer(member)" :player="member" />
             <BotParticipant v-else-if="isBot(member)" :bot="member" :team-id="teamId" />
         </div>
-        <div v-if="!isRaptorTeam(teamId) && !isScavengerTeam(teamId)">
-            <div v-for="(_, i) in getAmountOfJoinButtons(maxPlayersPerTeam, memberCount)" :key="i">
-                <button class="join-button" :class="{ first: i === 0 }" @click="addBotClicked(teamId)">
-                    {{ t("lobby.components.battle.teamComponent.addBot") }}
-                </button>
-            </div>
-        </div>
+        <template v-if="!isRaptorTeam(teamId) && !isScavengerTeam(teamId)">
+            <button
+                v-for="(_, i) in getAmountOfJoinButtons(maxPlayersPerTeam, memberCount)"
+                :key="i"
+                class="join-button"
+                :class="{ first: i === 0 }"
+                @click="addBotClicked(teamId)"
+            >
+                {{ t("lobby.components.battle.teamComponent.addBot") }}
+            </button>
+        </template>
     </div>
 </template>
 
 <script lang="ts" setup>
 import { computed } from "vue";
 import { useTypedI18n } from "@renderer/i18n";
+import { Icon } from "@iconify/vue";
+import closeIcon from "@iconify-icons/mdi/close";
 
 import BotParticipant from "@renderer/components/battle/BotParticipant.vue";
 import PlayerParticipant from "@renderer/components/battle/PlayerParticipant.vue";
-import Button from "@renderer/components/controls/Button.vue";
 import { Bot, isBot, isPlayer, isRaptor, isScavenger, Player } from "@main/game/battle/battle-types";
 import { battleActions, battleWithMetadataStore } from "@renderer/store/battle.store";
 
@@ -80,6 +90,25 @@ const maxPlayersPerTeam = computed(() => {
     if (!battleWithMetadataStore.battleOptions.map) return 1;
     return battleActions.getMaxPlayersPerTeam();
 });
+
+const canDeleteTeam = computed(() => {
+    // Can't delete raptor or scavenger teams
+    if (isRaptorTeam(props.teamId) || isScavengerTeam(props.teamId)) {
+        return false;
+    }
+    // Can't delete teams 1 and 2 (teamId 0 and 1)
+    if (props.teamId === 0 || props.teamId === 1) {
+        return false;
+    }
+    // Need at least 2 teams to delete one
+    return battleWithMetadataStore.teams.length >= 2;
+});
+
+function deleteTeam() {
+    if (canDeleteTeam.value) {
+        battleActions.removeTeam(props.teamId);
+    }
+}
 
 function isRaptorTeam(teamId: number) {
     return battleWithMetadataStore.teams[teamId].participants.some((member) => isBot(member) && isRaptor(member));
@@ -134,14 +163,20 @@ function onDrop(event: DragEvent, teamId: number) {
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .group {
     border: 1px inset rgba(255, 255, 255, 0.1);
     background: rgba(0, 0, 0, 0.5);
     min-height: 100px;
-    padding: 10px;
+    padding-left: map-get($spacing, "sm");
+    padding-right: map-get($spacing, "sm");
+    padding-top: map-get($spacing, "sm");
+    padding-bottom: map-get($spacing, "sm");
     position: relative;
     display: flex;
     flex-direction: column;
+    gap: map-get($spacing, "xs");
     &.highlight {
         &:before {
             width: 100%;
@@ -173,15 +208,19 @@ function onDrop(event: DragEvent, teamId: number) {
 }
 
 .group-header {
-    margin-bottom: 4px;
+    margin-bottom: map-get($spacing, "xs");
+    position: relative;
 }
 
 .participant {
-    height: 46px;
+    height: map-get($spacing, "xxl");
+    width: 100%;
+    margin: 0;
+    display: flex;
+    align-items: center;
 }
 
 .title {
-    font-size: 20px;
     filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.8));
 }
 
@@ -194,23 +233,54 @@ function onDrop(event: DragEvent, teamId: number) {
 .team-members {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: map-get($spacing, "xs");
     flex-wrap: wrap;
-    margin-top: 5px;
+    margin-top: map-get($spacing, "xs");
+}
+
+.delete-team-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+    opacity: 0;
+    margin-left: auto;
+    
+    .group:hover & {
+        opacity: 1;
+    }
+    
+    &:hover {
+        color: rgba(239, 68, 68, 0.9);
+        background: rgba(239, 68, 68, 0.1);
+    }
+    
+    &:active {
+        transform: scale(0.95);
+    }
 }
 
 .join-button {
-    height: 46px;
+    height: map-get($spacing, "xxl");
     &.first {
         border-top: none;
     }
     border-top: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 8px;
+    padding: map-get($spacing, "xs");
     width: 100%;
     text-align: center;
     text-transform: uppercase;
     text-shadow: inset 0 0 10px rgba(0, 0, 0, 1);
-    font-size: 1.2em;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: Poppins, sans-serif;
+    line-height: 1.4;
     color: rgba(255, 255, 255, 0.15);
     cursor: pointer;
     transition: all 0.3s;

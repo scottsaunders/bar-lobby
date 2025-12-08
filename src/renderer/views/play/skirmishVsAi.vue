@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT
 -->
 
 <route lang="json5">
-{ meta: { title: "Skirmish vs AI", order: 1, devOnly: true, transition: { name: "slide-left" } } }
+{ meta: { title: "Skirmish vs AI", order: 1, transition: { name: "slide-left" } } }
 </route>
 
 <template>
@@ -43,24 +43,25 @@ SPDX-License-Identifier: MIT
                             <MapBattlePreview />
                         </div>
                         <div class="map-features-container">
-                            <div class="map-features-row flex-row flex-align-start">
-                                <div class="flex-row flex-center-items gap-sm body-1 map-feature-item">
-                                    <Icon :icon="personIcon" />
+                            <div class="map-features-row flex-row">
+                                <div class="flex-row flex-center-items gap-sm body-2 map-feature-item">
+                                    <Icon :icon="personIcon" height="16" />
                                     <span>{{ map?.playerCountMin }} - {{ map?.playerCountMax }}</span>
                                 </div>
-                                <div class="flex-row flex-center-items gap-sm body-1 map-feature-item">
-                                    <Icon :icon="gridIcon" />
+                                <div class="flex-row flex-center-items gap-sm body-2 map-feature-item">
+                                    <Icon :icon="gridIcon" height="16" />
                                     <span>{{ map?.mapWidth }} x {{ map?.mapHeight }}</span>
                                 </div>
                                 <div class="terrain-icons-container flex-row flex-center-items gap-sm flex-wrap flex-grow">
                                     <TerrainIcon v-for="terrain in map?.terrain" :terrain="terrain" v-bind:key="terrain" />
                                 </div>
-                                <div class="map-options-wrapper">
-                                    <Button v-tooltip.left="'Configure map options'" class="grey slim" @click="openMapOptions">
-                                        Options
+                                <div class="map-start-position-controls flex-row flex-center-items gap-sm">
+                                    <span class="body-2">{{ currentStartSystemText }}</span>
+                                    <Button class="grey slim" @click="openMapOptions" v-tooltip.left="'Configure start positions'">
+                                        <Icon :icon="pencilIcon" height="16" />
                                     </Button>
+                                    <MapOptionsModal v-if="battleStore.battleOptions.map" v-model="mapOptionsOpen" />
                                 </div>
-                                <MapOptionsModal v-if="battleStore.battleOptions.map" v-model="mapOptionsOpen" />
                             </div>
                         </div>
                     </div>
@@ -70,18 +71,29 @@ SPDX-License-Identifier: MIT
                 <Panel class="teams-settings-panel flex-grow" no-padding>
                     <div class="panel-content flex-col fullheight">
                         <div class="panel-body flex-grow padding-left-xxl padding-right-xxl padding-top-xxl padding-bottom-xxl flex-col gap-md">
-                            <div class="game-mode-selector">
+                            <div class="game-mode-selector flex-row gap-md">
                                 <Select
                                     :modelValue="gameModeOption"
                                     :options="gameModeOptions"
                                     data-key="id"
                                     optionLabel="label"
                                     label="Game Mode"
+                                    class="game-mode-dropdown"
                                     @update:model-value="onGameModeChanged"
+                                />
+                                <Select
+                                    v-if="isTeamMode"
+                                    :modelValue="currentTeamSizeOption"
+                                    :options="teamSizeOptions"
+                                    data-key="value"
+                                    optionLabel="label"
+                                    label="Team Size"
+                                    class="team-size-dropdown"
+                                    @update:model-value="onTeamSizeChanged"
                                 />
                             </div>
                             <div class="playerlist-container flex-grow">
-                                <Playerlist :is-team-mode="isTeamMode" />
+                                <Playerlist :is-team-mode="isTeamMode" :hide-spectators="true" />
                             </div>
                             <Button v-if="isTeamMode" class="fullwidth" @click="addTeam">
                                 Add Team
@@ -96,7 +108,7 @@ SPDX-License-Identifier: MIT
                         <h2 class="title-2 padding-left-xxl padding-top-xxl padding-right-xxl padding-bottom-lg">Teams & Settings</h2>
                         <div class="panel-body flex-grow padding-left-xxl padding-right-xxl padding-bottom-xxl flex-col gap-md">
                             <GameModeComponent />
-                            <div v-if="settingsStore.devMode">
+                            <div v-if="settingsStore.devMode" class="dev-only">
                                 <Select
                                     :modelValue="battleStore.battleOptions.gameVersion"
                                     :options="gameListOptions"
@@ -108,7 +120,7 @@ SPDX-License-Identifier: MIT
                                     @update:model-value="onGameSelected"
                                 />
                             </div>
-                            <div v-if="settingsStore.devMode">
+                            <div v-if="settingsStore.devMode" class="dev-only">
                                 <Select
                                     :modelValue="enginesStore.selectedEngineVersion"
                                     @update:model-value="(engine) => (enginesStore.selectedEngineVersion = engine)"
@@ -127,14 +139,14 @@ SPDX-License-Identifier: MIT
             <!-- Bottom Panel: Action Button -->
             <Panel class="bottom-action-panel" no-padding>
                 <div class="bottom-action-content flex-row flex-space-between padding-left-lg padding-right-lg padding-top-lg padding-bottom-lg">
-                    <Button class="blue large" @click="generateRandomSkirmish">
+                    <Button class="blue" @click="generateRandomSkirmish">
                         Generate Random Skirmish
                     </Button>
                     <div v-if="map" style="display: flex; align-items: center;">
-                        <Button v-if="gameStore.status === GameStatus.LOADING" class="grey large" disabled>{{
+                        <Button v-if="gameStore.status === GameStatus.LOADING" class="grey slim" disabled>{{
                             t("lobby.components.battle.offlineBattleComponent.gameIsStarting")
                         }}</Button>
-                        <Button v-else-if="gameStore.status === GameStatus.RUNNING" class="grey large" disabled>{{
+                        <Button v-else-if="gameStore.status === GameStatus.RUNNING" class="grey slim" disabled>{{
                             t("lobby.components.battle.offlineBattleComponent.gameIsRunning")
                         }}</Button>
                         <DownloadContentButton
@@ -143,12 +155,12 @@ SPDX-License-Identifier: MIT
                             :engines="battleStore.battleOptions.engineVersion ? [battleStore.battleOptions.engineVersion] : []"
                             :games="battleStore.battleOptions.gameVersion ? [battleStore.battleOptions.gameVersion] : []"
                             download-text="Download Map"
-                            class="large"
+                            class="slim"
                             @click="battleActions.startBattle"
                             >Start Game</DownloadContentButton
                         >
                     </div>
-                    <Button v-else class="green large" disabled>{{
+                    <Button v-else class="green slim" disabled>{{
                         t("lobby.components.battle.offlineBattleComponent.startTheGame")
                     }}</Button>
                 </div>
@@ -181,9 +193,10 @@ import { enginesStore } from "@renderer/store/engine.store";
 import TerrainIcon from "@renderer/components/maps/filters/TerrainIcon.vue";
 import personIcon from "@iconify-icons/mdi/person-multiple";
 import gridIcon from "@iconify-icons/mdi/grid";
+import pencilIcon from "@iconify-icons/mdi/pencil";
 import { getRandomMap } from "@renderer/store/maps.store";
 import Playerlist from "@renderer/components/battle/Playerlist.vue";
-import { GameModeID, type GameModeWithOptions } from "@main/game/battle/battle-types";
+import { GameModeID, type GameModeWithOptions, StartPosType } from "@main/game/battle/battle-types";
 import { getTranslatedGameMode } from "@renderer/store/battle.store";
 
 const { t } = useTypedI18n();
@@ -331,6 +344,47 @@ function addTeam() {
     battleActions.addTeam();
 }
 
+// Team size management
+const teamSizeOptions = computed(() => {
+    // Generate options from 1 to 10 as objects with label and value
+    return Array.from({ length: 10 }, (_, i) => ({
+        label: String(i + 1),
+        value: i + 1,
+    }));
+});
+
+const currentTeamSize = computed(() => {
+    // Return custom team size if set, otherwise get from map
+    if (battleStore.battleOptions.mapOptions.customTeamSize !== undefined) {
+        return battleStore.battleOptions.mapOptions.customTeamSize;
+    }
+    return battleActions.getMaxPlayersPerTeam();
+});
+
+const currentTeamSizeOption = computed(() => {
+    const size = currentTeamSize.value;
+    return teamSizeOptions.value.find(opt => opt.value === size) || teamSizeOptions.value[0];
+});
+
+function onTeamSizeChanged(option: { label: string; value: number }) {
+    battleStore.battleOptions.mapOptions.customTeamSize = option.value;
+    // Update teams to match the new team size
+    battleActions.updateTeams();
+}
+
+// Current start system text
+const currentStartSystemText = computed(() => {
+    const startPosType = battleStore.battleOptions.mapOptions.startPosType;
+    if (startPosType === StartPosType.Boxes) {
+        return "Start Boxes";
+    } else if (startPosType === StartPosType.Fixed) {
+        return "Fixed Positions";
+    } else if (startPosType === StartPosType.Random) {
+        return "Random Positions";
+    }
+    return "Start Boxes"; // Default
+});
+
 // Initialize battle store and ensure game mode is Teams (CLASSIC)
 onMounted(async () => {
     // Get a map first if we don't have one
@@ -374,8 +428,11 @@ onMounted(async () => {
     min-height: 0;
     width: 100%;
     padding: 0 map-get($spacing, "xxl") map-get($spacing, "sm") map-get($spacing, "xxl");
-    overflow: hidden;
+    padding-bottom: calc(#{map-get($spacing, "sm")} + 10px); // Add extra space for button bar shadow
+    overflow-x: hidden;
+    overflow-y: hidden;
     box-sizing: border-box;
+    position: relative;
     
     .view-title {
         padding-left: 0;
@@ -387,12 +444,13 @@ onMounted(async () => {
     height: 100%;
     min-height: 0;
     align-items: stretch; // Ensure all panels have the same height
-    // Account for button bar: button bar is at bottom 140px, has padding lg (16px) top/bottom, button height 72px
-    // Total button bar height: 72px + 16px + 16px = 104px
+    // Account for button bar: button bar has padding lg (16px) top/bottom, small button height 48px
+    // Total button bar height: 48px + 16px + 16px = 80px
     // Add gap of lg (16px) between panels and button bar
-    // Total space needed: 104px + 16px = 120px
-    padding-bottom: calc(104px + #{map-get($spacing, "lg")}); // Button bar height + gap
+    // Total space needed: 80px + 16px = 96px
+    padding-bottom: calc(80px + #{map-get($spacing, "lg")}); // Button bar height + gap
     box-sizing: border-box;
+    overflow: hidden; // Prevent content from appearing off-screen during transitions
 }
 
 .map-panel {
@@ -427,6 +485,12 @@ onMounted(async () => {
     }
 }
 
+.map-start-position-controls {
+    flex-shrink: 0; // Hug contents
+    display: flex;
+    align-items: center;
+}
+
 .map-features-container {
     flex-shrink: 0;
     order: 2; // Ensure map features come after map preview
@@ -442,6 +506,7 @@ onMounted(async () => {
     flex-shrink: 0;
     gap: map-get($spacing, "md");
     flex-wrap: nowrap; // Don't wrap the row itself
+    align-items: center; // Center all items vertically
 }
 
 .teams-settings-panel {
@@ -479,7 +544,7 @@ onMounted(async () => {
 
 .bottom-action-panel {
     position: absolute;
-    bottom: 140px; // 0 margin + view's bottom padding (140px for chat)
+    bottom: 10px; // Move up slightly to allow shadow to show
     left: map-get($spacing, "xxl");
     right: map-get($spacing, "xxl");
     width: calc(100% - #{map-get($spacing, "xxl") * 2});
@@ -494,12 +559,7 @@ onMounted(async () => {
     // Override DownloadContentButton wrapper width in button bar
     :deep(.download-button-wrapper) {
         width: auto;
-    }
-    
-    // Set fixed width for download button in skirmish view only
-    :deep(.download-button--large) {
-        width: 240px; // Fixed width to ensure consistency across all states (Download/Downloading/Start)
-        min-width: 240px;
+        min-width: 400px;
     }
 }
 
@@ -513,10 +573,12 @@ onMounted(async () => {
     min-width: 0; // Allow shrinking below content size
 }
 
-.map-options-wrapper {
-    flex-shrink: 0; // Options button wrapper hugs its contents
-    align-self: flex-start; // Align wrapper to top
-    display: flex;
-    align-items: flex-start; // Align button to top within wrapper
+
+.game-mode-dropdown {
+    flex: 4; // 80% of the space (4:1 ratio)
+}
+
+.team-size-dropdown {
+    flex: 1; // 20% of the space (4:1 ratio)
 }
 </style>

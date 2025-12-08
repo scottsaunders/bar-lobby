@@ -7,10 +7,10 @@ SPDX-License-Identifier: MIT
 <template>
     <Modal ref="modal" :title="t('lobby.navbar.exit.title')">
         <div class="flex-row gap-md">
-            <Button @click="login" v-if="!me.isAuthenticated && !onLoginPage && settingsStore.devMode">{{
+            <Button @click="login" v-if="!me.isAuthenticated && !onLoginPage && settingsStore.devMode" class="dev-only">{{
                 t("lobby.navbar.exit.login")
             }}</Button>
-            <Button @click="logout" v-if="me.isAuthenticated && !onLoginPage && settingsStore.devMode">{{
+            <Button @click="logout" v-if="me.isAuthenticated && !onLoginPage && settingsStore.devMode" class="dev-only">{{
                 t("lobby.navbar.exit.logout")
             }}</Button>
             <Button @click="quitToDesktop">{{ t("lobby.navbar.exit.quitToDesktop") }}</Button>

@@ -26,6 +26,9 @@ interface BattleLobby {
     isSelectingGameMode: boolean;
 }
 
+// Store participant bonuses (participant id -> bonus percentage)
+const participantBonuses = reactive<Map<number, number>>(new Map());
+
 // Store
 export const battleStore = reactive<Battle & BattleLobby>({
     isJoined: false,
@@ -224,22 +227,37 @@ function getNumberOfTeams(): number {
         }
     }
 
-    if (battleStore.battleOptions.mapOptions.startPosType in [StartPosType.Fixed, StartPosType.Random]) {
-        if (!map.startPos || !map.startPos.team) throw new Error("failed to access team start position");
+    if (battleStore.battleOptions.mapOptions.startPosType === StartPosType.Fixed || 
+        battleStore.battleOptions.mapOptions.startPosType === StartPosType.Random) {
+        if (!map.startPos || !map.startPos.team) {
+            // Map doesn't have fixed positions, default to 2 teams
+            return 2;
+        }
 
-        const teamPreset = map.startPos.team[battleStore.battleOptions.mapOptions.fixedPositionsIndex ?? 0];
-        numberOfTeams = teamPreset.sides.length || 0;
+        const fixedPositionsIndex = battleStore.battleOptions.mapOptions.fixedPositionsIndex ?? 0;
+        if (fixedPositionsIndex >= map.startPos.team.length) {
+            // Index out of bounds, default to 2 teams
+            return 2;
+        }
+
+        const teamPreset = map.startPos.team[fixedPositionsIndex];
+        numberOfTeams = teamPreset?.sides?.length || 0;
     }
 
     return numberOfTeams;
 }
 
 function getMaxPlayersPerTeam() {
+    // If custom team size is set, use it
+    if (battleStore.battleOptions.mapOptions.customTeamSize !== undefined) {
+        return battleStore.battleOptions.mapOptions.customTeamSize;
+    }
+
     let maxPlayersPerTeam: number | null = null;
 
     const map = battleStore.battleOptions.map;
 
-    if (!map) throw new Error("failed to access battle options map");
+    if (!map) return 0;
 
     if (battleStore.battleOptions.mapOptions.startPosType === StartPosType.Boxes) {
         const startBoxIndex = battleStore.battleOptions.mapOptions.startBoxesIndex;
@@ -252,11 +270,17 @@ function getMaxPlayersPerTeam() {
         }
     }
 
-    if (battleStore.battleOptions.mapOptions.startPosType in [StartPosType.Fixed, StartPosType.Random]) {
-        if (!map.startPos || !map.startPos.team) throw new Error("failed to access team start position");
+    if (battleStore.battleOptions.mapOptions.startPosType === StartPosType.Fixed || 
+        battleStore.battleOptions.mapOptions.startPosType === StartPosType.Random) {
+        if (!map.startPos || !map.startPos.team) return 0;
 
-        const teamPreset = map.startPos.team[battleStore.battleOptions.mapOptions.fixedPositionsIndex ?? 0];
-        maxPlayersPerTeam = teamPreset.playersPerTeam || 0;
+        const fixedPositionsIndex = battleStore.battleOptions.mapOptions.fixedPositionsIndex ?? 0;
+        if (fixedPositionsIndex >= map.startPos.team.length) {
+            return 0;
+        }
+
+        const teamPreset = map.startPos.team[fixedPositionsIndex];
+        maxPlayersPerTeam = teamPreset?.playersPerTeam || 0;
     }
 
     return maxPlayersPerTeam || 0;
@@ -581,6 +605,17 @@ function addCoopAI(coopAI: "RaptorsAI" | "ScavengersAI") {
     }
 }
 
+function setParticipantBonus(participant: Player | Bot, bonus: number) {
+    participantBonuses.set(participant.id, bonus);
+    // Also update incomeMultiplier: bonus 100% = 2.0x income, bonus 0% = 1.0x income
+    // Formula: incomeMultiplier = 1 + (bonus / 100)
+    participant.incomeMultiplier = 1 + (bonus / 100);
+}
+
+function getParticipantBonus(participant: Player | Bot): number {
+    return participantBonuses.get(participant.id) ?? 0;
+}
+
 export const battleActions = {
     movePlayerToTeam,
     movePlayerToSpectators,
@@ -598,6 +633,8 @@ export const battleActions = {
     loadGameMode,
     getMaxPlayersPerTeam,
     getCurrentStartBoxes,
+    setParticipantBonus,
+    getParticipantBonus,
 };
 
 // Needs game files to exists.

@@ -56,6 +56,7 @@ export type BattleOptions = {
         customStartBoxes?: StartBox[];
         customStartBoxPreset?: StartBoxOrientation;
         fixedPositionsIndex?: number;
+        customTeamSize?: number;
     };
     restrictions: Restriction[];
 };

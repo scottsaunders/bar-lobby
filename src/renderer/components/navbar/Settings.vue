@@ -26,8 +26,8 @@ SPDX-License-Identifier: MIT
             <Checkbox v-model="settingsStore.skipIntro" />
 
             <template v-if="settingsStore.devMode">
-                <div>{{ t("lobby.navbar.settings.loginAutomatically") }}</div>
-                <Checkbox v-model="settingsStore.loginAutomatically" />
+                <div class="dev-only">{{ t("lobby.navbar.settings.loginAutomatically") }}</div>
+                <div class="dev-only"><Checkbox v-model="settingsStore.loginAutomatically" /></div>
             </template>
 
             <div>{{ t("lobby.navbar.settings.sfxVolume") }}</div>

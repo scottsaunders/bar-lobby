@@ -2229,10 +2229,17 @@
                     "configure": "Configure",
                     "duplicate": "Duplicate",
                     "kick": "Kick",
-                    "configureBot": "Configure Bot"
+                    "configureBot": "Configure Bot",
+                    "addBonus": "Add Bonus"
                 },
                 "addBotModal": {
                     "title": "Add Bot"
+                },
+                "addBonusModal": {
+                    "title": "Add Bonus",
+                    "description": "Give {name} an additional % resource bonus. 100% means that player produces double the normal resource amount. 0% is regular resource production. In single player games, a negative bonus will result in that player getting X% less resources",
+                    "save": "Save",
+                    "cancel": "Cancel"
                 },
                 "battleChat": {
                     "placeholder": "Type your message...",
@@ -2296,7 +2303,8 @@
                     "addFriend": "Add Friend",
                     "kick": "Kick",
                     "ring": "Ring",
-                    "more": "More"
+                    "more": "More",
+                    "addBonus": "Add Bonus"
                 },
                 "battleTitleComponent": {
                     "title": "Battle Title"

@@ -63,8 +63,16 @@ function onMouseEnter() {
         margin-top: 4px;
     }
     &.disabled {
-        opacity: 0.5;
+        background-color: rgba(128, 128, 128, 0.3);
+        border-color: rgba(128, 128, 128, 0.2);
+        opacity: 0.6;
         pointer-events: none;
+        cursor: not-allowed;
+        
+        &:hover {
+            background-color: rgba(128, 128, 128, 0.3);
+            border-color: rgba(128, 128, 128, 0.2);
+        }
     }
     &.dark {
         background-color: rgba(0, 0, 0, 0.1);
