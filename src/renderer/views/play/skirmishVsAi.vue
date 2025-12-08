@@ -326,6 +326,8 @@ async function generateRandomSkirmish() {
 const gameModeOptions: GameModeWithOptions[] = [
     { id: GameModeID.CLASSIC, label: "Teams", options: {} },
     { id: GameModeID.FFA, label: getTranslatedGameMode(GameModeID.FFA), options: {} },
+    { id: GameModeID.RAPTORS, label: getTranslatedGameMode(GameModeID.RAPTORS), options: {} },
+    { id: GameModeID.SCAVENGERS, label: getTranslatedGameMode(GameModeID.SCAVENGERS), options: {} },
 ];
 
 const gameModeOption = computed(() => {
