@@ -158,6 +158,16 @@ function addTeam() {
 function addBot(ai: EngineAI | GameAI, teamId: number) {
     if (!battleStore.me) throw new Error("failed to access current player");
 
+    // Ensure the team exists before adding a bot to it
+    if (!battleStore.teams[teamId]) {
+        addTeam();
+        // If we just added a team, it might not be at the expected index
+        // Ensure we have enough teams
+        while (battleStore.teams.length <= teamId) {
+            addTeam();
+        }
+    }
+
     battleStore.teams[teamId].participants.push({
         id: participantId++,
         name: ai.name,
@@ -210,6 +220,11 @@ function moveBotToTeam(bot: Bot, teamId: number) {
 }
 
 function getNumberOfTeams(): number {
+    // FFA mode always has 1 team
+    if (battleStore.battleOptions.gameMode.id === GameModeID.FFA) {
+        return 1;
+    }
+
     let numberOfTeams = 2;
 
     const map = battleStore.battleOptions.map;
@@ -251,6 +266,14 @@ function getMaxPlayersPerTeam() {
     // If custom team size is set, use it
     if (battleStore.battleOptions.mapOptions.customTeamSize !== undefined) {
         return battleStore.battleOptions.mapOptions.customTeamSize;
+    }
+
+    // For FFA mode, return custom team size (used for max players) or default to 8, but allow up to 16
+    if (battleStore.battleOptions.gameMode.id === GameModeID.FFA) {
+        if (battleStore.battleOptions.mapOptions.customTeamSize !== undefined) {
+            return Math.min(battleStore.battleOptions.mapOptions.customTeamSize, 16);
+        }
+        return 8;
     }
 
     let maxPlayersPerTeam: number | null = null;
@@ -450,8 +473,11 @@ watch(
 watch(
     () => battleStore.battleOptions.map,
     () => {
-        battleStore.battleOptions.mapOptions.startPosType = StartPosType.Boxes;
-        battleStore.battleOptions.mapOptions.startBoxesIndex = 0;
+        // Preserve FFA's Random startPosType when map changes
+        if (battleStore.battleOptions.gameMode.id !== GameModeID.FFA) {
+            battleStore.battleOptions.mapOptions.startPosType = StartPosType.Boxes;
+            battleStore.battleOptions.mapOptions.startBoxesIndex = 0;
+        }
         if (battleStore.me) battleStore.me.contentSyncState.map = battleStore.battleOptions.map?.isInstalled ? 1 : 0;
         updateTeams();
     },
@@ -562,8 +588,8 @@ async function loadGameMode(gameMode: GameModeID) {
                     options: {},
                 },
                 mapOptions: {
-                    startPosType: StartPosType.Boxes,
-                    startBoxesIndex: 0,
+                    startPosType: StartPosType.Random, // FFA uses random positions instead of boxes
+                    fixedPositionsIndex: 0,
                 },
                 restrictions: [],
             };
@@ -582,9 +608,17 @@ function addCoopAI(coopAI: "RaptorsAI" | "ScavengersAI") {
 
     removeCoopAIs();
 
+    // Ensure we have at least 2 teams (team 0 for players, team 1 for coop AI)
+    while (battleStore.teams.length < 2) {
+        addTeam();
+    }
+
     const ai = gameStore.selectedGameVersion.ais.find((ai) => ai.shortName === coopAI);
 
     if (ai) addBot(ai, 1);
+
+    // Ensure team 1 exists before accessing it
+    if (!battleStore.teams[1]) return;
 
     for (const participant of battleStore.teams[1].participants) {
         if (isPlayer(participant)) {

@@ -15,11 +15,14 @@ SPDX-License-Identifier: MIT
                 <h1>{{ t("lobby.views.play.skirmish") }}</h1>
                 <p>Configure your battle against AI opponents</p>
             </div>
-            <div class="skirmish-layout flex-row gap-xl">
-                <!-- Left Panel: Map Information -->
-                <div class="map-panel flex-col fullheight">
-                    <div class="map-panel-content flex-grow flex-col gap-md">
-                        <div class="flex-row gap-md">
+            <div class="skirmish-container flex-col fullheight">
+                <!-- Top Row: Three Main Panels -->
+                <div class="skirmish-layout flex-row gap-xl flex-grow min-height-0">
+                    <!-- Left Panel: Map Information -->
+                    <Panel class="map-panel" no-padding>
+                    <div class="panel-content flex-col fullheight">
+                        <div class="panel-body flex-grow padding-left-xxl padding-right-xxl padding-top-xxl padding-bottom-xxl flex-col gap-md">
+                        <div class="map-selector-row flex-row gap-md">
                             <Select
                                 :modelValue="battleStore.battleOptions.map"
                                 :options="mapListOptions"
@@ -27,7 +30,7 @@ SPDX-License-Identifier: MIT
                                 label="Map"
                                 optionLabel="springName"
                                 :filter="true"
-                                class="fullwidth"
+                                class="map-selector-dropdown"
                                 @update:model-value="onMapSelected"
                             />
                             <Button v-tooltip.left="'Open map selector'" @click="openMapList">
@@ -64,8 +67,9 @@ SPDX-License-Identifier: MIT
                                 </div>
                             </div>
                         </div>
+                        </div>
                     </div>
-                </div>
+                </Panel>
 
                 <!-- Center Panel: Teams and Spectators -->
                 <Panel class="teams-settings-panel flex-grow" no-padding>
@@ -91,6 +95,16 @@ SPDX-License-Identifier: MIT
                                     class="team-size-dropdown"
                                     @update:model-value="onTeamSizeChanged"
                                 />
+                                <Select
+                                    v-if="isFFAMode"
+                                    :modelValue="currentPlayerCountOption"
+                                    :options="playerCountOptions"
+                                    data-key="value"
+                                    optionLabel="label"
+                                    label="Players"
+                                    class="player-count-dropdown"
+                                    @update:model-value="onPlayerCountChanged"
+                                />
                             </div>
                             <div class="playerlist-container flex-grow">
                                 <Playerlist :is-team-mode="isTeamMode" :hide-spectators="true" />
@@ -105,41 +119,16 @@ SPDX-License-Identifier: MIT
                 <!-- Right Panel: Teams and Settings -->
                 <Panel class="tbd-panel" no-padding>
                     <div class="panel-content flex-col fullheight">
-                        <h2 class="title-2 padding-left-xxl padding-top-xxl padding-right-xxl padding-bottom-lg">Teams & Settings</h2>
-                        <div class="panel-body flex-grow padding-left-xxl padding-right-xxl padding-bottom-xxl flex-col gap-md">
+                        <div class="panel-body flex-grow padding-left-xxl padding-right-xxl padding-top-xxl padding-bottom-xxl flex-col gap-md">
                             <GameModeComponent />
-                            <div v-if="settingsStore.devMode" class="dev-only">
-                                <Select
-                                    :modelValue="battleStore.battleOptions.gameVersion"
-                                    :options="gameListOptions"
-                                    optionLabel="gameVersion"
-                                    optionValue="gameVersion"
-                                    label="Game"
-                                    :filter="true"
-                                    :placeholder="battleStore.battleOptions.gameVersion"
-                                    @update:model-value="onGameSelected"
-                                />
-                            </div>
-                            <div v-if="settingsStore.devMode" class="dev-only">
-                                <Select
-                                    :modelValue="enginesStore.selectedEngineVersion"
-                                    @update:model-value="(engine) => (enginesStore.selectedEngineVersion = engine)"
-                                    :options="enginesStore.availableEngineVersions"
-                                    data-key="id"
-                                    optionLabel="id"
-                                    label="Engine"
-                                    :filter="true"
-                                    class="fullwidth"
-                                />
-                            </div>
                         </div>
                     </div>
                 </Panel>
-            </div>
-            <!-- Bottom Panel: Action Button -->
-            <Panel class="bottom-action-panel" no-padding>
-                <div class="bottom-action-content flex-row flex-space-between padding-left-lg padding-right-lg padding-top-lg padding-bottom-lg">
-                    <Button class="blue" @click="generateRandomSkirmish">
+                </div>
+                <!-- Bottom Row: Button Panel -->
+                <Panel class="bottom-action-panel" no-padding>
+                    <div class="bottom-action-content flex-row flex-space-between padding-left-lg padding-right-lg padding-top-lg padding-bottom-lg">
+                        <Button class="blue" @click="generateRandomSkirmish">
                         Generate Random Skirmish
                     </Button>
                     <div v-if="map" style="display: flex; align-items: center;">
@@ -160,11 +149,36 @@ SPDX-License-Identifier: MIT
                             >Start Game</DownloadContentButton
                         >
                     </div>
-                    <Button v-else class="green slim" disabled>{{
-                        t("lobby.components.battle.offlineBattleComponent.startTheGame")
-                    }}</Button>
-                </div>
-            </Panel>
+                        <Button v-else class="green slim" disabled>{{
+                            t("lobby.components.battle.offlineBattleComponent.startTheGame")
+                        }}</Button>
+                    </div>
+                </Panel>
+            </div>
+            <!-- Dev-only dropdowns: Game and Engine (bottom right) -->
+            <div v-if="settingsStore.devMode" class="dev-dropdowns dev-only">
+                <Select
+                    :modelValue="battleStore.battleOptions.gameVersion"
+                    :options="gameListOptions"
+                    optionLabel="gameVersion"
+                    optionValue="gameVersion"
+                    label="Game"
+                    :filter="true"
+                    :placeholder="battleStore.battleOptions.gameVersion"
+                    @update:model-value="onGameSelected"
+                    class="dev-select"
+                />
+                <Select
+                    :modelValue="enginesStore.selectedEngineVersion"
+                    @update:model-value="(engine) => (enginesStore.selectedEngineVersion = engine)"
+                    :options="enginesStore.availableEngineVersions"
+                    data-key="id"
+                    optionLabel="id"
+                    label="Engine"
+                    :filter="true"
+                    class="dev-select"
+                />
+            </div>
         </div>
     </div>
 </template>
@@ -339,6 +353,10 @@ const isTeamMode = computed(() => {
     return gameMode === GameModeID.CLASSIC || gameMode === GameModeID.RAPTORS || gameMode === GameModeID.SCAVENGERS;
 });
 
+const isFFAMode = computed(() => {
+    return battleStore.battleOptions.gameMode.id === GameModeID.FFA;
+});
+
 async function onGameModeChanged(mode: GameModeWithOptions) {
     await battleActions.loadGameMode(mode.id);
 }
@@ -372,6 +390,35 @@ const currentTeamSizeOption = computed(() => {
 function onTeamSizeChanged(option: { label: string; value: number }) {
     battleStore.battleOptions.mapOptions.customTeamSize = option.value;
     // Update teams to match the new team size
+    battleActions.updateTeams();
+}
+
+// Player count management for FFA mode
+const playerCountOptions = computed(() => {
+    // Always allow up to 16 players for FFA
+    return Array.from({ length: 16 }, (_, i) => ({
+        label: String(i + 1),
+        value: i + 1,
+    }));
+});
+
+const currentPlayerCount = computed(() => {
+    // Return custom team size if set (used for FFA max players), otherwise get from map
+    if (battleStore.battleOptions.mapOptions.customTeamSize !== undefined) {
+        return battleStore.battleOptions.mapOptions.customTeamSize;
+    }
+    // For FFA, default to 8 but allow up to 16
+    return 8;
+});
+
+const currentPlayerCountOption = computed(() => {
+    const count = currentPlayerCount.value;
+    return playerCountOptions.value.find(opt => opt.value === count) || playerCountOptions.value[0];
+});
+
+function onPlayerCountChanged(option: { label: string; value: number }) {
+    battleStore.battleOptions.mapOptions.customTeamSize = option.value;
+    // Update teams to match the new player count
     battleActions.updateTeams();
 }
 
@@ -431,9 +478,7 @@ onMounted(async () => {
     min-height: 0;
     width: 100%;
     padding: 0 map-get($spacing, "xxl") map-get($spacing, "sm") map-get($spacing, "xxl");
-    padding-bottom: calc(#{map-get($spacing, "sm")} + 10px); // Add extra space for button bar shadow
-    overflow-x: hidden;
-    overflow-y: hidden;
+    overflow: visible; // Allow panel shadows to be visible
     box-sizing: border-box;
     position: relative;
     
@@ -442,49 +487,88 @@ onMounted(async () => {
     }
 }
 
+.skirmish-container {
+    width: 100%;
+    min-height: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: map-get($spacing, "lg"); // Gap between top row and bottom row
+}
+
 .skirmish-layout {
     width: 100%;
-    height: 100%;
     min-height: 0;
+    flex: 1; // Take up available space in top row
     align-items: stretch; // Ensure all panels have the same height
-    // Account for button bar: button bar has padding lg (16px) top/bottom, small button height 48px
-    // Total button bar height: 48px + 16px + 16px = 80px
-    // Add gap of lg (16px) between panels and button bar
-    // Total space needed: 80px + 16px = 96px
-    padding-bottom: calc(80px + #{map-get($spacing, "lg")}); // Button bar height + gap
-    box-sizing: border-box;
-    overflow: hidden; // Prevent content from appearing off-screen during transitions
+    overflow: visible; // Allow shadows to be visible (changed from hidden to prevent shadow clipping)
 }
 
 .map-panel {
-    width: 440px;
+    width: auto; // HUG width - determined by map preview
+    min-width: 0;
     min-height: 0;
+    max-width: 30%; // Constrain to max 30% of available width
+    flex-shrink: 1; // Allow shrinking
+    display: flex;
+    flex-direction: column;
+    height: 100%; // Fill height
+    overflow: hidden; // Prevent overflow
+    
+    // Ensure panel content is properly constrained
+    :deep(.content) {
+        min-height: 0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        width: 100%; // Fill panel width
+    }
+}
+
+.map-selector-row {
+    width: 100%; // Fill panel width
     flex-shrink: 0;
 }
 
-.map-panel-content {
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    gap: map-get($spacing, "md"); // Ensure spacing between children
+.map-selector-dropdown {
+    flex: 1; // Take up remaining space
+    min-width: 0; // Allow shrinking
+    width: 100%; // Fill width
+}
+
+.map-features-container {
+    flex-shrink: 0;
+    order: 2; // Ensure map features come after map preview
+    position: relative; // Ensure it's in normal flow
+    width: 100%; // Fill panel width
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: map-get($spacing, "md");
+    border-radius: 2px;
+    box-sizing: border-box; // Include padding in width calculation
 }
 
 .map-preview-container {
-    flex-shrink: 0;
-    width: 100%;
-    max-width: 100%;
-    min-height: 200px;
-    max-height: 440px; // Increased max height to ensure all maps fit
+    flex-grow: 1; // Fill available height
+    flex-shrink: 1; // Allow shrinking if needed
+    width: 100%; // Fill panel width (constrained by panel max-width)
+    min-height: 0; // Allow shrinking below minimum
+    min-width: 0; // Allow flex item to shrink below content size
     order: 1; // Ensure map preview comes first
     overflow: hidden; // Prevent content from overflowing
     display: flex;
     align-items: center;
     justify-content: center;
     
-    // Ensure the map container inside respects the parent size
+    // Map preview fills HEIGHT, maintains 1:1 ratio, fits within container width
     :deep(.map-container) {
-        max-width: 100%;
-        max-height: 100%;
+        height: 100%; // Fill available HEIGHT
+        width: 100%; // Fill container width
+        aspect-ratio: 1; // Maintain 1:1 ratio
+        max-width: 100%; // Don't exceed container width
+        max-height: 100%; // Don't exceed container height
+        object-fit: contain; // Fit within bounds while maintaining aspect ratio
+        flex-shrink: 1; // Allow shrinking to fit
     }
 }
 
@@ -492,17 +576,6 @@ onMounted(async () => {
     flex-shrink: 0; // Hug contents
     display: flex;
     align-items: center;
-}
-
-.map-features-container {
-    flex-shrink: 0;
-    order: 2; // Ensure map features come after map preview
-    position: relative; // Ensure it's in normal flow
-    width: 100%; // Ensure it takes full width
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background-color: rgba(0, 0, 0, 0.3);
-    padding: map-get($spacing, "md");
-    border-radius: 2px;
 }
 
 .map-features-row {
@@ -531,12 +604,14 @@ onMounted(async () => {
     min-height: 0;
     display: flex;
     flex-direction: column;
+    overflow: hidden; // Prevent overflow
 }
 
 .panel-body {
     min-height: 0;
     display: flex;
     flex-direction: column;
+    overflow: hidden; // Prevent overflow
 }
 
 .playerlist-container {
@@ -546,13 +621,8 @@ onMounted(async () => {
 }
 
 .bottom-action-panel {
-    position: absolute;
-    bottom: 10px; // Move up slightly to allow shadow to show
-    left: map-get($spacing, "xxl");
-    right: map-get($spacing, "xxl");
-    width: calc(100% - #{map-get($spacing, "xxl") * 2});
-    flex-shrink: 0;
-    z-index: 2;
+    flex-shrink: 0; // Don't shrink the button panel
+    width: 100%;
 }
 
 .bottom-action-content {
@@ -578,10 +648,35 @@ onMounted(async () => {
 
 
 .game-mode-dropdown {
-    flex: 4; // 80% of the space (4:1 ratio)
+    flex: 3; // 75% of the space (3:1 ratio)
+    min-width: 200px; // Ensure it doesn't shrink too much
 }
 
-.team-size-dropdown {
-    flex: 1; // 20% of the space (4:1 ratio)
+.team-size-dropdown,
+.player-count-dropdown {
+    flex: 1; // 25% of the space (3:1 ratio)
+    min-width: 120px; // Ensure it doesn't shrink too much
+}
+
+.dev-dropdowns {
+    position: fixed; // Use fixed positioning relative to viewport
+    bottom: 16px; // 16px from bottom of screen
+    right: 64px; // 64px from right side of screen
+    display: flex;
+    flex-direction: row; // Side-by-side layout
+    gap: map-get($spacing, "sm");
+    z-index: 1; // Lower z-index so button bar appears above
+    align-items: flex-end; // Align to the bottom
+}
+
+.dev-select {
+    width: 200px; // Reduced size
+    :deep(.p-dropdown) {
+        font-size: 0.875rem; // Smaller font
+        padding: 4px 8px; // Smaller padding
+    }
+    :deep(.p-dropdown-label) {
+        font-size: 0.875rem; // Smaller label font
+    }
 }
 </style>

@@ -65,8 +65,8 @@ import closeIcon from "@iconify-icons/mdi/close";
 
 import BotParticipant from "@renderer/components/battle/BotParticipant.vue";
 import PlayerParticipant from "@renderer/components/battle/PlayerParticipant.vue";
-import { Bot, isBot, isPlayer, isRaptor, isScavenger, Player } from "@main/game/battle/battle-types";
-import { battleActions, battleWithMetadataStore } from "@renderer/store/battle.store";
+import { Bot, isBot, isPlayer, isRaptor, isScavenger, Player, GameModeID } from "@main/game/battle/battle-types";
+import { battleActions, battleStore, battleWithMetadataStore } from "@renderer/store/battle.store";
 
 const { t } = useTypedI18n();
 
@@ -74,13 +74,19 @@ const props = defineProps<{
     teamId: number;
 }>();
 
-const title = computed(() =>
-    isScavengerTeam(props.teamId)
-        ? t("lobby.components.battle.teamComponent.scavengers")
-        : isRaptorTeam(props.teamId)
-          ? t("lobby.components.battle.teamComponent.raptors")
-          : t("lobby.components.battle.teamComponent.teamId", { id: Number(props.teamId) + 1 })
-);
+const title = computed(() => {
+    if (isScavengerTeam(props.teamId)) {
+        return t("lobby.components.battle.teamComponent.scavengers");
+    }
+    if (isRaptorTeam(props.teamId)) {
+        return t("lobby.components.battle.teamComponent.raptors");
+    }
+    // In FFA mode, show "Players" instead of "Team 1"
+    if (battleStore.battleOptions.gameMode.id === GameModeID.FFA) {
+        return t("lobby.components.battle.teamComponent.playersTitle");
+    }
+    return t("lobby.components.battle.teamComponent.teamId", { id: Number(props.teamId) + 1 });
+});
 
 const memberCount = computed(() => {
     return battleWithMetadataStore.teams[props.teamId]?.participants.length || 0;

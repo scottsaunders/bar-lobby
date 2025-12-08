@@ -2255,6 +2255,7 @@
                     "addBot": "Add bot",
                     "join": "Join",
                     "players": "({count} / {maxCount} players)",
+                    "playersTitle": "Players",
                     "scavengers": "Scavengers",
                     "raptors": "Raptors",
                     "teamId": "Team {id}"
@@ -2279,7 +2280,7 @@
                 "gameModeComponent": {
                     "gameMode": "Game Mode",
                     "presets": "Presets",
-                    "configureGameOptions": "Configure Game Options",
+                    "configureGameOptions": "Advanced game options",
                     "gameOptions": "Game Options",
                     "gameModeClassic": "Classic",
                     "gameModeFFA": "FFA",

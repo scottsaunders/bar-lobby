@@ -142,7 +142,7 @@ SPDX-License-Identifier: MIT
                     </div>
                 </div>
                 <div class="actions">
-                    <Button class="blue fullwidth" @click="close" :disabled="!isStartStyleSupported">Save</Button>
+                    <Button class="green fullwidth" @click="close" :disabled="!isStartStyleSupported">Save</Button>
                 </div>
             </div>
         </div>
