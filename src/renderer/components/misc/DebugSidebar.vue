@@ -50,6 +50,10 @@ SPDX-License-Identifier: MIT
             @update:model-value="(engine) => (enginesStore.selectedEngineVersion = engine)"
         />
         <Button @click="serverSettingsOpen = true">{{ t("lobby.components.misc.debugSidebar.lobbyServerSettings") }}</Button>
+        <div class="setting-row">
+            <span class="setting-label">Map Detail: Animated View</span>
+            <ToggleSwitch v-model="settingsStore.mapDetailUseAnimatedView" />
+        </div>
         <SyncDataDirsDialog v-model="syncLobbyContentToolOpen" />
     </div>
 </template>
@@ -62,9 +66,11 @@ import { useRouter } from "vue-router";
 
 import Button from "@renderer/components/controls/Button.vue";
 import Select from "@renderer/components/controls/Select.vue";
+import ToggleSwitch from "@renderer/components/controls/ToggleSwitch.vue";
 import SyncDataDirsDialog from "@renderer/components/misc/SyncDataDirsDialog.vue";
 import { gameStore } from "@renderer/store/game.store";
 import { enginesStore } from "@renderer/store/engine.store";
+import { settingsStore } from "@renderer/store/settings.store";
 import { GameVersion } from "@main/content/game/game-version";
 import { inject, Ref } from "vue";
 import { useTypedI18n } from "@renderer/i18n";
@@ -157,6 +163,19 @@ function causeError() {
                 background: #222;
             }
         }
+    }
+    .setting-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 5px 0;
+    }
+    .setting-label {
+        flex: 1;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 14px;
     }
 }
 </style>

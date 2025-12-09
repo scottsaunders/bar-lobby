@@ -1860,7 +1860,8 @@
             }
         },
         "buttons": {
-            "quickPlay": "Quick play"
+            "quickPlay": "Quick play",
+            "skirmishOnThisMap": "Skirmish on this map"
         },
         "composables": {
             "useTerrainIcon": {

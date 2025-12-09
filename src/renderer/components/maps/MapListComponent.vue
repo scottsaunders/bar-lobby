@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT
 -->
 
 <template>
-    <div class="flex-col gap-lg flex-grow fullheight">
+    <div class="flex-col gap-lg flex-grow fullheight map-list-wrapper">
         <div class="flex-row gap-md">
             <SearchBox v-model="searchVal" />
             <Select

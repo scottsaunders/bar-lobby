@@ -579,6 +579,20 @@ SPDX-License-Identifier: MIT
                                 </template>
                             </InteractiveTile>
                         </div>
+                        <div style="width: 300px">
+                            <InteractiveTile readMoreVariant>
+                                <template #media>
+                                    <img src="/src/renderer/assets/images/backgrounds/5.jpg" />
+                                </template>
+                                <template #content>
+                                    <h3>Read More Variant</h3>
+                                    <p class="body-1">Hover to see more content</p>
+                                </template>
+                                <template #body>
+                                    <p class="body-1">This is body copy that appears on hover with a darker black overlay. The title fades away and this content fades in along with a "Read More" button. The text is left-aligned for better readability.</p>
+                                </template>
+                            </InteractiveTile>
+                        </div>
                     </div>
                 </div>
 
