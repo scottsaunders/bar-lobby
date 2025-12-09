@@ -20,6 +20,7 @@ SPDX-License-Identifier: MIT
                         :to="view.path === '/play' ? '/play/menu' : view.path"
                         :match-prefix="view.path"
                         :class="{ 'dev-only': view.meta.devOnly }"
+                        @mouseenter="prefetchRoute(view.path === '/play' ? '/play/menu' : view.path)"
                     >
                         {{ view.meta.title }}
                     </Button>
@@ -79,6 +80,7 @@ SPDX-License-Identifier: MIT
                         :key="view.path" 
                         :to="view.path"
                         :class="{ 'dev-only': view.meta.devOnly }"
+                        @mouseenter="prefetchRoute(view.path)"
                     >
                         {{ view.meta.title ?? view.name }}
                     </Button>
@@ -206,6 +208,29 @@ function minimizeWindow() {
 
 function toggleFullscreen() {
     settingsStore.fullscreen = !settingsStore.fullscreen;
+}
+
+// Prefetch route components on hover to improve navigation performance
+function prefetchRoute(path: string) {
+    try {
+        const route = router.resolve(path);
+        if (route && route.matched.length > 0) {
+            route.matched.forEach((matched) => {
+                if (matched.components) {
+                    Object.values(matched.components).forEach((component) => {
+                        if (component && typeof component === "function") {
+                            // Trigger lazy loading by calling the component function
+                            component().catch(() => {
+                                // Silently fail if component fails to load
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    } catch (error) {
+        // Silently fail if route doesn't exist
+    }
 }
 </script>
 

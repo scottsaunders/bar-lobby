@@ -16,6 +16,32 @@ export default defineConfig({
     },
     build: {
         sourcemap: true,
+        rollupOptions: {
+            output: {
+                manualChunks: (id) => {
+                    // Split vendor libraries into separate chunks
+                    if (id.includes("node_modules")) {
+                        if (id.includes("vue") || id.includes("vue-router")) {
+                            return "vue-vendor";
+                        }
+                        if (id.includes("primevue")) {
+                            return "primevue-vendor";
+                        }
+                        if (id.includes("@iconify")) {
+                            return "iconify-vendor";
+                        }
+                        return "vendor";
+                    }
+                    // Keep route components in their own chunks for better caching
+                    if (id.includes("/views/")) {
+                        const viewMatch = id.match(/\/views\/([^/]+)/);
+                        if (viewMatch) {
+                            return `view-${viewMatch[1]}`;
+                        }
+                    }
+                },
+            },
+        },
     },
     optimizeDeps: {
         entries: ["src/renderer/**/*.vue", "src/renderer/**/*.ts", "src/renderer/**/*.js"],

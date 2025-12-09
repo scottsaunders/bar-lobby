@@ -168,6 +168,11 @@ async function onPreloadDone() {
 function onInitialSetupDone() {
     state.value = "default";
     console.debug("Initial setup done");
+    
+    // Preload common routes in the background to improve first-time load performance
+    import("@renderer/utils/route-preloader").then(({ preloadCommonRoutes }) => {
+        preloadCommonRoutes(router);
+    });
 }
 
 // Currently we support multiplayer only in dev mode, as it's very not finished.
