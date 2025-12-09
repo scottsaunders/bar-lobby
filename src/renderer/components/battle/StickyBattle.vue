@@ -31,7 +31,6 @@ SPDX-License-Identifier: MIT
         </div>
     </div> -->
     <!-- <BattleLobbyModal v-model="isLobbyOpen" /> -->
-    <BattleLobbyDrawer />
 </template>
 
 <script lang="ts" setup>
@@ -43,7 +42,6 @@ SPDX-License-Identifier: MIT
 // import swordCross from "@iconify-icons/mdi/sword-cross";
 // import { computed } from "vue";
 // import { battleActions, battleStore, battleWithMetadataStore } from "@renderer/store/battle.store";
-import BattleLobbyDrawer from "@renderer/components/battle/BattleLobbyDrawer.vue";
 
 // const playerCount = computed(() => battleWithMetadataStore.participants.length);
 // const botCount = computed(() => battleWithMetadataStore.bots.length);

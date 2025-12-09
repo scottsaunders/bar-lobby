@@ -51,7 +51,6 @@ SPDX-License-Identifier: MIT
         <Settings v-model="settingsOpen" />
         <ServerSettings v-model="serverSettingsOpen" />
         <ChatComponent v-if="state === 'default' && me.isAuthenticated && tachyonStore.isConnected" />
-        <FullscreenGameModeSelector v-if="state === 'default'" :visible="battleStore.isSelectingGameMode" />
         <LogInConfirmationModal v-model="logInConfirmationIsOpen" :intendedRoute="logInConfirmationIntendedRoute" />
     </div>
     <Error />
@@ -85,7 +84,6 @@ import { settingsStore } from "./store/settings.store";
 import { infosStore } from "@renderer/store/infos.store";
 import ChatComponent from "@renderer/components/social/ChatComponent.vue";
 import { battleStore } from "@renderer/store/battle.store";
-import FullscreenGameModeSelector from "@renderer/components/battle/FullscreenGameModeSelector.vue";
 import { useGlobalKeybindings } from "@renderer/composables/useGlobalKeybindings";
 import { me } from "@renderer/store/me.store";
 import { tachyonStore } from "@renderer/store/tachyon.store";
@@ -134,7 +132,8 @@ router.beforeEach(async (to) => {
     const rememberedPath = simpleRouterMemory.get(section);
     const defaultRedirect = to.meta.redirect;
 
-    if (!rememberedPath) {
+    // If no remembered path, or if remembered path is the menu, use default redirect
+    if (!rememberedPath || rememberedPath === "/play/menu") {
         return { path: router.resolve(defaultRedirect).fullPath };
     }
 
@@ -152,7 +151,11 @@ router.beforeEach(async (to) => {
 });
 
 router.afterEach(async (to) => {
-    simpleRouterMemory.set(to.fullPath.split("/")[1], to.fullPath);
+    const section = to.fullPath.split("/")[1];
+    // Don't remember the menu route - it should only be accessed via logo
+    if (to.fullPath !== "/play/menu") {
+        simpleRouterMemory.set(section, to.fullPath);
+    }
     empty.value = to?.meta?.empty ?? false;
     blurBg.value = to?.meta?.blurBg ?? false;
 });
@@ -180,7 +183,7 @@ function onInitialSetupDone() {
 // continuing to overview.
 if (!settingsStore.devMode) {
     auth.playOffline();
-    router.push("/play");
+    router.push("/play/menu");
 }
 </script>
 

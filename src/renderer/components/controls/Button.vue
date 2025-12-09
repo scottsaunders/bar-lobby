@@ -65,6 +65,12 @@ const controlRef = ref<InstanceType<typeof Control> | null>(null);
 const active = computed(() => {
     if (!props?.to) return false;
     const currentPath = router.currentRoute.value.path;
+    
+    // Don't highlight Play button when on the menu page
+    if (currentPath === "/play/menu" && props.to === "/play") {
+        return false;
+    }
+    
     if (props.matchPrefix) {
         // For primary nav buttons, check if current route starts with the prefix path
         const prefixPath = typeof props.matchPrefix === 'string' ? props.matchPrefix : props.to;

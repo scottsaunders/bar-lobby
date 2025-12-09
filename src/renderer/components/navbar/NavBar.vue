@@ -7,7 +7,7 @@ SPDX-License-Identifier: MIT
 <template>
     <div class="nav" :class="{ hidden }">
         <div class="logo">
-            <Button to="/play/menu?">
+            <Button to="/play/menu">
                 <img src="/src/renderer/assets/images/logo.svg" />
             </Button>
         </div>
@@ -17,10 +17,10 @@ SPDX-License-Identifier: MIT
                     <Button 
                         v-for="view in primaryRoutes" 
                         :key="view.path" 
-                        :to="view.path === '/play' ? '/play/menu' : view.path"
+                        :to="view.path === '/styles' ? '/styles/new-styles' : view.path"
                         :match-prefix="view.path"
                         :class="{ 'dev-only': view.meta.devOnly }"
-                        @mouseenter="prefetchRoute(view.path === '/play' ? '/play/menu' : view.path)"
+                        @mouseenter="prefetchRoute(view.path === '/styles' ? '/styles/new-styles' : view.path)"
                     >
                         {{ view.meta.title }}
                     </Button>
@@ -157,10 +157,6 @@ const secondaryRoutes = computed(() => {
     const currentPrimaryRouteSegment = router.currentRoute.value.path.split("/")[1];
     if (currentPrimaryRouteSegment === "styles") {
         return [
-            {
-                path: "/styles/default-styles",
-                meta: { title: "Default Styles" },
-            },
             {
                 path: "/styles/new-styles",
                 meta: { title: "New Styles" },

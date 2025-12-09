@@ -9,7 +9,7 @@ SPDX-License-Identifier: MIT
     meta: {
         title: "Play",
         order: 0,
-        redirect: "/play/menu",
+        redirect: "/play/skirmishVsAi",
     },
 }
 </route>

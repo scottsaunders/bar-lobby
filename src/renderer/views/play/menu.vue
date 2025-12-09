@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT
 -->
 
 <route lang="json5">
-{ meta: { title: "Menu", order: 0, devOnly: true, hide: true, transition: { name: "slide-left" } } }
+{ meta: { title: "Menu", order: 0, hide: true, transition: { name: "slide-left" } } }
 </route>
 
 <template>
@@ -59,27 +59,17 @@ SPDX-License-Identifier: MIT
 </template>
 
 <script lang="ts" setup>
-import { watch } from "vue";
 import { useRouter } from "vue-router";
 import InteractiveTile from "@renderer/components/common/InteractiveTile.vue";
 import { settingsStore } from "@renderer/store/settings.store";
-import { battleStore } from "@renderer/store/battle.store";
 import { useTypedI18n } from "@renderer/i18n";
 const { t } = useTypedI18n();
 
 const router = useRouter();
 
-watch(
-    () => battleStore.isSelectingGameMode,
-    (newValue) => {
-        battleStore.isLobbyOpened = !newValue;
-    }
-);
-
 // Game mode handlers
 const startSkirmish = () => {
-    //router.push("/play/skirmishVsAi");
-    battleStore.isSelectingGameMode = true;
+    router.push("/play/skirmishVsAi");
 };
 
 const startCampaign = () => {
@@ -112,12 +102,14 @@ const openTournaments = () => {
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .disabled {
     opacity: 60%;
     pointer-events: none;
 }
 .view-adjust-bottom {
-    padding-bottom: 30px;
+    padding-bottom: map-get($spacing, "xl");
     display: flex;
     flex-direction: column-reverse;
 }
@@ -130,19 +122,19 @@ const openTournaments = () => {
     flex-direction: column;
     width: 28%;
     height: 100%;
-    padding: 40px 40px;
+    padding: map-get($spacing, "xxxxl") map-get($spacing, "xxxxl");
 }
 
 .game-modes-grid {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
-    gap: 20px;
+    gap: map-get($spacing, "xl");
     margin: 0 0;
     flex: 1;
 }
 
 .game-mode-card {
-    min-height: 96px; // 50% taller (64px * 1.5 = 96px)
+    min-height: 96px;
 }
 
 @media (max-width: 1200px) {
@@ -154,17 +146,18 @@ const openTournaments = () => {
 
 @media (max-width: 768px) {
     .game-menu-container {
-        padding: 20px;
+        padding: map-get($spacing, "xl");
     }
 
     .game-modes-grid {
         grid-template-columns: 1fr;
         grid-template-rows: repeat(6, minmax(150px, auto));
-        gap: 15px;
+        gap: map-get($spacing, "lg");
     }
 
     .game-mode-card {
-        min-height: 225px; // 50% taller (150px * 1.5 = 225px)
+        min-height: 225px;
     }
 }
 </style>
+

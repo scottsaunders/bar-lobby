@@ -1,0 +1,190 @@
+# BAR Lobby Design System Rules
+
+## Core Principle
+**Always prefer the design system. Use reusable components/utilities over hard-coded styles or bespoke solutions. Break the rules intentionally, not accidentally.**
+
+## Design System Components
+
+### Required Components (prefer these over custom solutions):
+- **Buttons**: Always use `<Button>` from `@renderer/components/controls/Button.vue`
+  - Use classes: `green`, `red`, `blue`, `black`, `grey`, `slim`, `large`, `fullwidth`
+  - Avoid creating custom button elements or styles
+  
+- **Panels**: Always use `<Panel>` from `@renderer/components/common/Panel.vue`
+  - Use `no-padding` prop when needed
+  - Avoid creating custom panel/container divs with backgrounds/borders
+  
+- **Interactive Tiles**: Use `<InteractiveTile>` from `@renderer/components/common/InteractiveTile.vue`
+  - Supports variants: `saturate`, `selected`, `readMoreVariant`
+  - Use slots: `#media`, `#content`, `#body`, `#button`
+  
+- **Other Components**: 
+  - `<Loader>`, `<Modal>`, `<StatusCard>`, `<ScrollingTextPanel>`, `<Divider>`
+  - `<Select>`, `<Checkbox>`, `<ToggleSwitch>`, `<Textbox>`, `<Number>`, `<SearchBox>`
+  - Check `src/renderer/components/common/` and `src/renderer/components/controls/` before creating custom UI
+
+## Spacing System
+
+### ALWAYS prefer spacing utilities - avoid hard-coding padding/margin/gap values:
+
+**Available spacing scale:**
+- `xxs`: 2px
+- `xs`: 4px  
+- `sm`: 8px
+- `md`: 12px
+- `lg`: 16px
+- `xl`: 24px
+- `xxl`: 32px
+- `xxxl`: 48px
+- `xxxxl`: 56px
+
+**Usage:**
+```vue
+<!-- ✅ PREFERRED -->
+<div class="flex-col gap-lg padding-xl">
+<div class="padding-top-md padding-left-xxl">
+<div class="margin-bottom-lg">
+
+<!-- ⚠️ AVOID (unless intentional) -->
+<div style="padding: 16px; gap: 24px;">
+<div class="custom-padding"> /* with padding: 12px in CSS */
+```
+
+**Rules:**
+- Use `gap-*` for flex/grid gaps
+- Use `padding-*` or `padding-{direction}-*` for padding
+- Use `margin-*` or `margin-{direction}-*` for margins
+- Use `map-get($spacing, "key")` in SCSS when needed
+- **Avoid** writing `padding: 16px`, `margin: 8px`, etc. directly unless you have a specific reason
+
+## Typography System
+
+### ALWAYS prefer typography classes - avoid hard-coding font sizes/weights:
+
+**Available typography classes:**
+- **Titles**: `.title-1`, `.title-2`, `.title-3`, `.large-title`, `.display`
+- **Subtitles**: `.subtitle-1`, `.subtitle-2`, `.subtitle-2-stronger`
+- **Body**: `.body-1`, `.body-1-strong`, `.body-2`, `.body-2-strong`, `.body-2-stronger`
+- **Caption**: `.caption-1`, `.caption-1-strong`, `.caption-1-stronger`, `.caption-2`, `.caption-2-strong`
+- **Semantic HTML**: `h1`, `h2`, `h3`, `h4`, `h5`, `h6`, `p` (use these with typography classes)
+
+**Usage:**
+```vue
+<!-- ✅ PREFERRED -->
+<h2 class="title-2">Heading</h2>
+<p class="body-1">Body text</p>
+<div class="subtitle-1">Subtitle</div>
+
+<!-- ⚠️ AVOID (unless intentional) -->
+<div style="font-size: 20px; font-weight: 600;">
+<div class="custom-text"> /* with font-size: 16px in CSS */
+```
+
+**Rules:**
+- Always apply typography classes to text elements
+- Use semantic HTML (`h1-h6`, `p`) with typography classes
+- **Avoid** writing `font-size: 16px`, `font-weight: 600`, etc. directly unless you have a specific reason
+
+## Layout Utilities
+
+### Use existing layout utilities:
+- `flex-row`, `flex-col` for flexbox
+- `fullwidth`, `fullheight` for sizing
+- `flex-grow`, `flex-shrink`, `flex-center-items` for flex behavior
+- `gap-*` utilities (see spacing system)
+
+## Guidelines (Not Hard Rules)
+
+### ⚠️ Avoid `!important` unless intentional
+- **Avoid** using `!important` in CSS/SCSS
+- If you need to override styles, fix the specificity issue properly first
+- Use design system components/utilities instead of fighting with CSS
+- If you find yourself needing `!important`, reconsider your approach - can the design system help?
+- **However**: If you have a legitimate, intentional reason to use `!important`, document why in a comment
+
+### ⚠️ Avoid hard-coding styles when design system exists
+- Prefer design system utilities over inline styles for spacing, typography, colors (unless truly dynamic)
+- Avoid custom CSS classes that duplicate design system functionality
+- Avoid bespoke components that recreate existing design system components
+- **However**: If you have a specific, intentional reason to break this, document it
+
+### ⚠️ Avoid one-off solutions
+- Check if a design system component/utility exists first
+- If it doesn't exist but could be reusable, create it as a design system component
+- Only create truly unique, non-reusable code when absolutely necessary
+- **However**: Sometimes one-offs are needed - just make sure it's intentional
+
+## Code Review Checklist
+
+Before writing any code, ask:
+1. ✅ Is there a design system component for this? (Check `components/common/` and `components/controls/`)
+2. ✅ Am I using spacing utilities instead of hard-coded values?
+3. ✅ Am I using typography classes instead of hard-coded font styles?
+4. ✅ Am I avoiding `!important` (or documenting why I need it)?
+5. ✅ Is this code reusable, or should it be a design system component?
+6. ✅ If I'm breaking a rule, is it intentional and documented?
+
+## Examples
+
+### ✅ Preferred Code:
+```vue
+<template>
+  <Panel class="flex-col gap-lg" no-padding>
+    <h2 class="title-2 padding-left-xxl padding-top-xxl">Title</h2>
+    <div class="flex-row gap-md padding-xl">
+      <Button class="green">Action</Button>
+      <Button>Cancel</Button>
+    </div>
+    <p class="body-1 padding-left-xxl">Description text</p>
+  </Panel>
+</template>
+```
+
+### ⚠️ Code to Avoid (unless intentional):
+```vue
+<template>
+  <div class="custom-panel">
+    <div class="title" style="font-size: 28px; padding: 32px 0 0 32px;">Title</div>
+    <div style="display: flex; gap: 16px; padding: 24px;">
+      <button class="custom-button">Action</button>
+    </div>
+    <p style="font-size: 16px; margin-left: 32px;">Description</p>
+  </div>
+</template>
+
+<style>
+.custom-panel {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 16px !important; /* ⚠️ Avoid unless intentional - document why */
+}
+</style>
+```
+
+## When to Extend the Design System
+
+If you need something that doesn't exist:
+
+1. **Check if it can be achieved with existing components/props**
+   - Review existing components for props/variants that might work
+   - Consider composition of existing components
+
+2. **If not, create a new design system component (not a one-off)**
+   - Make it reusable and configurable via props
+   - Follow existing component patterns and structure
+
+3. **Add it to the appropriate directory**
+   - `components/common/` for general UI components
+   - `components/controls/` for form/input components
+
+4. **Document it in the design system**
+   - Add examples to the styles showcase pages
+   - Document props, slots, and usage patterns
+
+5. **Make it reusable and configurable via props**
+   - Avoid hard-coded values
+   - Use design system spacing/typography internally
+   - Support common use cases through props
+
+**Remember: The design system exists to prevent code duplication and maintain consistency. Use it! But if you need to break the rules, do it intentionally and document why.**
+

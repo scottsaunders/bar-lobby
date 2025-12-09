@@ -44,7 +44,6 @@ declare module 'vue-router/auto-routes' {
     '/play/tournaments': RouteRecordInfo<'/play/tournaments', '/play/tournaments', Record<never, never>, Record<never, never>>,
     '/profile/[userId]': RouteRecordInfo<'/profile/[userId]', '/profile/:userId', { userId: ParamValue<true> }, { userId: ParamValue<false> }>,
     '/styles': RouteRecordInfo<'/styles', '/styles', Record<never, never>, Record<never, never>>,
-    '/styles/default-styles': RouteRecordInfo<'/styles/default-styles', '/styles/default-styles', Record<never, never>, Record<never, never>>,
     '/styles/new-styles': RouteRecordInfo<'/styles/new-styles', '/styles/new-styles', Record<never, never>, Record<never, never>>,
     '/watch/': RouteRecordInfo<'/watch/', '/watch', Record<never, never>, Record<never, never>>,
     '/watch/replays': RouteRecordInfo<'/watch/replays', '/watch/replays', Record<never, never>, Record<never, never>>,

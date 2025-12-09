@@ -45,10 +45,13 @@ SPDX-License-Identifier: MIT
 .scrolling-text-panel__content {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     padding-top: map-get($spacing, "lg");
     padding-bottom: map-get($spacing, "lg");
     padding-left: map-get($spacing, "lg");
     padding-right: map-get($spacing, "lg");
+    word-wrap: break-word;
+    overflow-wrap: break-word;
     // Fade effect only at the bottom
     mask-image: linear-gradient(
         to bottom,
