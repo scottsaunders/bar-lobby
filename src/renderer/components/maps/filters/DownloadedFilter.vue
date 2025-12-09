@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT
 -->
 
 <template>
-    <Checkbox v-model="downloadedOnly" :label="t('lobby.components.maps.filters.downloadedFilter.label')"> </Checkbox>
+    <Checkbox v-model="downloadedOnly" :label="t('lobby.components.maps.filters.downloadedFilter.label')" fill />
 </template>
 
 <script setup lang="ts">

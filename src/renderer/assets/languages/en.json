@@ -1942,8 +1942,9 @@
         "library": {
             "maps": {
                 "title": "Maps",
+                "description": "Browse and manage your map collection",
                 "back": "Back",
-                "description": "Description",
+                "mapDescription": "Description",
                 "author": "Author",
                 "properties": "Map Properties",
                 "addToFavorites": "Add to favorites",
@@ -2335,7 +2336,8 @@
                     "maxPlayers": "Max Players",
                     "filterBy": "Filter By",
                     "terrain": "Terrain",
-                    "gameType": "Game Type"
+                    "gameType": "Game Type",
+                    "mapSize": "Map Size"
                 },
                 "mapListComponents": {
                     "sortBy": "Sort By",

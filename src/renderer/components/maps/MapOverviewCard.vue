@@ -50,6 +50,8 @@ const imageUrl = computed(() =>
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .map {
     will-change: transform, opacity;
     aspect-ratio: 1;
@@ -111,13 +113,13 @@ const imageUrl = computed(() =>
 }
 .favorite {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: map-get($spacing, "sm"); // 8px (closest to 10px)
+    right: map-get($spacing, "sm"); // 8px (closest to 10px)
     transition: 0.2s opacity;
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(0, 0, 0, 0.1);
-    font-size: 25px;
-    padding: 3px;
+    font-size: 1.5625rem; // 25px - using rem for typography
+    padding: map-get($spacing, "xs"); // 4px (closest to 3px)
 }
 .name {
     @extend .fullsize;
@@ -128,8 +130,8 @@ const imageUrl = computed(() =>
     justify-content: center;
     text-align: center;
     word-break: break-word;
-    padding: 10px;
-    font-size: 38px;
+    padding: map-get($spacing, "sm"); // 8px (closest to 10px)
+    font-size: 2.375rem; // 38px - using rem for typography
     font-weight: 600;
     text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
     transition: 0.2s opacity;
@@ -138,18 +140,18 @@ const imageUrl = computed(() =>
     position: absolute;
     border: 1px solid rgba(0, 0, 0, 0.1);
     background: rgba(0, 0, 0, 0.2);
-    font-size: 16px;
+    font-size: 1rem; // 16px - body-1 size
     font-weight: 600;
-    padding: 2px 5px;
+    padding: map-get($spacing, "xxs") map-get($spacing, "xs"); // 2px 4px (closest to 2px 5px)
     transition: 0.2s opacity;
 
     &.bl {
-        bottom: 10px;
-        left: 10px;
+        bottom: map-get($spacing, "sm"); // 8px (closest to 10px)
+        left: map-get($spacing, "sm"); // 8px (closest to 10px)
     }
     &.br {
-        bottom: 10px;
-        right: 10px;
+        bottom: map-get($spacing, "sm"); // 8px (closest to 10px)
+        right: map-get($spacing, "sm"); // 8px (closest to 10px)
         flex-wrap: wrap-reverse;
         justify-content: flex-end;
         max-width: 55%;

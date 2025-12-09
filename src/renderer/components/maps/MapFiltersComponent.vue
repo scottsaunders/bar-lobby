@@ -5,24 +5,30 @@ SPDX-License-Identifier: MIT
 -->
 
 <template>
-    <div class="fullheight scroll-container">
+    <div class="scroll-container main-panel-scroll">
         <div class="flex-col gap-xl filters">
-            <div>
-                <h6>{{ t("lobby.components.maps.mapFiltersComponent.maxPlayers") }}</h6>
+            <div class="flex-col gap-sm filter-section">
+                <h6 class="subtitle-2">{{ t("lobby.components.maps.mapFiltersComponent.maxPlayers") }}</h6>
                 <MaxPlayersFilter />
             </div>
-            <div>
-                <h6>{{ t("lobby.components.maps.mapFiltersComponent.filterBy") }}</h6>
-                <FavoritesFilter />
-                <DownloadedFilter />
+            <div class="flex-col gap-sm filter-section">
+                <h6 class="subtitle-2">{{ t("lobby.components.maps.mapFiltersComponent.filterBy") }}</h6>
+                <div class="flex-col gap-sm">
+                    <FavoritesFilter />
+                    <DownloadedFilter />
+                </div>
             </div>
-            <div>
-                <h6>{{ t("lobby.components.maps.mapFiltersComponent.terrain") }}</h6>
+            <div class="flex-col gap-sm filter-section">
+                <h6 class="subtitle-2">{{ t("lobby.components.maps.mapFiltersComponent.terrain") }}</h6>
                 <TerrainFilter />
             </div>
-            <div>
-                <h6>{{ t("lobby.components.maps.mapFiltersComponent.gameType") }}</h6>
+            <div class="flex-col gap-sm filter-section">
+                <h6 class="subtitle-2">{{ t("lobby.components.maps.mapFiltersComponent.gameType") }}</h6>
                 <GameTypeFilter />
+            </div>
+            <div class="flex-col gap-sm filter-section">
+                <h6 class="subtitle-2">{{ t("lobby.components.maps.mapFiltersComponent.mapSize") }}</h6>
+                <MapSizeFilter />
             </div>
         </div>
     </div>
@@ -45,6 +51,7 @@ SPDX-License-Identifier: MIT
  * - terrain (general, water type, & layout)
  */
 import GameTypeFilter from "@renderer/components/maps/filters/GameTypeFilter.vue";
+import MapSizeFilter from "@renderer/components/maps/filters/MapSizeFilter.vue";
 import MaxPlayersFilter from "@renderer/components/maps/filters/MaxPlayersFilter.vue";
 import TerrainFilter from "@renderer/components/maps/filters/TerrainFilter.vue";
 import FavoritesFilter from "@renderer/components/maps/filters/FavoritesFilter.vue";
@@ -54,7 +61,9 @@ const { t } = useTypedI18n();
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .filters {
-    padding-right: 10px;
+    padding: map-get($spacing, "xxl"); // Padding on all sides to match scenarios page
 }
 </style>

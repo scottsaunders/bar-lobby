@@ -80,19 +80,23 @@ useInfiniteScroll(
 );
 
 const maps = useDexieLiveQueryWithDeps([searchVal, sortMethod, limit, filters], () => {
-    const { terrain, gameType } = filters;
+    const { terrain, gameType, mapSize } = filters;
     const terrainFilters = new Set([...(<Terrain[]>Object.keys(terrain)).filter((key) => !!terrain[key]).map((k) => k)]);
     const gameTypeFilters = new Set([...(<GameType[]>Object.keys(gameType)).filter((key) => gameType[key]).map((k) => k)]);
+    const mapSizeFilters = new Set([...Object.keys(mapSize).filter((key) => !!mapSize[key])]);
     return db.maps
         .filter((map) => {
             const favorites = !filters.favoritesOnly || map.isFavorite;
             const downloaded = !filters.downloadedOnly || map.isInstalled;
+            const mapSizeStr = `${map.mapWidth}x${map.mapHeight}`;
+            const matchesMapSize = mapSizeFilters.size === 0 || mapSizeFilters.has(mapSizeStr);
             return Boolean(
                 map.displayName.toLocaleLowerCase().includes(searchVal.value.toLocaleLowerCase()) &&
                     filters.minPlayers <= map.playerCountMax &&
                     filters.maxPlayers >= map.playerCountMax &&
                     (terrainFilters.size === 0 || terrainFilters.isSubsetOf(new Set([...map.terrain]))) &&
                     (gameTypeFilters.size === 0 || !gameTypeFilters.isDisjointFrom(new Set([...map.tags]))) &&
+                    matchesMapSize &&
                     favorites &&
                     downloaded
             );
@@ -107,11 +111,13 @@ function mapSelected(map: MapData) {
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .maps {
     display: grid;
-    grid-gap: 15px;
+    grid-gap: map-get($spacing, "lg"); // 16px (closest to 15px)
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    padding-right: 10px;
+    padding-right: map-get($spacing, "sm"); // 8px (closest to 10px)
 }
 
 // Transition

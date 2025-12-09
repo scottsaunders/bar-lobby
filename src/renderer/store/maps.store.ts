@@ -14,6 +14,7 @@ export const mapsStore: {
     filters: {
         terrain: Partial<Record<Terrain, boolean>>;
         gameType: Partial<Record<GameType, boolean>>;
+        mapSize: Partial<Record<string, boolean>>;
         minPlayers: number;
         maxPlayers: number;
         favoritesOnly: boolean;
@@ -25,6 +26,7 @@ export const mapsStore: {
     filters: {
         terrain: {},
         gameType: {},
+        mapSize: {},
         minPlayers: 2,
         maxPlayers: 40,
         favoritesOnly: false,

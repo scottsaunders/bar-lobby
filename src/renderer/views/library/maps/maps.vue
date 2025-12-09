@@ -10,12 +10,13 @@ SPDX-License-Identifier: MIT
 
 <template>
     <div class="view">
-        <div class="maps-container">
+        <div class="view-container">
             <div class="view-title">
                 <h1>{{ t("lobby.library.maps.title") }}</h1>
+                <p>{{ t("lobby.library.maps.description") }}</p>
             </div>
-            <div class="layout">
-                <Panel class="map-filters">
+            <div class="maps-layout flex-row gap-xl">
+                <Panel class="map-filters" no-padding>
                     <MapFiltersComponent />
                 </Panel>
                 <Panel class="flex-grow">
@@ -45,24 +46,36 @@ async function onMapSelected(map: MapData) {
 </script>
 
 <style lang="scss" scoped>
-.maps-container {
+@use "@renderer/styles/spacing" as *;
+
+.view-container {
     display: flex;
     flex-direction: column;
-    align-self: center;
-    width: 1600px;
-    height: 100%;
-    padding-left: 40px;
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    padding: 0 map-get($spacing, "xxl") map-get($spacing, "sm") map-get($spacing, "xxl");
+    overflow: hidden;
+    box-sizing: border-box;
+    
+    .view-title {
+        padding-left: 0;
+    }
 }
 
-.layout {
+.maps-layout {
+    width: 100%;
+    min-height: 0;
+    flex: 1;
     display: flex;
     flex-direction: row;
-    gap: 20px;
-    height: 100%;
 }
 
 .map-filters {
-    height: 100%;
-    width: 300px;
+    width: 300px; // Layout-specific width for filters panel (no close design system match)
+    min-height: 0;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
 }
 </style>
