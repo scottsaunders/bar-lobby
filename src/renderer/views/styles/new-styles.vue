@@ -627,6 +627,42 @@ SPDX-License-Identifier: MIT
 
                 <Divider />
 
+                <!-- Badge Section -->
+                <div class="flex-col gap-md">
+                    <h2>Badge</h2>
+                    <p class="body-1">Use for: Small labels, tags, status indicators, difficulty levels, or metadata. Badges are compact, inline elements that provide additional context.</p>
+                    <div class="flex-col gap-md" style="max-width: 600px;">
+                        <div class="flex-col gap-sm">
+                            <h3>Variants</h3>
+                            <div class="flex-row gap-md flex-center-items">
+                                <Badge>Default</Badge>
+                                <Badge variant="primary">Primary</Badge>
+                                <Badge variant="success">Success</Badge>
+                                <Badge variant="warning">Warning</Badge>
+                                <Badge variant="error">Error</Badge>
+                            </div>
+                        </div>
+                        <div class="flex-col gap-sm">
+                            <h3>Usage Examples</h3>
+                            <div class="flex-col gap-sm">
+                                <div class="flex-row gap-md flex-center-items">
+                                    <span class="body-1">Difficulty:</span>
+                                    <Badge>Easy</Badge>
+                                    <Badge variant="warning">Medium</Badge>
+                                    <Badge variant="error">Hard</Badge>
+                                </div>
+                                <div class="flex-row gap-md flex-center-items">
+                                    <span class="body-1">Status:</span>
+                                    <Badge variant="success">Online</Badge>
+                                    <Badge>Offline</Badge>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <Divider />
+
                 <!-- Scrolling Text Panel Section -->
                 <div class="flex-col gap-md">
                     <h2>Scrolling Text Panel</h2>
@@ -1025,6 +1061,7 @@ import Range from "@renderer/components/controls/Range.vue";
 import Divider from "@renderer/components/common/Divider.vue";
 import InteractiveTile from "@renderer/components/common/InteractiveTile.vue";
 import StatusCard from "@renderer/components/common/StatusCard.vue";
+import Badge from "@renderer/components/common/Badge.vue";
 import ScrollingTextPanel from "@renderer/components/common/ScrollingTextPanel.vue";
 import InputSwitch from "primevue/inputswitch";
 import Progress from "@renderer/components/common/Progress.vue";

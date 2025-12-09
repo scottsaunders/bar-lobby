@@ -128,6 +128,8 @@ function causeError() {
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .debug-sidebar {
     position: fixed;
     top: 0;
@@ -139,11 +141,11 @@ function causeError() {
     border-left: 1px solid #222;
     transform: translateX(100%);
     transition: transform 0.1s;
-    padding: 10px;
+    padding: map-get($spacing, "sm");
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    gap: 10px;
+    gap: map-get($spacing, "sm");
     &.active {
         transform: translateX(0);
         box-shadow: -5px 0 5px rgba(0, 0, 0, 0.5);
@@ -169,13 +171,13 @@ function causeError() {
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        gap: 10px;
-        padding: 5px 0;
+        gap: map-get($spacing, "sm");
+        padding: map-get($spacing, "xs") 0;
     }
     .setting-label {
         flex: 1;
         color: rgba(255, 255, 255, 0.8);
-        font-size: 14px;
+        @extend .body-2 !optional;
     }
 }
 </style>

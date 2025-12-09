@@ -39,14 +39,16 @@ const processedText = computedAsync(async () => {
 });
 </script>
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .text {
     width: 100%;
     word-break: break-word;
-    padding: 4px 8px;
+    padding: map-get($spacing, "xxs") map-get($spacing, "sm");
     user-select: text;
     .system & {
         color: rgb(82, 215, 255);
-        font-weight: 600;
+        @extend .body-1-strong !optional;
     }
 
     :deep(code) {

@@ -122,8 +122,15 @@ function onMenuClick(event: MouseEvent) {
     }
 }
 
+const toggleProfile = inject<Ref<((userId?: string) => void) | undefined>>("toggleProfile");
+
 async function viewProfile() {
-    await router.push(`/profile/${props.player.user.userId}`);
+    if (toggleProfile?.value) {
+        toggleProfile.value(props.player.user.userId.toString());
+    } else {
+        // Fallback to route if toggle not available
+        await router.push(`/profile/${props.player.user.userId}`);
+    }
 }
 
 async function kickPlayer() {
@@ -171,6 +178,8 @@ function onBonusSave(bonus: number) {
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .player-participant-wrapper {
     width: 100%;
 }
@@ -195,7 +204,7 @@ function onBonusSave(bonus: number) {
     border: none;
     color: rgba(255, 255, 255, 0.5);
     cursor: pointer;
-    padding: 4px;
+    padding: map-get($spacing, "xxs");
     border-radius: 3px;
     transition: all 0.2s ease;
     opacity: 0;

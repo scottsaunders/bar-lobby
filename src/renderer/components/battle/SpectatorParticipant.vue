@@ -62,8 +62,15 @@ function onRightClick(event: MouseEvent) {
     }
 }
 
+const toggleProfile = inject<Ref<((userId?: string) => void) | undefined>>("toggleProfile");
+
 async function viewProfile() {
-    await router.push(`/profile/${props.player.user.userId}`);
+    if (toggleProfile?.value) {
+        toggleProfile.value(props.player.user.userId.toString());
+    } else {
+        // Fallback to route if toggle not available
+        await router.push(`/profile/${props.player.user.userId}`);
+    }
 }
 
 async function kickPlayer() {

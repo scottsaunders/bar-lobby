@@ -41,6 +41,8 @@ const fromHost = user.userId === me.userId;
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .message {
     display: flex;
     flex-direction: row;
@@ -59,11 +61,11 @@ const fromHost = user.userId === me.userId;
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 5px;
-    padding: 4px 8px;
+    gap: map-get($spacing, "xs");
+    padding: map-get($spacing, "xxs") map-get($spacing, "sm");
     background: rgba(255, 255, 255, 0.05);
     border-right: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.4);
-    font-weight: 500;
+    @extend .body-2-strong !optional;
 }
 </style>

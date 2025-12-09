@@ -24,6 +24,8 @@ defineEmits<{
 </script>
 
 <style lang="scss">
+@use "@renderer/styles/spacing" as *;
+
 .p-tabview {
     max-height: 100%;
     .p-tabview-nav {
@@ -33,7 +35,7 @@ defineEmits<{
         justify-content: space-between;
     }
     .p-tabview-nav-link {
-        padding: 10px;
+        padding: map-get($spacing, "sm");
         color: rgba(255, 255, 255, 0.4);
         &:hover {
             color: #fff;
@@ -66,7 +68,7 @@ defineEmits<{
     }
     .p-tabview-panel {
         position: relative;
-        padding: 25px;
+        padding: map-get($spacing, "xxl");
         flex-grow: 1;
         display: flex;
         flex-direction: column;

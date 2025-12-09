@@ -98,6 +98,8 @@ if (hasCredentials.value && settingsStore.loginAutomatically) {
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .container {
     position: relative;
     display: flex;
@@ -118,8 +120,8 @@ if (hasCredentials.value && settingsStore.loginAutomatically) {
 .play-offline {
     display: flex;
     align-self: center;
-    margin-top: 20px;
-    font-size: 32px;
+    margin-top: map-get($spacing, "xl");
+    @extend .title-1 !optional;
     opacity: 0.3;
     &:hover {
         opacity: 1;
@@ -129,8 +131,8 @@ if (hasCredentials.value && settingsStore.loginAutomatically) {
 .go-back-button {
     display: flex;
     align-self: center;
-    margin-top: 42px;
-    font-size: 32px;
+    margin-top: map-get($spacing, "xxxxl");
+    @extend .title-1 !optional;
     opacity: 0.3;
     &:hover {
         opacity: 1;
@@ -142,9 +144,8 @@ if (hasCredentials.value && settingsStore.loginAutomatically) {
     width: 500px;
     text-transform: uppercase;
     font-family: Rajdhani;
-    font-weight: bold;
-    font-size: 2rem;
-    padding: 20px 40px;
+    @extend .subtitle-1-strong !optional;
+    padding: map-get($spacing, "xl") map-get($spacing, "xxxxl");
     color: #fff;
     background: linear-gradient(90deg, #22c55e, #16a34a);
     border: none;
@@ -181,7 +182,7 @@ if (hasCredentials.value && settingsStore.loginAutomatically) {
 
 .buttons-container {
     display: flex;
-    gap: 20px;
+    gap: map-get($spacing, "xl");
     flex-direction: column;
     align-items: center;
 }

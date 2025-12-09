@@ -157,13 +157,15 @@ function close(userId: number) {
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .messages-tabview,
 :deep(.p-tabview-panels),
 :deep(.p-tabview-panel) {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    padding: 0 !important;
+    padding: 0; // Intentional: PrimeVue TabView requires no padding for proper layout
 }
 
 :deep(.p-tabview-header) {
@@ -181,13 +183,13 @@ function close(userId: number) {
     display: flex;
     flex-direction: column-reverse;
     overflow-y: scroll;
-    padding: 10px;
+    padding: map-get($spacing, "sm");
     flex: 1 1 auto;
     height: 0;
 }
 .message {
     word-break: break-word;
-    padding: 4px 8px;
+    padding: map-get($spacing, "xxs") map-get($spacing, "sm");
     user-select: text;
     display: flex;
     flex-direction: row;
@@ -201,8 +203,8 @@ function close(userId: number) {
     }
 }
 .reply-container {
-    padding: 10px;
-    padding-right: 20px;
+    padding: map-get($spacing, "sm");
+    padding-right: map-get($spacing, "xl");
 }
 .reply {
     width: 100%;
@@ -217,7 +219,7 @@ function close(userId: number) {
     background: none;
     border: none;
     opacity: 0.5;
-    padding: 10px;
+    padding: map-get($spacing, "sm");
     &:hover {
         opacity: 1;
     }

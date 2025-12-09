@@ -88,14 +88,16 @@ async function uploadLogsCommand() {
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .error-modal {
-    background: rgba(224, 17, 17, 0.7) !important;
+    background: rgba(224, 17, 17, 0.7) !important; // Intentional: Critical error modal needs distinct background
 }
 .error {
-    font-size: 16px;
+    @extend .body-1 !optional;
     white-space: pre-line;
     border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 10px;
+    padding: map-get($spacing, "sm");
     user-select: all;
 }
 .container {
@@ -107,9 +109,9 @@ async function uploadLogsCommand() {
     backdrop-filter: blur(5px);
 }
 .title {
-    padding: 5px 10px;
+    padding: map-get($spacing, "xs") map-get($spacing, "sm");
     flex-grow: 1;
     text-transform: capitalize;
-    font-weight: 600;
+    @extend .body-1-strong !optional;
 }
 </style>

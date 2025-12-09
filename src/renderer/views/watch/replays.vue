@@ -276,16 +276,18 @@ function showReplayFile(replay: Replay) {
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .replay-view {
     display: flex;
     flex-direction: column;
     width: 100%;
     height: 100%;
 
-    padding: 60px 60px 100px 60px;
+    padding: map-get($spacing, "xxxl") map-get($spacing, "xxxl") 100px map-get($spacing, "xxxl"); // 48px sides, 100px bottom - aligned to 4px grid where possible
 
-    gap: 20px;
-    padding-bottom: 120px;
+    gap: map-get($spacing, "xl"); // 24px - aligned to 4px grid (was 20px)
+    padding-bottom: 120px; // Intentional: Specific layout requirement
     align-self: center;
 }
 

@@ -87,7 +87,11 @@ SPDX-License-Identifier: MIT
                 </div>
                 <div class="secondary-right flex-row flex-right">
                     <ServerStatus v-if="settingsStore.devMode" />
-                    <Button v-if="me.isAuthenticated" class="user" :to="`/profile/${me.userId}`">
+                    <Button 
+                        v-if="me.isAuthenticated" 
+                        class="user" 
+                        @click="profileOpen = true; profileUserId = me.userId?.toString()"
+                    >
                         <div class="flex-row flex-center gap-sm">
                             <Icon :icon="account" :height="20" />
                             <div>{{ me.username }}</div>
@@ -108,6 +112,8 @@ SPDX-License-Identifier: MIT
             />
         </TransitionGroup>
 
+        <ProfileModal v-model="profileOpen" :userId="profileUserId || me.userId?.toString()" />
+
         <Exit v-model="exitOpen" />
     </div>
 </template>
@@ -123,7 +129,7 @@ import fullscreen from "@iconify-icons/mdi/fullscreen";
 import fullscreenExit from "@iconify-icons/mdi/fullscreen-exit";
 
 import cog from "@iconify-icons/mdi/cog";
-import { computed, inject, Ref, ref } from "vue";
+import { computed, inject, provide, Ref, ref } from "vue";
 import { useTypedI18n } from "@renderer/i18n";
 const { t } = useTypedI18n();
 
@@ -133,6 +139,7 @@ import DownloadsButton from "@renderer/components/navbar/DownloadsButton.vue";
 import Exit from "@renderer/components/navbar/Exit.vue";
 import Friends from "@renderer/components/navbar/Friends.vue";
 import Messages from "@renderer/components/navbar/Messages.vue";
+import ProfileModal from "@renderer/components/navbar/ProfileModal.vue";
 import { useRouter } from "vue-router";
 import { settingsStore } from "@renderer/store/settings.store";
 import { me } from "@renderer/store/me.store";
@@ -174,8 +181,21 @@ const secondaryRoutes = computed(() => {
 const messagesOpen = ref(false);
 const friendsOpen = ref(false);
 const downloadsOpen = ref(false);
+const profileOpen = ref(false);
+const profileUserId = ref<string | undefined>(undefined);
 const settingsOpen = inject<Ref<boolean>>("settingsOpen")!;
 const exitOpen = inject<Ref<boolean>>("exitOpen")!;
+
+const toggleProfile: Ref<((userId?: string) => void) | undefined> = ref();
+toggleProfile.value = (userId?: string) => {
+    if (userId) {
+        profileUserId.value = userId;
+        profileOpen.value = true;
+    } else {
+        profileOpen.value = !profileOpen.value;
+    }
+};
+provide("toggleProfile", toggleProfile);
 
 const { openLogInConfirmation } = useLogInConfirmation();
 function handleFriendsClick() {
@@ -231,6 +251,8 @@ function prefetchRoute(path: string) {
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .nav {
     position: relative;
     display: flex;
@@ -242,7 +264,7 @@ function prefetchRoute(path: string) {
         0 1px 0 rgba(0, 0, 0, 0.4),
         0 3px 5px rgba(0, 0, 0, 0.5);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    gap: 1px;
+    gap: map-get($spacing, "xxs"); // 2px - aligned to 4px grid (minimum visual separation)
     transition:
         transform 0.3s,
         opacity 0.3s;
@@ -301,19 +323,19 @@ function prefetchRoute(path: string) {
         text-transform: uppercase;
         max-height: unset;
         :deep(.button-content) {
-            font-size: 24px; // Title 3 - appropriate size for main navigation
+            font-size: 20px; // subtitle-1 size (1 size smaller than title-3/24px)
             font-weight: 400; // Regular weight
             font-family: Poppins, sans-serif;
             line-height: 1.3;
         }
         :deep(.p-button) {
-            padding: 0 22px;
-            border-radius: 0 !important;
+            padding: 0 map-get($spacing, "xl"); // 24px - aligned to 4px grid (was 22px)
+            border-radius: 0 !important; // Intentional: NavBar buttons require square corners
         }
         &.icon {
             :deep(.p-button) {
-                padding: 0 14px;
-                border-radius: 0 !important;
+                padding: 0 map-get($spacing, "md"); // 12px - aligned to 4px grid (was 14px)
+                border-radius: 0 !important; // Intentional: NavBar buttons require square corners
             }
         }
         &:hover,
@@ -340,7 +362,7 @@ function prefetchRoute(path: string) {
 .primary-right {
     display: flex;
     flex-direction: row;
-    gap: 1px;
+    gap: map-get($spacing, "xxs"); // 2px - aligned to 4px grid (minimum visual separation)
 }
 .primary-left {
     box-shadow: 5px 0 20px rgba(0, 0, 0, 0.4);
@@ -379,17 +401,17 @@ function prefetchRoute(path: string) {
         border-radius: 0;
         color: rgba(255, 255, 255, 0.5);
         flex-grow: 0;
-        height: 48px; // Match small button height
+        height: map-get($spacing, "xxxl"); // 48px - aligned to 4px grid (match small button height)
         :deep(.button-content) {
-            font-size: 16px; // Body 1 - appropriate for subtabs
-            font-weight: 400; // Regular weight
+            font-size: 14px; // 1 size smaller than body-1 (16px) -> body-2 (14px)
+            font-weight: 400;
             font-family: Poppins, sans-serif;
             line-height: 1.4;
         }
         :deep(> button) {
-            padding: 0 20px;
+            padding: 0 map-get($spacing, "xl"); // 24px - aligned to 4px grid (was 20px, using xl for consistency)
             height: 100%;
-            border-radius: 0 !important;
+            border-radius: 0 !important; // Intentional: NavBar buttons require square corners
         }
         &:hover {
             color: #fff;
@@ -410,8 +432,7 @@ function prefetchRoute(path: string) {
         .button {
             padding: 0;
             :deep(.button-content) {
-                font-size: 16px; // Body 1 - for player name and server status
-                font-weight: 400; // Regular weight
+                @extend .body-1 !optional; // 16px - for player name and server status
                 font-family: Poppins, sans-serif;
                 line-height: 1.4;
             }
@@ -432,11 +453,11 @@ function prefetchRoute(path: string) {
 }
 .unread-dot {
     position: absolute;
-    width: 10px;
-    height: 10px;
+    width: map-get($spacing, "sm"); // 8px - aligned to 4px grid (was 10px)
+    height: map-get($spacing, "sm"); // 8px - aligned to 4px grid (was 10px)
     border-radius: 100%;
-    right: 17px;
-    bottom: 17px;
+    right: map-get($spacing, "lg"); // 16px - aligned to 4px grid (was 17px)
+    bottom: map-get($spacing, "lg"); // 16px - aligned to 4px grid (was 17px)
     background: red;
 }
 

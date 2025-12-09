@@ -207,6 +207,8 @@ function onBonusSave(bonus: number) {
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .bot-type {
     opacity: 0.5;
 }
@@ -217,17 +219,17 @@ function onBonusSave(bonus: number) {
 
 .bot-content {
     width: 100%;
-    gap: 8px;
+    gap: map-get($spacing, "sm");
 }
 
 .difficulty-badge {
-    padding: 2px 8px;
+    padding: map-get($spacing, "xxs") map-get($spacing, "sm");
     border-radius: 4px;
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: rgba(255, 255, 255, 0.8);
     white-space: nowrap;
-    font-size: 12px;
+    @extend .caption-1 !optional;
     line-height: 1.2;
 }
 
@@ -239,7 +241,7 @@ function onBonusSave(bonus: number) {
     border: none;
     color: rgba(255, 255, 255, 0.5);
     cursor: pointer;
-    padding: 4px;
+    padding: map-get($spacing, "xxs");
     border-radius: 3px;
     transition: all 0.2s ease;
     opacity: 0;
@@ -266,7 +268,7 @@ function onBonusSave(bonus: number) {
     border: none;
     color: rgba(255, 255, 255, 0.5);
     cursor: pointer;
-    padding: 4px;
+    padding: map-get($spacing, "xxs");
     border-radius: 3px;
     transition: all 0.2s ease;
     opacity: 0;

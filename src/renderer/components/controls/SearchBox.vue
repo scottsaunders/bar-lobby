@@ -119,6 +119,8 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 @use "sass:color";
+@use "@renderer/styles/spacing" as *;
+
 $input-color: #ccc;
 $input-background: #ffffff11;
 $icon-color: $input-color;
@@ -130,8 +132,8 @@ $active-color: #ccc;
     input[data-search-input="true"] {
         display: block;
         width: 100%;
-        padding: 6px 20px 6px 35px;
-        font-size: 20px;
+        padding: map-get($spacing, "xs") map-get($spacing, "xl") map-get($spacing, "xs") map-get($spacing, "xxxl");
+        @extend .subtitle-1 !optional;
         color: $input-color;
         background-color: $input-background;
         border: 1px solid rgba(255, 255, 255, 0.2);

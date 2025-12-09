@@ -17,11 +17,13 @@ import Control from "@renderer/components/controls/Control.vue";
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .textbox {
     align-items: baseline;
 }
 .p-inputtext {
     width: 100%;
-    padding: 0 10px;
+    padding: 0 map-get($spacing, "sm");
 }
 </style>

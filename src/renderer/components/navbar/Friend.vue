@@ -149,8 +149,15 @@ async function rejectRequest() {
     }
 }
 
+const toggleProfile = inject<Ref<((userId?: string) => void) | undefined>>("toggleProfile");
+
 async function viewProfile() {
-    await router.push(`/profile/${props.userId}`);
+    if (toggleProfile?.value) {
+        toggleProfile.value(props.userId.toString());
+    } else {
+        // Fallback to route if toggle not available
+        await router.push(`/profile/${props.userId}`);
+    }
 }
 
 const toggleMessages = inject<Ref<((open?: boolean, userId?: string) => void) | undefined>>("toggleMessages")!;
@@ -196,27 +203,29 @@ async function removeFriend() {
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .friend {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    gap: map-get($spacing, "sm");
     background: rgba(0, 0, 0, 0.3);
-    padding: 5px 8px;
+    padding: map-get($spacing, "xs") map-get($spacing, "sm");
     border-radius: 3px;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .square {
     :deep(.p-button) {
-        padding: 2px;
-        font-size: 17px;
+        padding: map-get($spacing, "xxs");
+        @extend .body-1 !optional;
     }
 }
 
 .online-dot {
-    font-size: 12px;
+    @extend .caption-1 !optional;
     color: rgb(121, 226, 0);
     &.offline {
         color: rgb(216, 46, 46);

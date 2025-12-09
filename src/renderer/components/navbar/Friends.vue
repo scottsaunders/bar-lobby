@@ -219,13 +219,15 @@ async function addFriend() {
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .user-list {
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    gap: 5px;
+    gap: map-get($spacing, "xs");
 }
 :deep(.FriendId) {
     flex-grow: 1;

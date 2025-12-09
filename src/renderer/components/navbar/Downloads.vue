@@ -82,6 +82,8 @@ function progressText(currentBytes: number, totalBytes: number): string {
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .downloads {
     display: flex;
     flex-direction: column;
@@ -95,15 +97,14 @@ function progressText(currentBytes: number, totalBytes: number): string {
         width: 100%; // fixed size for the animations to work well
         display: flex;
         flex-direction: column;
-        padding: 15px;
+        padding: map-get($spacing, "md");
         border: 1px solid rgba(255, 255, 255, 0.07);
         background: rgba(255, 255, 255, 0.03);
-        gap: 5px;
+        gap: map-get($spacing, "xs");
     }
     &__type {
         text-transform: uppercase;
-        font-size: 12px;
-        font-weight: 700;
+        @extend .caption-1-stronger !optional;
         color: rgba(255, 255, 255, 0.7);
     }
 }

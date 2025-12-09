@@ -123,6 +123,8 @@ function sound() {
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .container {
     @extend .fullsize;
     left: 0;
@@ -138,15 +140,15 @@ function sound() {
     background: rgba(0, 0, 0, 0.5);
 }
 .title {
-    padding: 5px 10px;
+    padding: map-get($spacing, "xs") map-get($spacing, "sm");
     flex-grow: 1;
     text-transform: capitalize;
-    font-weight: 600;
+    @extend .body-1-strong !optional;
 }
 .close {
     display: flex;
     margin-left: auto;
-    padding: 5px 10px;
+    padding: map-get($spacing, "xs") map-get($spacing, "sm");
     &:hover {
         background: rgba(219, 20, 20, 0.6);
     }

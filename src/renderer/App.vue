@@ -188,6 +188,8 @@ if (!settingsStore.devMode) {
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .view-container {
     flex: auto;
     transition: transform 0.4s ease-out;
@@ -207,7 +209,7 @@ if (!settingsStore.devMode) {
     position: absolute;
     left: 3px;
     bottom: 1px;
-    font-size: 12px;
+    @extend .caption-1 !optional;
     color: rgba(255, 255, 255, 0.3);
 }
 
@@ -215,10 +217,10 @@ if (!settingsStore.devMode) {
     position: fixed;
     display: flex;
     flex-direction: row;
-    gap: 5px;
+    gap: map-get($spacing, "xs");
     right: 0;
     top: 0;
-    padding: 10px;
+    padding: map-get($spacing, "sm");
     z-index: 5;
     .option {
         opacity: 0.8;

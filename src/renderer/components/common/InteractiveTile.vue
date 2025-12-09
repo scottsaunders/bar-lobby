@@ -149,14 +149,14 @@ defineProps<{
         bottom: 0;
         left: 0;
         width: 100%;
-        padding: 10px;
+        padding: map-get($spacing, "sm");
         background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
         z-index: 2;
         pointer-events: none;
         transition: opacity 0.3s ease;
 
         &.persistent {
-            opacity: 1 !important;
+            opacity: 1 !important; // Intentional: Force persistent overlay visibility
         }
     }
 

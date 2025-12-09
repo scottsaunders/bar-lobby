@@ -252,7 +252,7 @@ function onDrop(event: DragEvent, teamId: number) {
     border: none;
     color: rgba(255, 255, 255, 0.5);
     cursor: pointer;
-    padding: 4px;
+    padding: map-get($spacing, "xxs");
     border-radius: 3px;
     transition: all 0.2s ease;
     opacity: 0;
@@ -283,8 +283,7 @@ function onDrop(event: DragEvent, teamId: number) {
     text-align: center;
     text-transform: uppercase;
     text-shadow: inset 0 0 10px rgba(0, 0, 0, 1);
-    font-size: 16px;
-    font-weight: 600;
+    @extend .body-1-strong !optional;
     font-family: Poppins, sans-serif;
     line-height: 1.4;
     color: rgba(255, 255, 255, 0.15);

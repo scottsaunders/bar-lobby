@@ -10,7 +10,7 @@ SPDX-License-Identifier: MIT
             <slot name="header" />
         </div>
 
-        <div class="content" :style="{ padding: noPadding ? 0 : '30px' }">
+        <div class="content" :class="{ 'no-padding': noPadding }">
             <slot />
         </div>
 
@@ -28,6 +28,8 @@ defineProps<{
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .panel {
     position: relative;
     max-height: 100%;
@@ -60,6 +62,10 @@ defineProps<{
         display: flex;
         flex-direction: column;
         flex-grow: 1;
+        padding: map-get($spacing, "xxl");
+        &.no-padding {
+            padding: 0;
+        }
     }
     .header {
         position: relative;

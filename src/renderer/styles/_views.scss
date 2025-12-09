@@ -4,22 +4,24 @@
  * SPDX-License-Identifier: MIT
  */
 
+@use "spacing" as *;
+
 .view {
     height: 100%;
     width: 100%;
-    padding-top: 30px;
-    padding-bottom: 140px;
+    padding-top: map-get($spacing, "xxl"); // 32px - aligned to 4px grid (was 30px)
+    padding-bottom: 140px; // Intentional: Specific layout requirement, not a standard spacing value
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    gap: 10px;
+    gap: map-get($spacing, "sm"); // 8px - aligned to 4px grid (was 10px, using sm for consistency)
     overflow: hidden;
     position: relative;
     contain: layout style paint;
 }
 
 .view-title {
-    margin-bottom: 24px;
+    margin-bottom: map-get($spacing, "xl"); // 24px - aligned to 4px grid
     h1 {
         filter: drop-shadow(3px 3px 5px rgba(0, 0, 0, 0.8));
     }

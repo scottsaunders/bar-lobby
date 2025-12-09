@@ -6,13 +6,13 @@ SPDX-License-Identifier: MIT
 
 <template>
     <div>
-        <div class="dev-title">
+        <div class="dev-title title-3">
             {{ title }}
         </div>
-        <div v-if="entry?.published" class="dev-date">
+        <div v-if="entry?.published" class="dev-date caption-1">
             {{ formatDistanceToNow(entry.published, { addSuffix: true }) }}
         </div>
-        <div class="dev-desc">{{ description }}</div>
+        <div class="dev-desc body-1">{{ description }}</div>
     </div>
 </template>
 <script lang="ts" setup>
@@ -25,23 +25,21 @@ const { entry } = defineProps<{ entry: NewsFeedData | undefined }>();
 const title = computed(() => entry?.title?.replace(" ⇀ Microblog ★ Beyond All Reason RTS", ""));
 const description = computed(() => entry?.description?.split("|")[1]?.trim());
 </script>
-<style lang="css" scoped>
+<style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
 .dev-title {
-    font-size: 1.2em;
-    font-weight: semibold;
     filter: drop-shadow(3px 3px 5px rgba(0, 0, 0, 0.8));
 }
 
 .dev-date {
-    font-size: 0.8em;
-    margin-bottom: 5px;
+    margin-bottom: map-get($spacing, "xs");
     filter: drop-shadow(3px 3px 5px rgba(0, 0, 0, 0.8));
     color: rgba(255, 255, 255, 0.6);
 }
 
 .dev-desc {
-    font-size: 1em;
-    margin-bottom: 15px;
+    margin-bottom: map-get($spacing, "md");
     filter: drop-shadow(3px 3px 5px rgba(0, 0, 0, 0.8));
     color: rgba(255, 255, 255, 0.8);
 }

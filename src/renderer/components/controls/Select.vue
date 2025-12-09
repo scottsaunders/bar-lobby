@@ -42,6 +42,8 @@ function handleEvent(value: any) {
 </script>
 
 <style lang="scss">
+@use "@renderer/styles/spacing" as *;
+
 .select {
     align-self: center;
     width: 100%;
@@ -51,7 +53,7 @@ function handleEvent(value: any) {
     display: inline-flex;
     flex-direction: row;
     align-items: center;
-    padding: 5px 10px;
+    padding: map-get($spacing, "xs") map-get($spacing, "sm");
     width: 100%;
     overflow: hidden;
     &-panel {
@@ -64,13 +66,13 @@ function handleEvent(value: any) {
             border: none;
             border-bottom: 1px solid #333;
             background: #222;
-            padding: 5px 10px;
+            padding: map-get($spacing, "xs") map-get($spacing, "sm");
         }
     }
     &-empty-message,
     &-item {
         color: #eee;
-        padding: 5px 10px;
+        padding: map-get($spacing, "xs") map-get($spacing, "sm");
     }
     &-item:hover,
     &-item.p-highlight,
@@ -80,10 +82,10 @@ function handleEvent(value: any) {
         text-shadow: none;
     }
     &-filter-icon {
-        right: 10px;
+        right: map-get($spacing, "sm");
     }
     &.p-inputwrapper {
-        gap: 10px;
+        gap: map-get($spacing, "sm");
     }
 }
 </style>
