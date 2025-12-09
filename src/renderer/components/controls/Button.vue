@@ -51,16 +51,28 @@ export interface Props extends /* @vue-ignore */ ButtonProps {
     disabled?: boolean;
     tooltip?: string;
     showTooltip?: boolean;
+    matchPrefix?: string | boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
     showTooltip: false,
+    matchPrefix: false,
 });
 
 const router = useRouter();
 const attrs = useAttrs();
 const controlRef = ref<InstanceType<typeof Control> | null>(null);
-const active = computed(() => props?.to && router.currentRoute.value.path.includes(props.to));
+const active = computed(() => {
+    if (!props?.to) return false;
+    const currentPath = router.currentRoute.value.path;
+    if (props.matchPrefix) {
+        // For primary nav buttons, check if current route starts with the prefix path
+        const prefixPath = typeof props.matchPrefix === 'string' ? props.matchPrefix : props.to;
+        return currentPath.startsWith(prefixPath);
+    }
+    // Default behavior: check if current path includes the button's path
+    return currentPath.includes(props.to);
+});
 
 const tooltipEnabled = computed(() => props.showTooltip && !!props.tooltip);
 
@@ -167,6 +179,12 @@ async function onClick() {
     justify-content: center;
     padding: 0 8px; // Default padding, overridden by large/slim variants
     border-radius: 2px;
+    
+    // Override border-radius for primary nav buttons (set via class)
+    .button[style*="border-radius: 0"] &,
+    .button[class*="no-radius"] & {
+        border-radius: 0;
+    }
     text-transform: capitalize;
     text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.6);
     font-size: inherit; // Allow typography classes to control font size

@@ -18,6 +18,7 @@ SPDX-License-Identifier: MIT
                         v-for="view in primaryRoutes" 
                         :key="view.path" 
                         :to="view.path === '/play' ? '/play/menu' : view.path"
+                        :match-prefix="view.path"
                         :class="{ 'dev-only': view.meta.devOnly }"
                     >
                         {{ view.meta.title }}
@@ -273,6 +274,7 @@ function toggleFullscreen() {
             1px 0 0 rgba(255, 255, 255, 0.05),
             -1px 0 0 rgba(255, 255, 255, 0.05);
         border: none;
+        border-radius: 0 !important;
         flex-grow: 0;
         height: 100%;
         text-transform: uppercase;
@@ -285,10 +287,12 @@ function toggleFullscreen() {
         }
         :deep(.p-button) {
             padding: 0 22px;
+            border-radius: 0 !important;
         }
         &.icon {
             :deep(.p-button) {
                 padding: 0 14px;
+                border-radius: 0 !important;
             }
         }
         &:hover,
@@ -351,6 +355,7 @@ function toggleFullscreen() {
     .button {
         background: none;
         border: none;
+        border-radius: 0;
         color: rgba(255, 255, 255, 0.5);
         flex-grow: 0;
         height: 48px; // Match small button height
@@ -363,14 +368,21 @@ function toggleFullscreen() {
         :deep(> button) {
             padding: 0 20px;
             height: 100%;
+            border-radius: 0 !important;
         }
-        &:hover,
-        &.active {
+        &:hover {
             color: #fff;
             background: rgba(255, 255, 255, 0.05);
             box-shadow:
                 inset 0 2px 10px rgba(0, 0, 0, 0.5),
                 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        &.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.8);
+            box-sizing: border-box;
         }
     }
     &-right {
