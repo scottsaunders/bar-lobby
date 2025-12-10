@@ -88,6 +88,7 @@ const maps = useDexieLiveQueryWithDeps([searchVal, sortMethod, limit, filters], 
         .filter((map) => {
             const favorites = !filters.favoritesOnly || map.isFavorite;
             const downloaded = !filters.downloadedOnly || map.isInstalled;
+            const fixedPositions = !filters.fixedPositionsOnly || (map.startPos?.team && map.startPos.team.length > 0);
             const mapSizeStr = `${map.mapWidth}x${map.mapHeight}`;
             const matchesMapSize = mapSizeFilters.size === 0 || mapSizeFilters.has(mapSizeStr);
             return Boolean(
@@ -98,7 +99,8 @@ const maps = useDexieLiveQueryWithDeps([searchVal, sortMethod, limit, filters], 
                     (gameTypeFilters.size === 0 || !gameTypeFilters.isDisjointFrom(new Set([...map.tags]))) &&
                     matchesMapSize &&
                     favorites &&
-                    downloaded
+                    downloaded &&
+                    fixedPositions
             );
         })
         .limit(limit.value)

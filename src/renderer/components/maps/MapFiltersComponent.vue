@@ -16,6 +16,7 @@ SPDX-License-Identifier: MIT
                 <div class="flex-col gap-sm">
                     <FavoritesFilter />
                     <DownloadedFilter />
+                    <FixedPositionsFilter />
                 </div>
             </div>
             <div class="flex-col gap-sm filter-section">
@@ -56,6 +57,7 @@ import MaxPlayersFilter from "@renderer/components/maps/filters/MaxPlayersFilter
 import TerrainFilter from "@renderer/components/maps/filters/TerrainFilter.vue";
 import FavoritesFilter from "@renderer/components/maps/filters/FavoritesFilter.vue";
 import DownloadedFilter from "@renderer/components/maps/filters/DownloadedFilter.vue";
+import FixedPositionsFilter from "@renderer/components/maps/filters/FixedPositionsFilter.vue";
 import { useTypedI18n } from "@renderer/i18n";
 const { t } = useTypedI18n();
 </script>

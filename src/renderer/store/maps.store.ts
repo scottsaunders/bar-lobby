@@ -19,6 +19,7 @@ export const mapsStore: {
         maxPlayers: number;
         favoritesOnly: boolean;
         downloadedOnly: boolean;
+        fixedPositionsOnly: boolean;
     };
     availableMapNames: Set<string>;
 } = reactive({
@@ -31,6 +32,7 @@ export const mapsStore: {
         maxPlayers: 40,
         favoritesOnly: false,
         downloadedOnly: false,
+        fixedPositionsOnly: false,
     },
     availableMapNames: new Set(),
 });

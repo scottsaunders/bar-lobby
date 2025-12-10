@@ -510,6 +510,9 @@
                     },
                     "downloadedFilter": {
                         "label": "Downloaded"
+                    },
+                    "fixedPositionsFilter": {
+                        "label": "Fixed Positions"
                     }
                 }
             }

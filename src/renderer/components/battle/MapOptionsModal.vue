@@ -32,11 +32,11 @@ SPDX-License-Identifier: MIT
                             <Button
                                 v-for="(boxSet, i) in battleStore.battleOptions.map.startboxesSet"
                                 :key="i"
-                                class="grey slim"
+                                :class="['grey', 'slim', { selected: battleStore.battleOptions.mapOptions.startBoxesIndex === i }]"
                                 @click="() => setPresetStartBoxes(i)"
                                 :disabled="battleStore.battleOptions.mapOptions.startBoxesIndex === i"
                             >
-                                <span>{{ i + 1 }}</span>
+                                <span class="title-3">{{ i + 1 }}</span>
                             </Button>
                         </div>
                     </div>
@@ -120,24 +120,24 @@ SPDX-License-Identifier: MIT
                         v-if="!supportsFixedPositions" 
                         variant="warning"
                         label="Notice"
-                        value="This map doesn't support fixed positions"
+                        value="This map doesn't support fixed positions. Commanders will start in random positions instead."
                     />
                     <div v-else class="box-buttons">
                         <Button
                             v-for="(teamSet, i) in battleStore.battleOptions.map.startPos?.team"
                             :key="`team${i}`"
-                            class="grey slim"
+                            :class="['grey', 'slim', { selected: battleStore.battleOptions.mapOptions.startPosType === StartPosType.Fixed && battleStore.battleOptions.mapOptions.fixedPositionsIndex === i }]"
                             @click="() => setFixedStartBoxes(i)"
                             :disabled="battleStore.battleOptions.mapOptions.startPosType === StartPosType.Fixed && battleStore.battleOptions.mapOptions.fixedPositionsIndex === i"
                         >
-                            <span>{{ i + 1 }}</span>
+                            <span class="title-3">{{ i + 1 }}</span>
                         </Button>
                         <Button
-                            class="grey slim"
+                            :class="['grey', 'slim', 'random-button', { selected: battleStore.battleOptions.mapOptions.startPosType === StartPosType.Random }]"
                             @click="setRandomStartBoxes"
                             :disabled="battleStore.battleOptions.mapOptions.startPosType === StartPosType.Random"
                         >
-                            <span>{{ t("lobby.components.battle.mapOptionsModal.random") }}</span>
+                            <span class="title-3">{{ t("lobby.components.battle.mapOptionsModal.random") }}</span>
                         </Button>
                     </div>
                 </div>
@@ -254,7 +254,9 @@ const isStartStyleSupported = computed(() => {
         return true;
     } else if (style === StartPosType.Fixed || style === StartPosType.Random) {
         // Fixed positions are only supported if the map has them
-        return supportsFixedPositions.value;
+        // However, if fixed positions aren't available, the game will use random positions
+        // so we should still allow saving
+        return true;
     }
     return true;
 });
@@ -360,6 +362,29 @@ function close() {
     flex-direction: row;
     gap: map-get($spacing, "xs");
     flex-wrap: wrap;
+    :deep(.control.grey) {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        border-color: rgba(255, 255, 255, 0.15) !important;
+        box-shadow: none !important;
+        &.selected {
+            background-color: rgba(255, 255, 255, 0.7) !important;
+            border-color: rgba(255, 255, 255, 0.7) !important;
+            color: #fff !important;
+            :deep(.p-button) {
+                color: #fff !important;
+            }
+            :deep(span) {
+                color: #fff !important;
+            }
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.6) !important;
+            }
+        }
+        &:hover:not(.selected) {
+            background-color: rgba(255, 255, 255, 0.2) !important;
+            border-color: rgba(255, 255, 255, 0.2) !important;
+        }
+    }
     :deep(button) {
         padding: map-get($spacing, "xs");
         &:hover {
@@ -379,7 +404,6 @@ function close() {
     span {
         min-width: 50px;
         opacity: 0.7;
-        font-size: 2rem;
     }
 }
 
