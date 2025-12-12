@@ -34,7 +34,6 @@ SPDX-License-Identifier: MIT
                                 :key="i"
                                 :class="['grey', 'slim', { selected: battleStore.battleOptions.mapOptions.startBoxesIndex === i }]"
                                 @click="() => setPresetStartBoxes(i)"
-                                :disabled="battleStore.battleOptions.mapOptions.startBoxesIndex === i"
                             >
                                 <span class="title-3">{{ i + 1 }}</span>
                             </Button>
@@ -128,14 +127,12 @@ SPDX-License-Identifier: MIT
                             :key="`team${i}`"
                             :class="['grey', 'slim', { selected: battleStore.battleOptions.mapOptions.startPosType === StartPosType.Fixed && battleStore.battleOptions.mapOptions.fixedPositionsIndex === i }]"
                             @click="() => setFixedStartBoxes(i)"
-                            :disabled="battleStore.battleOptions.mapOptions.startPosType === StartPosType.Fixed && battleStore.battleOptions.mapOptions.fixedPositionsIndex === i"
                         >
                             <span class="title-3">{{ i + 1 }}</span>
                         </Button>
                         <Button
                             :class="['grey', 'slim', 'random-button', { selected: battleStore.battleOptions.mapOptions.startPosType === StartPosType.Random }]"
                             @click="setRandomStartBoxes"
-                            :disabled="battleStore.battleOptions.mapOptions.startPosType === StartPosType.Random"
                         >
                             <span class="title-3">{{ t("lobby.components.battle.mapOptionsModal.random") }}</span>
                         </Button>
@@ -367,17 +364,55 @@ function close() {
         border-color: rgba(255, 255, 255, 0.15) !important;
         box-shadow: none !important;
         &.selected {
-            background-color: rgba(255, 255, 255, 0.7) !important;
-            border-color: rgba(255, 255, 255, 0.7) !important;
+            background-color: rgba(255, 255, 255, 0.6) !important;
+            border-color: rgba(255, 255, 255, 0.6) !important;
             color: #fff !important;
             :deep(.p-button) {
                 color: #fff !important;
+                opacity: 1 !important;
+            }
+            :deep(.p-button:disabled) {
+                color: #fff !important;
+                opacity: 1 !important;
             }
             :deep(span) {
                 color: #fff !important;
+                opacity: 1 !important;
+            }
+            :deep(.title-3) {
+                color: #fff !important;
+                opacity: 1 !important;
+            }
+            :deep(.button-content) {
+                color: #fff !important;
+                opacity: 1 !important;
+            }
+            &.disabled {
+                background-color: rgba(255, 255, 255, 0.6) !important;
+                border-color: rgba(255, 255, 255, 0.6) !important;
+                :deep(.p-button) {
+                    color: #fff !important;
+                    opacity: 1 !important;
+                }
+                :deep(.p-button:disabled) {
+                    color: #fff !important;
+                    opacity: 1 !important;
+                }
+                :deep(span) {
+                    color: #fff !important;
+                    opacity: 1 !important;
+                }
+                :deep(.title-3) {
+                    color: #fff !important;
+                    opacity: 1 !important;
+                }
+                :deep(.button-content) {
+                    color: #fff !important;
+                    opacity: 1 !important;
+                }
             }
             &:hover {
-                background-color: rgba(255, 255, 255, 0.6) !important;
+                background-color: rgba(255, 255, 255, 0.5) !important;
             }
         }
         &:hover:not(.selected) {
