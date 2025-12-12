@@ -103,7 +103,7 @@ SPDX-License-Identifier: MIT
                     <div class="flex-col fullheight min-height-0">
                         <BattlePreview v-if="selectedBattle" :battle="selectedBattle">
                             <template #actions="{ battle }">
-                                <Button class="green flex-grow" @click="attemptJoinBattle(battle)">{{
+                                <Button class="green large flex-grow" @click="attemptJoinBattle(battle)">{{
                                     t("lobby.multiplayer.custom.table.join")
                                 }}</Button>
                             </template>
@@ -190,7 +190,7 @@ const battles = ref<BattleWithComputed[]>([
         gameId: "battle-001",
         engineVersion: "105.1.1-1547-g1234567",
         gameVersion: "10.123",
-        mapSpringName: "Comet Catcher Redux v1.0",
+        mapSpringName: "All that glitters",
         startTime: new Date(Date.now() - 18 * 60 * 1000), // 18 minutes ago
         hasBots: 0,
         preset: "team",
@@ -225,7 +225,7 @@ const battles = ref<BattleWithComputed[]>([
         mapSettings: {},
         battleOptions: {
             title: "Competitive 8v8 Tournament Match",
-            map: "Comet Catcher Redux v1.0",
+            map: "All that glitters",
         },
         primaryFactor: "Running",
         runtimeMs: { value: 18 * 60 * 1000 },
@@ -266,7 +266,7 @@ const battles = ref<BattleWithComputed[]>([
         gameId: "battle-002",
         engineVersion: "105.1.1-1547-g1234567",
         gameVersion: "10.123",
-        mapSpringName: "Quicksilver Remake 1.24",
+        mapSpringName: "Supreme Isthmus",
         startTime: new Date(Date.now() - 32 * 60 * 1000), // 32 minutes ago
         hasBots: 0,
         preset: "team",
@@ -300,7 +300,7 @@ const battles = ref<BattleWithComputed[]>([
         mapSettings: {},
         battleOptions: {
             title: "Elite 8v8 Ranked Battle",
-            map: "Quicksilver Remake 1.24",
+            map: "Supreme Isthmus",
         },
         primaryFactor: "Running",
         runtimeMs: { value: 32 * 60 * 1000 },
@@ -340,7 +340,7 @@ const battles = ref<BattleWithComputed[]>([
         gameId: "battle-003",
         engineVersion: "105.1.1-1547-g1234567",
         gameVersion: "10.123",
-        mapSpringName: "Titan v1.0",
+        mapSpringName: "Quicksilver Remake 1.24",
         startTime: new Date(Date.now() - 12 * 60 * 1000), // 12 minutes ago
         hasBots: 0,
         preset: "team",
@@ -376,7 +376,7 @@ const battles = ref<BattleWithComputed[]>([
         mapSettings: {},
         battleOptions: {
             title: "Pro League 8v8 Match",
-            map: "Titan v1.0",
+            map: "All that glitters",
         },
         primaryFactor: "Running",
         runtimeMs: { value: 12 * 60 * 1000 },
@@ -418,7 +418,7 @@ const battles = ref<BattleWithComputed[]>([
         gameId: "battle-004",
         engineVersion: "105.1.1-1547-g1234567",
         gameVersion: "10.123",
-        mapSpringName: "Altored Divide Bar Remake v1.0",
+        mapSpringName: "Supreme Isthmus",
         startTime: new Date(Date.now() - 25 * 60 * 1000), // 25 minutes ago
         hasBots: 0,
         preset: "team",
@@ -455,7 +455,7 @@ const battles = ref<BattleWithComputed[]>([
         mapSettings: {},
         battleOptions: {
             title: "Championship 8v8 Finals",
-            map: "Altored Divide Bar Remake v1.0",
+            map: "Supreme Isthmus",
         },
         primaryFactor: "Running",
         runtimeMs: { value: 25 * 60 * 1000 },
@@ -498,7 +498,7 @@ const battles = ref<BattleWithComputed[]>([
         gameId: "battle-005",
         engineVersion: "105.1.1-1547-g1234567",
         gameVersion: "10.123",
-        mapSpringName: "Ghenna Rising v1.3",
+        mapSpringName: "Quicksilver Remake 1.24",
         startTime: new Date(Date.now() - 7 * 60 * 1000), // 7 minutes ago
         hasBots: 0,
         preset: "team",
@@ -531,7 +531,7 @@ const battles = ref<BattleWithComputed[]>([
         mapSettings: {},
         battleOptions: {
             title: "Casual 8v8 Public Game",
-            map: "Ghenna Rising v1.3",
+            map: "Quicksilver Remake 1.24",
         },
         primaryFactor: "Running",
         runtimeMs: { value: 7 * 60 * 1000 },
@@ -571,7 +571,7 @@ const battles = ref<BattleWithComputed[]>([
         gameId: "battle-006",
         engineVersion: "105.1.1-1547-g1234567",
         gameVersion: "10.123",
-        mapSpringName: "Supreme Conflict v1.0",
+        mapSpringName: "Supreme Isthmus",
         startTime: new Date(Date.now() - 2 * 60 * 1000), // 2 minutes ago
         hasBots: 0,
         preset: "team",
@@ -601,7 +601,7 @@ const battles = ref<BattleWithComputed[]>([
         mapSettings: {},
         battleOptions: {
             title: "8v8 Lobby - Need 4 More Players",
-            map: "Supreme Conflict v1.0",
+            map: "Supreme Isthmus",
         },
         primaryFactor: "12/16 Players",
         runtimeMs: { value: 0 },
@@ -637,7 +637,7 @@ const battles = ref<BattleWithComputed[]>([
         gameId: "battle-007",
         engineVersion: "105.1.1-1547-g1234567",
         gameVersion: "10.123",
-        mapSpringName: "Titan Duel v2.1",
+        mapSpringName: "Red Comet Remake 1.8",
         startTime: new Date(Date.now() - 1 * 60 * 1000), // 1 minute ago
         hasBots: 0,
         preset: "team",
@@ -659,7 +659,7 @@ const battles = ref<BattleWithComputed[]>([
         mapSettings: {},
         battleOptions: {
             title: "4v4 Casual Match - Join Us!",
-            map: "Titan Duel v2.1",
+            map: "Red Comet Remake 1.8",
         },
         primaryFactor: "5/8 Players",
         runtimeMs: { value: 0 },
@@ -687,7 +687,7 @@ const battles = ref<BattleWithComputed[]>([
         gameId: "battle-008",
         engineVersion: "105.1.1-1547-g1234567",
         gameVersion: "10.123",
-        mapSpringName: "Comet Catcher Redux v1.0",
+        mapSpringName: "Quicksilver Remake 1.24",
         startTime: new Date(Date.now() - 30 * 1000), // 30 seconds ago
         hasBots: 0,
         preset: "duel",
@@ -706,7 +706,7 @@ const battles = ref<BattleWithComputed[]>([
         mapSettings: {},
         battleOptions: {
             title: "1v1 Ranked Duel - Waiting for Opponent",
-            map: "Comet Catcher Redux v1.0",
+            map: "Quicksilver Remake 1.24",
         },
         primaryFactor: "1/2 Players",
         runtimeMs: { value: 0 },
@@ -764,7 +764,7 @@ const battles = ref<BattleWithComputed[]>([
         mapSettings: {},
         battleOptions: {
             title: "8v8 Team Battle - Almost Full",
-            map: "Quicksilver Remake 1.24",
+            map: "All that glitters",
         },
         primaryFactor: "14/16 Players",
         runtimeMs: { value: 0 },
@@ -803,7 +803,7 @@ const battles = ref<BattleWithComputed[]>([
         gameId: "battle-010",
         engineVersion: "105.1.1-1547-g1234567",
         gameVersion: "10.123",
-        mapSpringName: "Ghenna Rising v1.3",
+        mapSpringName: "Red Comet Remake 1.8",
         startTime: new Date(Date.now() - 45 * 1000), // 45 seconds ago
         hasBots: 0,
         preset: "team",
@@ -824,7 +824,7 @@ const battles = ref<BattleWithComputed[]>([
         mapSettings: {},
         battleOptions: {
             title: "4v4 Newbie Friendly - Learning Game",
-            map: "Ghenna Rising v1.3",
+            map: "Red Comet Remake 1.8",
         },
         primaryFactor: "3/8 Players",
         runtimeMs: { value: 0 },
