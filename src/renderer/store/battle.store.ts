@@ -484,6 +484,16 @@ watch(
     { deep: true }
 );
 
+// Watch for map installation changes to update contentSyncState
+watch(
+    () => battleStore.battleOptions.map?.isInstalled,
+    (isInstalled) => {
+        if (battleStore.me && battleStore.battleOptions.map) {
+            battleStore.me.contentSyncState.map = isInstalled ? 1 : 0;
+        }
+    }
+);
+
 watch(
     () => enginesStore.selectedEngineVersion,
     () => {
@@ -672,6 +682,36 @@ export const battleActions = {
 };
 
 // Needs game files to exists.
-export function initBattleStore() {
+export async function initBattleStore() {
     resetToDefaultBattle();
+    
+    // Listen for map download completion to update contentSyncState
+    window.downloads.onDownloadMapComplete(async (downloadInfo) => {
+        // If the downloaded map is the current map in battleStore, update contentSyncState
+        if (battleStore.battleOptions.map?.springName === downloadInfo.name && battleStore.me) {
+            battleStore.me.contentSyncState.map = 1;
+            // Refresh the map object from the database to get updated isInstalled status
+            const { db } = await import("@renderer/store/db");
+            const updatedMap = await db.maps.get(downloadInfo.name) || await db.nonLiveMaps.get(downloadInfo.name);
+            if (updatedMap && battleStore.battleOptions.map?.springName === updatedMap.springName) {
+                // Update the map object with fresh data from database
+                Object.assign(battleStore.battleOptions.map, updatedMap);
+            }
+        }
+    });
+    
+    // Listen for map added event (when map is detected after download)
+    window.maps.onMapAdded(async (springName: string) => {
+        // If the added map is the current map in battleStore, update contentSyncState
+        if (battleStore.battleOptions.map?.springName === springName && battleStore.me) {
+            battleStore.me.contentSyncState.map = 1;
+            // Refresh the map object from the database to get updated isInstalled status
+            const { db } = await import("@renderer/store/db");
+            const updatedMap = await db.maps.get(springName) || await db.nonLiveMaps.get(springName);
+            if (updatedMap && battleStore.battleOptions.map?.springName === updatedMap.springName) {
+                // Update the map object with fresh data from database
+                Object.assign(battleStore.battleOptions.map, updatedMap);
+            }
+        }
+    });
 }

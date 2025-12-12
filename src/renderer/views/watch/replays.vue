@@ -18,7 +18,7 @@ SPDX-License-Identifier: MIT
             <div class="replays-layout flex-row flex-grow gap-xl">
                 <Panel class="flex-grow replays-list-panel">
                     <div class="flex-col fullheight gap-md">
-                            <div class="flex-row gap-md fullwidth">
+                            <div class="flex-row flex-center-items gap-md fullwidth">
                                 <TriStateCheckbox
                                     v-model="settingsStore.endedNormallyFilter"
                                     :label="t('lobby.views.watch.replays.endedNormally')"

@@ -128,6 +128,19 @@ $active-color: #ccc;
 .search-input-wrapper {
     position: relative;
     flex-shrink: 0;
+    min-height: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
+    
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
 
     input[data-search-input="true"] {
         display: block;
@@ -135,15 +148,18 @@ $active-color: #ccc;
         padding: map-get($spacing, "xs") map-get($spacing, "xl") map-get($spacing, "xs") map-get($spacing, "xxxl");
         @extend .subtitle-1 !optional;
         color: $input-color;
-        background-color: $input-background;
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        background-color: transparent;
+        border: none;
         transition-property: border-color, padding, max-width;
         transition-duration: 0.25s;
         transition-timing-function: ease-in-out;
+        box-sizing: border-box;
+        height: 100%;
         &:focus {
-            background-color: color.adjust($input-background, $lightness: 25%);
-            border-color: $active-color;
+            background-color: transparent;
+            border-color: transparent;
             box-shadow: none;
+            outline: none;
         }
     }
 
@@ -152,7 +168,8 @@ $active-color: #ccc;
         &.search {
             color: $icon-color;
             left: 14px;
-            bottom: 14px;
+            top: 50%;
+            transform: translateY(-50%);
             box-sizing: border-box;
             display: block;
             width: 16px;
@@ -178,7 +195,8 @@ $active-color: #ccc;
         }
         &.clear {
             right: 8px;
-            bottom: 8px;
+            top: 50%;
+            transform: translateY(-50%);
             cursor: pointer;
             z-index: 10;
             box-sizing: border-box;
