@@ -257,6 +257,17 @@ function getNumberOfTeams(): number {
 
         const teamPreset = map.startPos.team[fixedPositionsIndex];
         numberOfTeams = teamPreset?.sides?.length || 0;
+        
+        // Safety check: if numberOfTeams is 0 but we have existing teams, preserve the current team count
+        // This prevents teams from being cleared when switching to unsupported fixed positions
+        if (numberOfTeams === 0 && battleStore.teams.length > 0) {
+            return battleStore.teams.length;
+        }
+        
+        // If still 0, default to 2 teams to prevent clearing all teams
+        if (numberOfTeams === 0) {
+            return 2;
+        }
     }
 
     return numberOfTeams;

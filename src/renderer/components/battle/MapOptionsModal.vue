@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT
 -->
 
 <template>
-    <Modal ref="modal" :title="t('lobby.components.battle.mapOptionsModal.mapOptionsTitle')">
+    <Modal ref="modal" :title="t('lobby.components.battle.mapOptionsModal.mapOptionsTitle')" @open="onModalOpen" @close="onModalClose">
         <div class="container">
             <div class="map-preview-container">
                 <MapBattlePreview />
@@ -119,7 +119,7 @@ SPDX-License-Identifier: MIT
                         v-if="!supportsFixedPositions" 
                         variant="warning"
                         label="Notice"
-                        value="This map doesn't support fixed positions. Commanders will start in random positions instead."
+                        value="This map doesn't support fixed positions."
                     />
                     <div v-else class="box-buttons">
                         <Button
@@ -166,6 +166,9 @@ import { useTypedI18n } from "@renderer/i18n";
 const { t } = useTypedI18n();
 
 const modal: Ref<null | InstanceType<typeof Modal>> = ref(null);
+
+// Track initial start style to revert if needed
+const initialStartPosType = ref<StartPosType | undefined>(undefined);
 
 const customBoxRange = ref(25);
 
@@ -233,6 +236,11 @@ const selectedStartStyle = computed({
         return type === StartPosType.Random ? StartPosType.Fixed : type;
     },
     set: (value: StartPosType) => {
+        // Prevent switching to Fixed positions if map doesn't support them
+        if (value === StartPosType.Fixed && !supportsFixedPositions.value) {
+            // Don't allow the change - the getter will return the current value
+            return;
+        }
         onStartStyleChanged(value);
     },
 });
@@ -249,11 +257,9 @@ const isStartStyleSupported = computed(() => {
     if (style === StartPosType.Boxes) {
         // Start boxes are always supported
         return true;
-    } else if (style === StartPosType.Fixed || style === StartPosType.Random) {
+    } else if (style === StartPosType.Fixed) {
         // Fixed positions are only supported if the map has them
-        // However, if fixed positions aren't available, the game will use random positions
-        // so we should still allow saving
-        return true;
+        return supportsFixedPositions.value;
     }
     return true;
 });
@@ -277,6 +283,7 @@ function onStartStyleChanged(newType: StartPosType) {
         }
     } else if (newType === StartPosType.Fixed) {
         // Switch to fixed positions mode - preserve existing selection if possible
+        // Note: This should only be called if supportsFixedPositions is true (checked in setter)
         if (battleStore.battleOptions.mapOptions.fixedPositionsIndex !== undefined) {
             // Already have a fixed position selected, just switch the type
             battleStore.battleOptions.mapOptions.startPosType = StartPosType.Fixed;
@@ -284,7 +291,7 @@ function onStartStyleChanged(newType: StartPosType) {
             // Use first fixed position preset
             setFixedStartBoxes(0);
         } else {
-            // No fixed positions available, use random
+            // This shouldn't happen if supportsFixedPositions is true, but fallback to random
             setRandomStartBoxes();
         }
     }
@@ -331,6 +338,26 @@ function setCustomBoxesFromPresetBoxes() {
 
 function close() {
     modal.value?.close();
+}
+
+function onModalOpen() {
+    // Track the initial start style when modal opens
+    initialStartPosType.value = battleStore.battleOptions.mapOptions.startPosType;
+}
+
+function onModalClose() {
+    // If fixed positions was selected but not supported, revert to start boxes
+    const currentType = battleStore.battleOptions.mapOptions.startPosType;
+    if ((currentType === StartPosType.Fixed || currentType === StartPosType.Random) && !supportsFixedPositions.value) {
+        // Revert to start boxes
+        if (battleStore.battleOptions.map?.startboxesSet && battleStore.battleOptions.map.startboxesSet.length > 0) {
+            // Use first preset if available
+            setPresetStartBoxes(0);
+        } else {
+            // No presets available, set up custom boxes
+            setCustomStartBoxes(StartBoxOrientation.EastVsWest);
+        }
+    }
 }
 </script>
 

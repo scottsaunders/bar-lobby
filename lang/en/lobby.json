@@ -145,6 +145,7 @@
             "custom": {
                 "title": "Multiplayer Custom Battles",
                 "hostBattle": "Host Battle",
+                "searchPlaceholder": "Search for player, map, or lobby",
                 "filters": {
                     "hidePvE": "Hide PvE",
                     "hideLocked": "Hide Locked",
@@ -156,6 +157,7 @@
                     "title": "Title",
                     "map": "Map",
                     "players": "Players",
+                    "runtime": "Runtime",
                     "runningFor": "Running for",
                     "join": "Join"
                 }
