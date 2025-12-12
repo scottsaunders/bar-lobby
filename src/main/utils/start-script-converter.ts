@@ -17,12 +17,18 @@ import { AllyTeam, Bot, Game, Player, Team } from "@main/model/start-script";
 class StartScriptConverter {
     public generateScriptStr(battle: BattleWithMetadata): string {
         let scriptStr = "";
-        if (!battle.isOnline) {
-            const script = this.offlineBattleToStartScript(battle);
-            scriptStr = this.generateScriptString(script);
-        } else {
-            throw new Error("Online battles are not supported yet");
-            //scriptStr = this.generateOnlineScript(battle);
+        try {
+            if (!battle.isOnline) {
+                const script = this.offlineBattleToStartScript(battle);
+                scriptStr = this.generateScriptString(script);
+            } else {
+                throw new Error("Online battles are not supported yet");
+                //scriptStr = this.generateOnlineScript(battle);
+            }
+        } catch (error) {
+            console.error("Error generating script:", error);
+            console.error("Battle data:", JSON.stringify(battle, null, 2));
+            throw error;
         }
         return scriptStr;
     }
@@ -41,9 +47,15 @@ class StartScriptConverter {
         const players: Player[] = [];
         const bots: Bot[] = [];
 
-        Object.entries(battle.teams).forEach((entry) => {
-            const teamId = Number(entry[0]);
-            const team = entry[1];
+        if (!battle.teams || !Array.isArray(battle.teams)) {
+            throw new Error(`Invalid teams structure: expected array, got ${typeof battle.teams}`);
+        }
+
+        battle.teams.forEach((team, teamId) => {
+            if (!team || !team.participants || !Array.isArray(team.participants)) {
+                console.warn(`Team ${teamId} has invalid structure, skipping`);
+                return;
+            }
             const allyTeam: AllyTeam = {
                 id: teamId,
                 numallies: 0,
@@ -146,10 +158,22 @@ class StartScriptConverter {
         if (!battle.battleOptions.map) throw new Error("failed to access battle options map");
         if (!battle.me) throw new Error("failed to access current player");
 
+        // Filter modoptions to only include primitive values (not nested objects/arrays)
+        // This prevents serializing option definitions with descriptions/metadata
+        const modoptions: Record<string, string | number | boolean> = {};
+        if (battle.battleOptions.gameMode.options) {
+            for (const [key, value] of Object.entries(battle.battleOptions.gameMode.options)) {
+                // Only include primitive values (string, number, boolean)
+                if (value !== null && value !== undefined && (typeof value === "string" || typeof value === "number" || typeof value === "boolean")) {
+                    modoptions[key] = value;
+                }
+            }
+        }
+
         return {
             gametype: battle.battleOptions.gameVersion,
             mapname: battle.battleOptions.map.springName,
-            modoptions: battle.battleOptions.gameMode.options,
+            modoptions,
             // mapoptions: battle.battleOptions.???,
             ishost: 1,
             myplayername: battle.me.user.username,

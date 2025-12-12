@@ -81,6 +81,7 @@
             "watch": {
                 "replays": {
                     "title": "Replays",
+                    "description": "Watch and manage your saved battle replays",
                     "endedNormally": "Ended Normally",
                     "showSpoilers": "Show Spoilers",
                     "searchPlaceholder": "Search map, players...",

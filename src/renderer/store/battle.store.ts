@@ -315,7 +315,7 @@ function updateTeams() {
 
     // Adjust number of teams
     if (battleStore.teams.length < numberOfTeams) {
-        for (let i = 0; i <= numberOfTeams - battleStore.teams.length; i++) addTeam();
+        for (let i = 0; i < numberOfTeams - battleStore.teams.length; i++) addTeam();
     } else if (battleStore.teams.length > numberOfTeams) {
         for (let i = battleStore.teams.length - 1; i + 1 > numberOfTeams; i--) removeTeam(i);
     }
@@ -384,7 +384,7 @@ function defaultOfflineBattle(engine?: EngineVersion, game?: GameVersion, map?: 
             gameMode: {
                 id: GameModeID.CLASSIC,
                 label: getTranslatedGameMode(GameModeID.CLASSIC),
-                options: game?.luaOptionSections || {},
+                options: {},
             },
             map,
             mapOptions: {

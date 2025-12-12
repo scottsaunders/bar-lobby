@@ -12,6 +12,7 @@ import { engineContentAPI } from "@main/content/engine/engine-content";
 
 import { startScriptConverter } from "@main/utils/start-script-converter";
 import { logger } from "@main/utils/logger";
+import { logErrorToFile } from "@main/utils/error-logger";
 import { gameContentAPI } from "@main/content/game/game-content";
 import { WRITE_DATA_PATH, REPLAYS_PATH, ENGINE_PATH, ASSETS_PATH } from "@main/config/app";
 import { BattleWithMetadata } from "@main/game/battle/battle-types";
@@ -40,14 +41,26 @@ export class GameAPI {
     protected gameProcess: ChildProcess | null = null;
 
     public async launchBattle(battle: BattleWithMetadata): Promise<void> {
-        const script = startScriptConverter.generateScriptStr(battle);
-        const scriptPath = path.join(WRITE_DATA_PATH, this.startScriptName);
-        await fs.promises.writeFile(scriptPath, script);
-        await this.launch({
-            engineVersion: battle.battleOptions.engineVersion,
-            gameVersion: battle.battleOptions.gameVersion,
-            launchArg: scriptPath,
-        });
+        try {
+            log.debug("Generating script for battle...");
+            const script = startScriptConverter.generateScriptStr(battle);
+            log.debug(`Generated script (${script.length} chars):\n${script}`);
+            const scriptPath = path.join(WRITE_DATA_PATH, this.startScriptName);
+            await fs.promises.writeFile(scriptPath, script);
+            log.debug(`Script written to: ${scriptPath}`);
+            await this.launch({
+                engineVersion: battle.battleOptions.engineVersion,
+                gameVersion: battle.battleOptions.gameVersion,
+                launchArg: scriptPath,
+            });
+        } catch (error) {
+            log.error(`Failed to launch battle: ${error}`);
+            if (error instanceof Error) {
+                log.error(`Error stack: ${error.stack}`);
+            }
+            logErrorToFile(error, "launchBattle");
+            throw error;
+        }
     }
 
     public async launchReplay(replay: Replay) {
@@ -63,7 +76,9 @@ export class GameAPI {
         const scriptGameVersion = script.match(/gametype\s*=\s*(.*);/)?.[1];
         const mapSpringName = script.match(/mapname\s*=\s*(.*);/)?.[1];
         if (!mapSpringName) {
-            throw new Error("Could not parse map name from script");
+            const error = new Error("Could not parse map name from script");
+            logErrorToFile(error, "launchScript");
+            throw error;
         }
         const scriptPath = path.join(WRITE_DATA_PATH, this.startScriptName);
         await fs.promises.writeFile(scriptPath, script);
@@ -84,7 +99,9 @@ export class GameAPI {
 
     public async launch({ engineVersion, gameVersion, launchArg }: { engineVersion?: string; gameVersion?: string; launchArg?: string }): Promise<void> {
         if (!engineVersion || !gameVersion || !launchArg) {
-            throw new Error("Engine Version, Game Version and launch Arguments need to be specified");
+            const error = new Error("Engine Version, Game Version and launch Arguments need to be specified");
+            logErrorToFile(error, "launch validation");
+            throw error;
         }
 
         log.info(`Launching game with engine: ${engineVersion}, game: ${gameVersion}`);
@@ -128,14 +145,18 @@ export class GameAPI {
                 });
                 this.gameProcess.stderr.on("data", (data) => {
                     engineLogger.error(`${data}`);
+                    logErrorToFile(data.toString(), "game process stderr");
                 });
                 this.gameProcess.addListener("error", (err) => {
                     log.error(err);
+                    logErrorToFile(err, "game process error");
                 });
                 this.gameProcess.addListener("exit", (code) => {
                     if (code !== 0) {
                         log.error(`Game process exited with code: ${code}`);
-                        reject(new Error(`Game process exited with code: ${code}`));
+                        const exitError = new Error(`Game process exited with code: ${code}`);
+                        logErrorToFile(exitError, "game process exit");
+                        reject(exitError);
                     } else {
                         log.info(`Game process exited with code: ${code}`);
                     }
@@ -150,6 +171,7 @@ export class GameAPI {
                 log.debug(`Game process PID: ${this.gameProcess.pid}`);
             } catch (err) {
                 log.error(`Failed to launch game: ${err}`);
+                logErrorToFile(err, "launch game");
                 reject(err);
             }
         });
@@ -162,7 +184,9 @@ export class GameAPI {
     //TODO not handling maps, not sure if needed if we always come from the lobby's UI
     protected async fetchMissingContent(engineVersion?: string, gameVersion?: string) {
         if (!engineVersion || !gameVersion) {
-            throw new Error("Engine Version and Game Version need to be specified");
+            const error = new Error("Engine Version and Game Version need to be specified");
+            logErrorToFile(error, "fetchMissingContent");
+            throw error;
         }
 
         const isEngineInstalled = engineContentAPI.isVersionInstalled(engineVersion);

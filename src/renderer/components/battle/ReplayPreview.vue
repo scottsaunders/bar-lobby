@@ -5,13 +5,15 @@ SPDX-License-Identifier: MIT
 -->
 
 <template>
-    <div class="flex-col gap-md fullheight">
-        <TabView>
+    <div class="replay-preview-content flex-col gap-md fullheight">
+        <TabView class="flex-grow min-height-0">
             <TabPanel header="Map">
-                <ReplayPreviewMap :replay="replay" />
+                <div class="map-preview-wrapper flex-grow min-height-0">
+                    <ReplayPreviewMap :replay="replay" />
+                </div>
             </TabPanel>
             <TabPanel header="Details">
-                <div class="scroll-container flex-col" style="height: 550px">
+                <div class="scroll-container flex-col flex-grow">
                     <div class="teams padding-bottom-sm">
                         <div v-if="isFFA">
                             <div class="team-title">{{ t("lobby.components.battle.replayPreview.players") }}</div>
@@ -76,7 +78,7 @@ SPDX-License-Identifier: MIT
                 </div>
             </TabPanel>
         </TabView>
-        <div class="flex-bottom gap-md padding-left-md padding-right-md">
+        <div class="replay-actions flex-shrink-0 gap-md padding-left-md padding-right-md padding-bottom-md">
             <slot name="actions" :replay="replay"></slot>
         </div>
     </div>
@@ -134,6 +136,46 @@ function getStripeResult(index: number) {
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
+.replay-preview-content {
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+:deep(.p-tabview) {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0;
+}
+
+:deep(.p-tabview-panels) {
+    flex-grow: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+:deep(.p-tabview-panel) {
+    flex-grow: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.map-preview-wrapper {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.replay-actions {
+    flex-shrink: 0;
+}
+
 .teams {
     gap: 5px;
     height: auto;

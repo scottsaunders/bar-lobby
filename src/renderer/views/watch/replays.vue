@@ -10,14 +10,14 @@ SPDX-License-Identifier: MIT
 
 <template>
     <div class="view">
-        <div class="replay-container">
+        <div class="view-container">
             <div class="view-title">
                 <h1>{{ t("lobby.views.watch.replays.title") }}</h1>
+                <p>{{ t("lobby.views.watch.replays.description") }}</p>
             </div>
-            <div class="flex-row flex-grow gap-md">
-                <div class="middle-section">
-                    <Panel>
-                        <div class="flex-col fullheight gap-md">
+            <div class="replays-layout flex-row flex-grow gap-xl">
+                <Panel class="flex-grow replays-list-panel">
+                    <div class="flex-col fullheight gap-md">
                             <div class="flex-row gap-md fullwidth">
                                 <TriStateCheckbox
                                     v-model="settingsStore.endedNormallyFilter"
@@ -87,9 +87,7 @@ SPDX-License-Identifier: MIT
                             </DataTable>
                         </div>
                     </Panel>
-                </div>
-                <div class="right-section">
-                    <Panel class="flex-grow" no-padding>
+                <Panel class="replay-preview-panel flex-grow" no-padding>
                         <ReplayPreview v-if="selectedReplay" :replay="selectedReplay" :showSpoilers="showSpoilers">
                             <template #actions="{ replay }">
                                 <div class="fullwidth">
@@ -101,6 +99,7 @@ SPDX-License-Identifier: MIT
                                             :engines="[replay.engineVersion]"
                                             @click="watchReplay(replay)"
                                             :disabled="gameStore.status !== GameStatus.CLOSED"
+                                            class="large"
                                         >
                                             <template v-if="gameStore.status === GameStatus.RUNNING">{{
                                                 t("lobby.views.watch.replays.gameIsRunning")
@@ -110,8 +109,8 @@ SPDX-License-Identifier: MIT
                                             }}</template>
                                             <template v-else>{{ t("lobby.views.watch.replays.watch") }}</template>
                                         </DownloadContentButton>
-                                        <Button v-else disabled style="flex-grow: 1">{{ t("lobby.views.watch.replays.watch") }}</Button>
-                                        <Button v-if="replay" @click="showReplayFile(replay)" class="icon" :height="32"
+                                        <Button v-else disabled class="large" style="flex-grow: 1">{{ t("lobby.views.watch.replays.watch") }}</Button>
+                                        <Button v-if="replay" @click="showReplayFile(replay)" class="icon folder-button" v-tooltip.left="'Open file location'"
                                             ><Icon :icon="folder" :height="32"
                                         /></Button>
                                     </div>
@@ -119,7 +118,6 @@ SPDX-License-Identifier: MIT
                             </template>
                         </ReplayPreview>
                     </Panel>
-                </div>
             </div>
         </div>
     </div>
@@ -278,38 +276,57 @@ function showReplayFile(replay: Replay) {
 <style lang="scss" scoped>
 @use "@renderer/styles/spacing" as *;
 
-.replay-view {
+.view-container {
     display: flex;
     flex-direction: column;
+    flex: 1;
+    min-height: 0;
     width: 100%;
-    height: 100%;
-
-    padding: map-get($spacing, "xxxl") map-get($spacing, "xxxl") 100px map-get($spacing, "xxxl"); // 48px sides, 100px bottom - aligned to 4px grid where possible
-
-    gap: map-get($spacing, "xl"); // 24px - aligned to 4px grid (was 20px)
-    padding-bottom: 120px; // Intentional: Specific layout requirement
-    align-self: center;
+    padding: 0 map-get($spacing, "xxl") map-get($spacing, "sm") map-get($spacing, "xxl");
+    overflow: hidden;
+    box-sizing: border-box;
+    
+    .view-title {
+        padding-left: 0; // Ensure title isn't cut off - padding is handled by view-container
+    }
 }
 
-.replay-container {
+.replays-layout {
+    min-height: 0;
+}
+
+.replays-list-panel {
+    flex: 2;
+    min-width: 0;
+}
+
+.replay-preview-panel {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
     display: flex;
     flex-direction: column;
-    height: 100%;
-    align-self: center;
-}
-
-.middle-section {
-    width: 1200px;
-    height: 700px;
-}
-
-.right-section {
-    display: flex;
-    height: 700px;
-    width: 400px;
 }
 
 :deep(.p-datatable-tbody tr.highlighted-replay td) {
     background-color: rgba(255, 200, 0, 0.3) !important;
+}
+
+.folder-button {
+    height: 72px; // Match large button height
+    width: 72px; // 1:1 aspect ratio
+    flex-shrink: 0; // Prevent shrinking
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    .p-button {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
 </style>

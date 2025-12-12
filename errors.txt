@@ -1,0 +1,2005 @@
+This file is automatically populated with errors when the game fails to load.
+Errors are appended here with timestamps for easy debugging.
+
+You can also manually paste additional errors below this line if needed.
+========================================
+
+
+
+
+=== Error at 2025-12-11T23:33:19.776Z ===
+Context: game process stderr
+Error: [t=00:00:00.622143] Warning: [ArchiveData] version "1.3" included in name "Red Triangle Remake v1.3"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:32.756Z ===
+Context: game process stderr
+Error: [t=00:00:13.602522][f=-000001] Warning: [UDPListener::TryBindSocket] opening socket on loopback address, other users will not be able to connect!
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:35.163Z ===
+Context: game process stderr
+Error: [t=00:00:16.009254][f=-000001] Warning: [CSMFReadMap::CreateSplatDetailTextures] Invalid SMF splatDetailTex maps/iwantDNTS.tga. Creating fallback texture
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:35.822Z ===
+Context: game process stderr
+Error: [t=00:00:16.668833][f=-000001] [featuredefs_post.lua] Warning: Removing feature def, corhack_dead, for having invalid model that would crash the engine, Units/corfast_dead.s3o
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:35.823Z ===
+Context: game process stderr
+Error: [t=00:00:16.668950][f=-000001] [featuredefs_post.lua] Warning: Removing feature def, xmascomwreck, for having invalid model that would crash the engine, gingerbread
+[t=00:00:16.669413][f=-000001] [featuredefs_post.lua] Warning: Removing feature def, corfast_dead, for having invalid model that would crash the engine, Units/corfast_dead.s3o
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:37.566Z ===
+Context: game process stderr
+Error: [t=00:00:18.412835][f=-000001] Warning: WeaponDefs: Unknown tag "shield.energyupkeep" in "armcomcon_repulsor1"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:37.570Z ===
+Context: game process stderr
+Error: [t=00:00:18.416759][f=-000001] Warning: WeaponDefs: Unknown tag "shield.energyupkeep" in "armfgate_sea_repulsor"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:37.571Z ===
+Context: game process stderr
+Error: [t=00:00:18.417125][f=-000001] Warning: WeaponDefs: Unknown tag "shield.energyupkeep" in "armgate_repulsor"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:37.576Z ===
+Context: game process stderr
+Error: [t=00:00:18.422369][f=-000001] Warning: WeaponDefs: Unknown tag "shield.energyupkeep" in "corcomcon_repulsor1"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:37.580Z ===
+Context: game process stderr
+Error: [t=00:00:18.426488][f=-000001] Warning: WeaponDefs: Unknown tag "shield.energyupkeep" in "corfgate_sea_repulsor"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:37.581Z ===
+Context: game process stderr
+Error: [t=00:00:18.426881][f=-000001] Warning: WeaponDefs: Unknown tag "shield.energyupkeep" in "corgate_repulsor"
+[t=00:00:18.427453][f=-000001] Warning: WeaponDefs: Unknown tag "comment" in "corjuno_juno_pulse_ghost"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:37.593Z ===
+Context: game process stderr
+Error: [t=00:00:18.439682][f=-000001] Warning: [CreateYardMap] armanavaldefturret: given yardmap requires 13 extra char(s)!
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:37.597Z ===
+Context: game process stderr
+Error: [t=00:00:18.443977][f=-000001] Warning: [CreateYardMap] armhaap: given yardmap requires 81 extra char(s)!
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:37.604Z ===
+Context: game process stderr
+Error: [t=00:00:18.450436][f=-000001] Warning: [CreateYardMap] coranavaldefturret: given yardmap requires 13 extra char(s)!
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:37.608Z ===
+Context: game process stderr
+Error: [t=00:00:18.454906][f=-000001] Warning: [CreateYardMap] corhasy: given yardmap requires 48 extra char(s)!
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:37.616Z ===
+Context: game process stderr
+Error: [t=00:00:18.462855][f=-000001] Warning: [CreateYardMap] leghaap: given yardmap requires 36 extra char(s)!
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:37.619Z ===
+Context: game process stderr
+Error: [t=00:00:18.465442][f=-000001] Warning: removed the "legvp" entry from the "leghaca" build menu
+[t=00:00:18.465455][f=-000001] Warning: removed the "legap" entry from the "leghaca" build menu
+[t=00:00:18.465460][f=-000001] Warning: removed the "legnanotc" entry from the "leghaca" build menu
+[t=00:00:18.465464][f=-000001] Warning: removed the "legfus" entry from the "leghaca" build menu
+[t=00:00:18.465477][f=-000001] Warning: removed the "legsd" entry from the "leghaca" build menu
+[t=00:00:18.465482][f=-000001] Warning: removed the "leglab" entry from the "leghaca" build menu
+[t=00:00:18.465486][f=-000001] Warning: removed the "legeheatraymech" entry from the "leghaca" build menu
+[t=00:00:18.465491][f=-000001] Warning: removed the "legelrpcmech" entry from the "leghaca" build menu
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:37.636Z ===
+Context: game process stderr
+Error: [t=00:00:18.482236][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "corfast_dead"
+[t=00:00:18.482255][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "corhack_dead"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.759Z ===
+Context: game process stderr
+Error: [t=00:00:19.605466][f=-000001] Warning: Could not load ground decal "scars/scar1_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.816Z ===
+Context: game process stderr
+Error: [t=00:00:19.662571][f=-000001] Warning: Could not load ground decal "scars/scar2_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.834Z ===
+Context: game process stderr
+Error: [t=00:00:19.680229][f=-000001] Warning: Could not load ground decal "scars/scar3_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.837Z ===
+Context: game process stderr
+Error: [t=00:00:19.683598][f=-000001] Warning: Could not load ground decal "scars/scar4_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.840Z ===
+Context: game process stderr
+Error: [t=00:00:19.686625][f=-000001] Warning: Could not load ground decal "scars/scar5_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.843Z ===
+Context: game process stderr
+Error: [t=00:00:19.689383][f=-000001] Warning: Could not load ground decal "scars/scar6_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.846Z ===
+Context: game process stderr
+Error: [t=00:00:19.692573][f=-000001] Warning: Could not load ground decal "bitmaps/scars/scar1_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.903Z ===
+Context: game process stderr
+Error: [t=00:00:19.749522][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/arm_acv_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.905Z ===
+Context: game process stderr
+Error: [t=00:00:19.752225][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/arm_acv_tracks_2_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.908Z ===
+Context: game process stderr
+Error: [t=00:00:19.755015][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/arm_stumpy_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.910Z ===
+Context: game process stderr
+Error: [t=00:00:19.757087][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armacv_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.913Z ===
+Context: game process stderr
+Error: [t=00:00:19.759565][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armbull_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.916Z ===
+Context: game process stderr
+Error: [t=00:00:19.762468][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armcroc_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.917Z ===
+Context: game process stderr
+Error: [t=00:00:19.764236][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armgremlin_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.919Z ===
+Context: game process stderr
+Error: [t=00:00:19.765824][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armmart_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.920Z ===
+Context: game process stderr
+Error: [t=00:00:19.767088][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armpincer_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.923Z ===
+Context: game process stderr
+Error: [t=00:00:19.769324][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armsam_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.924Z ===
+Context: game process stderr
+Error: [t=00:00:19.770523][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armseer_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.926Z ===
+Context: game process stderr
+Error: [t=00:00:19.772522][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armstump_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.927Z ===
+Context: game process stderr
+Error: [t=00:00:19.773945][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armyork_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.928Z ===
+Context: game process stderr
+Error: [t=00:00:19.775024][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/bigfoot_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.931Z ===
+Context: game process stderr
+Error: [t=00:00:19.776064][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/bottrack1_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.932Z ===
+Context: game process stderr
+Error: [t=00:00:19.777031][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/comtrack_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.933Z ===
+Context: game process stderr
+Error: [t=00:00:19.779795][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/corparrowtracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.935Z ===
+Context: game process stderr
+Error: [t=00:00:19.782109][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/corwidetracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.937Z ===
+Context: game process stderr
+Error: [t=00:00:19.783256][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/raptortrack_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.938Z ===
+Context: game process stderr
+Error: [t=00:00:19.784304][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/raptortrackpointy_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:38.939Z ===
+Context: game process stderr
+Error: [t=00:00:19.785184][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/stdtank_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:40.701Z ===
+Context: game process stderr
+Error: [t=00:00:21.547176][f=-000001] [Texture] Warning: [LoadAndCacheTexture] could not load primary texture "rocks30_map_color.dds" from model "objects3d/rocks30/rocks30_map_07.s3o"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:43.632Z ===
+Context: game process stderr
+Error: [t=00:00:24.478363][f=-000001] Warning: [CCEG::Load] genericshellexplosion-small-bomb: unknown class "groundflash_anim"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:33:48.460Z ===
+Context: game process stderr
+Error: [t=00:00:29.306311][f=-000001] [Start Position Suggestions] Warning: No modoption start position data found
+
+==================================================
+
+
+=== Error at 2025-12-11T23:34:12.397Z ===
+Context: game process stderr
+Error: [t=00:00:00.508568] Warning: [ArchiveData] version "1.3" included in name "Gods of War Remake v1.3"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:34:13.198Z ===
+Context: game process stderr
+Error: [t=00:00:01.317174][f=-000001] Error: [ClientSetup::LoadFromStartScript] GAME-section missing from setup-script "[game] {
+    gametype=Beyond All Reason test-29036-a86c25c;
+    mapname=Gods of War Remake v1.3;
+    [modoptions] {
+        [0] {
+            key=options_main;
+            name=Main;
+            description=;
+            hidden=0;
+            type=section;
+            [options] {
+                [0] {
+                    key=ranked_game;
+                    name=Ranked Game;
+                    description=Should game results affect OpenSkill. Note that games with AI or games that are not balanced are always unranked.;
+                    hidden=0;
+                    type=boolean;
+                    default=1;
+                }
+                [1] {
+                    key=allowuserwidgets;
+                    name=Allow Custom Widgets;
+                    description=Allow custom user widgets or disallow them;
+                    hidden=0;
+                    type=boolean;
+                    default=1;
+                }
+                [2] {
+                    key=allowpausegameplay;
+                    name=Allow Commands While Paused;
+                    description=Allow giving unit commands while paused;
+                    hidden=0;
+                    type=boolean;
+                    default=1;
+                }
+                [3] {
+                    key=maxunits;
+                    name=Max Units Per Player;
+                    description=Keep in mind there is an absolute limit of units, 32000, divided between each team. If you set this value higher than possible it will force itself down to the maximum it can be.;
+                    hidden=0;
+                    type=number;
+                    default=2000;
+                    step=1;
+                    min=500;
+                    max=32000;
+                }
+                [4] {
+                    key=deathmode;
+                    name=Game End Mode;
+                    description=What it takes to eliminate a team;
+                    hidden=0;
+                    type=list;
+                    default=com;
+                    [options] {
+                        [0] {
+                            type=list;
+                            key=neverend;
+                            name=Never ending;
+                            description=Teams are never eliminated;
+                        }
+                        [1] {
+                            type=list;
+                            key=com;
+                            name=Kill all enemy Commanders;
+                            description=When a team has no Commanders left, it loses;
+                        }
+                        [2] {
+                            type=list;
+                            key=territorial_domination;
+                            name=Territorial Domination;
+                            description=Teams earn points by capturing territory to stay in the game. At the end of the final round, the team with the most points wins.;
+                        }
+                        [3] {
+                            type=list;
+                            key=builders;
+                            name=Kill all Builders;
+                            description=When a team has no builders left, it loses;
+                        }
+                        [4] {
+                            type=list;
+                            key=killall;
+                            name=Kill everything;
+                            description=Every last unit must be eliminated, no exceptions!;
+                        }
+                        [5] {
+                            type=list;
+                            key=own_com;
+                            name=Player resign on Com death;
+                            description=When player commander dies, you auto-resign.;
+                        }
+                    }
+                }
+                [5] {
+                    key=territorial_domination_config;
+                    name=Territorial Domination Length;
+                    description=Configures the grace period and the amount of time in minutes it takes to reach the maximum required territory.;
+                    hidden=0;
+                    type=list;
+                    default=24_minutes;
+                    [options] {
+                        [0] {
+                            type=list;
+                            key=18_minutes;
+                            name=3 Rounds, 18 Minutes;
+                            description=Early tech emphasis, mathmathically certain comeback, elimination unlikely.;
+                        }
+                        [1] {
+                            type=list;
+                            key=24_minutes;
+                            name=4 Rounds, 24 Minutes(Default);
+                            description=Mid/late-game tech, comebacks a significant factor,eliminations uncommon;
+                        }
+                        [2] {
+                            type=list;
+                            key=30_minutes;
+                            name=5 Rounds, 30 Minutes;
+                            description=Late-game tech, comebacks less significant, eliminations likely;
+                        }
+                        [3] {
+                            type=list;
+                            key=42_minutes;
+                            name=7 Rounds, 42 Minutes;
+                            description=Super lategame tech, eliminations extremely likely;
+                        }
+                    }
+                }
+                [6] {
+                    key=draft_mode;
+                    name=Draft Spawn Order Mode;
+                    description=Random/Captain/Skill/Fair based startPosType modes. Default: Random.;
+                    hidden=0;
+                    type=list;
+                    default=random;
+                    [options] {
+                        [0] {
+                            type=list;
+                            key=disabled;
+                            name=Disabled;
+                            description=Disable draft mod. Fast-PC place first.;
+                        }
+                        [1] {
+                            type=list;
+                            key=random;
+                            name=Random Order;
+                            description=Players get to pick a start position with a delay in a random order.;
+                        }
+                        [2] {
+                            type=list;
+                            key=captain;
+                            name=Captains First;
+                            description=Captain picks first, then everyone else in a random order.;
+                        }
+                        [3] {
+                            type=list;
+                            key=skill;
+                            name=Skill Order;
+                            description=Skill-based order, instead of random.;
+                        }
+                        [4] {
+                            type=list;
+                            key=fair;
+                            name=After full team has loaded;
+                            description=Everyone must join the game first - after that (+2sec delay) everyone can place.;
+                        }
+                    }
+                }
+                [7] {
+                    key=teamcolors_anonymous_mode;
+                    name=Anonymous Mode;
+                    description=Anonymize players by changing colors (based on chosen mode) and replacing names with question marks, making it harder to know who's who.;
+                    hidden=0;
+                    type=list;
+                    default=disabled;
+                    [options] {
+                        [0] {
+                            type=list;
+                            key=disabled;
+                            name=Disabled;
+                        }
+                        [1] {
+                            type=list;
+                            key=global;
+                            name=Shuffle Globally;
+                            descrip
+==================================================
+
+
+=== Error at 2025-12-11T23:34:13.200Z ===
+Context: game process stderr
+Error: tion=You can distinguish different players and everyone sees the same colors globally. Diplomacy is the same as usual except using colors instead of names (e.g. \"Red, let's ally against Blue\").;
+                        }
+                        [2] {
+                            type=list;
+                            key=local;
+                            name=Shuffle Locally;
+                            description=You can distinguish different players but everyone sees different colors locally. Diplomacy is harder but possible using positions (e.g. \"Southeast, let's ally against Northeast\").;
+                        }
+                        [3] {
+                            type=list;
+                            key=disco;
+                            name=Shuffle Locally (Continiously);
+                            description=Same as local shuffle, except that colors are reshuffled every 2 mins for extra spicyness.;
+                        }
+                        [4] {
+                            type=list;
+                            key=allred;
+                            name=Everyone Is Red;
+                            description=You cannot distinguish different players, they all have the same color (red by default, can be changed in accessibility settings). Diplomacy is very hard.;
+                        }
+                    }
+                }
+                [8] {
+                    key=transportenemy;
+                    name=Enemy Transporting;
+                    description=Toggle which enemy units you can kidnap with an air transport;
+                    hidden=1;
+                    type=list;
+                    default=notcoms;
+                    [options] {
+                        [0] {
+                            type=list;
+                            key=notcoms;
+                            name=All But Commanders;
+                            description=Only commanders are immune to napping;
+                        }
+                        [1] {
+                            type=list;
+                            key=none;
+                            name=Disallow All;
+                            description=No enemy units can be napped;
+                        }
+                    }
+                }
+                [9] {
+                    key=teamffa_start_boxes_shuffle;
+                    name=Shuffle TeamFFA Start Boxes;
+                    description=In TeamFFA games (more than 2 teams, excluding Raptors / Scavengers), start boxes will be randomly assigned to each team: team 1 might be assigned any start box rather than team 1 always being assigned start box 1.;
+                    hidden=0;
+                    type=boolean;
+                    default=1;
+                }
+                [10] {
+                    key=fixedallies;
+                    name=Disabled Dynamic Alliances;
+                    description=Disables the possibility of players to dynamically change alliances ingame;
+                    hidden=1;
+                    type=boolean;
+                    default=1;
+                }
+                [11] {
+                    key=disablemapdamage;
+                    name=Disable Map Deformation;
+                    description=Prevents the map shape from being changed by weapons;
+                    hidden=0;
+                    type=boolean;
+                    default=0;
+                }
+                [12] {
+                    key=disable_fogofwar;
+                    name=Disable Fog of War;
+                    description=Disable Fog of War;
+                    hidden=0;
+                    type=boolean;
+                    default=0;
+                }
+                [13] {
+                    key=norushtimer;
+                    name=No Rush Time [minutes];
+                    description=Set timer in which players cannot get out of their startbox, so you have time to prepare before fighting.
+PLEASE NOTE: For this to work, the game needs to have set startboxes.
+                          It won't work in FFA mode without boxes.
+                          Also, it does not affect Scavengers and Raptors.;
+                    hidden=0;
+                    type=number;
+                    default=0;
+                    step=1;
+                    min=0;
+                    max=30;
+                }
+                [14] {
+                    key=tax_resource_sharing_amount;
+                    name=Resource Sharing Tax;
+                    description=Taxes resource sharing and overflow (engine TODO:)
+Set to [0] to turn off. Recommended: [0.4]. (Ranges: 0 - 0.99);
+                    hidden=0;
+                    type=number;
+                    default=0;
+                    step=0.01;
+                    min=0;
+                    max=0.99;
+                }
+                [15] {
+                    key=disable_unit_sharing;
+                    name=Disable Unit Sharing;
+                    description=Disable sharing units and structures to allies;
+                    hidden=0;
+                    type=boolean;
+                    default=0;
+                }
+                [16] {
+                    key=disable_assist_ally_construction;
+                    name=Disable Assist Ally Construction;
+                    description=Disables assisting allied blueprints and labs.;
+                    hidden=0;
+                    type=boolean;
+                    default=0;
+                }
+                [17] {
+                    key=unit_restrictions_notech15;
+                    name=Disable Tech 1.5;
+                    description=Disables: Sea Plane Labs, Hovercraft labs, and Amphibious labs. (Considered Tier 1.5);
+                    hidden=0;
+                    type=boolean;
+                    default=0;
+                }
+                [18] {
+                    key=unit_restrictions_notech2;
+                    name=Disable Tech 2;
+                    description=Disable Tech 2;
+                    hidden=0;
+                    type=boolean;
+                    default=0;
+                }
+                [19] {
+                    key=unit_restrictions_notech3;
+                    name=Disable Tech 3;
+                    description=Disable Tech 3;
+                    hidden=0;
+                    type=boolean;
+                    default=0;
+                }
+                [20] {
+                    key=unit_restrictions_noair;
+                    name=Disable Air Units;
+                    description=Disable Air Units;
+                    hidden=0;
+                    type=boolean;
+                    default=0;
+                }
+                [21] {
+                    key=unit_restrictions_nodefence;
+                    name=Disable Defences;
+                    description=Disables Defensive Structures, apart from basic LLTs and basic AA;
+                    hidden=0;
+                    type=boolean;
+                    default=0;
+                }
+                [22] {
+                    key=unit_restrictions_noextractors;
+                    name=Disable Metal Extractors;
+                    description=Disable Metal Extractors;
+                    hidden=0;
+                    type=boolean;
+                    default=0;
+                }
+                [23] {
+                    key=unit_restrictions_noconverters;
+                    name=Disable Energy Converters;
+                    description=Disable Energy Converters;
+                    hidden=0;
+                    type=boolean;
+                    default=0;
+                }
+                [24] {
+                    key=unit_restrictions_nofusion;
+                    name=Disable Fusion Generators;
+                    description=Disables Normal and Advanced Fusion Energy Generators;
+                    hidden=0;
+                    type=boolean;
+                    default=0;
+                }
+                [25] {
+                    key=unit_restrictions_notacnukes;
+                    name=Disable Tactical Missiles/EMPs;
+                    description=Disables Cortex Tactical Missile Launcher and Armada EMP Missile Launcher;
+                    hidden=0;
+                    type=boolean;
+                    default=0;
+                }
+                [26] {
+                    key=unit_restrictions_nonukes;
+                    name=Disable Nuclear Missiles;
+                    description=Disable Nuclear Missiles;
+                    hidden=0;
+                    type=boolean;
+                    default=0;
+                }
+                [27] {
+                    key=unit_restrictions_noantinuke;
+                    name=Disable Anti-Nuke Defence;
+                    description=Disables Nuke Interceptor Units and Structures.;
+                    hidden=0;
+                    type=boolean;
+                    default=0;
+                }
+                [28] {
+                    key=unit_restrictions_nolrpc;
+                    name=Disable Long Range Artilery (LRPC);
+                    description=Disable Long Range Plasma Artilery (LRPC) structures;
+                    hidden=0;
+                    type=boolean;
+                    default=0;
+                }
+                [29] {
+                    key=unit_restrictions_noendgamelrpc;
+                    name=Disable Endgame Artilery (LRPC);
+                    description=Disable Endgame Long Range Plasma Artilery (LRPC) structures (AKA lolcannons);
+                    hidden=0;
+                    type=boolean;
+                    default=0;
+                }
+            }
+        }
+        [1] {
+            key=options;
+            name=Other;
+            description=Options;
+            hidden=0;
+            type=section;
+            [options] {
+                [0] {
+                    key=map_tidal;
+                    name=Tidal Strength;
+                    description=Unchanged = map setting, low = 13e/sec, medium = 18e/sec, high = 23e/sec.;
+                    hidden=1;
+                    type=list;
+                    default=unchanged;
+                    [options] {
+                        [0] {
+                            type=list;
+                            key=unchanged;
+                            name=Unchanged;
+                            description=Use map settings;
+                        }
+                        [1] {
+                            type=list;
+                            key=low;
+                            name=Low;
+                            description=Set tidal incomes to 13 energy per second;
+                        }
+                        [2] {
+                            type=list;
+                            key=medium;
+                            name=Medium;
+                            description=Set tidal incomes to 18 energy per second;
+                        }
+                        [3] {
+                            type=list;
+                            key=high;
+                            name=High;
+                            description=Set tidal incomes to 23 energy per second;
+                        }
+                    }
+                }
+                [1] {
+                    key=critters;
+                    name=Animal amount;
+                    description=This multiplier will be applied on the amount of critters a map will end up with;
+                    hidden=1;
+                    type=number;
+                    default=1;
+                    step=0.2;
+                    min=0;
+                    max=2;
+                }
+                [2] {
+                    key=map_atmosphere;
+                    name=Map Atmosphere and Ambient Sounds;
+                    description=;
+                    hidden=1;
+                    type=boolean;
+                    default=1;
+                }
+                [3] {
+                    key=ffa_wreckage;
+                    name=FFA Mode Wreckage;
+                    description=Killed players will blow up but leave wreckages;
+                    hidden=1;
+                    type=boolean;
+                    default=0;
+                }
+                [4] {
+                    key=coop;
+                    name=Cooperative mode;
+                    description=Adds extra commanders to id-sharing teams, 1 com per player;
+                    hidden=1;
+                    type=boolean;
+                    default=0;
+                }
+                [5] {
+                    key=ruins_civilian_disable;
+                    name=Ruins: Disable Civilian (Not Implemented Yet);
+                    hidden=1;
+                    type=boolean;
+                    default=0;
+                }
+                [6] {
+                    key=shareddynamicalliancevictory;
+                    name=Dynamic Ally Victory;
+                    description=Ingame alliance should count for game over condition.;
+                    hidden=1;
+                    type=boolean;
+                    default=0;
+                }
+                [7] {
+                    key=ai_incomemultiplier;
+                    name=AI Income Multiplier;
+                    description=Multiplies AI resource income;
+                    hidden=1;
+                    type=number;
+                    default=1;
+                    step=0.1;
+                    min=1;
+                    max=10;
+                }
+            }
+        }
+        [2] {
+            key=raptor_defense_options;
+            name=Raptors;
+            description=Various gameplay options that will change how the Raptor Defense is played.;
+            hidden=0;
+            type=section;
+            [options] {
+                [0] {
+                    key=raptor_difficulty;
+                    name=Base Difficulty;
+                    description=Raptors difficulty;
+                    hidden=0;
+                    type=list;
+                    default=normal;
+                    [options] {
+                        [0] {
+                            type=list;
+                            key=veryeasy;
+                            name=Very Easy;
+                            description=Very Easy;
+                        }
+                        [1] {
+                            type=list;
+                            key=easy;
+                            name=Easy;
+                            description=Easy;
+                        }
+                        [2] {
+                            type=list;
+                            key=normal;
+                            name=Normal;
+                            description=Normal;
+                        }
+                        [3] {
+                            type=list;
+                            key=hard;
+                            name=Hard;
+                            description=Hard;
+                        }
+                        [4] {
+                            type=list;
+                            key=veryhard;
+                            name=Very Hard;
+                            description=Very Hard;
+                        }
+                        [5] {
+                            type=list;
+                            key=epic;
+                            name=Epic;
+                            description=Epic;
+                        }
+                    }
+                }
+                [1] {
+                    key=raptor_raptorstart;
+                    name=Hives Placement;
+                    description=Control where hives spawn;
+                    hidden=0;
+                    type=list;
+                    default=initialbox;
+                    [options] {
+                        [0] {
+                            type=list;
+                            key=avoid;
+                            name=Spawn Anywhere;
+                            description=Hives avoid player units;
+                        }
+                        [1] {
+                            type=list;
+                            key=initialbox;
+                            name=Growing Spawn Box;
+                            description=Hives spawn in limited area that increases over time;
+                        }
+                        [2] {
+                            type=list;
+                            key=alwaysbox;
+                            name=Always Start Box;
+                            description=Hives always spawn in raptor start box;
+                        }
+                    }
+                }
+                [2] {
+                    key=raptor_endless;
+                    name=Endless Mode;
+                    description=When you kill the queen, the game doesn't end, but loops around at higher difficulty instead, infinitely.;
+                    hidden=0;
+                    type=boolean;
+                    default=0;
+                }
+                [3] {
+                    key=raptor_queentimemult;
+                    name=Queen Hatching Time Multiplier;
+                    description=(Range: 0.1 - 2). How quickly Queen Hatch goes from 0 to 100%;
+                    hidden=0;
+                    type=number;
+                    default=1;
+                    step=0.1;
+                    min=0.1;
+                    max=2;
+                }
+                [4] {
+                    key=raptor_queen_count;
+                    name=Raptor Queen Count;
+                    description=(Range: 1 - 100). Number of queens that will spawn.;
+                    hidden=0;
+                    type=number;
+                    default=1;
+                    step=1;
+                    min=1;
+                    max=100;
+                }
+                [5] {
+                    key=raptor_spawncountmult;
+                    name=Unit Spawn Per Wave Multiplier;
+                    description=(Range: 1 - 5). How many times more raptors will spawn per wave.;
+                    hidden=0;
+                    type=number;
+                    default=1;
+                    step=1;
+                    min=1;
+                    max=5;
+                }
+                [6] {
+                    key=raptor_firstwavesboost;
+                    name=First Waves Size Boost;
+                    description=(Range: 1 - 10). Intended to use with heavily modified settings. Makes first waves larger, the bigger the number the larger they are. Cools down within first few waves.;
+                    hidden=0;
+                    type=number;
+                    default=1;
+                    step=1;
+                    min=1;
+                    max=10;
+                }
+                [7] {
+                    key=raptor_spawntimemult;
+                    name=Waves Amount Multiplier;
+                    description=(Range: 1 - 5). How often new waves will spawn. Bigger Number = More Waves;
+                    hidden=0;
+                    type=number;
+                    default=1;
+                    step=0.1;
+                    min=1;
+                    max=5;
+                }
+                [8] {
+                    key=raptor_graceperiodmult;
+                    name=Grace Period Time Multiplier;
+                    description=(Range: 0.1 - 3). Time before Raptors become active. ;
+                    hidden=0;
+                    type=number;
+                    default=1;
+                    step=0.1;
+                    min=0.1;
+                    max=3;
+                }
+            }
+        }
+        [3] {
+            key=scav_defense_options;
+            name=Scavengers;
+            description=Gameplay options for Scavengers gamemode;
+            hidden=0;
+            type=section;
+            [options] {
+                [0] {
+                    key=scav_difficulty;
+                    name=Base Difficulty;
+                    description=Scavs difficulty;
+                    hidden=0;
+                    type=list;
+                    default=normal;
+                    [options] {
+                        [0] {
+                            type=list;
+                            key=veryeasy;
+                            name=Very Easy;
+                            description=Very Easy;
+                        }
+                        [1] {
+                            type=list;
+                            key=easy;
+                            name=Easy;
+                            description=Easy;
+                        }
+                        [2] {
+                            type=list;
+                            key=normal;
+                            name=Normal;
+                            description=Normal;
+                        }
+                        [3] {
+                            type=list;
+                            key=hard;
+                            name=Hard;
+                            description=Hard;
+                        }
+                        [4] {
+                            type=list;
+                            key=veryhard;
+                            name=Very Hard;
+                            description=Very Hard;
+                        }
+                        [5] {
+                            type=list;
+                            key=epic;
+                            name=Epic;
+                            description=Epic;
+                        }
+                    }
+                }
+                [1] {
+                    key=scav_scavstart;
+                    name=Spawn Beacons Placement;
+                    description=Control where spawners appear;
+                    hidden=0;
+                    type=list;
+                    default=initialbox;
+                    [options] {
+                        [0] {
+                            type=list;
+                            key=avoid;
+                            name=Spawn Anywhere;
+                            description=Beacons avoid player units;
+                        }
+                        [1] {
+                            type=list;
+                            key=initialbox;
+                            name=Growing Spawn Box;
+                            description=Beacons spawn in limited area that increases over time;
+                        }
+                    }
+                }
+                [2] {
+                    key=scav_endless;
+                    name=Endless Mode;
+                    description=When you kill the boss, the game doesn't end, but loops around at higher difficulty instead, infinitely.;
+                    hidden=0;
+                    type=boolean;
+                    default=0;
+                }
+                [3] {
+                    key=scav_bosstimemult;
+                    name=Boss Preparation Time Multiplier;
+                    description=(Range: 0.1 - 2). How quickly Boss Anger goes from 0 to 100%.;
+                    hidden=0;
+                    type=number;
+                    default=1;
+                    step=0.1;
+                    min=0.1;
+                    max=2;
+                }
+                [4] {
+                    key=scav_boss_count;
+                    name=Scavengers Boss Count;
+                    description=(Range: 1 - 20). Number of bosses that will spawn.;
+                    hidden=0;
+                    type=number;
+                    default=1;
+                    step=1;
+                    min=1;
+                    max=20;
+                }
+                [5] {
+                    key=scav_spawncountmult;
+                    name=Unit Spawn Per Wave Multiplier;
+                    description=(Range: 1 - 5). How many times more scavs will spawn per wave.;
+                    hidden=0;
+                    type=number;
+                    default=1;
+                    step=1;
+                    min=1;
+                    max=5;
+                }
+                [6] {
+                    key=scav_spawntimemult;
+                    name=Waves Amount Multiplier;
+                    description=(Range: 1 - 5). How often new waves will spawn. Bigger Number = More Waves;
+                    hidden=0;
+                    type=number;
+                    default=1;
+                    step=0.1;
+                    min=1;
+                    max=5;
+                }
+            }
+        }
+        [4] {
+            key=options_extra;
+            name=Extras;
+            description=Extra options;
+            hidden=0;
+            type=section;
+            [options] {
+                [0] {
+                    key=experimentalextraunits;
+                    name=Extra Units Pack;
+                    description=Pack of units that didn't make it to the main game roster. Balanced for PvP;
+       
+
+==================================================
+
+
+=== Error at 2025-12-11T23:34:18.188Z ===
+Context: game process stderr
+Error: [t=00:00:06.306502][f=-000001] Fatal: [ExitSpringProcess] errorMsg="Invalid script file
+setup-script error" msgCaption="Spring: caught content_error: " mainThread=1
+[t=00:00:06.306586][f=-000001] Error: [Watchdog::ClearTimer(id)] Invalid thread 4 (_threadId=0000000000000000)
+
+==================================================
+
+
+=== Error at 2025-12-11T23:34:18.408Z ===
+Context: game process stderr
+Error: [t=00:00:06.518896] Error: [Watchdog::DeregisterThread] invalid thread number 0
+
+==================================================
+
+
+=== Error at 2025-12-11T23:34:19.094Z ===
+Context: game process exit
+Error: Game process exited with code: 4294966293
+Stack:
+Error: Game process exited with code: 4294966293
+    at ChildProcess.<anonymous> (C:\Users\scopa\OneDrive\Documents\GitHub\bar-lobby\src\main\game\game.ts:157:43)
+    at ChildProcess.emit (node:events:518:28)
+    at ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+==================================================
+
+
+=== Error at 2025-12-11T23:34:19.146Z ===
+Context: launchBattle
+Error: Game process exited with code: 4294966293
+Stack:
+Error: Game process exited with code: 4294966293
+    at ChildProcess.<anonymous> (C:\Users\scopa\OneDrive\Documents\GitHub\bar-lobby\src\main\game\game.ts:157:43)
+    at ChildProcess.emit (node:events:518:28)
+    at ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+==================================================
+
+
+=== Error at 2025-12-11T23:36:59.992Z ===
+Context: game process stderr
+Error: [t=00:00:00.485848] Warning: [ArchiveData] version "1.4" included in name "The Halite Maze v1.4"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:01.744Z ===
+Context: game process stderr
+Error: [t=00:00:02.245188][f=-000001] Warning: [UDPListener::TryBindSocket] opening socket on loopback address, other users will not be able to connect!
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:02.722Z ===
+Context: game process stderr
+Error: [t=00:00:03.223172][f=-000001] Warning: [CSMFReadMap::CreateSplatDetailTextures] Invalid SMF splatDetailTex maps/iwantDNTS.tga. Creating fallback texture
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:03.199Z ===
+Context: game process stderr
+Error: [t=00:00:03.699895][f=-000001] [featuredefs_post.lua] Warning: Removing feature def, corhack_dead, for having invalid model that would crash the engine, Units/corfast_dead.s3o
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:03.200Z ===
+Context: game process stderr
+Error: [t=00:00:03.700003][f=-000001] [featuredefs_post.lua] Warning: Removing feature def, xmascomwreck, for having invalid model that would crash the engine, gingerbread
+[t=00:00:03.700343][f=-000001] [featuredefs_post.lua] Warning: Removing feature def, corfast_dead, for having invalid model that would crash the engine, Units/corfast_dead.s3o
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:04.478Z ===
+Context: game process stderr
+Error: [t=00:00:04.978905][f=-000001] Warning: WeaponDefs: Unknown tag "shield.energyupkeep" in "armcomcon_repulsor1"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:04.483Z ===
+Context: game process stderr
+Error: [t=00:00:04.983135][f=-000001] Warning: WeaponDefs: Unknown tag "shield.energyupkeep" in "armfgate_sea_repulsor"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:04.484Z ===
+Context: game process stderr
+Error: [t=00:00:04.983522][f=-000001] Warning: WeaponDefs: Unknown tag "shield.energyupkeep" in "armgate_repulsor"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:04.488Z ===
+Context: game process stderr
+Error: [t=00:00:04.988950][f=-000001] Warning: WeaponDefs: Unknown tag "shield.energyupkeep" in "corcomcon_repulsor1"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:04.492Z ===
+Context: game process stderr
+Error: [t=00:00:04.992744][f=-000001] Warning: WeaponDefs: Unknown tag "shield.energyupkeep" in "corfgate_sea_repulsor"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:04.493Z ===
+Context: game process stderr
+Error: [t=00:00:04.993114][f=-000001] Warning: WeaponDefs: Unknown tag "shield.energyupkeep" in "corgate_repulsor"
+[t=00:00:04.993673][f=-000001] Warning: WeaponDefs: Unknown tag "comment" in "corjuno_juno_pulse_ghost"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:04.505Z ===
+Context: game process stderr
+Error: [t=00:00:05.005778][f=-000001] Warning: [CreateYardMap] armanavaldefturret: given yardmap requires 13 extra char(s)!
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:04.509Z ===
+Context: game process stderr
+Error: [t=00:00:05.009910][f=-000001] Warning: [CreateYardMap] armhaap: given yardmap requires 81 extra char(s)!
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:04.515Z ===
+Context: game process stderr
+Error: [t=00:00:05.016307][f=-000001] Warning: [CreateYardMap] coranavaldefturret: given yardmap requires 13 extra char(s)!
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:04.519Z ===
+Context: game process stderr
+Error: [t=00:00:05.020632][f=-000001] Warning: [CreateYardMap] corhasy: given yardmap requires 48 extra char(s)!
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:04.526Z ===
+Context: game process stderr
+Error: [t=00:00:05.026536][f=-000001] Warning: [CreateYardMap] leghaap: given yardmap requires 36 extra char(s)!
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:04.528Z ===
+Context: game process stderr
+Error: [t=00:00:05.029004][f=-000001] Warning: removed the "legvp" entry from the "leghaca" build menu
+[t=00:00:05.029017][f=-000001] Warning: removed the "legap" entry from the "leghaca" build menu
+[t=00:00:05.029021][f=-000001] Warning: removed the "legnanotc" entry from the "leghaca" build menu
+[t=00:00:05.029026][f=-000001] Warning: removed the "legfus" entry from the "leghaca" build menu
+[t=00:00:05.029038][f=-000001] Warning: removed the "legsd" entry from the "leghaca" build menu
+[t=00:00:05.029042][f=-000001] Warning: removed the "leglab" entry from the "leghaca" build menu
+[t=00:00:05.029047][f=-000001] Warning: removed the "legeheatraymech" entry from the "leghaca" build menu
+[t=00:00:05.029051][f=-000001] Warning: removed the "legelrpcmech" entry from the "leghaca" build menu
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:04.543Z ===
+Context: game process stderr
+Error: [t=00:00:05.044332][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "corfast_dead"
+[t=00:00:05.044348][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "corhack_dead"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:04.963Z ===
+Context: game process stderr
+Error: [t=00:00:05.463778][f=-000001] Warning: Could not load ground decal "scars/scar1_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.011Z ===
+Context: game process stderr
+Error: [t=00:00:05.511511][f=-000001] Warning: Could not load ground decal "scars/scar2_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.025Z ===
+Context: game process stderr
+Error: [t=00:00:05.526533][f=-000001] Warning: Could not load ground decal "scars/scar3_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.028Z ===
+Context: game process stderr
+Error: [t=00:00:05.529153][f=-000001] Warning: Could not load ground decal "scars/scar4_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.031Z ===
+Context: game process stderr
+Error: [t=00:00:05.531797][f=-000001] Warning: Could not load ground decal "scars/scar5_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.034Z ===
+Context: game process stderr
+Error: [t=00:00:05.534642][f=-000001] Warning: Could not load ground decal "scars/scar6_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.036Z ===
+Context: game process stderr
+Error: [t=00:00:05.537424][f=-000001] Warning: Could not load ground decal "bitmaps/scars/scar1_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.085Z ===
+Context: game process stderr
+Error: [t=00:00:05.585715][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/arm_acv_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.087Z ===
+Context: game process stderr
+Error: [t=00:00:05.588377][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/arm_acv_tracks_2_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.089Z ===
+Context: game process stderr
+Error: [t=00:00:05.590552][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/arm_stumpy_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.091Z ===
+Context: game process stderr
+Error: [t=00:00:05.592080][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armacv_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.093Z ===
+Context: game process stderr
+Error: [t=00:00:05.594126][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armbull_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.095Z ===
+Context: game process stderr
+Error: [t=00:00:05.595848][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armcroc_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.096Z ===
+Context: game process stderr
+Error: [t=00:00:05.597163][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armgremlin_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.097Z ===
+Context: game process stderr
+Error: [t=00:00:05.598596][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armmart_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.099Z ===
+Context: game process stderr
+Error: [t=00:00:05.599962][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armpincer_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.100Z ===
+Context: game process stderr
+Error: [t=00:00:05.601433][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armsam_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.101Z ===
+Context: game process stderr
+Error: [t=00:00:05.602663][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armseer_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.103Z ===
+Context: game process stderr
+Error: [t=00:00:05.604254][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armstump_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.104Z ===
+Context: game process stderr
+Error: [t=00:00:05.605599][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armyork_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.105Z ===
+Context: game process stderr
+Error: [t=00:00:05.606572][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/bigfoot_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.106Z ===
+Context: game process stderr
+Error: [t=00:00:05.607538][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/bottrack1_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.107Z ===
+Context: game process stderr
+Error: [t=00:00:05.608409][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/comtrack_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.109Z ===
+Context: game process stderr
+Error: [t=00:00:05.610474][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/corparrowtracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.112Z ===
+Context: game process stderr
+Error: [t=00:00:05.612818][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/corwidetracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.113Z ===
+Context: game process stderr
+Error: [t=00:00:05.614324][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/raptortrack_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.114Z ===
+Context: game process stderr
+Error: [t=00:00:05.615282][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/raptortrackpointy_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:05.115Z ===
+Context: game process stderr
+Error: [t=00:00:05.616184][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/stdtank_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:07.420Z ===
+Context: game process stderr
+Error: [t=00:00:07.921079][f=-000001] [Texture] Warning: [LoadAndCacheTexture] could not load primary texture "rocks30_map_color.dds" from model "objects3d/rocks30/rocks30_map_10.s3o"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:09.755Z ===
+Context: game process stderr
+Error: [t=00:00:10.256112][f=-000001] Warning: [CCEG::Load] genericshellexplosion-small-bomb: unknown class "groundflash_anim"
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:09.812Z ===
+Context: game process stderr
+Error: [t=00:00:10.312411][f=-000001] Error: Loading "bumpmapped" water failed, error: [BumpWater] Could not load texture from file maps/maps/waterbump_4tiles.png
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:12.343Z ===
+Context: game process stderr
+Error: [t=00:00:12.843461][f=-000001] [Start Position Suggestions] Warning: No modoption start position data found
+
+==================================================
+
+
+=== Error at 2025-12-11T23:37:14.990Z ===
+Context: game process stderr
+Error: [t=00:00:15.490869][f=-000001] Warning: Couldn't find texture "unittextures/tree_elm_dead_normal.dds"!
+[t=00:00:15.490993][f=-000001] Warning: Couldn't find texture "unittextures/dead_tree_trunk_normal.dds"!
+
+==================================================
+
+
+=== Error at 2025-12-11T23:39:00.729Z ===
+Context: game process stderr
+Error: [t=00:02:01.231066][f=0000846] [Start Position Suggestions] Warning: No modoption start position data found
+
+==================================================
+
+
+=== Error at 2025-12-11T23:39:02.321Z ===
+Context: game process stderr
+Error: [t=00:02:02.822843][f=0000846] [Start Position Suggestions] Warning: No modoption start position data found
+
+==================================================
+
+
+=== Error at 2025-12-11T23:40:04.484Z ===
+Context: game process stderr
+Error: [t=00:03:04.985880][f=0002519] [Smart Area Reclaim] Warning: Smart reclaim area is too large, limiting size
+
+==================================================
+
+
+=== Error at 2025-12-11T23:40:06.808Z ===
+Context: game process stderr
+Error: [t=00:03:07.309330][f=0002588] [Smart Area Reclaim] Warning: Smart reclaim area is too large, limiting size
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:26.862Z ===
+Context: game process stderr
+Error: [t=00:00:00.470996] Warning: [ArchiveData] version "1" included in name "Supreme_Crossing_V1"
+[t=00:00:00.471031] Warning: [AS::ScanArchive] set the 'mapfile' key in mapinfo.lua of archive "C:\Users\scopa\OneDrive\Documents\GitHub\bar-lobby\assets\maps\supreme_crossing_v1.sd7" for faster loading!
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:27.758Z ===
+Context: game process stderr
+Error: [t=00:00:01.366757][f=-000001] Warning: [UDPListener::TryBindSocket] opening socket on loopback address, other users will not be able to connect!
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:29.003Z ===
+Context: game process stderr
+Error: [t=00:00:02.611711][f=-000001] Warning: [CSMFReadMap::CreateSplatDetailTextures] Invalid SMF splatDetailTex maps/iwantDNTS.tga. Creating fallback texture
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:29.556Z ===
+Context: game process stderr
+Error: [t=00:00:03.165184][f=-000001] [featuredefs_post.lua] Warning: Removing feature def, corhack_dead, for having invalid model that would crash the engine, Units/corfast_dead.s3o
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:29.557Z ===
+Context: game process stderr
+Error: [t=00:00:03.165358][f=-000001] [featuredefs_post.lua] Warning: Removing feature def, xmascomwreck, for having invalid model that would crash the engine, gingerbread
+[t=00:00:03.165953][f=-000001] [featuredefs_post.lua] Warning: Removing feature def, corfast_dead, for having invalid model that would crash the engine, Units/corfast_dead.s3o
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:30.562Z ===
+Context: game process stderr
+Error: [t=00:00:04.171541][f=-000001] Warning: WeaponDefs: Unknown tag "shield.energyupkeep" in "armcomcon_repulsor1"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:30.566Z ===
+Context: game process stderr
+Error: [t=00:00:04.175596][f=-000001] Warning: WeaponDefs: Unknown tag "shield.energyupkeep" in "armfgate_sea_repulsor"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:30.567Z ===
+Context: game process stderr
+Error: [t=00:00:04.176003][f=-000001] Warning: WeaponDefs: Unknown tag "shield.energyupkeep" in "armgate_repulsor"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:30.572Z ===
+Context: game process stderr
+Error: [t=00:00:04.181558][f=-000001] Warning: WeaponDefs: Unknown tag "shield.energyupkeep" in "corcomcon_repulsor1"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:30.576Z ===
+Context: game process stderr
+Error: [t=00:00:04.185547][f=-000001] Warning: WeaponDefs: Unknown tag "shield.energyupkeep" in "corfgate_sea_repulsor"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:30.577Z ===
+Context: game process stderr
+Error: [t=00:00:04.185936][f=-000001] Warning: WeaponDefs: Unknown tag "shield.energyupkeep" in "corgate_repulsor"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:30.578Z ===
+Context: game process stderr
+Error: [t=00:00:04.186513][f=-000001] Warning: WeaponDefs: Unknown tag "comment" in "corjuno_juno_pulse_ghost"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:30.596Z ===
+Context: game process stderr
+Error: [t=00:00:04.205103][f=-000001] Warning: [CreateYardMap] armanavaldefturret: given yardmap requires 13 extra char(s)!
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:30.600Z ===
+Context: game process stderr
+Error: [t=00:00:04.209567][f=-000001] Warning: [CreateYardMap] armhaap: given yardmap requires 81 extra char(s)!
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:30.607Z ===
+Context: game process stderr
+Error: [t=00:00:04.216391][f=-000001] Warning: [CreateYardMap] coranavaldefturret: given yardmap requires 13 extra char(s)!
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:30.612Z ===
+Context: game process stderr
+Error: [t=00:00:04.221026][f=-000001] Warning: [CreateYardMap] corhasy: given yardmap requires 48 extra char(s)!
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:30.619Z ===
+Context: game process stderr
+Error: [t=00:00:04.228123][f=-000001] Warning: [CreateYardMap] leghaap: given yardmap requires 36 extra char(s)!
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:30.627Z ===
+Context: game process stderr
+Error: [t=00:00:04.235930][f=-000001] Warning: removed the "legvp" entry from the "leghaca" build menu
+[t=00:00:04.235942][f=-000001] Warning: removed the "legap" entry from the "leghaca" build menu
+[t=00:00:04.235947][f=-000001] Warning: removed the "legnanotc" entry from the "leghaca" build menu
+[t=00:00:04.235952][f=-000001] Warning: removed the "legfus" entry from the "leghaca" build menu
+[t=00:00:04.235967][f=-000001] Warning: removed the "legsd" entry from the "leghaca" build menu
+[t=00:00:04.235971][f=-000001] Warning: removed the "leglab" entry from the "leghaca" build menu
+[t=00:00:04.235976][f=-000001] Warning: removed the "legeheatraymech" entry from the "leghaca" build menu
+[t=00:00:04.235981][f=-000001] Warning: removed the "legelrpcmech" entry from the "leghaca" build menu
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:30.643Z ===
+Context: game process stderr
+Error: [t=00:00:04.252677][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "corfast_dead"
+[t=00:00:04.252692][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "corhack_dead"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.059Z ===
+Context: game process stderr
+Error: [t=00:00:04.668046][f=-000001] Warning: Could not load ground decal "scars/scar1_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.106Z ===
+Context: game process stderr
+Error: [t=00:00:04.715472][f=-000001] Warning: Could not load ground decal "scars/scar2_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.120Z ===
+Context: game process stderr
+Error: [t=00:00:04.729771][f=-000001] Warning: Could not load ground decal "scars/scar3_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.123Z ===
+Context: game process stderr
+Error: [t=00:00:04.732190][f=-000001] Warning: Could not load ground decal "scars/scar4_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.125Z ===
+Context: game process stderr
+Error: [t=00:00:04.734593][f=-000001] Warning: Could not load ground decal "scars/scar5_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.128Z ===
+Context: game process stderr
+Error: [t=00:00:04.736977][f=-000001] Warning: Could not load ground decal "scars/scar6_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.130Z ===
+Context: game process stderr
+Error: [t=00:00:04.739395][f=-000001] Warning: Could not load ground decal "bitmaps/scars/scar1_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.178Z ===
+Context: game process stderr
+Error: [t=00:00:04.787704][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/arm_acv_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.181Z ===
+Context: game process stderr
+Error: [t=00:00:04.790498][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/arm_acv_tracks_2_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.183Z ===
+Context: game process stderr
+Error: [t=00:00:04.792550][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/arm_stumpy_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.184Z ===
+Context: game process stderr
+Error: [t=00:00:04.793925][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armacv_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.186Z ===
+Context: game process stderr
+Error: [t=00:00:04.795738][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armbull_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.188Z ===
+Context: game process stderr
+Error: [t=00:00:04.797528][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armcroc_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.190Z ===
+Context: game process stderr
+Error: [t=00:00:04.799143][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armgremlin_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.191Z ===
+Context: game process stderr
+Error: [t=00:00:04.800699][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armmart_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.192Z ===
+Context: game process stderr
+Error: [t=00:00:04.801897][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armpincer_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.194Z ===
+Context: game process stderr
+Error: [t=00:00:04.803571][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armsam_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.195Z ===
+Context: game process stderr
+Error: [t=00:00:04.804784][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armseer_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.197Z ===
+Context: game process stderr
+Error: [t=00:00:04.806239][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armstump_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.198Z ===
+Context: game process stderr
+Error: [t=00:00:04.807476][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armyork_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.199Z ===
+Context: game process stderr
+Error: [t=00:00:04.808389][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/bigfoot_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.200Z ===
+Context: game process stderr
+Error: [t=00:00:04.809246][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/bottrack1_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.201Z ===
+Context: game process stderr
+Error: [t=00:00:04.810003][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/comtrack_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.202Z ===
+Context: game process stderr
+Error: [t=00:00:04.811953][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/corparrowtracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.205Z ===
+Context: game process stderr
+Error: [t=00:00:04.814132][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/corwidetracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.206Z ===
+Context: game process stderr
+Error: [t=00:00:04.815238][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/raptortrack_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.207Z ===
+Context: game process stderr
+Error: [t=00:00:04.816190][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/raptortrackpointy_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:31.207Z ===
+Context: game process stderr
+Error: [t=00:00:04.816949][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/stdtank_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:34.350Z ===
+Context: game process stderr
+Error: [t=00:00:07.958918][f=-000001] [Texture] Warning: [LoadAndCacheTexture] could not load primary texture "rocks30_map_color.dds" from model "objects3d/rocks30/rocks30_map_10.s3o"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:35.822Z ===
+Context: game process stderr
+Error: [t=00:00:09.430616][f=-000001] Warning: [CCEG::Load] genericshellexplosion-small-bomb: unknown class "groundflash_anim"
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:35.880Z ===
+Context: game process stderr
+Error: [t=00:00:09.489185][f=-000001] Error: Loading "bumpmapped" water failed, error: [BumpWater] Could not load texture from file maps/maps/waterbump_4tiles.png
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:38.743Z ===
+Context: game process stderr
+Error: [t=00:00:12.353002][f=-000001] [Start Position Suggestions] Warning: No modoption start position data found
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:41.327Z ===
+Context: game process stderr
+Error: [t=00:00:14.936908][f=-000001] Warning: Couldn't find texture "unittextures/tree_elm_dead_normal.dds"!
+
+==================================================
+
+
+=== Error at 2025-12-12T00:12:41.342Z ===
+Context: game process stderr
+Error: [t=00:00:14.952222][f=-000001] Warning: Couldn't find texture "unittextures/dead_tree_trunk_normal.dds"!
+
+==================================================

@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT
 -->
 
 <template>
-    <div class="map-container" :style="{ aspectRatio: mapTextureUrl ? 'auto' : 1 }">
+    <div class="map-container">
         <div v-if="mapTextureUrl" class="map">
             <img :src="mapTextureUrl" />
             <div class="boxes">
@@ -84,19 +84,27 @@ const mapTextureUrl = computed(() => {
     justify-content: center;
     border: 1px solid rgba(255, 255, 255, 0.1);
     background-color: rgba(0, 0, 0, 0.3);
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    flex-grow: 1;
+    position: relative;
 }
 
 .map {
+    width: 100%;
     height: 100%;
     position: relative;
-    object-fit: contain;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
     img {
+        max-width: 100%;
         max-height: 100%;
-        width: 100%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
         // image-rendering: pixelated;
     }
 }

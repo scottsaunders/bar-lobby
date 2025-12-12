@@ -127,15 +127,15 @@ SPDX-License-Identifier: MIT
                 </div>
                 <!-- Bottom Row: Button Panel -->
                 <Panel class="bottom-action-panel" no-padding>
-                    <div class="bottom-action-content flex-row flex-space-between padding-left-lg padding-right-lg padding-top-lg padding-bottom-lg">
-                        <Button class="blue" @click="generateRandomSkirmish">
+                    <div class="bottom-action-content flex-row flex-space-between padding-left-xxl padding-right-xxl padding-top-xxl padding-bottom-xxl">
+                        <Button class="blue large" @click="generateRandomSkirmish">
                         Generate Random Skirmish
                     </Button>
                     <div v-if="map" style="display: flex; align-items: center;">
-                        <Button v-if="gameStore.status === GameStatus.LOADING" class="grey slim" disabled>{{
+                        <Button v-if="gameStore.status === GameStatus.LOADING" class="grey large" disabled>{{
                             t("lobby.components.battle.offlineBattleComponent.gameIsStarting")
                         }}</Button>
-                        <Button v-else-if="gameStore.status === GameStatus.RUNNING" class="grey slim" disabled>{{
+                        <Button v-else-if="gameStore.status === GameStatus.RUNNING" class="grey large" disabled>{{
                             t("lobby.components.battle.offlineBattleComponent.gameIsRunning")
                         }}</Button>
                         <DownloadContentButton
@@ -144,12 +144,12 @@ SPDX-License-Identifier: MIT
                             :engines="battleStore.battleOptions.engineVersion ? [battleStore.battleOptions.engineVersion] : []"
                             :games="battleStore.battleOptions.gameVersion ? [battleStore.battleOptions.gameVersion] : []"
                             download-text="Download Map"
-                            class="slim"
+                            class="large"
                             @click="battleActions.startBattle"
                             >Start Game</DownloadContentButton
                         >
                     </div>
-                        <Button v-else class="green slim" disabled>{{
+                        <Button v-else class="green large" disabled>{{
                             t("lobby.components.battle.offlineBattleComponent.startTheGame")
                         }}</Button>
                     </div>
@@ -278,12 +278,29 @@ async function generateRandomSkirmish() {
             randomMap
         );
         
+        // Get the total number of teams required by the map
+        // Calculate it the same way updateTeams does, BEFORE calling updateTeams
+        let numberOfTeams = 2; // default
+        if (battleStore.battleOptions.mapOptions.startPosType === StartPosType.Boxes) {
+            const startBoxIndex = battleStore.battleOptions.mapOptions.startBoxesIndex;
+            if (startBoxIndex != undefined && randomMap.startboxesSet[startBoxIndex]) {
+                numberOfTeams = randomMap.startboxesSet[startBoxIndex].startboxes.length;
+            } else if (battleStore.battleOptions.mapOptions.customStartBoxes) {
+                numberOfTeams = battleStore.battleOptions.mapOptions.customStartBoxes.length;
+            }
+        }
+        
         // Use updateTeams to ensure we have the correct number of teams based on the map
         // This will create teams based on the map's start boxes
         try {
             battleActions.updateTeams();
         } catch (error) {
             console.warn("Could not update teams based on map, using default 2 teams");
+        }
+        
+        // Ensure we have the correct number of teams (defensive check)
+        while (battleStore.teams.length < numberOfTeams) {
+            battleActions.addTeam();
         }
         
         // Get the recommended team size from the map
@@ -294,9 +311,6 @@ async function generateRandomSkirmish() {
             // If we can't get the team size, default to 3
             recommendedTeamSize = 3;
         }
-        
-        // Get the total number of teams (this should match the map's team count)
-        const numberOfTeams = battleStore.teams.length;
         
         // Ensure player is in team 0
         if (battleStore.me && battleStore.teams[0]) {
@@ -309,25 +323,69 @@ async function generateRandomSkirmish() {
         }
         
         // Fill ALL teams with bots to reach recommended team size
-        // General rule: loop through every team (0 to numberOfTeams-1) and fill each one
+        // First pass: ensure every team (except 0) has at least 1 bot
         for (let teamId = 0; teamId < numberOfTeams; teamId++) {
             // Ensure the team exists
             if (!battleStore.teams[teamId]) {
-                continue;
+                battleActions.addTeam();
             }
             
             const team = battleStore.teams[teamId];
+            
+            // Count current bots (excluding scavengers/raptors)
+            const currentBots = team.participants.filter(
+                (p) => "aiShortName" in p && p.aiShortName !== "RaptorsAI" && p.aiShortName !== "ScavengersAI"
+            );
+            
+            // For teams other than 0, ensure they have at least 1 bot
+            if (teamId !== 0 && currentBots.length === 0) {
+                battleActions.addBot(barbAi, teamId);
+            }
+        }
+        
+        // Second pass: fill all teams to recommended team size
+        for (let teamId = 0; teamId < numberOfTeams; teamId++) {
+            // Ensure the team exists
+            if (!battleStore.teams[teamId]) {
+                battleActions.addTeam();
+            }
+            
+            const team = battleStore.teams[teamId];
+            if (!team) continue; // Safety check
             
             // Count current participants (excluding scavengers/raptors)
             const currentParticipants = team.participants.filter(
                 (p) => !("aiShortName" in p && (p.aiShortName === "RaptorsAI" || p.aiShortName === "ScavengersAI"))
             );
             
-            // Calculate how many bots we need to add to reach recommended team size
-            const botsNeeded = recommendedTeamSize - currentParticipants.length;
+            // Calculate how many more bots we need to reach recommendedTeamSize
+            const botsNeeded = Math.max(0, recommendedTeamSize - currentParticipants.length);
             
-            // Add bots to fill the team (always ensure team has bots if needed)
+            // Add bots to fill the team to recommended size
             for (let i = 0; i < botsNeeded; i++) {
+                battleActions.addBot(barbAi, teamId);
+            }
+        }
+        
+        // Final verification pass: ensure every team (except 0) has at least 1 bot
+        for (let teamId = 0; teamId < numberOfTeams; teamId++) {
+            if (teamId === 0) continue; // Skip team 0 (has player)
+            
+            // Ensure the team exists
+            if (!battleStore.teams[teamId]) {
+                battleActions.addTeam();
+            }
+            
+            const team = battleStore.teams[teamId];
+            if (!team) continue;
+            
+            // Count current bots (excluding scavengers/raptors)
+            const currentBots = team.participants.filter(
+                (p) => "aiShortName" in p && p.aiShortName !== "RaptorsAI" && p.aiShortName !== "ScavengersAI"
+            );
+            
+            // If still no bots, add one
+            if (currentBots.length === 0) {
                 battleActions.addBot(barbAi, teamId);
             }
         }
@@ -628,6 +686,7 @@ onMounted(async () => {
 .bottom-action-content {
     display: flex;
     align-items: center;
+    gap: map-get($spacing, "lg");
     
     // Override DownloadContentButton wrapper width in button bar
     :deep(.download-button-wrapper) {
@@ -680,3 +739,4 @@ onMounted(async () => {
     }
 }
 </style>
+
