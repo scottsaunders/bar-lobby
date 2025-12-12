@@ -6,8 +6,8 @@ SPDX-License-Identifier: MIT
 
 <template>
     <div class="map-container">
-        <div v-if="mapTextureUrl" class="map">
-            <img :src="mapTextureUrl" />
+        <div v-if="mapTextureUrl" class="map" :style="mapAspectRatioStyle">
+            <img :src="mapTextureUrl" ref="mapImage" />
             <div class="boxes">
                 <div v-for="team in teams" :key="team.allyTeamId" v-startBox="team.startBox" class="box" />
             </div>
@@ -40,6 +40,8 @@ import { computed, defineComponent, ref, watch } from "vue";
 import vStartBox from "@renderer/directives/vStartBox";
 import vStartPos from "@renderer/directives/vStartPos";
 import vSetPlayerColor from "@renderer/directives/vSetPlayerColor";
+
+const mapImage = ref<HTMLImageElement | null>(null);
 
 const props = defineProps<{
     replay: Replay | null;
@@ -74,6 +76,22 @@ const mapTextureUrl = computed(() => {
     if (!map.value?.imagesBlob?.preview) return null;
     return cache.get(map.value.springName, map.value.imagesBlob?.preview);
 });
+
+const mapAspectRatioStyle = computed(() => {
+    if (!map.value?.mapWidth || !map.value?.mapHeight) {
+        return {};
+    }
+    const aspectRatio = map.value.mapWidth / map.value.mapHeight;
+    // Always set aspect-ratio to maintain correct proportions
+    // For wide maps (aspect ratio > 1), set height: auto and width: 100%
+    // For tall maps (aspect ratio <= 1), set height: 100% and width: auto
+    return {
+        aspectRatio: `${map.value.mapWidth} / ${map.value.mapHeight}`,
+        ...(aspectRatio > 1 
+            ? { height: "auto", width: "100%" } 
+            : { height: "100%", width: "auto" }),
+    };
+});
 </script>
 
 <style lang="scss" scoped>
@@ -92,25 +110,21 @@ const mapTextureUrl = computed(() => {
 }
 
 .map {
-    width: 100%;
-    height: 100%;
     position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     overflow: hidden;
     img {
-        max-width: 100%;
-        max-height: 100%;
-        width: auto;
-        height: auto;
+        width: 100%;
+        height: 100%;
         object-fit: contain;
+        display: block;
         // image-rendering: pixelated;
     }
 }
 
 .boxes {
     position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
 }

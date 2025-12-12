@@ -87,37 +87,114 @@ SPDX-License-Identifier: MIT
                             </DataTable>
                         </div>
                     </Panel>
-                <Panel class="replay-preview-panel flex-grow" no-padding>
-                        <ReplayPreview v-if="selectedReplay" :replay="selectedReplay" :showSpoilers="showSpoilers">
-                            <template #actions="{ replay }">
-                                <div class="fullwidth">
-                                    <div class="flex-row flex-bottom gap-md padding-bottom-md">
-                                        <DownloadContentButton
-                                            v-if="map && replay"
-                                            :maps="[map.springName]"
-                                            :games="[replay.gameVersion]"
-                                            :engines="[replay.engineVersion]"
-                                            @click="watchReplay(replay)"
-                                            :disabled="gameStore.status !== GameStatus.CLOSED"
-                                            class="large"
-                                        >
-                                            <template v-if="gameStore.status === GameStatus.RUNNING">{{
-                                                t("lobby.views.watch.replays.gameIsRunning")
-                                            }}</template>
-                                            <template v-else-if="gameStore.status === GameStatus.LOADING">{{
-                                                t("lobby.views.watch.replays.launching")
-                                            }}</template>
-                                            <template v-else>{{ t("lobby.views.watch.replays.watch") }}</template>
-                                        </DownloadContentButton>
-                                        <Button v-else disabled class="large" style="flex-grow: 1">{{ t("lobby.views.watch.replays.watch") }}</Button>
-                                        <Button v-if="replay" @click="showReplayFile(replay)" class="icon folder-button" v-tooltip.left="'Open file location'"
-                                            ><Icon :icon="folder" :height="32"
-                                        /></Button>
+                <Panel class="replay-side-panel flex-grow" no-padding>
+                    <div class="flex-col fullheight min-height-0">
+                        <TabView class="flex-grow min-height-0">
+                            <TabPanel header="Map" class="tab-panel-no-padding">
+                                <div class="flex-col fullheight min-height-0 tab-panel-inner-container">
+                                    <div class="flex-grow min-height-0 margin-top-xxl margin-bottom-xxl margin-left-xxl margin-right-xxl inner-panel-container map-preview-container">
+                                        <ReplayPreviewMap v-if="selectedReplay" :replay="selectedReplay" />
                                     </div>
                                 </div>
-                            </template>
-                        </ReplayPreview>
-                    </Panel>
+                            </TabPanel>
+                            <TabPanel header="Details" class="tab-panel-no-padding">
+                                <div class="flex-col fullheight min-height-0 tab-panel-inner-container">
+                                    <div class="flex-grow min-height-0 margin-top-xxl margin-bottom-xxl margin-left-xxl margin-right-xxl inner-panel-container scroll-container">
+                                        <div class="flex-col flex-grow padding-xxl gap-lg">
+                                            <div v-if="isFFA" class="team-section">
+                                                <div class="team-title">{{ t("lobby.components.battle.replayPreview.players") }}</div>
+                                                <div class="contenders">
+                                                    <template v-for="(contender, i) in selectedReplay?.contenders" :key="`contender${i}`">
+                                                        <BattlePreviewParticipant :contender="contender" />
+                                                        <Icon
+                                                            v-if="selectedReplay?.winningTeamId === contender.allyTeamId && showSpoilers"
+                                                            class="trophy"
+                                                            :icon="trophyVariant"
+                                                            height="18"
+                                                        />
+                                                    </template>
+                                                </div>
+                                            </div>
+                                            <template v-for="[teamId, contenders] in teams" v-else :key="`team${teamId}`">
+                                                <div class="team-section">
+                                                    <div class="team-title">
+                                                        <div>Team {{ teamId + 1 }}</div>
+                                                        <Icon
+                                                            v-if="selectedReplay?.winningTeamId === teamId && showSpoilers"
+                                                            class="trophy"
+                                                            :icon="trophyVariant"
+                                                            height="18"
+                                                        />
+                                                    </div>
+                                                    <div class="contenders">
+                                                        <BattlePreviewParticipant
+                                                            v-for="(contender, contenderIndex) in contenders"
+                                                            :key="`contender${contenderIndex}`"
+                                                            :contender="contender"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </template>
+                                            <div v-if="selectedReplay?.spectators.length" class="team-section">
+                                                <div class="team-title">{{ t("lobby.components.battle.replayPreview.spectators") }}</div>
+                                                <div class="contenders">
+                                                    <BattlePreviewParticipant
+                                                        v-for="(spectator, spectatorIndex) in selectedReplay.spectators"
+                                                        :key="`spectator${spectatorIndex}`"
+                                                        :contender="spectator"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <hr class="margin-top-md margin-bottom-md divider" />
+                                            <div class="padding-top-sm">
+                                                <div v-for="(item, index) in extraDetails" :key="index">
+                                                    <div>
+                                                        <div :class="getStripeResult(index)">
+                                                            <div class="margin-left-sm padding-top-sm padding-bottom-sm">
+                                                                <p class="text-xs">
+                                                                    <b>{{ item.title }}</b>
+                                                                </p>
+                                                            </div>
+                                                            <div class="margin-right-sm padding-top-sm padding-bottom-sm txt-right">
+                                                                <p class="text-xs">{{ item.data }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </TabPanel>
+                        </TabView>
+                        <div class="flex-shrink-0 flex-col padding-bottom-xxl padding-left-xxl padding-right-xxl">
+                            <div class="flex-row gap-md">
+                                <DownloadContentButton
+                                    v-if="map && selectedReplay"
+                                    :maps="[map.springName]"
+                                    :games="[selectedReplay.gameVersion]"
+                                    :engines="[selectedReplay.engineVersion]"
+                                    @click="watchReplay(selectedReplay)"
+                                    :disabled="gameStore.status !== GameStatus.CLOSED"
+                                    class="large"
+                                    style="flex-grow: 1"
+                                >
+                                    <template v-if="gameStore.status === GameStatus.RUNNING">{{
+                                        t("lobby.views.watch.replays.gameIsRunning")
+                                    }}</template>
+                                    <template v-else-if="gameStore.status === GameStatus.LOADING">{{
+                                        t("lobby.views.watch.replays.launching")
+                                    }}</template>
+                                    <template v-else>{{ t("lobby.views.watch.replays.watch") }}</template>
+                                </DownloadContentButton>
+                                <Button v-else disabled class="large" style="flex-grow: 1">{{ t("lobby.views.watch.replays.watch") }}</Button>
+                                <Button v-if="selectedReplay" @click="showReplayFile(selectedReplay)" class="icon folder-button" v-tooltip.left="'Open file location'">
+                                    <Icon :icon="folder" :height="32" />
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </Panel>
             </div>
         </div>
     </div>
@@ -153,15 +230,21 @@ import DataTable, { DataTablePageEvent, DataTableSortEvent } from "primevue/data
 import Panel from "@renderer/components/common/Panel.vue";
 import { db } from "@renderer/store/db";
 import { useDexieLiveQueryWithDeps } from "@renderer/composables/useDexieLiveQuery";
-import ReplayPreview from "@renderer/components/battle/ReplayPreview.vue";
 import DownloadContentButton from "@renderer/components/controls/DownloadContentButton.vue";
 import { GameStatus, gameStore, watchReplay } from "@renderer/store/game.store";
 import { replaysStore, acknowledgeReplay } from "@renderer/store/replays.store";
 import { MapDownloadData } from "@main/content/maps/map-data";
 import { Icon } from "@iconify/vue";
 import folder from "@iconify-icons/mdi/folder";
+import file from "@iconify-icons/mdi/file";
 import SearchBox from "@renderer/components/controls/SearchBox.vue";
 import { settingsStore } from "@renderer/store/settings.store";
+import TabView from "@renderer/components/common/TabView.vue";
+import TabPanel from "primevue/tabpanel";
+import ReplayPreviewMap from "@renderer/components/maps/ReplayPreviewMap.vue";
+import BattlePreviewParticipant from "@renderer/components/battle/BattlePreviewParticipant.vue";
+import trophyVariant from "@iconify-icons/mdi/trophy-variant";
+import { DemoModel } from "$/sdfz-demo-parser";
 
 const { t } = useTypedI18n();
 
@@ -271,6 +354,37 @@ function openReplaysFolder() {
 function showReplayFile(replay: Replay) {
     if (replay?.fileName) window.shell.showReplayInFolder(replay.fileName);
 }
+
+const isFFA = computed(() => {
+    return selectedReplay.value?.preset === "ffa";
+});
+
+const teams = computed<Map<number, (DemoModel.Info.Player | DemoModel.Info.AI)[]>>(() => {
+    if (!selectedReplay.value) {
+        return new Map();
+    }
+    const teams = Map.groupBy(selectedReplay.value.contenders, (contender) => contender.allyTeamId);
+    const sortedTeams = new Map([...teams.entries()].sort());
+    return sortedTeams;
+});
+
+const extraDetails = computed(() => {
+    if (!selectedReplay.value) return [];
+    return [
+        {
+            title: t("lobby.components.battle.replayPreview.engineVersion"),
+            data: selectedReplay.value.engineVersion,
+        },
+        {
+            title: t("lobby.components.battle.replayPreview.gameVersion"),
+            data: selectedReplay.value.gameVersion,
+        },
+    ];
+});
+
+function getStripeResult(index: number) {
+    return index & 1 ? "datagrid" : "datagrid datagridstripe";
+}
 </script>
 
 <style lang="scss" scoped>
@@ -300,13 +414,126 @@ function showReplayFile(replay: Replay) {
     min-width: 0;
 }
 
-.replay-preview-panel {
+.replay-side-panel {
     flex: 1;
     min-width: 0;
     min-height: 0;
     display: flex;
     flex-direction: column;
 }
+
+:deep(.tab-panel-no-padding.p-tabview-panel) {
+    padding: 0 !important;
+    margin: 0 !important;
+    min-height: 0;
+}
+
+:deep(.replay-side-panel .tab-panel-no-padding.p-tabview-panel) {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+:deep(.replay-side-panel .p-tabview-panel) {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.tab-panel-inner-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100%;
+    height: 100%;
+}
+
+:deep(.replay-side-panel .p-tabview) {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0;
+}
+
+:deep(.replay-side-panel .p-tabview-panels) {
+    flex-grow: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.inner-panel-container {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.map-preview-container {
+    overflow: hidden;
+    min-height: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.map-preview-container :deep(.map-container) {
+    height: 100%;
+    min-height: 0;
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.map-preview-container :deep(.map) {
+    flex: 1 1 0;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.teams {
+    gap: 5px;
+    height: auto;
+}
+
+.team-title {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    font-weight: 500;
+    margin-bottom: 3px;
+}
+
+.contenders {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.trophy {
+    color: #ffbc00;
+    display: flex;
+    align-self: center;
+    margin-bottom: 1px;
+}
+
+.datagrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: auto;
+}
+
+.datagridstripe {
+    background-color: #00000033;
+}
+
+.divider {
+    background: rgba(255, 255, 255, 0.3);
+}
+
 
 :deep(.p-datatable-tbody tr.highlighted-replay td) {
     background-color: rgba(255, 200, 0, 0.3) !important;

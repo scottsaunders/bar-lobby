@@ -2003,3 +2003,356 @@ Context: game process stderr
 Error: [t=00:00:14.952222][f=-000001] Warning: Couldn't find texture "unittextures/dead_tree_trunk_normal.dds"!
 
 ==================================================
+
+
+=== Error at 2025-12-12T07:28:46.321Z ===
+Context: game process stderr
+Error: [t=00:00:00.701072] Warning: [ArchiveData] version "2.3.1" included in name "Tundra Continents v2.3.1"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:28:50.361Z ===
+Context: game process stderr
+Error: [t=00:00:04.757052][f=-000001] Warning: [UDPListener::TryBindSocket] opening socket on loopback address, other users will not be able to connect!
+
+==================================================
+
+
+=== Error at 2025-12-12T07:28:53.615Z ===
+Context: game process stderr
+Error: [t=00:00:08.011532][f=-000001] Warning: [CSMFReadMap::CreateSplatDetailTextures] Invalid SMF splatDetailTex maps/iwantDNTS.tga. Creating fallback texture
+
+==================================================
+
+
+=== Error at 2025-12-12T07:28:58.239Z ===
+Context: game process stderr
+Error: [t=00:00:12.635001][f=-000001] [featuredefs_post.lua] Warning: Removing feature def, corfast_dead, for having invalid model that would crash the engine, Units/corfast_dead.s3o
+
+==================================================
+
+
+=== Error at 2025-12-12T07:28:58.241Z ===
+Context: game process stderr
+Error: [t=00:00:12.635271][f=-000001] [featuredefs_post.lua] Warning: Removing feature def, xmascomwreck, for having invalid model that would crash the engine, gingerbread
+[t=00:00:12.635476][f=-000001] [featuredefs_post.lua] Warning: Removing feature def, corhack_dead, for having invalid model that would crash the engine, Units/corfast_dead.s3o
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:05.939Z ===
+Context: game process stderr
+Error: [t=00:00:20.334086][f=-000001] Warning: WeaponDefs: Unknown tag "shield.energyupkeep" in "armcomcon_repulsor1"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:05.942Z ===
+Context: game process stderr
+Error: [t=00:00:20.338139][f=-000001] Warning: WeaponDefs: Unknown tag "shield.energyupkeep" in "armfgate_sea_repulsor"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:05.943Z ===
+Context: game process stderr
+Error: [t=00:00:20.338525][f=-000001] Warning: WeaponDefs: Unknown tag "shield.energyupkeep" in "armgate_repulsor"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:05.949Z ===
+Context: game process stderr
+Error: [t=00:00:20.344729][f=-000001] Warning: WeaponDefs: Unknown tag "shield.energyupkeep" in "corcomcon_repulsor1"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:05.953Z ===
+Context: game process stderr
+Error: [t=00:00:20.349105][f=-000001] Warning: WeaponDefs: Unknown tag "shield.energyupkeep" in "corfgate_sea_repulsor"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:05.955Z ===
+Context: game process stderr
+Error: [t=00:00:20.349509][f=-000001] Warning: WeaponDefs: Unknown tag "shield.energyupkeep" in "corgate_repulsor"
+[t=00:00:20.350225][f=-000001] Warning: WeaponDefs: Unknown tag "comment" in "corjuno_juno_pulse_ghost"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:05.967Z ===
+Context: game process stderr
+Error: [t=00:00:20.363269][f=-000001] Warning: [CreateYardMap] armanavaldefturret: given yardmap requires 13 extra char(s)!
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:05.972Z ===
+Context: game process stderr
+Error: [t=00:00:20.367564][f=-000001] Warning: [CreateYardMap] armhaap: given yardmap requires 81 extra char(s)!
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:05.979Z ===
+Context: game process stderr
+Error: [t=00:00:20.374683][f=-000001] Warning: [CreateYardMap] coranavaldefturret: given yardmap requires 13 extra char(s)!
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:05.984Z ===
+Context: game process stderr
+Error: [t=00:00:20.379812][f=-000001] Warning: [CreateYardMap] corhasy: given yardmap requires 48 extra char(s)!
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:05.991Z ===
+Context: game process stderr
+Error: [t=00:00:20.386914][f=-000001] Warning: [CreateYardMap] leghaap: given yardmap requires 36 extra char(s)!
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:05.994Z ===
+Context: game process stderr
+Error: [t=00:00:20.390065][f=-000001] Warning: removed the "legvp" entry from the "leghaca" build menu
+[t=00:00:20.390083][f=-000001] Warning: removed the "legap" entry from the "leghaca" build menu
+[t=00:00:20.390091][f=-000001] Warning: removed the "legnanotc" entry from the "leghaca" build menu
+[t=00:00:20.390097][f=-000001] Warning: removed the "legfus" entry from the "leghaca" build menu
+[t=00:00:20.390120][f=-000001] Warning: removed the "legsd" entry from the "leghaca" build menu
+[t=00:00:20.390128][f=-000001] Warning: removed the "leglab" entry from the "leghaca" build menu
+[t=00:00:20.390134][f=-000001] Warning: removed the "legeheatraymech" entry from the "leghaca" build menu
+[t=00:00:20.390141][f=-000001] Warning: removed the "legelrpcmech" entry from the "leghaca" build menu
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:06.013Z ===
+Context: game process stderr
+Error: [t=00:00:20.409194][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "corfast_dead"
+[t=00:00:20.409227][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "corhack_dead"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.056Z ===
+Context: game process stderr
+Error: [t=00:00:22.451612][f=-000001] Warning: Could not load ground decal "scars/scar1_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.124Z ===
+Context: game process stderr
+Error: [t=00:00:22.519966][f=-000001] Warning: Could not load ground decal "scars/scar2_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.151Z ===
+Context: game process stderr
+Error: [t=00:00:22.546747][f=-000001] Warning: Could not load ground decal "scars/scar3_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.164Z ===
+Context: game process stderr
+Error: [t=00:00:22.559553][f=-000001] Warning: Could not load ground decal "scars/scar4_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.175Z ===
+Context: game process stderr
+Error: [t=00:00:22.570066][f=-000001] Warning: Could not load ground decal "scars/scar5_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.185Z ===
+Context: game process stderr
+Error: [t=00:00:22.580467][f=-000001] Warning: Could not load ground decal "scars/scar6_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.188Z ===
+Context: game process stderr
+Error: [t=00:00:22.583563][f=-000001] Warning: Could not load ground decal "bitmaps/scars/scar1_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.257Z ===
+Context: game process stderr
+Error: [t=00:00:22.652202][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/arm_acv_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.269Z ===
+Context: game process stderr
+Error: [t=00:00:22.664943][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/arm_acv_tracks_2_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.281Z ===
+Context: game process stderr
+Error: [t=00:00:22.676250][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/arm_stumpy_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.291Z ===
+Context: game process stderr
+Error: [t=00:00:22.686279][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armacv_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.303Z ===
+Context: game process stderr
+Error: [t=00:00:22.698088][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armbull_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.311Z ===
+Context: game process stderr
+Error: [t=00:00:22.706571][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armcroc_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.320Z ===
+Context: game process stderr
+Error: [t=00:00:22.715390][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armgremlin_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.331Z ===
+Context: game process stderr
+Error: [t=00:00:22.726543][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armmart_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.341Z ===
+Context: game process stderr
+Error: [t=00:00:22.736245][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armpincer_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.352Z ===
+Context: game process stderr
+Error: [t=00:00:22.747046][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armsam_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.361Z ===
+Context: game process stderr
+Error: [t=00:00:22.756007][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armseer_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.370Z ===
+Context: game process stderr
+Error: [t=00:00:22.765165][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armstump_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.379Z ===
+Context: game process stderr
+Error: [t=00:00:22.774660][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armyork_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.389Z ===
+Context: game process stderr
+Error: [t=00:00:22.784849][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/bigfoot_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.400Z ===
+Context: game process stderr
+Error: [t=00:00:22.795137][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/bottrack1_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.402Z ===
+Context: game process stderr
+Error: [t=00:00:22.797601][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/comtrack_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.413Z ===
+Context: game process stderr
+Error: [t=00:00:22.808375][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/corparrowtracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.422Z ===
+Context: game process stderr
+Error: [t=00:00:22.817380][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/corwidetracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.430Z ===
+Context: game process stderr
+Error: [t=00:00:22.825880][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/raptortrack_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.438Z ===
+Context: game process stderr
+Error: [t=00:00:22.833922][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/raptortrackpointy_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:08.440Z ===
+Context: game process stderr
+Error: [t=00:00:22.835346][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/stdtank_normal.bmp"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:10.117Z ===
+Context: game process stderr
+Error: [t=00:00:24.512116][f=-000001] [Texture] Warning: [LoadAndCacheTexture] could not load primary texture "rocks30_map_color.dds" from model "objects3d/rocks30/rocks30_map_05.s3o"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:14.447Z ===
+Context: game process stderr
+Error: [t=00:00:28.841928][f=-000001] Warning: [CCEG::Load] genericshellexplosion-small-bomb: unknown class "groundflash_anim"
+
+==================================================
+
+
+=== Error at 2025-12-12T07:29:22.766Z ===
+Context: game process stderr
+Error: [t=00:00:37.161307][f=-000001] [Start Position Suggestions] Warning: No modoption start position data found
+
+==================================================

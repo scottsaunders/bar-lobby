@@ -27,28 +27,28 @@ SPDX-License-Identifier: MIT
 
                     <InteractiveTile class="game-mode-card disabled" @click="startCampaign">
                         <template #content>
-                            <h3>{{ t("lobby.views.play.campaign") }}</h3>
+                            <h3>{{ t("lobby.views.play.campaign.title") }}</h3>
                             <p class="body-1">{{ t("lobby.views.play.comingSoon") }}</p>
                         </template>
                     </InteractiveTile>
 
                     <InteractiveTile class="game-mode-card disabled" @click="startMatchmaking">
                         <template #content>
-                            <h3>{{ t("lobby.views.play.matchmaking") }}</h3>
+                            <h3>{{ t("lobby.views.play.matchmaking.title") }}</h3>
                             <p class="body-1">{{ t("lobby.views.play.comingSoon") }}</p>
                         </template>
                     </InteractiveTile>
 
                     <InteractiveTile class="game-mode-card disabled" @click="startCustomLobbies">
                         <template #content>
-                            <h3>{{ t("lobby.views.play.customLobbies") }}</h3>
+                            <h3>{{ t("lobby.views.play.customLobbies.title") }}</h3>
                             <p class="body-1">{{ t("lobby.views.play.comingSoon") }}</p>
                         </template>
                     </InteractiveTile>
 
                     <InteractiveTile class="game-mode-card disabled" @click="openTournaments">
                         <template #content>
-                            <h3>{{ t("lobby.views.play.tournaments") }}</h3>
+                            <h3>{{ t("lobby.views.play.tournaments.title") }}</h3>
                             <p class="body-1">{{ t("lobby.views.play.comingSoon") }}</p>
                         </template>
                     </InteractiveTile>

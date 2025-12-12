@@ -152,13 +152,58 @@ defineProps<{
 
 const router = useRouter();
 const allRoutes = router.getRoutes();
+
+function translateRouteTitle(title: string | undefined): string {
+    if (!title) return "";
+    // If title looks like an i18n key (starts with "lobby."), translate it
+    if (title.startsWith("lobby.")) {
+        try {
+            const translated = t(title as any);
+            // If translation returns the key itself, it means the key wasn't found
+            return translated === title ? title : translated;
+        } catch {
+            return title;
+        }
+    }
+    // Map route titles to their i18n keys (only translate if key exists)
+    const titleMap: Record<string, string> = {
+        "Multiplayer Lobbies": "lobby.views.play.customLobbies.title",
+        "Custom Lobbies": "lobby.views.play.customLobbies.title",
+        "Scenarios": "lobby.views.play.scenarios",
+        "Skirmish vs AI": "lobby.views.play.skirmish",
+        "Campaign": "lobby.views.play.campaign.title",
+        "Matchmaking": "lobby.views.play.matchmaking.title",
+        "Tournaments": "lobby.views.play.tournaments.title",
+        "Replays": "lobby.views.watch.replays.title",
+    };
+    const translationKey = titleMap[title];
+    if (translationKey) {
+        try {
+            const translated = t(translationKey as any);
+            // If translation returns the key (meaning it wasn't found), return original title
+            return translated === translationKey ? title : translated;
+        } catch {
+            return title;
+        }
+    }
+    // For titles without a mapping, return as-is (they should already be in the correct language)
+    return title;
+}
+
 const primaryRoutes = computed(() => {
     return allRoutes
         .filter((r) => ["/play", "/watch", "/news", "/library", "/styles"].includes(r.path))
         .filter(
             (r) => (r.meta.hide === false || r.meta.hide === undefined) && ((r.meta.devOnly && settingsStore.devMode) || !r.meta.devOnly)
         )
-        .sort((a, b) => (a.meta.order ?? 99) - (b.meta.order ?? 99));
+        .sort((a, b) => (a.meta.order ?? 99) - (b.meta.order ?? 99))
+        .map((r) => ({
+            ...r,
+            meta: {
+                ...r.meta,
+                title: translateRouteTitle(r.meta.title),
+            },
+        }));
 });
 const secondaryRoutes = computed(() => {
     const currentPrimaryRouteSegment = router.currentRoute.value.path.split("/")[1];
@@ -166,7 +211,7 @@ const secondaryRoutes = computed(() => {
         return [
             {
                 path: "/styles/new-styles",
-                meta: { title: "New Styles" },
+                meta: { title: translateRouteTitle("New Styles") },
             },
         ];
     }
@@ -176,7 +221,14 @@ const secondaryRoutes = computed(() => {
         .filter(
             (r) => (r.meta.hide === false || r.meta.hide === undefined) && ((r.meta.devOnly && settingsStore.devMode) || !r.meta.devOnly)
         )
-        .sort((a, b) => (a.meta.order ?? 99) - (b.meta.order ?? 99));
+        .sort((a, b) => (a.meta.order ?? 99) - (b.meta.order ?? 99))
+        .map((r) => ({
+            ...r,
+            meta: {
+                ...r.meta,
+                title: translateRouteTitle(r.meta.title),
+            },
+        }));
 });
 const messagesOpen = ref(false);
 const friendsOpen = ref(false);
