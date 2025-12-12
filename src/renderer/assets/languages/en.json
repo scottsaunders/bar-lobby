@@ -1905,11 +1905,23 @@
             "play": {
                 "comingSoon": "(Coming Soon)",
                 "skirmish": "Skirmish vs AI",
-                "campaign": "Campaign",
-                "matchmaking": "Matchmaking",
+                "campaign": {
+                    "title": "Campaign",
+                    "description": "Play through the official campaign missions"
+                },
+                "matchmaking": {
+                    "title": "Matchmaking",
+                    "description": "Join a multiplayer ranked queue"
+                },
                 "scenarios": "Scenarios",
-                "customLobbies": "Custom Lobbies",
-                "tournaments": "Tournaments"
+                "customLobbies": {
+                    "title": "Multiplayer Lobbies",
+                    "description": "Browse and join custom multiplayer battles"
+                },
+                "tournaments": {
+                    "title": "Tournaments",
+                    "description": "Participate in competitive tournaments"
+                }
             },
             "watch": {
                 "replays": {

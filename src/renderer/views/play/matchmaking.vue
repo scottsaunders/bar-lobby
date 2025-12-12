@@ -10,11 +10,12 @@ SPDX-License-Identifier: MIT
 
 <template>
     <div class="view">
-        <div class="ranked-container">
+        <div class="view-container">
             <div class="view-title">
-                <h1>{{ t("lobby.multiplayer.ranked.title") }}</h1>
-                <p>{{ t("lobby.multiplayer.ranked.description") }}</p>
+                <h1>{{ t("lobby.views.play.matchmaking.title") }}</h1>
+                <p>{{ t("lobby.views.play.matchmaking.description") }}</p>
             </div>
+            <div class="ranked-container">
             <div class="my-rank">
                 <div></div>
             </div>
@@ -81,6 +82,7 @@ SPDX-License-Identifier: MIT
                 </button>
                 <p class="txt-error" v-if="matchmakingStore.errorMessage">{{ matchmakingStore.errorMessage }}</p>
             </div>
+            </div>
         </div>
     </div>
 </template>
@@ -103,6 +105,23 @@ onActivated(() => {
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
+.view-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    padding: 0 map-get($spacing, "xxl") map-get($spacing, "sm") map-get($spacing, "xxl");
+    overflow: hidden;
+    box-sizing: border-box;
+    
+    .view-title {
+        padding-left: 0; // Ensure title isn't cut off - padding is handled by view-container
+    }
+}
+
 .ranked-container {
     display: flex;
     flex-direction: column;

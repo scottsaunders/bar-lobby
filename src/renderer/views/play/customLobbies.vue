@@ -9,12 +9,15 @@ SPDX-License-Identifier: MIT
 </route>
 
 <template>
-    <div class="flex-row flex-grow gap-md hide-overflow">
-        <Loader v-if="loading"></Loader>
-        <div v-else class="flex-col flex-grow gap-md">
-            <div class="flex-row gap-md">
-                <h1>{{ t("lobby.multiplayer.custom.title") }}</h1>
+    <div class="view">
+        <div class="view-container">
+            <div class="view-title">
+                <h1>{{ t("lobby.views.play.customLobbies.title") }}</h1>
+                <p>{{ t("lobby.views.play.customLobbies.description") }}</p>
             </div>
+            <div class="flex-row flex-grow gap-md hide-overflow">
+                <Loader v-if="loading"></Loader>
+                <div v-else class="flex-col flex-grow gap-md">
             <div class="flex-row gap-md">
                 <Button class="blue" @click="hostBattleOpen = true">{{ t("lobby.multiplayer.custom.hostBattle") }}</Button>
                 <HostBattle v-model="hostBattleOpen" />
@@ -77,15 +80,17 @@ SPDX-License-Identifier: MIT
                     </Column>
                 </DataTable>
             </div>
+            </div>
+            <div v-if="!loading" class="right">
+                <BattlePreview v-if="selectedBattle" :battle="selectedBattle">
+                    <template #actions="{ battle }">
+                        <Button class="green flex-grow" @click="attemptJoinBattle(battle)">{{
+                            t("lobby.multiplayer.custom.table.join")
+                        }}</Button>
+                    </template>
+                </BattlePreview>
+            </div>
         </div>
-        <div v-if="!loading" class="right">
-            <BattlePreview v-if="selectedBattle" :battle="selectedBattle">
-                <template #actions="{ battle }">
-                    <Button class="green flex-grow" @click="attemptJoinBattle(battle)">{{
-                        t("lobby.multiplayer.custom.table.join")
-                    }}</Button>
-                </template>
-            </BattlePreview>
         </div>
     </div>
 </template>
@@ -134,6 +139,23 @@ function attemptJoinBattle(battle: OngoingBattle) {
 </script>
 
 <style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
+.view-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    padding: 0 map-get($spacing, "xxl") map-get($spacing, "sm") map-get($spacing, "xxl");
+    overflow: hidden;
+    box-sizing: border-box;
+    
+    .view-title {
+        padding-left: 0; // Ensure title isn't cut off - padding is handled by view-container
+    }
+}
+
 .right {
     position: relative;
     min-width: 400px;

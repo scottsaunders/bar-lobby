@@ -9,16 +9,37 @@ SPDX-License-Identifier: MIT
 </route>
 
 <template>
-    <div>
-        <h1>{{ route.meta.title }}</h1>
+    <div class="view">
+        <div class="view-container">
+            <div class="view-title">
+                <h1>{{ t("lobby.views.play.campaign.title") }}</h1>
+                <p>{{ t("lobby.views.play.campaign.description") }}</p>
+            </div>
+        </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { useRouter } from "vue-router";
+import { useTypedI18n } from "@renderer/i18n";
 
-const router = useRouter();
-const route = router.currentRoute.value;
+const { t } = useTypedI18n();
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
+.view-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    padding: 0 map-get($spacing, "xxl") map-get($spacing, "sm") map-get($spacing, "xxl");
+    overflow: hidden;
+    box-sizing: border-box;
+    
+    .view-title {
+        padding-left: 0; // Ensure title isn't cut off - padding is handled by view-container
+    }
+}
+</style>
