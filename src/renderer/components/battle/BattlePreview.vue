@@ -33,6 +33,10 @@ SPDX-License-Identifier: MIT
                 <div class="map-placeholder">No map preview</div>
             </div>
         </div>
+        <div v-if="isRunning && formattedRuntime" class="runtime-info body-2 flex-row flex-center-items gap-sm">
+            <Icon :icon="swordCross" height="18" />
+            <span>Runtime: {{ formattedRuntime }}</span>
+        </div>
         <div class="teams scroll-container flex-grow">
             <div v-if="isFFA" class="team-section">
                 <div class="team-title">{{ t("lobby.components.battle.battlePreview.players") }}</div>
@@ -80,6 +84,7 @@ import defaultMiniMap from "/src/renderer/assets/images/default-minimap.png?url"
 import { Icon } from "@iconify/vue";
 import personIcon from "@iconify-icons/mdi/person-multiple";
 import gridIcon from "@iconify-icons/mdi/grid";
+import swordCross from "@iconify-icons/mdi/sword-cross";
 
 import BattlePreviewParticipant from "@renderer/components/battle/BattlePreviewParticipant.vue";
 import TerrainIcon from "@renderer/components/maps/filters/TerrainIcon.vue";
@@ -92,11 +97,25 @@ import { db } from "@renderer/store/db";
 const { t } = useTypedI18n();
 
 const props = defineProps<{
-    battle: OngoingBattle;
+    battle: OngoingBattle & {
+        primaryFactor?: string;
+        runtimeMs?: { value: number };
+    };
     showSpoilers?: boolean;
 }>();
 
-const map = useDexieLiveQueryWithDeps([() => props.battle], () => db.maps.get(props.battle.mapSpringName));
+// Try to get map by springName, or fallback to displayName lookup
+const map = useDexieLiveQueryWithDeps([() => props.battle], async () => {
+    // Try direct lookup by springName first
+    let foundMap = await db.maps.get(props.battle.mapSpringName);
+    
+    // If not found, try to find by displayName (from battleOptions.map)
+    if (!foundMap && props.battle.battleOptions?.map) {
+        foundMap = await db.maps.where("displayName").equals(props.battle.battleOptions.map).first();
+    }
+    
+    return foundMap || null;
+});
 const showMapDetailModal = ref(false);
 
 const cache = useImageBlobUrlCache();
@@ -123,6 +142,27 @@ const teams = computed<Map<number, (DemoModel.Info.Player | DemoModel.Info.AI)[]
 const mapSize = computed(() =>
     map.value ? map.value.mapWidth + "x" + map.value.mapHeight : t("lobby.components.maps.mapOverviewCard.sizeUnknown")
 );
+
+const isRunning = computed(() => {
+    return props.battle.primaryFactor === "Running";
+});
+
+// Format runtime as H:MM:SS
+function formatRuntime(ms: number): string {
+    if (ms === 0) return "0:00:00";
+    const totalSeconds = Math.floor(ms / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+}
+
+const formattedRuntime = computed(() => {
+    if (isRunning.value && props.battle.runtimeMs?.value) {
+        return formatRuntime(props.battle.runtimeMs.value);
+    }
+    return null;
+});
 
 function onMapClick() {
     if (map.value) {
@@ -283,6 +323,11 @@ function onMapClick() {
 .map-placeholder {
     color: rgba(255, 255, 255, 0.5);
     text-align: center;
+}
+
+.runtime-info {
+    flex-shrink: 0;
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .teams {

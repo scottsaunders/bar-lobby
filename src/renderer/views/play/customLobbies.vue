@@ -190,7 +190,7 @@ const battles = ref<BattleWithComputed[]>([
         gameId: "battle-001",
         engineVersion: "105.1.1-1547-g1234567",
         gameVersion: "10.123",
-        mapSpringName: "All that glitters",
+        mapSpringName: "All That Glitters v2.2",
         startTime: new Date(Date.now() - 18 * 60 * 1000), // 18 minutes ago
         hasBots: 0,
         preset: "team",
@@ -225,7 +225,7 @@ const battles = ref<BattleWithComputed[]>([
         mapSettings: {},
         battleOptions: {
             title: "Competitive 8v8 Tournament Match",
-            map: "All that glitters",
+            map: "All That Glitters v2.2",
         },
         primaryFactor: "Running",
         runtimeMs: { value: 18 * 60 * 1000 },
@@ -376,7 +376,7 @@ const battles = ref<BattleWithComputed[]>([
         mapSettings: {},
         battleOptions: {
             title: "Pro League 8v8 Match",
-            map: "All that glitters",
+            map: "Quicksilver Remake 1.24",
         },
         primaryFactor: "Running",
         runtimeMs: { value: 12 * 60 * 1000 },
@@ -498,7 +498,7 @@ const battles = ref<BattleWithComputed[]>([
         gameId: "battle-005",
         engineVersion: "105.1.1-1547-g1234567",
         gameVersion: "10.123",
-        mapSpringName: "Quicksilver Remake 1.24",
+        mapSpringName: "All That Glitters v2.2",
         startTime: new Date(Date.now() - 7 * 60 * 1000), // 7 minutes ago
         hasBots: 0,
         preset: "team",
@@ -531,7 +531,7 @@ const battles = ref<BattleWithComputed[]>([
         mapSettings: {},
         battleOptions: {
             title: "Casual 8v8 Public Game",
-            map: "Quicksilver Remake 1.24",
+            map: "All That Glitters v2.2",
         },
         primaryFactor: "Running",
         runtimeMs: { value: 7 * 60 * 1000 },
@@ -687,7 +687,7 @@ const battles = ref<BattleWithComputed[]>([
         gameId: "battle-008",
         engineVersion: "105.1.1-1547-g1234567",
         gameVersion: "10.123",
-        mapSpringName: "Quicksilver Remake 1.24",
+        mapSpringName: "All That Glitters v2.2",
         startTime: new Date(Date.now() - 30 * 1000), // 30 seconds ago
         hasBots: 0,
         preset: "duel",
@@ -706,7 +706,7 @@ const battles = ref<BattleWithComputed[]>([
         mapSettings: {},
         battleOptions: {
             title: "1v1 Ranked Duel - Waiting for Opponent",
-            map: "Quicksilver Remake 1.24",
+            map: "All That Glitters v2.2",
         },
         primaryFactor: "1/2 Players",
         runtimeMs: { value: 0 },
@@ -764,7 +764,7 @@ const battles = ref<BattleWithComputed[]>([
         mapSettings: {},
         battleOptions: {
             title: "8v8 Team Battle - Almost Full",
-            map: "All that glitters",
+            map: "Quicksilver Remake 1.24",
         },
         primaryFactor: "14/16 Players",
         runtimeMs: { value: 0 },
@@ -803,7 +803,7 @@ const battles = ref<BattleWithComputed[]>([
         gameId: "battle-010",
         engineVersion: "105.1.1-1547-g1234567",
         gameVersion: "10.123",
-        mapSpringName: "Red Comet Remake 1.8",
+        mapSpringName: "All That Glitters v2.2",
         startTime: new Date(Date.now() - 45 * 1000), // 45 seconds ago
         hasBots: 0,
         preset: "team",
@@ -824,7 +824,7 @@ const battles = ref<BattleWithComputed[]>([
         mapSettings: {},
         battleOptions: {
             title: "4v4 Newbie Friendly - Learning Game",
-            map: "Red Comet Remake 1.8",
+            map: "All That Glitters v2.2",
         },
         primaryFactor: "3/8 Players",
         runtimeMs: { value: 0 },

@@ -25,8 +25,16 @@ const props = defineProps<{
 
 const imageCache = useImageBlobUrlCache();
 
-const map = useDexieLiveQueryWithDeps([() => props.mapSpringName], () => {
-    return db.maps.get(props.mapSpringName);
+const map = useDexieLiveQueryWithDeps([() => props.mapSpringName, () => props.mapName], async () => {
+    // Try direct lookup by springName first
+    let foundMap = await db.maps.get(props.mapSpringName);
+    
+    // If not found, try to find by displayName (mapName prop)
+    if (!foundMap && props.mapName) {
+        foundMap = await db.maps.where("displayName").equals(props.mapName).first();
+    }
+    
+    return foundMap || null;
 });
 
 const mapImageUrl = computed(() => {
