@@ -496,21 +496,21 @@ const currentStartSystemText = computed(() => {
 // Initialize battle store and ensure game mode is Teams (CLASSIC)
 onMounted(async () => {
     // Get a map first if we don't have one
-    if (!battleStore.battleOptions.map) {
+    let mapToUse = battleStore.battleOptions.map;
+    if (!mapToUse) {
         const randomMap = await getRandomMap();
         if (randomMap) {
-            battleStore.battleOptions.map = randomMap;
+            mapToUse = randomMap;
         }
     }
     
-    // Always initialize/reset the battle store to ensure teams are created
-    if (battleStore.teams.length === 0) {
-        battleActions.resetToDefaultBattle(
-            enginesStore.selectedEngineVersion,
-            gameStore.selectedGameVersion,
-            battleStore.battleOptions.map
-        );
-    }
+    // Always reset battle store to clear any multiplayer placeholder data
+    // This ensures clean state when coming from multiplayer lobby
+    battleActions.resetToDefaultBattle(
+        enginesStore.selectedEngineVersion,
+        gameStore.selectedGameVersion,
+        mapToUse
+    );
     
     // Ensure game mode is set to Teams (CLASSIC)
     if (battleStore.battleOptions.gameMode.id !== GameModeID.CLASSIC) {

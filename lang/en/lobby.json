@@ -76,7 +76,17 @@
                 "matchmaking": "Matchmaking",
                 "scenarios": "Scenarios",
                 "customLobbies": "Custom Lobbies",
-                "tournaments": "Tournaments"
+                "tournaments": "Tournaments",
+                "multiplayerLobby": {
+                    "title": "Multiplayer Lobby",
+                    "description": "Configure your battle and join the game",
+                    "back": "Back to Lobbies",
+                    "leaveLobby": "Leave Lobby",
+                    "joinQueue": "Join Queue",
+                    "joinSpectators": "Join Spectators",
+                    "ready": "Ready",
+                    "start": "Start"
+                }
             },
             "watch": {
                 "replays": {

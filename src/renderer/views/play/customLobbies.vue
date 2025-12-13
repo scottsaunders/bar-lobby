@@ -103,7 +103,18 @@ SPDX-License-Identifier: MIT
                     <div class="flex-col fullheight min-height-0">
                         <BattlePreview v-if="selectedBattle" :battle="selectedBattle">
                             <template #actions="{ battle }">
-                                <Button class="green large flex-grow" @click="attemptJoinBattle(battle)">{{
+                                <Button 
+                                    v-if="isJoinableBattle(battle)"
+                                    class="green large flex-grow" 
+                                    @click="attemptJoinBattle(battle)"
+                                >{{
+                                    t("lobby.multiplayer.custom.table.join")
+                                }}</Button>
+                                <Button 
+                                    v-else
+                                    class="grey large flex-grow" 
+                                    disabled
+                                >{{
                                     t("lobby.multiplayer.custom.table.join")
                                 }}</Button>
                             </template>
@@ -132,6 +143,7 @@ import swordCross from "@iconify-icons/mdi/sword-cross";
 import Column from "primevue/column";
 import DataTable from "primevue/datatable";
 import { Ref, ref, shallowRef } from "vue";
+import { useRouter } from "vue-router";
 
 import BattlePreview from "@renderer/components/battle/BattlePreview.vue";
 import HostBattle from "@renderer/components/battle/HostBattle.vue";
@@ -146,8 +158,15 @@ import { OngoingBattle } from "@main/content/replays/replay";
 import { settingsStore } from "@renderer/store/settings.store";
 import { useTypedI18n } from "@renderer/i18n";
 import { DemoModel } from "$/sdfz-demo-parser";
+import { battleActions, battleStore } from "@renderer/store/battle.store";
+import { enginesStore } from "@renderer/store/engine.store";
+import { gameStore } from "@renderer/store/game.store";
+import { db } from "@renderer/store/db";
+import { GameModeID, Player } from "@main/game/battle/battle-types";
+import { me } from "@renderer/store/me.store";
 
 const { t } = useTypedI18n();
+const router = useRouter();
 
 // Format runtime as H:MM:SS
 function formatRuntime(ms: number): string {
@@ -184,6 +203,75 @@ const selectedBattle: Ref<BattleWithComputed | null> = shallowRef(null);
 // 5 games in progress (running) - mostly 8v8 full teams with spectators
 // 5 games not started - 8v8, 4v4, 1v1 with partial teams and spectators
 const battles = ref<BattleWithComputed[]>([
+    // ===== FIRST LOBBY - JOINABLE (Supreme Isthmus, 14 ready players) =====
+    {
+        title: "! 8v8 Supreme Isthmus - 14/16 Ready",
+        gameId: "battle-joinable",
+        engineVersion: "105.1.1-1547-g1234567",
+        gameVersion: "10.123",
+        mapSpringName: "Supreme Isthmus",
+        startTime: new Date(Date.now() - 2 * 60 * 1000), // 2 minutes ago
+        hasBots: 0,
+        preset: "team",
+        teams: [],
+        contenders: [
+            { name: "Player1", participantId: 1, allyTeamId: 0 } as DemoModel.Info.Player,
+            { name: "Player2", participantId: 2, allyTeamId: 0 } as DemoModel.Info.Player,
+            { name: "Player3", participantId: 3, allyTeamId: 0 } as DemoModel.Info.Player,
+            { name: "Player4", participantId: 4, allyTeamId: 0 } as DemoModel.Info.Player,
+            { name: "Player5", participantId: 5, allyTeamId: 0 } as DemoModel.Info.Player,
+            { name: "Player6", participantId: 6, allyTeamId: 0 } as DemoModel.Info.Player,
+            { name: "Player7", participantId: 7, allyTeamId: 0 } as DemoModel.Info.Player,
+            { name: "Player8", participantId: 8, allyTeamId: 0 } as DemoModel.Info.Player,
+            { name: "Player9", participantId: 9, allyTeamId: 1 } as DemoModel.Info.Player,
+            { name: "Player10", participantId: 10, allyTeamId: 1 } as DemoModel.Info.Player,
+            { name: "Player11", participantId: 11, allyTeamId: 1 } as DemoModel.Info.Player,
+            { name: "Player12", participantId: 12, allyTeamId: 1 } as DemoModel.Info.Player,
+            { name: "Player13", participantId: 13, allyTeamId: 1 } as DemoModel.Info.Player,
+            { name: "Player14", participantId: 14, allyTeamId: 1 } as DemoModel.Info.Player,
+        ],
+        spectators: [
+            { name: "VeryLongPlayerNameThatExceedsTheContainerWidth", participantId: 17 } as DemoModel.Info.Spectator,
+        ],
+        script: "",
+        battleSettings: {},
+        hostSettings: {},
+        gameSettings: {},
+        mapSettings: {},
+        battleOptions: {
+            title: "! 8v8 Supreme Isthmus - 14/16 Ready",
+            map: "Supreme Isthmus",
+        },
+        primaryFactor: "14/16 Players",
+        runtimeMs: { value: 0 },
+        players: {
+            value: [
+                { name: "Player1", participantId: 1, allyTeamId: 0 } as DemoModel.Info.Player,
+                { name: "Player2", participantId: 2, allyTeamId: 0 } as DemoModel.Info.Player,
+                { name: "Player3", participantId: 3, allyTeamId: 0 } as DemoModel.Info.Player,
+                { name: "Player4", participantId: 4, allyTeamId: 0 } as DemoModel.Info.Player,
+                { name: "Player5", participantId: 5, allyTeamId: 0 } as DemoModel.Info.Player,
+                { name: "Player6", participantId: 6, allyTeamId: 0 } as DemoModel.Info.Player,
+                { name: "Player7", participantId: 7, allyTeamId: 0 } as DemoModel.Info.Player,
+                { name: "Player8", participantId: 8, allyTeamId: 0 } as DemoModel.Info.Player,
+                { name: "Player9", participantId: 9, allyTeamId: 1 } as DemoModel.Info.Player,
+                { name: "Player10", participantId: 10, allyTeamId: 1 } as DemoModel.Info.Player,
+                { name: "Player11", participantId: 11, allyTeamId: 1 } as DemoModel.Info.Player,
+                { name: "Player12", participantId: 12, allyTeamId: 1 } as DemoModel.Info.Player,
+                { name: "Player13", participantId: 13, allyTeamId: 1 } as DemoModel.Info.Player,
+                { name: "Player14", participantId: 14, allyTeamId: 1 } as DemoModel.Info.Player,
+            ],
+        },
+        spectators: {
+            value: [
+                { name: "VeryLongPlayerNameThatExceedsTheContainerWidth", participantId: 17 } as DemoModel.Info.Spectator,
+            ],
+        },
+        bots: [],
+        isLockedOrPassworded: { value: false },
+        playerCount: { value: 14 },
+        score: 95,
+    },
     // ===== GAMES IN PROGRESS (Running) =====
     {
         title: "Competitive 8v8 Tournament Match",
@@ -848,8 +936,213 @@ const battles = ref<BattleWithComputed[]>([
     },
 ]);
 
-function attemptJoinBattle(battle: OngoingBattle | BattleWithComputed) {
+function isJoinableBattle(battle: OngoingBattle | BattleWithComputed): boolean {
+    // Only the first battle (index 0) is joinable
+    return battles.value[0]?.gameId === (battle as BattleWithComputed).gameId;
+}
+
+async function attemptJoinBattle(battle: OngoingBattle | BattleWithComputed) {
+    // Only allow joining the first battle
+    if (!isJoinableBattle(battle)) {
+        console.warn("This battle is not joinable");
+        return;
+    }
+    
     console.log("Joining battle", battle);
+    
+    // Get the map from the database
+    let map: MapData | undefined;
+    if (battle.mapSpringName) {
+        map = await db.maps.get(battle.mapSpringName);
+        // If not found by springName, try displayName
+        if (!map && battle.battleOptions?.map) {
+            map = await db.maps.where("displayName").equals(battle.battleOptions.map).first();
+        }
+    }
+    
+    if (!map) {
+        console.error("Could not find map for battle:", battle.mapSpringName);
+        return;
+    }
+    
+    // Set up the battle store with the lobby's data
+    battleStore.isOnline = true;
+    battleStore.battleOptions.map = map;
+    battleStore.battleOptions.gameVersion = battle.gameVersion;
+    battleStore.battleOptions.engineVersion = battle.engineVersion;
+    
+    // Ensure game mode is set (default to CLASSIC/Teams if not specified)
+    if (!battleStore.battleOptions.gameMode) {
+        await battleActions.loadGameMode(GameModeID.CLASSIC);
+    }
+    
+    // Set title AFTER loadGameMode to ensure it doesn't get overwritten
+    battleStore.title = battle.battleOptions?.title || battle.title || "Multiplayer Lobby";
+    
+    // Save the title before resetting battle (resetToDefaultBattle will overwrite it)
+    const lobbyTitle = battle.battleOptions?.title || battle.title || "Multiplayer Lobby";
+    
+    // Reset teams based on the map
+    try {
+        battleActions.resetToDefaultBattle(
+            battle.engineVersion ? enginesStore.availableEngineVersions.find(e => e.id === battle.engineVersion) : enginesStore.selectedEngineVersion,
+            gameStore.availableGameVersions.get(battle.gameVersion) || gameStore.selectedGameVersion,
+            map
+        );
+    } catch (error) {
+        console.error("Error resetting battle:", error);
+    }
+    
+    // Restore the lobby title after reset
+    battleStore.title = lobbyTitle;
+    
+    // Populate placeholder players from the battle data
+    const battleWithComputed = battle as BattleWithComputed;
+    if (battleWithComputed.players?.value) {
+        // Clear existing teams
+        battleStore.teams = [];
+        
+        // Create teams based on allyTeamIds
+        const teamMap = new Map<number, number>(); // allyTeamId -> team index
+        let teamIndex = 0;
+        
+        for (const playerInfo of battleWithComputed.players.value) {
+            const allyTeamId = playerInfo.allyTeamId ?? 0;
+            
+            if (!teamMap.has(allyTeamId)) {
+                teamMap.set(allyTeamId, teamIndex);
+                battleActions.addTeam();
+                teamIndex++;
+            }
+        }
+        
+        // Add players to teams
+        for (const playerInfo of battleWithComputed.players.value) {
+            const allyTeamId = playerInfo.allyTeamId ?? 0;
+            const teamIdx = teamMap.get(allyTeamId) ?? 0;
+            
+            // Simulate random rank (1-6) and chevron level (1-5) for variety
+            // Limited to ranks 1-6 to match available rank images
+            const simulatedRank = Math.floor(Math.random() * 6) + 1;
+            const simulatedChevron = Math.floor(Math.random() * 5) + 1;
+            // Use player index to generate varied but deterministic skill levels for performance
+            const skillLevels = [15, 18, 22, 12, 25, 16, 20, 14, 28, 17, 19, 13, 24, 16, 21, 30, 15, 23, 11, 17];
+            const simulatedSkillLevel = skillLevels[playerInfo.participantId % skillLevels.length];
+            
+            // Create a placeholder User object
+            const placeholderUser = {
+                userId: `placeholder-${playerInfo.participantId}`,
+                username: playerInfo.name,
+                displayName: playerInfo.name,
+                clanId: null,
+                partyId: null,
+                countryCode: "US",
+                status: "lobby" as const,
+                rank: simulatedRank,
+                chevronLevel: simulatedChevron,
+                skillLevel: simulatedSkillLevel,
+                battleRoomState: {
+                    isSpectator: false,
+                    isReady: true, // All placeholder players are ready
+                    teamId: teamIdx,
+                },
+            };
+            
+            // Create Player object
+            const player: Player = {
+                id: playerInfo.participantId,
+                name: playerInfo.name,
+                user: placeholderUser,
+                contentSyncState: {
+                    engine: 1,
+                    game: 1,
+                    map: 1,
+                },
+                inGame: false,
+            };
+            
+            // Add to appropriate team
+            if (battleStore.teams[teamIdx]) {
+                battleStore.teams[teamIdx].participants.push(player);
+            }
+        }
+        
+        // Add spectators if any
+        if (battleWithComputed.spectators?.value) {
+            for (const specInfo of battleWithComputed.spectators.value) {
+                // Simulate random rank and chevron for spectators too
+                // Limited to ranks 1-6 to match available rank images
+                const simulatedRank = Math.floor(Math.random() * 6) + 1;
+                const simulatedChevron = Math.floor(Math.random() * 5) + 1;
+                // Use participant ID to generate varied but deterministic skill levels for performance
+                const skillLevels = [15, 18, 22, 12, 25, 16, 20, 14, 28, 17, 19, 13, 24, 16, 21, 30, 15, 23, 11, 17];
+                const simulatedSkillLevel = skillLevels[specInfo.participantId % skillLevels.length];
+                
+                const placeholderUser = {
+                    userId: `placeholder-spec-${specInfo.participantId}`,
+                    username: specInfo.name,
+                    displayName: specInfo.name,
+                    clanId: null,
+                    partyId: null,
+                    countryCode: "US",
+                    status: "lobby" as const,
+                    rank: simulatedRank,
+                    chevronLevel: simulatedChevron,
+                    skillLevel: simulatedSkillLevel,
+                    battleRoomState: {
+                        isSpectator: true,
+                        isReady: false,
+                    },
+                };
+                
+                const spectator: Player = {
+                    id: specInfo.participantId,
+                    name: specInfo.name,
+                    user: placeholderUser,
+                    contentSyncState: {
+                        engine: 1,
+                        game: 1,
+                        map: 1,
+                    },
+                    inGame: false,
+                };
+                
+                battleStore.spectators.push(spectator);
+            }
+        }
+        
+        // Add current player to spectators initially
+        if (battleStore.me) {
+            // Ensure the current user has a rank and skill level (default values for testing)
+            if (!battleStore.me.user.rank) {
+                battleStore.me.user.rank = 3;
+            }
+            if (battleStore.me.user.skillLevel === undefined) {
+                // Set a skill level around average (17)
+                battleStore.me.user.skillLevel = 17;
+            }
+            // Remove from any team first
+            for (const team of battleStore.teams) {
+                const index = team.participants.findIndex(p => 
+                    'user' in p && p.user.userId === battleStore.me?.user.userId
+                );
+                if (index !== -1) {
+                    team.participants.splice(index, 1);
+                }
+            }
+            // Add to spectators
+            const spectatorIndex = battleStore.spectators.findIndex(p => 
+                'user' in p && p.user.userId === battleStore.me?.user.userId
+            );
+            if (spectatorIndex === -1) {
+                battleActions.movePlayerToSpectators(battleStore.me);
+                me.battleRoomState.isSpectator = true;
+            }
+        }
+    }
+    
+    // Navigate to the multiplayer lobby
+    router.push("/play/multiplayerLobby");
 }
 
 function getRowClass(data: BattleWithComputed) {
@@ -905,7 +1198,7 @@ function getRowClass(data: BattleWithComputed) {
     .lobby-waiting {
         // Normal white background for waiting games (no tint)
         &:hover {
-            background-color: rgba(255, 255, 255, 0.05) !important;
+            background-color: rgba(255, 255, 255, 0.2) !important;
         }
     }
 }

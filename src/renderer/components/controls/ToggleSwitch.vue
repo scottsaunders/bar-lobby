@@ -27,39 +27,42 @@ function onClick() {
 <style lang="scss" scoped>
 .toggle-switch {
     position: relative;
-    width: 44px;
-    height: 24px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
+    width: 3rem;
+    height: 32px;
     cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
     
-    &:hover {
-        background-color: rgba(255, 255, 255, 0.15);
-        border-color: rgba(255, 255, 255, 0.3);
+    .toggle-slider {
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+        position: relative;
+        
+        &:before {
+            content: "";
+            position: absolute;
+            background: #ffffff;
+            width: 1.25rem;
+            height: 1.25rem;
+            left: 0.25rem;
+            top: 50%;
+            margin-top: -0.625rem;
+            border-radius: 2px;
+            transition-duration: 0.2s;
+        }
     }
     
     &.on {
-        background-color: rgba(34, 197, 94, 0.6);
-        border-color: rgba(34, 197, 94, 0.8);
-        
         .toggle-slider {
-            transform: translateX(20px);
+            background: #22c55e;
+            
+            &:before {
+                transform: translateX(1.25rem);
+            }
         }
     }
-}
-
-.toggle-slider {
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 18px;
-    height: 18px;
-    background-color: #fff;
-    border-radius: 50%;
-    transition: transform 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 </style>
 

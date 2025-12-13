@@ -20,9 +20,10 @@ SPDX-License-Identifier: MIT
             :class="{
                 'download-button--small': !isLarge,
                 'download-button--large': isLarge,
-                'download-button--ready': ready,
-                'download-button--downloading': isDownloading,
-                'download-button--default': !ready && !isDownloading
+                'download-button--ready': ready && !disabled,
+                'download-button--downloading': isDownloading && !disabled,
+                'download-button--default': !ready && !isDownloading && !disabled,
+                'download-button--disabled': disabled
             }"
         >
             <!-- Progress bar overlay during download -->
@@ -81,7 +82,8 @@ export interface Props extends /* @vue-ignore */ ButtonProps {
     games?: string[];
     downloadText?: string;
 }
-const { maps = [], engines = [], games = [], downloadText } = defineProps<Props>();
+const props = defineProps<Props>();
+const { maps = [], engines = [], games = [], downloadText, disabled } = props;
 
 const isDownloading = ref(false);
 
@@ -304,6 +306,30 @@ async function beginDownload(maps?: string[], engines?: string[], games?: string
     &--ready:active {
         box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
         transform: translateY(1px);
+    }
+    
+    // Disabled state styling - match Button component's disabled style
+    // Must override all state variants (ready, downloading, default)
+    &--disabled {
+        background-color: rgba(128, 128, 128, 0.3) !important;
+        border-color: rgba(128, 128, 128, 0.2) !important;
+        box-shadow: none !important;
+        
+        // Override ready state hover when disabled
+        &.download-button--ready:hover {
+            background-color: rgba(128, 128, 128, 0.3) !important;
+            box-shadow: none !important;
+        }
+        
+        // Override default state hover when disabled
+        &.download-button--default:hover {
+            background-color: rgba(128, 128, 128, 0.3) !important;
+            box-shadow: none !important;
+        }
+        
+        .download-button__clickable {
+            cursor: not-allowed;
+        }
     }
 }
 

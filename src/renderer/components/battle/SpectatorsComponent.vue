@@ -8,12 +8,11 @@ SPDX-License-Identifier: MIT
     <div key="spectators" class="group" data-type="group" @dragenter.prevent="onDragEnter($event)" @dragover.prevent @drop="onDrop($event)">
         <div class="flex-row flex-center-items gap-md">
             <div class="title subtitle-1">{{ title }}</div>
-            <div v-if="memberCount > 0" class="member-count body-2">
-                {{ t("lobby.components.battle.spectatorsComponent.memberCount", memberCount) }}
+            <div class="flex-grow"></div>
+            <div v-if="memberCount > 0" class="member-count flex-row flex-center-items gap-xs">
+                <Icon :icon="personIcon" height="16" />
+                <span class="body-2">{{ memberCount }}</span>
             </div>
-            <Button v-if="showJoin" class="slim black" @click="onJoinClicked()">
-                {{ t("lobby.components.battle.spectatorsComponent.join") }}
-            </Button>
         </div>
         <div class="participants">
             <div
@@ -31,31 +30,23 @@ SPDX-License-Identifier: MIT
 
 <script lang="ts" setup>
 import { computed } from "vue";
+import { Icon } from "@iconify/vue";
+import personIcon from "@iconify-icons/mdi/person-multiple";
 import { useTypedI18n } from "@renderer/i18n";
 
 import SpectatorParticipant from "@renderer/components/battle/SpectatorParticipant.vue";
-import Button from "@renderer/components/controls/Button.vue";
 import { battleWithMetadataStore } from "@renderer/store/battle.store";
 import { Player } from "@main/game/battle/battle-types";
-import { me } from "@renderer/store/me.store";
 
 const { t } = useTypedI18n();
 
 const title = t("lobby.components.battle.spectatorsComponent.spectators");
 
-const showJoin = computed(() => {
-    return me.battleRoomState.isSpectator === false;
-});
-
 const memberCount = computed(() => {
     return battleWithMetadataStore.spectators.length;
 });
 
-const emit = defineEmits(["onJoinClicked", "onDragStart", "onDragEnd", "onDragEnter", "onDrop"]);
-
-function onJoinClicked() {
-    emit("onJoinClicked");
-}
+const emit = defineEmits(["onDragStart", "onDragEnd", "onDragEnter", "onDrop"]);
 
 // TODO probably need to emit with a isSpectator flag
 function onDragStart(event: DragEvent, member: Player) {
@@ -82,6 +73,9 @@ function onDrop(event: DragEvent) {
     min-height: 100px;
     padding: map-get($spacing, "sm");
     position: relative;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
     &.highlight {
         &:before {
             @extend .fullsize;
@@ -107,19 +101,14 @@ function onDrop(event: DragEvent) {
     // Typography handled by subtitle-1 class
 }
 .member-count {
-    display: inline-block;
-    opacity: 0.5;
-    vertical-align: middle;
+    display: flex;
+    align-items: center;
+    opacity: 0.8;
 }
 .participants {
     display: flex;
     flex-direction: column;
     gap: map-get($spacing, "xs");
-    flex-wrap: wrap;
     margin-top: map-get($spacing, "xs");
-    .spectators & {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-    }
 }
 </style>

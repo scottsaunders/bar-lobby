@@ -20,6 +20,11 @@ export type User = {
         isReady?: boolean;
         teamId?: number;
     };
+    
+    // Optional player stats
+    rank?: number; // Skill rank (e.g., 1-6)
+    chevronLevel?: number; // Chevron level (e.g., 1-5)
+    skillLevel?: number; // Skill level (average 17, top 5% = 30)
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

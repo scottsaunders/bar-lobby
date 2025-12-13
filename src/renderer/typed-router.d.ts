@@ -39,6 +39,7 @@ declare module 'vue-router/auto-routes' {
     '/play/customLobbies': RouteRecordInfo<'/play/customLobbies', '/play/customLobbies', Record<never, never>, Record<never, never>>,
     '/play/matchmaking': RouteRecordInfo<'/play/matchmaking', '/play/matchmaking', Record<never, never>, Record<never, never>>,
     '/play/menu': RouteRecordInfo<'/play/menu', '/play/menu', Record<never, never>, Record<never, never>>,
+    '/play/multiplayerLobby': RouteRecordInfo<'/play/multiplayerLobby', '/play/multiplayerLobby', Record<never, never>, Record<never, never>>,
     '/play/scenarios': RouteRecordInfo<'/play/scenarios', '/play/scenarios', Record<never, never>, Record<never, never>>,
     '/play/skirmishVsAi': RouteRecordInfo<'/play/skirmishVsAi', '/play/skirmishVsAi', Record<never, never>, Record<never, never>>,
     '/play/tournaments': RouteRecordInfo<'/play/tournaments', '/play/tournaments', Record<never, never>, Record<never, never>>,

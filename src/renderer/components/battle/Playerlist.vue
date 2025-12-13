@@ -15,7 +15,53 @@ SPDX-License-Identifier: MIT
         @bot-selected="onBotSelected"
     />
     <div class="scroll-container padding-right-sm">
-        <div class="playerlist" :class="{ dragging: draggedBot || draggedPlayer, 'team-mode': isTeamMode }">
+        <!-- Multiplayer layout: 3-column grid with teams, toggle, join queue, and spectators -->
+        <div v-if="showJoinQueue || showPlayingToggle" class="playerlist-layout" :class="{ dragging: draggedBot || draggedPlayer, 'team-mode': isTeamMode }">
+            <!-- Teams grid (takes up 2 columns, tiles in 2-column grid) -->
+            <div class="teams-grid">
+                <TeamComponent
+                    v-for="(teamId) in orderedTeamIds"
+                    :key="teamId"
+                    :teamId="teamId"
+                    @add-bot-clicked="openBotList"
+                    @on-join-clicked="joinTeam"
+                    @on-drag-start="dragStart"
+                    @on-drag-end="dragEnd"
+                    @on-drag-enter="dragEnterTeam"
+                    @on-drop="onDropTeam"
+                />
+            </div>
+            <!-- Third column: Toggle, Join Queue, and Spectators -->
+            <div class="queue-spectators-column">
+                <template v-if="showPlayingToggle">
+                    <div class="playing-toggle-wrapper" :class="{ 'playing-active': isPlaying }">
+                        <Options 
+                            :modelValue="isPlaying ? 'Playing' : 'Spectating'" 
+                            :options="['Playing', 'Spectating']"
+                            @update:modelValue="(value: string) => onPlayingToggle(value === 'Playing')"
+                        />
+                    </div>
+                </template>
+                <template v-if="showJoinQueue">
+                    <div class="playerlist">
+                        <JoinQueueComponent />
+                    </div>
+                </template>
+                <template v-if="!hideSpectators">
+                    <div class="playerlist">
+                        <SpectatorsComponent
+                            class="spectators"
+                            @on-drag-start="dragStart"
+                            @on-drag-end="dragEnd"
+                            @on-drag-enter="dragEnterSpectators"
+                            @on-drop="onDropSpectators"
+                        />
+                    </div>
+                </template>
+            </div>
+        </div>
+        <!-- Original layout: Single column/grid for teams (used in skirmish) -->
+        <div v-else class="playerlist" :class="{ dragging: draggedBot || draggedPlayer, 'team-mode': isTeamMode }">
             <TeamComponent
                 v-for="(teamId) in orderedTeamIds"
                 :key="teamId"
@@ -27,20 +73,17 @@ SPDX-License-Identifier: MIT
                 @on-drag-enter="dragEnterTeam"
                 @on-drop="onDropTeam"
             />
-        </div>
-        <template v-if="!hideSpectators">
-            <hr class="margin-top-sm margin-bottom-sm" />
-            <div class="playerlist" :class="{ dragging: draggedBot || draggedPlayer }">
+            <template v-if="!hideSpectators">
+                <hr class="margin-top-sm margin-bottom-sm" />
                 <SpectatorsComponent
                     class="spectators"
-                    @on-join-clicked="joinSpectators"
                     @on-drag-start="dragStart"
                     @on-drag-end="dragEnd"
                     @on-drag-enter="dragEnterSpectators"
                     @on-drop="onDropSpectators"
                 />
-            </div>
-        </template>
+            </template>
+        </div>
     </div>
 </template>
 
@@ -49,20 +92,37 @@ import { Ref, ref, computed } from "vue";
 import { useTypedI18n } from "@renderer/i18n";
 
 import AddBotModal from "@renderer/components/battle/AddBotModal.vue";
+import Options from "@renderer/components/controls/Options.vue";
 import TeamComponent from "@renderer/components/battle/TeamComponent.vue";
 import { EngineAI } from "@main/content/engine/engine-version";
 import { Bot, isBot, isRaptor, isScavenger, Player, GameModeID } from "@main/game/battle/battle-types";
 import { battleWithMetadataStore, battleStore, battleActions } from "@renderer/store/battle.store";
 import SpectatorsComponent from "@renderer/components/battle/SpectatorsComponent.vue";
+import JoinQueueComponent from "@renderer/components/battle/JoinQueueComponent.vue";
 import { GameAI } from "@main/content/game/game-version";
 
 const props = withDefaults(defineProps<{
     isTeamMode?: boolean;
     hideSpectators?: boolean;
+    showJoinQueue?: boolean;
+    showPlayingToggle?: boolean;
+    isPlaying?: boolean;
 }>(), {
     isTeamMode: true,
     hideSpectators: false,
+    showJoinQueue: false,
+    showPlayingToggle: false,
+    isPlaying: false,
 });
+
+const emit = defineEmits<{
+    (event: "playingToggle", value: boolean): void;
+    (event: "onJoinClicked"): void;
+    (event: "onDragStart", event: DragEvent, member: Player | Bot): void;
+    (event: "onDragEnd"): void;
+    (event: "onDragEnter", event: DragEvent): void;
+    (event: "onDrop", event: DragEvent): void;
+}>();
 
 const { t } = useTypedI18n();
 
@@ -228,22 +288,92 @@ function onDropSpectators(event: DragEvent) {
     }
     battleActions.movePlayerToSpectators(draggedPlayer.value);
 }
+
+function onPlayingToggle(value: boolean) {
+    emit("playingToggle", value);
+}
 </script>
 
 <style lang="scss" scoped>
 @use "@renderer/styles/spacing" as *;
+
+.playerlist-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr 210px;
+    gap: map-get($spacing, "md");
+    align-items: start;
+    
+    &.dragging .group > * {
+        pointer-events: none;
+    }
+}
+
+.teams-grid {
+    grid-column: 1 / 3;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: max-content;
+    gap: map-get($spacing, "sm");
+    
+    &.dragging .group > * {
+        pointer-events: none;
+    }
+}
 
 .playerlist {
     display: grid;
     grid-template-columns: 1fr;
     grid-auto-rows: max-content;
     gap: map-get($spacing, "sm");
+    
     &.dragging .group > * {
         pointer-events: none;
     }
+    
     &.team-mode {
-        grid-template-columns: repeat(2, 1fr);
+        // Teams tile in 2-column grid for skirmish (original layout)
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: map-get($spacing, "md");
+    }
+}
+
+.queue-spectators-column {
+    grid-column: 3;
+    display: flex;
+    flex-direction: column;
+}
+
+.playing-toggle-wrapper {
+    padding-bottom: map-get($spacing, "sm");
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    
+    :deep(.options) {
+        width: 100%;
+    }
+    
+    :deep(.p-selectbutton) {
+        width: 100%;
+        
+        .p-button {
+            padding: map-get($spacing, "sm") map-get($spacing, "md");
+        }
+    }
+    
+    &.playing-active {
+        :deep(.p-selectbutton) {
+            .p-highlight {
+                background: rgba(37, 99, 235, 0.2);
+                border-color: rgba(37, 99, 235, 0.4);
+                
+                &:hover {
+                    background: rgba(37, 99, 235, 0.3);
+                }
+            }
+        }
     }
 }
 </style>

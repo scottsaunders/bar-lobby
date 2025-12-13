@@ -5,19 +5,40 @@ SPDX-License-Identifier: MIT
 -->
 
 <template>
-    <TeamParticipant @contextmenu="onRightClick">
-        <div>
-            <Flag class="flag" :countryCode="player.user.countryCode" />
-        </div>
-        <div>{{ player.user.username }}</div>
-    </TeamParticipant>
+    <div @contextmenu="onRightClick" class="player-participant-wrapper" :class="{ 'current-user': isCurrentUser }">
+        <TeamParticipant>
+            <div>
+                <Flag class="flag" :countryCode="player.user.countryCode" />
+            </div>
+            <div class="flex-row flex-center-items gap-xs player-name-container">
+                <!-- In multiplayer lobby, show rank image and skill number -->
+                <img 
+                    v-if="isMultiplayerLobby" 
+                    :src="rankImageUrl" 
+                    :alt="`Rank ${effectiveRank}`"
+                    :title="`Rank ${effectiveRank}`"
+                    class="rank-icon"
+                />
+                <span v-if="isMultiplayerLobby" class="skill-level">
+                    {{ player.user.skillLevel ?? 17 }}
+                </span>
+                <span 
+                    class="player-name" 
+                    :title="player.user.username"
+                >
+                    {{ player.user.username }}
+                </span>
+            </div>
+        </TeamParticipant>
+    </div>
     <ContextMenu ref="menu" :model="actions" />
 </template>
 
 <script lang="ts" setup>
 import { delay } from "$/jaz-ts-utils/delay";
-import { inject, Ref, ref } from "vue";
+import { computed, inject, Ref, ref } from "vue";
 import { useTypedI18n } from "@renderer/i18n";
+import { useRoute } from "vue-router";
 
 import TeamParticipant from "@renderer/components/battle/TeamParticipant.vue";
 import ContextMenu from "@renderer/components/common/ContextMenu.vue";
@@ -29,10 +50,30 @@ import { me } from "@renderer/store/me.store";
 const { t } = useTypedI18n();
 
 const router = useRouter();
+const route = useRoute();
 
 const props = defineProps<{
     player: Player;
 }>();
+
+const isMultiplayerLobby = computed(() => {
+    return route.path.includes('/multiplayerLobby');
+});
+
+const effectiveRank = computed(() => {
+    // Default to rank 1 if not set, clamp to valid range 1-6
+    const rank = props.player.user.rank || 1;
+    return Math.min(Math.max(1, rank), 6);
+});
+
+const rankImageUrl = computed(() => {
+    const rank = effectiveRank.value;
+    return new URL(`/src/renderer/assets/images/icons/ranks/${rank}.png`, import.meta.url).href;
+});
+
+const isCurrentUser = computed(() => {
+    return props.player.user.userId === me.userId;
+});
 
 const menu = ref<InstanceType<typeof ContextMenu>>();
 
@@ -110,4 +151,54 @@ async function addFriend() {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@use "@renderer/styles/spacing" as *;
+
+.player-participant-wrapper {
+    width: 100%;
+    
+    &.current-user {
+        :deep(.participant) {
+            background: rgba(37, 99, 235, 0.15);
+            border-color: rgba(37, 99, 235, 0.3);
+        }
+    }
+}
+
+:deep(.participant) {
+    width: 100% !important;
+    box-sizing: border-box;
+}
+
+.player-name-container {
+    flex-wrap: nowrap;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.rank-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+.skill-level {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    padding: 0 4px;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.player-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+</style>

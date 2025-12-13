@@ -5,23 +5,38 @@ SPDX-License-Identifier: MIT
 -->
 
 <template>
-    <div @contextmenu="onRightClick" class="player-participant-wrapper">
+    <div @contextmenu="onRightClick" class="player-participant-wrapper" :class="{ 'current-user': isCurrentUser }">
         <TeamParticipant>
             <div>
                 <Flag class="flag" :countryCode="player.user.countryCode" />
             </div>
-            <div>{{ displayName }}</div>
+            <div class="flex-row flex-center-items gap-xs">
+                <!-- In multiplayer lobby, always show rank image (default to rank 1 if not set) -->
+                <img 
+                    v-if="isMultiplayerLobby" 
+                    :src="rankImageUrl" 
+                    :alt="`Rank ${effectiveRank}`"
+                    :title="`Rank ${effectiveRank}`"
+                    class="rank-icon"
+                />
+                <!-- Show skill level next to rank in multiplayer lobby -->
+                <span v-if="isMultiplayerLobby" class="skill-level">
+                    {{ player.user.skillLevel ?? 17 }}
+                </span>
+                <span>{{ displayName }}</span>
+            </div>
             <div class="flex-row flex-right flex-center">
                 <div class="flex-row flex-center gap-sm">
-                    <!-- <div
-                        v-if="player.battleStatus.teamId > 0 && isSpadsBattle(battle)"
-                        class="ready"
-                        :class="{ isReady: player.battleStatus.ready }"
-                    >
-                        ⬤
-                    </div> -->
-                    <Icon v-if="isSynced" :icon="checkBold" :height="16" color="#0f0" />
-                    <Icon v-else :icon="cloudDownload" :height="16" color="#f00" />
+                    <!-- Show ready status only in multiplayer lobby -->
+                    <template v-if="isMultiplayerLobby && player.user.battleRoomState?.teamId !== undefined && player.user.battleRoomState?.teamId !== null">
+                        <Icon v-if="isReady" :icon="checkBold" :height="16" color="#0f0" />
+                        <Icon v-else :icon="closeThick" :height="16" color="#f00" />
+                    </template>
+                    <!-- Show sync status otherwise (skirmish and other views) -->
+                    <template v-else>
+                        <Icon v-if="isSynced" :icon="checkBold" :height="16" color="#0f0" />
+                        <Icon v-else :icon="cloudDownload" :height="16" color="#f00" />
+                    </template>
                 </div>
             </div>
             <button class="menu-button" @click.stop="onMenuClick" title="Menu">
@@ -37,6 +52,7 @@ SPDX-License-Identifier: MIT
 import { Icon } from "@iconify/vue";
 import checkBold from "@iconify-icons/mdi/check-bold";
 import cloudDownload from "@iconify-icons/mdi/cloud-download";
+import closeThick from "@iconify-icons/mdi/close-thick";
 import dotsVerticalIcon from "@iconify-icons/mdi/dots-vertical";
 import { delay } from "$/jaz-ts-utils/delay";
 import { computed, inject, Ref, ref } from "vue";
@@ -63,6 +79,29 @@ const isSynced = computed(() => {
     const syncStatus = props.player.contentSyncState;
     if (!syncStatus) return false;
     return syncStatus.engine === 1 && syncStatus.game === 1 && syncStatus.map === 1;
+});
+
+const isReady = computed(() => {
+    return props.player.user.battleRoomState?.isReady ?? false;
+});
+
+const isMultiplayerLobby = computed(() => {
+    return route.path.includes('/multiplayerLobby');
+});
+
+const effectiveRank = computed(() => {
+    // Default to rank 1 if not set, clamp to valid range 1-6
+    const rank = props.player.user.rank || 1;
+    return Math.min(Math.max(1, rank), 6);
+});
+
+const isCurrentUser = computed(() => {
+    return props.player.user.userId === me.userId;
+});
+
+const rankImageUrl = computed(() => {
+    const rank = effectiveRank.value;
+    return new URL(`/src/renderer/assets/images/icons/ranks/${rank}.png`, import.meta.url).href;
 });
 
 const bonus = computed(() => battleActions.getParticipantBonus(props.player));
@@ -182,6 +221,13 @@ function onBonusSave(bonus: number) {
 
 .player-participant-wrapper {
     width: 100%;
+    
+    &.current-user {
+        :deep(.participant) {
+            background: rgba(37, 99, 235, 0.15);
+            border-color: rgba(37, 99, 235, 0.3);
+        }
+    }
 }
 
 .flag {
@@ -194,6 +240,20 @@ function onBonusSave(bonus: number) {
     &.isReady {
         color: rgb(121, 226, 0);
     }
+}
+
+.rank-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+.skill-level {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    padding: 0 4px;
 }
 
 .menu-button {
