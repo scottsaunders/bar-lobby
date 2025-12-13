@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT
 -->
 
 <template>
-    <Checkbox v-model="fixedPositionsOnly" label="Fixed Positions" fill />
+    <Checkbox v-model="fixedPositionsOnly" label="Has fixed positions" fill />
 </template>
 
 <script setup lang="ts">
