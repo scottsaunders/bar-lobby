@@ -34,14 +34,11 @@ SPDX-License-Identifier: MIT
             <div class="view-container" :class="{ 'translated-right': battleStore.isLobbyOpened }" v-else>
                 <RouterView v-slot="{ Component, route }">
                     <template v-if="Component">
+                        <!-- KeepAlive caches component instances by route path -->
+                        <!-- Increased max to 15 to cache more views -->
                         <Transition v-bind="route.meta.transition" mode="out-in">
-                            <KeepAlive>
-                                <Suspense timeout="0">
-                                    <component :is="Component" />
-                                    <template #fallback>
-                                        <Loader />
-                                    </template>
-                                </Suspense>
+                            <KeepAlive :max="15">
+                                <component :is="Component" :key="route.path" />
                             </KeepAlive>
                         </Transition>
                     </template>
@@ -65,7 +62,6 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 import StickyBattle from "@renderer/components/battle/StickyBattle.vue";
-import Loader from "@renderer/components/common/Loader.vue";
 import Background from "@renderer/components/misc/Background.vue";
 import DebugSidebar from "@renderer/components/misc/DebugSidebar.vue";
 import Error from "@renderer/components/misc/Error.vue";

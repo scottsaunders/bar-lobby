@@ -23,18 +23,12 @@ SPDX-License-Identifier: MIT
                     <div class="panel-content flex-col fullheight">
                         <div class="panel-body flex-grow padding-left-xxl padding-right-xxl padding-top-xxl padding-bottom-xxl flex-col gap-md">
                         <div class="map-selector-row flex-row gap-md">
-                            <Select
-                                :modelValue="battleStore.battleOptions.map"
-                                :options="mapListOptions"
-                                data-key="springName"
-                                label="Map"
-                                optionLabel="springName"
-                                :filter="true"
-                                class="map-selector-dropdown"
-                                @update:model-value="onMapSelected"
-                            />
-                            <Button v-tooltip.left="'Open map selector'" @click="openMapList">
-                                <Icon :icon="listIcon" height="23" />
+                            <!-- Map selector button - opens modal instead of loading all maps -->
+                            <Button class="map-selector-button flex-grow" @click="openMapList">
+                                <div class="flex-row flex-center-items gap-sm fullwidth">
+                                    <span class="body-1">{{ battleStore.battleOptions.map?.displayName || battleStore.battleOptions.map?.springName || 'Select Map' }}</span>
+                                    <Icon :icon="listIcon" height="20" />
+                                </div>
                             </Button>
                             <MapListModal
                                 v-model="mapListOpen"
@@ -196,7 +190,7 @@ import Button from "@renderer/components/controls/Button.vue";
 import { db } from "@renderer/store/db";
 import listIcon from "@iconify-icons/mdi/format-list-bulleted";
 import cogIcon from "@iconify-icons/mdi/cog";
-import { useDexieLiveQuery, useDexieLiveQueryWithDeps } from "@renderer/composables/useDexieLiveQuery";
+import { useDexieLiveQueryWithDeps } from "@renderer/composables/useDexieLiveQuery";
 import MapBattlePreview from "@renderer/components/maps/MapBattlePreview.vue";
 import { MapData } from "@main/content/maps/map-data";
 import { settingsStore } from "@renderer/store/settings.store";
@@ -217,7 +211,9 @@ const { t } = useTypedI18n();
 
 const mapListOpen = ref(false);
 const mapOptionsOpen = ref(false);
-const mapListOptions = useDexieLiveQuery(() => db.maps.toArray());
+// Removed: mapListOptions = useDexieLiveQuery(() => db.maps.toArray()) 
+// This was loading ALL maps into memory on component mount - extremely slow!
+// Now using MapListModal which has pagination/infinite scroll
 const gameListOptions = computed(() => {
     return Array.from(gameStore.availableGameVersions.values());
 });
@@ -588,10 +584,11 @@ onMounted(async () => {
     flex-shrink: 0;
 }
 
-.map-selector-dropdown {
+.map-selector-button {
     flex: 1; // Take up remaining space
     min-width: 0; // Allow shrinking
-    width: 100%; // Fill width
+    justify-content: flex-start;
+    text-align: left;
 }
 
 .map-features-container {

@@ -48,10 +48,16 @@ const connecting = ref(false);
 const error = ref<string>();
 
 const hasCredentials = ref(false);
+
+// Check credentials on activation and also on initial load
+async function checkCredentials() {
+    const result = await window.auth.hasCredentials();
+    hasCredentials.value = result;
+    return result;
+}
+
 onActivated(() => {
-    window.auth.hasCredentials().then((result) => {
-        hasCredentials.value = result;
-    });
+    checkCredentials();
 });
 
 async function login() {
@@ -61,15 +67,13 @@ async function login() {
         await auth.login();
         await tachyon.connect();
         const redirect = router.currentRoute.value.query.redirect as string | undefined;
+        // Don't reset connecting state - navigation will unmount this component
         router.push(redirect || "/play/menu");
     } catch (e) {
         console.error(e);
         error.value = (e as Error).message;
-    } finally {
-        // Removes the stutter when transitioning to the next page
-        setTimeout(() => {
-            connecting.value = false;
-        }, 1000);
+        // Only reset connecting state on error
+        connecting.value = false;
     }
 }
 
@@ -91,10 +95,15 @@ async function playOffline() {
     router.push("/play/menu");
 }
 
-if (hasCredentials.value && settingsStore.loginAutomatically) {
-    console.log("Logging in automatically");
-    login();
-}
+// Check credentials and auto-login if enabled
+// Using an IIFE to avoid top-level await which blocks other routes
+(async () => {
+    const hasCreds = await checkCredentials();
+    if (hasCreds && settingsStore.loginAutomatically) {
+        console.log("Logging in automatically");
+        login();
+    }
+})();
 </script>
 
 <style lang="scss" scoped>

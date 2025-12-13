@@ -139,9 +139,10 @@ const tooltipValue = computed(() => {
     return null;
 });
 
-async function onClick() {
+function onClick() {
     if (props.to && router.currentRoute.value.path !== props.to) {
-        await router.push(props.to);
+        // Don't await - let navigation happen asynchronously for responsive UI
+        router.push(props.to);
     }
 }
 </script>

@@ -8,9 +8,9 @@ SPDX-License-Identifier: MIT
     <div class="download-button-wrapper fullwidth" :class="$attrs.class">
         <div class="progress-bar-outer margin-left-md margin-right-md">
             <DownloadProgress
-                :maps="maps"
-                :engines="engines"
-                :games="games"
+                :maps="mapsToDownload"
+                :engines="enginesToDownload"
+                :games="gamesToDownload"
                 :height="75"
                 @status-change="updateDownloadStatus"
             ></DownloadProgress>
@@ -20,10 +20,10 @@ SPDX-License-Identifier: MIT
             :class="{
                 'download-button--small': !isLarge,
                 'download-button--large': isLarge,
-                'download-button--ready': ready && !disabled,
-                'download-button--downloading': isDownloading && !disabled,
-                'download-button--default': !ready && !isDownloading && !disabled,
-                'download-button--disabled': disabled
+                'download-button--ready': ready && !props.disabled,
+                'download-button--downloading': isDownloading && !props.disabled,
+                'download-button--default': !ready && !isDownloading && !props.disabled,
+                'download-button--disabled': props.disabled
             }"
         >
             <!-- Progress bar overlay during download -->
@@ -38,27 +38,27 @@ SPDX-License-Identifier: MIT
                     <slot>Ready</slot>
                 </span>
                 <span v-else-if="isDownloading">{{ t("lobby.components.controls.downloadContentButton.downloading") }}</span>
-                <span v-else>{{ downloadText || t("lobby.components.controls.downloadContentButton.download") }}</span>
+                <span v-else>{{ props.downloadText || t("lobby.components.controls.downloadContentButton.download") }}</span>
             </span>
             <!-- Click handler -->
             <button
                 v-if="ready"
                 class="download-button__clickable"
-                :disabled="disabled"
-                @click="onClick"
+                :disabled="props.disabled"
+                @click="props.onClick"
             ></button>
             <button
                 v-else
                 class="download-button__clickable"
-                :disabled="disabled"
-                @click="beginDownload(maps, engines, games)"
+                :disabled="props.disabled"
+                @click="beginDownload()"
             ></button>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import { downloadMap } from "@renderer/store/maps.store";
 import { ButtonProps } from "primevue/button";
 import DownloadProgress from "@renderer/components/common/DownloadProgress.vue";
@@ -83,7 +83,11 @@ export interface Props extends /* @vue-ignore */ ButtonProps {
     downloadText?: string;
 }
 const props = defineProps<Props>();
-const { maps = [], engines = [], games = [], downloadText, disabled } = props;
+
+// Use computed properties to maintain reactivity - don't destructure arrays from props
+const mapsToDownload = computed(() => props.maps ?? []);
+const enginesToDownload = computed(() => props.engines ?? []);
+const gamesToDownload = computed(() => props.games ?? []);
 
 const isDownloading = ref(false);
 
@@ -108,7 +112,7 @@ const isLarge = computed(() => {
 });
 
 const ready = computed(() => {
-    const targetList = new Set([...maps, ...games, ...engines]);
+    const targetList = new Set([...mapsToDownload.value, ...gamesToDownload.value, ...enginesToDownload.value]);
     if (targetList.size == 0) return true;
     let availableContent = new Set(mapsStore.availableMapNames);
     availableContent = availableContent.union(new Set(enginesStore.availableEngineVersions.map((e) => e.id)));
@@ -123,7 +127,7 @@ function updateDownloadStatus(value: boolean) {
 
 // Calculate download progress (matching DownloadProgress component logic)
 const downloadProgress = computed(() => {
-    const targetList = new Set([...maps, ...games, ...engines]);
+    const targetList = new Set([...mapsToDownload.value, ...gamesToDownload.value, ...enginesToDownload.value]);
     if (targetList.size === 0) return 0;
     
     const downloads = [...downloadsStore.mapDownloads, ...downloadsStore.engineDownloads, ...downloadsStore.gameDownloads];
@@ -137,14 +141,14 @@ const downloadProgress = computed(() => {
 });
 
 // Note; we have to await each download because we need to update pr-downloader to accept concurrent downloads
-async function beginDownload(maps?: string[], engines?: string[], games?: string[]) {
-    for (const map of maps ?? []) {
+async function beginDownload() {
+    for (const map of mapsToDownload.value) {
         await downloadMap(map);
     }
-    for (const engine of engines ?? []) {
+    for (const engine of enginesToDownload.value) {
         await downloadEngine(engine);
     }
-    for (const game of games ?? []) {
+    for (const game of gamesToDownload.value) {
         await downloadGame(game);
     }
 }
