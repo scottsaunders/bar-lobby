@@ -16,21 +16,9 @@ SPDX-License-Identifier: MIT
                 <p>{{ t("lobby.views.play.campaign.description") }}</p>
             </div>
             
-            <div class="campaign-layout flex-col gap-xl flex-grow">
-                <!-- Tutorial Button -->
-                <div class="tutorial-section">
-                    <Button class="tutorial-button" @click="startTutorial">
-                        <div class="flex-row flex-center-items gap-md">
-                            <Icon :icon="schoolIcon" height="24" />
-                            <span>Tutorial Campaign</span>
-                            <span class="tutorial-status body-2" v-if="tutorialProgress.completed">✓ Completed</span>
-                            <span class="tutorial-status body-2" v-else-if="tutorialProgress.started">In Progress</span>
-                        </div>
-                    </Button>
-                </div>
-
-                <!-- Main Campaign Tiles -->
-                <div class="campaigns-grid flex-row gap-xl flex-grow">
+            <div class="campaign-layout flex-col gap-lg flex-grow">
+                <!-- Main Campaign Tiles - Full Width -->
+                <div class="campaigns-grid flex-row gap-lg flex-grow">
                     <!-- Armada Campaign -->
                     <div class="campaign-tile-wrapper" @click="selectCampaign('armada')">
                         <div class="campaign-card">
@@ -126,6 +114,22 @@ SPDX-License-Identifier: MIT
                         </div>
                     </div>
                 </div>
+
+                <!-- Additional Actions -->
+                <div class="campaign-actions flex-row gap-lg">
+                    <Button class="action-button fullwidth" @click="startTutorial">
+                        <div class="flex-row flex-center-items gap-md">
+                            <Icon :icon="schoolIcon" height="24" />
+                            <span class="subtitle-1">Tutorial</span>
+                        </div>
+                    </Button>
+                    <Button class="action-button fullwidth" @click="openLore">
+                        <div class="flex-row flex-center-items gap-md">
+                            <Icon :icon="bookIcon" height="24" />
+                            <span class="subtitle-1">Lore & Codex</span>
+                        </div>
+                    </Button>
+                </div>
             </div>
         </div>
     </div>
@@ -138,6 +142,7 @@ import { Icon } from "@iconify/vue";
 import lockIcon from "@iconify-icons/mdi/lock";
 import schoolIcon from "@iconify-icons/mdi/school";
 import skullIcon from "@iconify-icons/mdi/skull";
+import bookIcon from "@iconify-icons/mdi/book-open-variant";
 
 import Button from "@renderer/components/controls/Button.vue";
 import { useTypedI18n } from "@renderer/i18n";
@@ -180,6 +185,10 @@ function startTutorial() {
     router.push("/play/campaign/tutorial");
 }
 
+function openLore() {
+    router.push("/play/campaign/lore");
+}
+
 function selectCampaign(campaignId: string) {
     router.push(`/play/campaign/${campaignId}`);
 }
@@ -205,33 +214,18 @@ function selectCampaign(campaignId: string) {
 
 .campaign-layout {
     min-height: 0;
-}
-
-.tutorial-section {
-    flex-shrink: 0;
-}
-
-.tutorial-button {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: map-get($spacing, "md") map-get($spacing, "xl");
-    
-    .tutorial-status {
-        color: rgba(255, 255, 255, 0.6);
-        margin-left: auto;
-    }
+    overflow: hidden;
 }
 
 .campaigns-grid {
     min-height: 0;
+    flex-shrink: 1;
 }
 
 .campaign-tile-wrapper {
     flex: 1;
-    min-width: 280px;
-    max-width: 400px;
+    min-width: 0;
     height: 100%;
-    min-height: 400px;
     cursor: pointer;
     
     &.locked {
@@ -343,5 +337,21 @@ function selectCampaign(campaignId: string) {
     color: rgba(255, 255, 255, 0.5);
     text-align: center;
     padding: map-get($spacing, "xs") 0;
+}
+
+.campaign-actions {
+    flex-shrink: 0;
+}
+
+.action-button {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: map-get($spacing, "lg") map-get($spacing, "xl");
+    transition: all 0.2s ease;
+    
+    &:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
 }
 </style>
