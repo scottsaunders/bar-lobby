@@ -26,20 +26,14 @@ interface Props {
     engines?: string[];
 }
 
-const props = defineProps<Props>();
-
-// Use computed properties to maintain reactivity - don't destructure arrays from props
-const mapsToCheck = computed(() => props.maps ?? []);
-const gamesToCheck = computed(() => props.games ?? []);
-const enginesToCheck = computed(() => props.engines ?? []);
-const height = computed(() => props.height ?? 100);
+const { maps = [], height = 100, games = [], engines = [] } = defineProps<Props>();
 
 const emit = defineEmits<{
     statusChange: [value: boolean];
 }>();
 
 const isDownloading = computed(() => {
-    const targetList = new Set([...mapsToCheck.value, ...gamesToCheck.value, ...enginesToCheck.value]);
+    const targetList = new Set([...maps, ...games, ...engines]);
     if (targetList.size == 0) return false;
     const downloads = [...downloadsStore.mapDownloads, ...downloadsStore.engineDownloads, ...downloadsStore.gameDownloads];
     if (downloads.length == 0) return false;
@@ -55,7 +49,7 @@ watch(isDownloading, (value) => {
 });
 
 const downloadPercent = computed(() => {
-    const targetList = new Set([...mapsToCheck.value, ...gamesToCheck.value, ...enginesToCheck.value]);
+    const targetList = new Set([...maps, ...games, ...engines]);
     const downloads = [...downloadsStore.mapDownloads, ...downloadsStore.engineDownloads, ...downloadsStore.gameDownloads];
     const count = downloads.length;
     let progress: number = 0;

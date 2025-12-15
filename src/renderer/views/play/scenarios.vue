@@ -15,12 +15,7 @@ SPDX-License-Identifier: MIT
                 <h1>{{ t("lobby.singleplayer.scenarios.title") }}</h1>
                 <p>{{ t("lobby.singleplayer.scenarios.description") }}</p>
             </div>
-            <!-- Loading state -->
-            <div v-if="isLoading" class="scenarios-loading flex-center-items fullheight">
-                <Loader />
-            </div>
-            <!-- Content when loaded -->
-            <div v-else class="scenarios-layout flex-row gap-xl">
+            <div class="scenarios-layout flex-row gap-xl">
                 <Panel class="flex-grow scenarios-panel" no-padding>
                     <div class="scroll-container main-panel-scroll">
                         <div class="scenarios-grid">
@@ -32,7 +27,7 @@ SPDX-License-Identifier: MIT
                                 >
                                     <InteractiveTile
                                         :saturate="true"
-                                        :selected="selectedScenario?.scenarioid === scenario.scenarioid"
+                                        :selected="selectedScenario.scenarioid === scenario.scenarioid"
                                         @click="selectedScenario = scenario"
                                     >
                                         <template #media>
@@ -47,7 +42,7 @@ SPDX-License-Identifier: MIT
                         </div>
                     </div>
                 </Panel>
-                <Panel v-if="selectedScenario" class="scenario-details-panel" no-padding>
+                <Panel class="scenario-details-panel" no-padding>
                     <div class="scenario-details-layout flex-col fullheight">
                         <h2 class="title-2 padding-left-xxl padding-top-xxl padding-right-xxl padding-bottom-lg">{{ selectedScenario.title }}</h2>
                         <div class="description-scroll scroll-container flex-grow">
@@ -77,7 +72,7 @@ SPDX-License-Identifier: MIT
                             <DownloadContentButton
                                 v-if="map"
                                 :maps="[map.springName]"
-                                :games="currentGameVersion ? [currentGameVersion] : []"
+                                :games="gameVersion ? [gameVersion] : []"
                                 :engines="enginesStore.selectedEngineVersion ? [enginesStore.selectedEngineVersion.id] : []"
                                 class="fullwidth large"
                                 :disabled="gameStore.status !== GameStatus.CLOSED"
@@ -94,14 +89,13 @@ SPDX-License-Identifier: MIT
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch, onActivated } from "vue";
+import { computed, ref, watch } from "vue";
 
 import Button from "@renderer/components/controls/Button.vue";
 import Select from "@renderer/components/controls/Select.vue";
 import InteractiveTile from "@renderer/components/common/InteractiveTile.vue";
 import StatusCard from "@renderer/components/common/StatusCard.vue";
 import ScrollingTextPanel from "@renderer/components/common/ScrollingTextPanel.vue";
-import Loader from "@renderer/components/common/Loader.vue";
 import { Scenario } from "@main/content/game/scenario";
 import { LATEST_GAME_VERSION } from "@main/config/default-versions";
 import Panel from "@renderer/components/common/Panel.vue";
@@ -118,39 +112,10 @@ const { t } = useTypedI18n();
 
 import { enginesStore } from "@renderer/store/engine.store";
 
-// Computed game version for reactivity
-const currentGameVersion = computed(() => gameStore?.selectedGameVersion?.gameVersion);
-
-// Loading state for scenarios - avoid top-level await which blocks other routes
-const isLoading = ref(true);
-const scenarios = ref<Scenario[]>([]);
-const selectedScenario = ref<Scenario | null>(null);
-
-// Load scenarios asynchronously on component activation (not top-level await)
-async function loadScenarios() {
-    const gameVersion = gameStore?.selectedGameVersion?.gameVersion;
-    if (gameVersion) {
-        isLoading.value = true;
-        const loadedScenarios = await window.game.getScenarios(gameVersion);
-        scenarios.value = loadedScenarios;
-        selectedScenario.value = scenarios.value[0] ?? null;
-        isLoading.value = false;
-    } else {
-        scenarios.value = [];
-        selectedScenario.value = null;
-        isLoading.value = false;
-    }
-}
-
-// Load on first activation
-onActivated(() => {
-    if (scenarios.value.length === 0) {
-        loadScenarios();
-    }
-});
-
-// Also load immediately if this is the initial mount
-loadScenarios();
+const gameVersion = gameStore?.selectedGameVersion?.gameVersion;
+const loadedScenarios = gameVersion ? await window.game.getScenarios(gameVersion) : [];
+const scenarios = ref<Scenario[]>(loadedScenarios);
+const selectedScenario = ref<Scenario>(scenarios.value[0]);
 
 const map = useDexieLiveQueryWithDeps([selectedScenario], async () => {
     let selected = selectedScenario.value;
@@ -171,33 +136,27 @@ const map = useDexieLiveQueryWithDeps([selectedScenario], async () => {
     return map;
 });
 
-const difficulties = computed(() => selectedScenario.value?.difficulties ?? []);
-const selectedDifficulty = ref<Scenario["difficulties"][number] | undefined>(undefined);
+const difficulties = computed(() => selectedScenario.value.difficulties);
+const selectedDifficulty = ref(difficulties.value.find((dif) => dif.name === selectedScenario.value.defaultdifficulty));
 
-const factions = computed(() => selectedScenario.value?.allowedsides ?? []);
-const selectedFaction = ref<string | undefined>(undefined);
+const factions = computed(() => selectedScenario.value.allowedsides);
+const selectedFaction = ref(factions.value[0]);
 
 watch(
     () => gameStore.selectedGameVersion?.gameVersion,
     async (selectedVersion) => {
         const loadedScenarios = selectedVersion ? await window.game.getScenarios(selectedVersion) : [];
         scenarios.value = loadedScenarios;
-        selectedScenario.value = scenarios.value[0] ?? null;
+        selectedScenario.value = scenarios.value[0];
     }
 );
 
 watch(selectedScenario, (newScenario) => {
-    if (newScenario) {
-        selectedDifficulty.value = difficulties.value.find((dif) => dif.name === newScenario.defaultdifficulty);
-        selectedFaction.value = factions.value[0] ?? "Armada";
-    }
+    selectedDifficulty.value = difficulties.value.find((dif) => dif.name === newScenario.defaultdifficulty);
+    selectedFaction.value = factions.value[0] ?? "Armada";
 });
 
 async function launch() {
-    if (!selectedScenario.value) {
-        throw new Error("No scenario selected");
-    }
-    
     const scenarioOptions = {
         ...selectedScenario.value.scenariooptions,
         version: selectedScenario.value.version,
@@ -218,7 +177,7 @@ async function launch() {
         .replaceAll("__PLAYERNAME__", "Player")
         .replaceAll("__BARVERSION__", LATEST_GAME_VERSION)
         .replaceAll("__MAPNAME__", selectedScenario.value.mapfilename)
-        .replaceAll("__PLAYERSIDE__", selectedFaction.value ?? "Armada")
+        .replaceAll("__PLAYERSIDE__", selectedFaction.value)
         .replaceAll("__ENEMYHANDICAP__", selectedDifficulty.value?.enemyhandicap?.toString() ?? "0")
         .replaceAll("__PLAYERHANDICAP__", selectedDifficulty.value?.playerhandicap?.toString() ?? "0")
         .replaceAll("__RESTRICTEDUNITS__", restrictionsStr)
@@ -305,12 +264,5 @@ async function launch() {
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 2px;
-}
-
-.scenarios-loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex: 1;
 }
 </style>
