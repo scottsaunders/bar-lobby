@@ -11,13 +11,15 @@ SPDX-License-Identifier: MIT
 <template>
     <div class="view">
         <div class="view-container">
-            <div class="view-header flex-row flex-center-items gap-lg">
-                <Button class="back-button" @click="goBack">
-                    <Icon :icon="arrowLeftIcon" height="24" />
-                </Button>
-                <div class="view-title">
-                    <h1>Lore & Codex</h1>
-                    <p>Discover the history and secrets of Beyond All Reason</p>
+            <div class="view-title">
+                <div class="flex-row flex-center-items gap-md">
+                    <Button class="icon" @click="goBack">
+                        <Icon :icon="arrowLeftIcon" height="24" />
+                    </Button>
+                    <div>
+                        <h1>Lore & Codex</h1>
+                        <p>Discover the history and secrets of Beyond All Reason</p>
+                    </div>
                 </div>
             </div>
             
@@ -268,23 +270,7 @@ function getEntryById(id: string) {
     box-sizing: border-box;
 }
 
-.view-header {
-    flex-shrink: 0;
-    
-    .view-title {
-        padding-left: 0;
-    }
-}
 
-.back-button {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: map-get($spacing, "md");
-    
-    &:hover {
-        background: rgba(255, 255, 255, 0.08);
-    }
-}
 
 .lore-layout {
     min-height: 0;

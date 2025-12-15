@@ -11,93 +11,88 @@ SPDX-License-Identifier: MIT
 <template>
     <div class="view">
         <div class="view-container">
-            <div class="view-header flex-row flex-center-items gap-lg">
-                <Button class="back-button" @click="goBack">
-                    <Icon :icon="arrowLeftIcon" height="24" />
-                </Button>
-                <div class="view-title">
-                    <h1>{{ missionData.name }}</h1>
-                    <p>{{ campaignName }} - Mission {{ missionId }}</p>
+            <div class="view-title">
+                <div class="flex-row flex-center-items gap-md">
+                    <Button class="icon" @click="goBack">
+                        <Icon :icon="arrowLeftIcon" height="24" />
+                    </Button>
+                    <div>
+                        <h1>{{ missionData.name }}</h1>
+                        <p>{{ campaignName }} - Mission {{ missionId }}</p>
+                    </div>
                 </div>
             </div>
             
-            <div class="mission-detail-layout flex-row gap-xl flex-grow">
-                <!-- Left Column - Mission Info -->
-                <div class="mission-info-column flex-col gap-lg">
-                    <Panel class="mission-brief padding-xl">
-                        <h2 class="title-3">Mission Brief</h2>
-                        <div class="brief-content body-1">
-                            <p>{{ missionData.briefing }}</p>
-                        </div>
-                        
-                        <div class="mission-stats flex-col gap-md margin-top-xl">
-                            <div class="stat-row flex-row flex-center-items">
-                                <span class="subtitle-2">Difficulty:</span>
-                                <span class="body-1" :class="getDifficultyClass(missionData.difficulty)">{{ missionData.difficulty }}</span>
+            <div class="mission-layout flex-row gap-xl flex-grow">
+                <!-- Main Content - Mission Info -->
+                <Panel class="flex-grow mission-content-panel">
+                    <div class="scroll-container main-panel-scroll">
+                        <div class="flex-col gap-lg padding-xxl">
+                            <!-- Mission Brief -->
+                            <div class="mission-section">
+                                <h2 class="title-3 margin-bottom-md">Mission Brief</h2>
+                                <p class="body-1 brief-content">{{ missionData.briefing }}</p>
                             </div>
-                            <div class="stat-row flex-row flex-center-items">
-                                <span class="subtitle-2">Estimated Time:</span>
-                                <span class="body-1">{{ missionData.estimatedTime }} minutes</span>
-                            </div>
-                            <div class="stat-row flex-row flex-center-items">
-                                <span class="subtitle-2">Map:</span>
-                                <span class="body-1">{{ missionData.map }}</span>
-                            </div>
-                        </div>
-                    </Panel>
 
-                    <Panel class="objectives-panel padding-xl">
-                        <h2 class="title-3">Objectives</h2>
-                        <div class="objectives-list flex-col gap-md margin-top-md">
-                            <div v-for="(objective, index) in missionData.objectives" :key="index" class="objective-item flex-row gap-md">
-                                <div class="objective-marker">{{ index + 1 }}</div>
-                                <div class="objective-text">
-                                    <h3 class="subtitle-2">{{ objective.title }}</h3>
-                                    <p class="body-2">{{ objective.description }}</p>
+                            <!-- Mission Stats -->
+                            <div class="mission-section">
+                                <h3 class="subtitle-1 margin-bottom-md">Mission Details</h3>
+                                <div class="mission-stats flex-col gap-sm">
+                                    <StatusCard label="Difficulty" :value="missionData.difficulty" :class="getDifficultyClass(missionData.difficulty)" />
+                                    <StatusCard label="Estimated Time" :value="`${missionData.estimatedTime} minutes`" />
+                                    <StatusCard label="Map" :value="missionData.map" />
+                                </div>
+                            </div>
+
+                            <!-- Objectives -->
+                            <div class="mission-section">
+                                <h3 class="subtitle-1 margin-bottom-md">Objectives</h3>
+                                <div class="objectives-list flex-col gap-md">
+                                    <div v-for="(objective, index) in missionData.objectives" :key="index" class="objective-item flex-row gap-md">
+                                        <div class="objective-marker">{{ index + 1 }}</div>
+                                        <div class="objective-text">
+                                            <h4 class="subtitle-2">{{ objective.title }}</h4>
+                                            <p class="body-2">{{ objective.description }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Rewards (if completed) -->
+                            <div v-if="missionData.completed" class="mission-section rewards-section">
+                                <h3 class="subtitle-1 margin-bottom-md">Mission Completed!</h3>
+                                <div class="rewards-list flex-col gap-sm">
+                                    <div class="reward-item body-1">
+                                        <Icon :icon="checkIcon" height="20" />
+                                        <span>Experience: +{{ missionData.experienceReward }}</span>
+                                    </div>
+                                    <div class="reward-item body-1">
+                                        <Icon :icon="checkIcon" height="20" />
+                                        <span>New Units Unlocked: {{ missionData.unitsUnlocked }}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </Panel>
-
-                    <Panel v-if="missionData.completed" class="rewards-panel padding-xl">
-                        <h2 class="title-3">Mission Completed!</h2>
-                        <div class="rewards-list flex-col gap-sm margin-top-md">
-                            <div class="reward-item body-1">
-                                <Icon :icon="checkIcon" height="20" />
-                                <span>Experience: +{{ missionData.experienceReward }}</span>
-                            </div>
-                            <div class="reward-item body-1">
-                                <Icon :icon="checkIcon" height="20" />
-                                <span>New Units Unlocked: {{ missionData.unitsUnlocked }}</span>
-                            </div>
-                        </div>
-                    </Panel>
-                </div>
-
-                <!-- Right Column - Preview & Actions -->
-                <div class="mission-preview-column flex-col gap-lg">
-                    <Panel class="map-preview no-padding">
-                        <div class="preview-placeholder">
-                            <Icon :icon="mapIcon" height="64" />
-                            <span class="body-1">Map Preview</span>
-                        </div>
-                    </Panel>
-
-                    <div class="mission-actions flex-col gap-md">
-                        <Button v-if="!missionData.locked" class="green large fullwidth" @click="startMission">
-                            <div class="flex-row flex-center-items gap-md">
-                                <Icon :icon="playIcon" height="24" />
-                                <span>{{ missionData.completed ? 'Replay Mission' : 'Start Mission' }}</span>
-                            </div>
-                        </Button>
-                        <Button v-else class="grey large fullwidth" disabled>
-                            <div class="flex-row flex-center-items gap-md">
-                                <Icon :icon="lockIcon" height="24" />
-                                <span>Mission Locked</span>
-                            </div>
-                        </Button>
                     </div>
-                </div>
+                </Panel>
+
+                <!-- Right Panel - Map Preview & Actions -->
+                <Panel class="mission-side-panel" no-padding>
+                    <div class="mission-side-layout flex-col fullheight">
+                        <h2 class="title-2 padding-left-xxl padding-top-xxl padding-right-xxl padding-bottom-lg">{{ missionData.map }}</h2>
+                        <div class="map-preview-container flex-grow margin-left-xxl margin-right-xxl">
+                            <MapSimplePreview v-if="map" :map="map" />
+                        </div>
+                        <div class="mission-controls flex-col gap-md padding-left-xxl padding-right-xxl padding-top-lg padding-bottom-xxl">
+                            <Button v-if="!missionData.locked" class="green large fullwidth" @click="startMission">
+                                {{ missionData.completed ? 'Replay Mission' : 'Start Mission' }}
+                            </Button>
+                            <Button v-else class="grey large fullwidth" disabled>
+                                Mission Locked
+                            </Button>
+                        </div>
+                    </div>
+                </Panel>
             </div>
         </div>
     </div>
@@ -108,14 +103,15 @@ import { computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { Icon } from "@iconify/vue";
 import arrowLeftIcon from "@iconify-icons/mdi/arrow-left";
-import playIcon from "@iconify-icons/mdi/play";
-import lockIcon from "@iconify-icons/mdi/lock";
-import mapIcon from "@iconify-icons/mdi/map";
 import checkIcon from "@iconify-icons/mdi/check-circle";
 
 import Button from "@renderer/components/controls/Button.vue";
 import Panel from "@renderer/components/common/Panel.vue";
+import StatusCard from "@renderer/components/common/StatusCard.vue";
+import MapSimplePreview from "@renderer/components/maps/MapSimplePreview.vue";
 import { useTypedI18n } from "@renderer/i18n";
+import { useDexieLiveQuery } from "@renderer/composables/useDexieLiveQuery";
+import { db } from "@renderer/store/db";
 
 const { t } = useTypedI18n();
 const router = useRouter();
@@ -133,6 +129,9 @@ const campaigns = {
 
 const campaignName = computed(() => campaigns[campaignId.value as keyof typeof campaigns] || "Campaign");
 
+// Use Quicksilver Remake as the example map for all missions
+const map = useDexieLiveQuery(() => db.maps.get("Quicksilver Remake 1.24"));
+
 // Generate mission data based on mission ID
 const missionData = computed(() => {
     const id = missionId.value;
@@ -143,6 +142,9 @@ const missionData = computed(() => {
             difficulty: "Easy",
             estimatedTime: 15,
             map: "Delta Siege",
+            mapSize: "16x16",
+            playerCount: "2v2",
+            terrain: ["grassy", "water"],
             locked: false,
             completed: true,
             experienceReward: 500,
@@ -159,6 +161,9 @@ const missionData = computed(() => {
             difficulty: "Easy",
             estimatedTime: 20,
             map: "Supply Route Alpha",
+            mapSize: "12x16",
+            playerCount: "1v2",
+            terrain: ["desert", "flat"],
             locked: false,
             completed: true,
             experienceReward: 650,
@@ -175,6 +180,9 @@ const missionData = computed(() => {
             difficulty: "Medium",
             estimatedTime: 25,
             map: "Last Stand",
+            mapSize: "20x20",
+            playerCount: "1v3",
+            terrain: ["hills", "forests"],
             locked: false,
             completed: true,
             experienceReward: 800,
@@ -191,6 +199,9 @@ const missionData = computed(() => {
             difficulty: "Medium",
             estimatedTime: 30,
             map: "Contested Valley",
+            mapSize: "16x20",
+            playerCount: "2v2",
+            terrain: ["tropical", "sea", "island"],
             locked: false,
             completed: false,
             objectives: [
@@ -207,6 +218,9 @@ const missionData = computed(() => {
         difficulty: "Unknown",
         estimatedTime: 30,
         map: "Unknown",
+        mapSize: "16x16",
+        playerCount: "TBD",
+        terrain: ["grassy"],
         locked: true,
         completed: false,
         objectives: [
@@ -251,64 +265,47 @@ function getDifficultyClass(difficulty: string): string {
     box-sizing: border-box;
 }
 
-.view-header {
-    flex-shrink: 0;
-    
-    .view-title {
-        padding-left: 0;
-    }
-}
 
-.back-button {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: map-get($spacing, "md");
-    
-    &:hover {
-        background: rgba(255, 255, 255, 0.08);
-    }
-}
 
-.mission-detail-layout {
+.mission-layout {
     min-height: 0;
+}
+
+.mission-content-panel {
+    min-height: 0;
+}
+
+.main-panel-scroll {
+    height: 100%;
     overflow-y: auto;
-    align-items: flex-start;
 }
 
-.mission-info-column {
-    flex: 1;
-    min-width: 0;
-}
-
-.mission-preview-column {
-    width: 400px;
-    flex-shrink: 0;
-    position: sticky;
-    top: 0;
+.mission-section {
+    margin-bottom: map-get($spacing, "xl");
+    
+    &:last-child {
+        margin-bottom: 0;
+    }
 }
 
 .brief-content {
-    margin-top: map-get($spacing, "md");
     color: rgba(255, 255, 255, 0.9);
     line-height: 1.6;
 }
 
-.stat-row {
-    justify-content: space-between;
-    
-    span:first-child {
-        color: rgba(255, 255, 255, 0.7);
-    }
+.mission-stats {
+    max-width: 500px;
 }
 
-.difficulty-easy { color: #22c55e; }
-.difficulty-medium { color: #eab308; }
-.difficulty-hard { color: #f97316; }
-.difficulty-very-hard { color: #ef4444; }
-.difficulty-extreme { color: #dc2626; font-weight: 600; }
+.difficulty-easy :deep(.status-card) { border-color: #22c55e; }
+.difficulty-medium :deep(.status-card) { border-color: #eab308; }
+.difficulty-hard :deep(.status-card) { border-color: #f97316; }
+.difficulty-very-hard :deep(.status-card) { border-color: #ef4444; }
+.difficulty-extreme :deep(.status-card) { border-color: #dc2626; }
 
 .objectives-list {
-    margin-top: map-get($spacing, "md");
+    display: flex;
+    flex-direction: column;
 }
 
 .objective-item {
@@ -330,7 +327,7 @@ function getDifficultyClass(difficulty: string): string {
 .objective-text {
     flex: 1;
     
-    h3 {
+    h4 {
         margin: 0 0 map-get($spacing, "xs") 0;
     }
     
@@ -340,8 +337,9 @@ function getDifficultyClass(difficulty: string): string {
     }
 }
 
-.rewards-list {
-    margin-top: map-get($spacing, "md");
+.rewards-section {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: map-get($spacing, "xl");
 }
 
 .reward-item {
@@ -351,23 +349,25 @@ function getDifficultyClass(difficulty: string): string {
     color: #22c55e;
 }
 
-.map-preview {
-    aspect-ratio: 1;
+.mission-side-panel {
+    width: 450px;
+    flex-shrink: 0;
+}
+
+.mission-side-layout {
+    display: flex;
+    flex-direction: column;
+}
+
+.map-preview-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.3);
+    min-height: 0;
+    height: 100%;
 }
 
-.preview-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: map-get($spacing, "md");
-    color: rgba(255, 255, 255, 0.4);
-}
-
-.mission-actions {
-    margin-top: auto;
+.mission-controls {
+    flex-shrink: 0;
 }
 </style>

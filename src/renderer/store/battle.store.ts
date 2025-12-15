@@ -235,8 +235,10 @@ function getNumberOfTeams(): number {
         const startBoxIndex = battleStore.battleOptions.mapOptions.startBoxesIndex;
 
         if (startBoxIndex != undefined) {
-            const startBoxes = map.startboxesSet[startBoxIndex];
-            numberOfTeams = startBoxes.startboxes.length;
+            const startBoxes = map.startboxesSet?.[startBoxIndex];
+            if (startBoxes?.startboxes) {
+                numberOfTeams = startBoxes.startboxes.length;
+            }
         } else if (battleStore.battleOptions.mapOptions.customStartBoxes) {
             numberOfTeams = battleStore.battleOptions.mapOptions.customStartBoxes.length;
         }
@@ -297,8 +299,10 @@ function getMaxPlayersPerTeam() {
         const startBoxIndex = battleStore.battleOptions.mapOptions.startBoxesIndex;
 
         if (startBoxIndex != undefined) {
-            const startBoxes = map.startboxesSet[startBoxIndex];
-            maxPlayersPerTeam = startBoxes.maxPlayersPerStartbox;
+            const startBoxes = map.startboxesSet?.[startBoxIndex];
+            if (startBoxes?.maxPlayersPerStartbox) {
+                maxPlayersPerTeam = startBoxes.maxPlayersPerStartbox;
+            }
         } else if (battleStore.battleOptions.mapOptions.customStartBoxes) {
             maxPlayersPerTeam = Math.round(map.playerCountMax / battleStore.battleOptions.mapOptions.customStartBoxes.length);
         }
@@ -348,7 +352,7 @@ function updateTeams() {
 function getCurrentStartBoxes(): Array<StartBox> {
     const startBoxesIndex = battleStore.battleOptions.mapOptions.startBoxesIndex;
     return startBoxesIndex != undefined
-        ? battleStore.battleOptions.map?.startboxesSet.at(startBoxesIndex)?.startboxes.map((box) => spadsBoxToStartBox(box.poly)) || []
+        ? battleStore.battleOptions.map?.startboxesSet?.at(startBoxesIndex)?.startboxes?.map((box) => spadsBoxToStartBox(box.poly)) || []
         : (battleStore.battleOptions.mapOptions.customStartBoxes as Array<StartBox>);
 }
 

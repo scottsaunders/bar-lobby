@@ -11,13 +11,15 @@ SPDX-License-Identifier: MIT
 <template>
     <div class="view">
         <div class="view-container">
-            <div class="view-header flex-row flex-center-items gap-lg">
-                <Button class="back-button" @click="goBack">
-                    <Icon :icon="arrowLeftIcon" height="24" />
-                </Button>
-                <div class="view-title">
-                    <h1>Tutorial Campaign</h1>
-                    <p>Learn the basics of Beyond All Reason</p>
+            <div class="view-title">
+                <div class="flex-row flex-center-items gap-md">
+                    <Button class="icon" @click="goBack">
+                        <Icon :icon="arrowLeftIcon" height="24" />
+                    </Button>
+                    <div>
+                        <h1>Tutorial Campaign</h1>
+                        <p>Learn the basics of Beyond All Reason</p>
+                    </div>
                 </div>
             </div>
             
@@ -84,8 +86,8 @@ import hammerIcon from "@iconify-icons/mdi/hammer";
 import tankIcon from "@iconify-icons/mdi/tank";
 import lightningIcon from "@iconify-icons/mdi/lightning-bolt";
 import shieldIcon from "@iconify-icons/mdi/shield";
-import targetIcon from "@iconify-icons/mdi/target";
-import strategyIcon from "@iconify-icons/mdi/strategy";
+import targetIcon from "@iconify-icons/mdi/crosshairs";
+import strategyIcon from "@iconify-icons/mdi/chess-knight";
 
 import Button from "@renderer/components/controls/Button.vue";
 import Panel from "@renderer/components/common/Panel.vue";
@@ -189,23 +191,7 @@ function startLesson(lessonId: number) {
     box-sizing: border-box;
 }
 
-.view-header {
-    flex-shrink: 0;
-    
-    .view-title {
-        padding-left: 0;
-    }
-}
 
-.back-button {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: map-get($spacing, "md");
-    
-    &:hover {
-        background: rgba(255, 255, 255, 0.08);
-    }
-}
 
 .tutorial-layout {
     min-height: 0;
