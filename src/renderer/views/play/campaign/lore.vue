@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT
 -->
 
 <route lang="json5">
-{ meta: { title: "Lore & Codex", devOnly: true, hide: true, transition: { name: "slide-left" } } }
+{ meta: { title: "Lore & Codex", hide: true, transition: { name: "slide-left" } } }
 </route>
 
 <template>

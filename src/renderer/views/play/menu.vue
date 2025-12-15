@@ -25,31 +25,27 @@ SPDX-License-Identifier: MIT
                         </template>
                     </InteractiveTile>
 
-                    <InteractiveTile class="game-mode-card disabled" @click="startCampaign">
+                    <InteractiveTile class="game-mode-card" @click="startCampaign">
                         <template #content>
                             <h3>{{ t("lobby.views.play.campaign.title") }}</h3>
-                            <p class="body-1">{{ t("lobby.views.play.comingSoon") }}</p>
                         </template>
                     </InteractiveTile>
 
-                    <InteractiveTile class="game-mode-card disabled" @click="startMatchmaking">
+                    <InteractiveTile class="game-mode-card" @click="startMatchmaking">
                         <template #content>
                             <h3>{{ t("lobby.views.play.matchmaking.title") }}</h3>
-                            <p class="body-1">{{ t("lobby.views.play.comingSoon") }}</p>
                         </template>
                     </InteractiveTile>
 
-                    <InteractiveTile class="game-mode-card disabled" @click="startCustomLobbies">
+                    <InteractiveTile class="game-mode-card" @click="startCustomLobbies">
                         <template #content>
                             <h3>{{ t("lobby.views.play.customLobbies.title") }}</h3>
-                            <p class="body-1">{{ t("lobby.views.play.comingSoon") }}</p>
                         </template>
                     </InteractiveTile>
 
-                    <InteractiveTile class="game-mode-card disabled" @click="openTournaments">
+                    <InteractiveTile class="game-mode-card" @click="openTournaments">
                         <template #content>
                             <h3>{{ t("lobby.views.play.tournaments.title") }}</h3>
-                            <p class="body-1">{{ t("lobby.views.play.comingSoon") }}</p>
                         </template>
                     </InteractiveTile>
                 </div>
@@ -61,7 +57,6 @@ SPDX-License-Identifier: MIT
 <script lang="ts" setup>
 import { useRouter } from "vue-router";
 import InteractiveTile from "@renderer/components/common/InteractiveTile.vue";
-import { settingsStore } from "@renderer/store/settings.store";
 import { useTypedI18n } from "@renderer/i18n";
 const { t } = useTypedI18n();
 
@@ -73,21 +68,15 @@ const startSkirmish = () => {
 };
 
 const startCampaign = () => {
-    if (settingsStore.devMode) {
-        router.push("/play/campaign");
-    }
+    router.push("/play/campaign");
 };
 
 const startMatchmaking = () => {
-    if (settingsStore.devMode) {
-        router.push("/play/matchmaking");
-    }
+    router.push("/play/matchmaking");
 };
 
 const startCustomLobbies = () => {
-    if (settingsStore.devMode) {
-        router.push("/play/customLobbies");
-    }
+    router.push("/play/customLobbies");
 };
 
 const openScenarios = () => {
@@ -95,19 +84,13 @@ const openScenarios = () => {
 };
 
 const openTournaments = () => {
-    if (settingsStore.devMode) {
-        router.push("/play/tournaments");
-    }
+    router.push("/play/tournaments");
 };
 </script>
 
 <style lang="scss" scoped>
 @use "@renderer/styles/spacing" as *;
 
-.disabled {
-    opacity: 60%;
-    pointer-events: none;
-}
 .view-adjust-bottom {
     padding-bottom: map-get($spacing, "xl");
     display: flex;

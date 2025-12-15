@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT
 -->
 
 <route lang="json5">
-{ meta: { title: "Campaign", devOnly: true, hide: true, transition: { name: "slide-left" } } }
+{ meta: { title: "Campaign", hide: true, transition: { name: "slide-left" } } }
 </route>
 
 <template>
@@ -23,70 +23,132 @@ SPDX-License-Identifier: MIT
                 </div>
             </div>
             
-            <div class="campaign-detail-layout flex-col gap-xl flex-grow">
-                <!-- Campaign Progress Summary -->
-                <Panel class="progress-panel padding-xl">
-                    <div class="flex-row flex-center-items gap-xl">
-                        <div class="campaign-icon">
-                            <img v-if="campaignData.image" :src="campaignData.image" :alt="campaignData.name" />
-                            <Icon v-else :icon="campaignData.icon" height="64" />
-                        </div>
-                        <div class="flex-col gap-md flex-grow">
-                            <div class="flex-row flex-center-items gap-md">
-                                <h2 class="title-2">Campaign Progress</h2>
-                                <span class="caption-1">{{ campaignData.completedMissions }}/{{ campaignData.totalMissions }} missions completed</span>
-                            </div>
-                            <div class="progress-bar-large">
-                                <div class="progress-fill" :style="{ width: campaignData.progressPercent + '%' }"></div>
+            <div class="campaign-layout flex-row gap-xl">
+                <!-- Left Panel: Mission List -->
+                <Panel class="missions-panel" no-padding>
+                    <div class="scroll-container main-panel-scroll missions-scroll">
+                        <div class="missions-list">
+                            <div
+                                v-for="(mission, index) in campaignData.missions"
+                                :key="mission.id"
+                                class="mission-tile-wrapper"
+                            >
+                                <InteractiveTile
+                                    :saturate="!mission.locked"
+                                    :selected="selectedMission?.id === mission.id"
+                                    :class="getMissionClass(mission)"
+                                    @click="!mission.locked && selectMission(mission)"
+                                >
+                                    <template #media>
+                                        <div class="mission-media" :class="getMissionClass(mission)">
+                                            <div class="mission-number-badge">
+                                                <Icon v-if="mission.completed" :icon="checkIcon" height="24" />
+                                                <Icon v-else-if="mission.locked" :icon="lockIcon" height="24" />
+                                                <span v-else>{{ index + 1 }}</span>
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <template #content>
+                                        <div class="mission-tile-content">
+                                            <h3 class="subtitle-1">{{ mission.name }}</h3>
+                                            <p class="body-2">{{ mission.description }}</p>
+                                            <div class="mission-badges flex-row gap-sm">
+                                                <span v-if="mission.completed" class="badge completed">Completed</span>
+                                                <span v-else-if="isCurrentMission(mission, index)" class="badge current">Current</span>
+                                                <span v-else-if="mission.locked" class="badge locked">Locked</span>
+                                                <span class="badge difficulty">{{ mission.difficulty }}</span>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </InteractiveTile>
                             </div>
                         </div>
                     </div>
                 </Panel>
 
-                <!-- Mission Grid -->
-                <div class="missions-grid">
-                    <div 
-                        v-for="(mission, index) in campaignData.missions" 
-                        :key="mission.id"
-                        class="mission-card"
-                        :class="{ locked: mission.locked, completed: mission.completed }"
-                        @click="!mission.locked && selectMission(mission.id)"
-                    >
-                        <div class="mission-number">
-                            <span v-if="mission.completed">✓</span>
-                            <span v-else-if="mission.locked">
-                                <Icon :icon="lockIcon" height="20" />
-                            </span>
-                            <span v-else>{{ index + 1 }}</span>
-                        </div>
-                        <div class="mission-info">
-                            <h3 class="subtitle-1">{{ mission.name }}</h3>
-                            <p class="body-2">{{ mission.description }}</p>
-                            <div class="mission-meta caption-1">
-                                <span v-if="mission.difficulty">Difficulty: {{ mission.difficulty }}</span>
-                                <span v-if="mission.estimatedTime">{{ mission.estimatedTime }} min</span>
+                <!-- Right Panel: Galaxy Map & Mission Info -->
+                <Panel class="galaxy-panel" no-padding>
+                    <div class="galaxy-layout flex-col fullheight">
+                        <!-- Campaign Progress Header -->
+                        <div class="campaign-progress-header padding-xl">
+                            <div class="flex-row flex-center-items gap-lg">
+                                <div class="campaign-icon">
+                                    <img v-if="campaignData.image" :src="campaignData.image" :alt="campaignData.name" />
+                                    <Icon v-else :icon="campaignData.icon" height="48" />
+                                </div>
+                                <div class="flex-col gap-sm flex-grow">
+                                    <div class="flex-row flex-center-items flex-space-between">
+                                        <span class="subtitle-1">Campaign Progress</span>
+                                        <span class="body-2">{{ campaignData.completedMissions }}/{{ campaignData.totalMissions }} missions</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" :style="{ width: campaignData.progressPercent + '%' }"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div v-if="mission.locked" class="locked-overlay">
-                            <Icon :icon="lockIcon" height="32" />
+
+                        <!-- Galaxy Map Placeholder -->
+                        <div class="galaxy-map-container flex-grow">
+                            <div class="galaxy-map-placeholder">
+                                <Icon :icon="planetIcon" height="80" />
+                                <h2 class="title-2">3D Galaxy Map</h2>
+                                <p class="body-1">Goes Here</p>
+                                <p class="caption-1">Rotates and animates as you select missions</p>
+                            </div>
+                        </div>
+
+                        <!-- Selected Mission Info -->
+                        <div v-if="selectedMission" class="mission-info-section padding-xxl">
+                            <div class="flex-row flex-center-items gap-lg margin-bottom-lg">
+                                <div class="selected-mission-number">
+                                    <Icon v-if="selectedMission.completed" :icon="checkIcon" height="28" />
+                                    <span v-else>{{ selectedMissionIndex + 1 }}</span>
+                                </div>
+                                <div class="flex-col flex-grow">
+                                    <h2 class="title-2">{{ selectedMission.name }}</h2>
+                                    <p class="body-2">{{ selectedMission.description }}</p>
+                                </div>
+                            </div>
+                            <div class="mission-stats flex-row gap-xl margin-bottom-lg">
+                                <div class="stat">
+                                    <span class="caption-1">Difficulty</span>
+                                    <span class="body-1-strong" :class="getDifficultyClass(selectedMission.difficulty)">{{ selectedMission.difficulty }}</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="caption-1">Est. Time</span>
+                                    <span class="body-1-strong">{{ selectedMission.estimatedTime }} min</span>
+                                </div>
+                            </div>
+                            <Button class="green large fullwidth" @click="openMissionBriefing">
+                                Mission Briefing
+                            </Button>
+                        </div>
+
+                        <!-- No Mission Selected -->
+                        <div v-else class="no-mission-selected padding-xxl">
+                            <p class="body-1">Select a mission to view details</p>
                         </div>
                     </div>
-                </div>
+                </Panel>
             </div>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { Icon } from "@iconify/vue";
 import arrowLeftIcon from "@iconify-icons/mdi/arrow-left";
 import lockIcon from "@iconify-icons/mdi/lock";
+import checkIcon from "@iconify-icons/mdi/check-circle";
 import skullIcon from "@iconify-icons/mdi/skull";
+import planetIcon from "@iconify-icons/mdi/planet";
 
 import Button from "@renderer/components/controls/Button.vue";
 import Panel from "@renderer/components/common/Panel.vue";
+import InteractiveTile from "@renderer/components/common/InteractiveTile.vue";
 import { useTypedI18n } from "@renderer/i18n";
 
 import armadaImage from "@renderer/assets/images/factions/armada_faction.png";
@@ -98,6 +160,16 @@ const route = useRoute();
 
 const campaignId = computed(() => route.params.campaignId as string);
 
+interface Mission {
+    id: number;
+    name: string;
+    description: string;
+    difficulty: string;
+    estimatedTime: number;
+    locked: boolean;
+    completed: boolean;
+}
+
 // Mock campaign data - this would come from a store/API
 const campaigns = {
     armada: {
@@ -105,22 +177,28 @@ const campaigns = {
         name: "Armada Campaign",
         description: "Lead the Armada forces in their fight for freedom",
         image: armadaImage,
-        totalMissions: 12,
+        totalMissions: 18,
         completedMissions: 3,
-        progressPercent: 25,
+        progressPercent: 17,
         missions: [
             { id: 1, name: "First Strike", description: "Defend the colony from initial assault", difficulty: "Easy", estimatedTime: 15, locked: false, completed: true },
             { id: 2, name: "Supply Lines", description: "Secure critical supply routes", difficulty: "Easy", estimatedTime: 20, locked: false, completed: true },
             { id: 3, name: "Hold the Line", description: "Defend against overwhelming odds", difficulty: "Medium", estimatedTime: 25, locked: false, completed: true },
             { id: 4, name: "Counterattack", description: "Launch offensive operations", difficulty: "Medium", estimatedTime: 30, locked: false, completed: false },
             { id: 5, name: "Behind Enemy Lines", description: "Infiltrate enemy territory", difficulty: "Hard", estimatedTime: 35, locked: true, completed: false },
-            { id: 6, name: "Rescue Operation", description: "Extract trapped personnel", difficulty: "Medium", estimatedTime: 25, locked: true, completed: false },
-            { id: 7, name: "Strategic Strike", description: "Destroy enemy stronghold", difficulty: "Hard", estimatedTime: 40, locked: true, completed: false },
-            { id: 8, name: "Alliance", description: "Secure diplomatic relations", difficulty: "Medium", estimatedTime: 30, locked: true, completed: false },
-            { id: 9, name: "Final Push", description: "Break through enemy lines", difficulty: "Hard", estimatedTime: 45, locked: true, completed: false },
-            { id: 10, name: "Turning Point", description: "Secure strategic victory", difficulty: "Very Hard", estimatedTime: 50, locked: true, completed: false },
-            { id: 11, name: "Last Stand", description: "Defend against final assault", difficulty: "Very Hard", estimatedTime: 55, locked: true, completed: false },
-            { id: 12, name: "Liberation", description: "Final mission to secure freedom", difficulty: "Extreme", estimatedTime: 60, locked: true, completed: false },
+            { id: 6, name: "Rescue Operation", description: "Extract trapped personnel from the fallen outpost", difficulty: "Medium", estimatedTime: 25, locked: true, completed: false },
+            { id: 7, name: "Strategic Strike", description: "Destroy the enemy's main supply depot", difficulty: "Hard", estimatedTime: 40, locked: true, completed: false },
+            { id: 8, name: "Alliance Talks", description: "Secure diplomatic relations with neutral factions", difficulty: "Medium", estimatedTime: 30, locked: true, completed: false },
+            { id: 9, name: "The Crossing", description: "Lead your forces across the dangerous DMZ", difficulty: "Hard", estimatedTime: 35, locked: true, completed: false },
+            { id: 10, name: "Enemy Within", description: "Root out Cortex infiltrators in your ranks", difficulty: "Hard", estimatedTime: 40, locked: true, completed: false },
+            { id: 11, name: "Orbital Defense", description: "Protect the space station from attack", difficulty: "Very Hard", estimatedTime: 45, locked: true, completed: false },
+            { id: 12, name: "Final Push", description: "Break through the enemy's fortified lines", difficulty: "Hard", estimatedTime: 45, locked: true, completed: false },
+            { id: 13, name: "Turning Point", description: "Secure a strategic victory at the crossroads", difficulty: "Very Hard", estimatedTime: 50, locked: true, completed: false },
+            { id: 14, name: "Heart of Darkness", description: "Assault the enemy's central command", difficulty: "Very Hard", estimatedTime: 55, locked: true, completed: false },
+            { id: 15, name: "Last Stand", description: "Defend against the enemy's final assault", difficulty: "Very Hard", estimatedTime: 55, locked: true, completed: false },
+            { id: 16, name: "The Reckoning", description: "Face the enemy commander in battle", difficulty: "Extreme", estimatedTime: 60, locked: true, completed: false },
+            { id: 17, name: "Dawn of Freedom", description: "Lead the final liberation assault", difficulty: "Extreme", estimatedTime: 60, locked: true, completed: false },
+            { id: 18, name: "Victory", description: "Secure total victory for the Armada", difficulty: "Extreme", estimatedTime: 75, locked: true, completed: false },
         ]
     },
     cortex: {
@@ -167,12 +245,62 @@ const campaigns = {
 
 const campaignData = computed(() => campaigns[campaignId.value as keyof typeof campaigns] || campaigns.armada);
 
+const selectedMission = ref<Mission | null>(null);
+
+const selectedMissionIndex = computed(() => {
+    if (!selectedMission.value) return -1;
+    return campaignData.value.missions.findIndex(m => m.id === selectedMission.value?.id);
+});
+
+// Auto-select the current mission on load
+const currentMissionIndex = computed(() => {
+    const missions = campaignData.value.missions;
+    // Find first incomplete, unlocked mission
+    const idx = missions.findIndex(m => !m.completed && !m.locked);
+    return idx >= 0 ? idx : 0;
+});
+
+// Initialize with current mission selected
+if (!selectedMission.value && campaignData.value.missions.length > 0) {
+    const currentIdx = campaignData.value.missions.findIndex(m => !m.completed && !m.locked);
+    selectedMission.value = campaignData.value.missions[currentIdx >= 0 ? currentIdx : 0];
+}
+
 function goBack() {
     router.push("/play/campaign");
 }
 
-function selectMission(missionId: number) {
-    router.push(`/play/campaign/mission?campaign=${campaignId.value}&mission=${missionId}`);
+function selectMission(mission: Mission) {
+    selectedMission.value = mission;
+}
+
+function openMissionBriefing() {
+    if (selectedMission.value) {
+        router.push(`/play/campaign/mission?campaign=${campaignId.value}&mission=${selectedMission.value.id}`);
+    }
+}
+
+function getMissionClass(mission: Mission): string {
+    if (mission.completed) return 'completed';
+    if (mission.locked) return 'locked';
+    if (isCurrentMission(mission, campaignData.value.missions.indexOf(mission))) return 'current';
+    return 'available';
+}
+
+function isCurrentMission(mission: Mission, index: number): boolean {
+    // Current mission is first incomplete, unlocked mission
+    return !mission.completed && !mission.locked && index === currentMissionIndex.value;
+}
+
+function getDifficultyClass(difficulty: string): string {
+    const difficultyMap: Record<string, string> = {
+        'Easy': 'difficulty-easy',
+        'Medium': 'difficulty-medium',
+        'Hard': 'difficulty-hard',
+        'Very Hard': 'difficulty-very-hard',
+        'Extreme': 'difficulty-extreme'
+    };
+    return difficultyMap[difficulty] || '';
 }
 </script>
 
@@ -190,98 +318,99 @@ function selectMission(missionId: number) {
     box-sizing: border-box;
 }
 
-
-
-.campaign-detail-layout {
-    min-height: 0;
-    overflow-y: auto;
-}
-
-.progress-panel {
-    flex-shrink: 0;
-}
-
-.campaign-icon {
-    width: 64px;
-    height: 64px;
-    flex-shrink: 0;
-    
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
-}
-
-.progress-bar-large {
+.campaign-layout {
     width: 100%;
-    height: 12px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
-    overflow: hidden;
-}
-
-.progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #22c55e, #16a34a);
-    border-radius: 6px;
-    transition: width 0.3s ease;
+    min-height: 0;
+    align-items: stretch;
 }
 
-.missions-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: map-get($spacing, "lg");
-    padding-bottom: map-get($spacing, "xl");
-}
-
-.mission-card {
-    position: relative;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-    padding: map-get($spacing, "lg");
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    gap: map-get($spacing, "md");
-    
-    &:hover:not(.locked) {
-        border-color: rgba(255, 255, 255, 0.3);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    }
-    
-    &.locked {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
-    
-    &.completed {
-        border-color: rgba(34, 197, 94, 0.3);
-        
-        .mission-number {
-            background: rgba(34, 197, 94, 0.2);
-            color: #22c55e;
-        }
-    }
-}
-
-.mission-number {
-    width: 48px;
-    height: 48px;
+.missions-panel {
+    width: 450px;
+    min-height: 0;
     flex-shrink: 0;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    
+    // Override Panel's internal structure for proper scrolling
+    :deep(.panel) {
+        min-height: 0;
+        height: 100%;
+    }
+    
+    :deep(.content) {
+        min-height: 0;
+        overflow: hidden;
+    }
+}
+
+.missions-scroll {
+    min-height: 0;
+    flex: 1;
+}
+
+.missions-list {
+    display: flex;
+    flex-direction: column;
+    gap: map-get($spacing, "lg");
+    padding: map-get($spacing, "xxl");
+}
+
+.mission-tile-wrapper {
+    height: 140px;
+}
+
+.mission-media {
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
-    font-weight: 600;
+    background: linear-gradient(135deg, rgba(30, 30, 50, 0.9) 0%, rgba(20, 20, 40, 0.9) 100%);
+    
+    &.completed {
+        background: linear-gradient(135deg, rgba(34, 100, 50, 0.6) 0%, rgba(20, 60, 30, 0.6) 100%);
+    }
+    
+    &.current {
+        background: linear-gradient(135deg, rgba(37, 99, 235, 0.6) 0%, rgba(20, 50, 120, 0.6) 100%);
+    }
+    
+    &.locked {
+        background: linear-gradient(135deg, rgba(50, 50, 50, 0.9) 0%, rgba(30, 30, 30, 0.9) 100%);
+    }
 }
 
-.mission-info {
-    flex: 1;
+.mission-number-badge {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 700;
+    
+    .completed & {
+        border-color: #22c55e;
+        color: #22c55e;
+    }
+    
+    .current & {
+        border-color: #3b82f6;
+        color: #3b82f6;
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+    }
+    
+    .locked & {
+        border-color: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.4);
+    }
+}
+
+.mission-tile-content {
     display: flex;
     flex-direction: column;
     gap: map-get($spacing, "xs");
@@ -296,24 +425,157 @@ function selectMission(missionId: number) {
     }
 }
 
-.mission-meta {
-    display: flex;
-    gap: map-get($spacing, "md");
-    color: rgba(255, 255, 255, 0.6);
+.mission-badges {
     margin-top: map-get($spacing, "xs");
+    flex-wrap: wrap;
 }
 
-.locked-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
+.badge {
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    
+    &.completed {
+        background: rgba(34, 197, 94, 0.2);
+        color: #22c55e;
+    }
+    
+    &.current {
+        background: rgba(59, 130, 246, 0.2);
+        color: #3b82f6;
+    }
+    
+    &.locked {
+        background: rgba(128, 128, 128, 0.2);
+        color: rgba(255, 255, 255, 0.5);
+    }
+    
+    &.difficulty {
+        background: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.7);
+    }
+}
+
+// Campaign Progress Header
+.campaign-progress-header {
+    flex-shrink: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.campaign-icon {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+}
+
+.progress-bar {
     width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: linear-gradient(90deg, #22c55e, #16a34a);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+// Galaxy Panel
+.galaxy-panel {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.galaxy-layout {
+    min-height: 0;
+}
+
+.galaxy-map-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 4px;
+    min-height: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 20, 0.8) 0%, rgba(10, 10, 30, 0.8) 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.galaxy-map-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: map-get($spacing, "md");
+    color: rgba(255, 255, 255, 0.4);
+    text-align: center;
+    
+    h2, p {
+        margin: 0;
+    }
+}
+
+.mission-info-section {
+    flex-shrink: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.selected-mission-number {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: rgba(59, 130, 246, 0.2);
+    border: 2px solid #3b82f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 700;
+    color: #3b82f6;
+}
+
+.mission-stats {
+    .stat {
+        display: flex;
+        flex-direction: column;
+        gap: map-get($spacing, "xs");
+        
+        .caption-1 {
+            color: rgba(255, 255, 255, 0.6);
+        }
+    }
+}
+
+.difficulty-easy { color: #22c55e; }
+.difficulty-medium { color: #eab308; }
+.difficulty-hard { color: #f97316; }
+.difficulty-very-hard { color: #ef4444; }
+.difficulty-extreme { color: #dc2626; }
+
+.no-mission-selected {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+// Override InteractiveTile styles for locked missions
+:deep(.locked) {
+    opacity: 0.5;
+    cursor: not-allowed;
     pointer-events: none;
 }
 </style>

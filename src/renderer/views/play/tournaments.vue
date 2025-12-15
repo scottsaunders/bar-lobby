@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT
 -->
 
 <route lang="json5">
-{ meta: { title: "Tournaments", order: 6, devOnly: true, onlineOnly: true, transition: { name: "slide-left" } } }
+{ meta: { title: "Tournaments", order: 6, onlineOnly: true, transition: { name: "slide-left" } } }
 </route>
 
 <template>
@@ -15,12 +15,22 @@ SPDX-License-Identifier: MIT
                 <h1>{{ t("lobby.views.play.tournaments.title") }}</h1>
                 <p>{{ t("lobby.views.play.tournaments.description") }}</p>
             </div>
+            <Panel class="coming-soon-panel">
+                <div class="coming-soon-content">
+                    <Icon :icon="trophyIcon" height="64" />
+                    <h2 class="title-1">{{ t("lobby.views.play.comingSoon") }}</h2>
+                    <p class="body-1">Tournament features are currently in development.</p>
+                </div>
+            </Panel>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
 import { useTypedI18n } from "@renderer/i18n";
+import Panel from "@renderer/components/common/Panel.vue";
+import { Icon } from "@iconify/vue";
+import trophyIcon from "@iconify-icons/mdi/trophy";
 
 const { t } = useTypedI18n();
 </script>
@@ -39,7 +49,23 @@ const { t } = useTypedI18n();
     box-sizing: border-box;
     
     .view-title {
-        padding-left: 0; // Ensure title isn't cut off - padding is handled by view-container
+        padding-left: 0;
     }
+}
+
+.coming-soon-panel {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.coming-soon-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: map-get($spacing, "lg");
+    text-align: center;
+    opacity: 0.7;
 }
 </style>
