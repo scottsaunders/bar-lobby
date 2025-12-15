@@ -185,7 +185,7 @@ export default {
     },
     methods: {
         isTabPanel(child) {
-            return child.type.name === "TabPanel";
+            return child?.type?.name === "TabPanel";
         },
         isTabActive(index) {
             return this.d_activeIndex === index;

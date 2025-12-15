@@ -16,17 +16,27 @@ SPDX-License-Identifier: MIT
                     <Button v-tooltip.bottom="'Back to Lobbies'" class="icon" @click="goBack">
                         <Icon :icon="arrow_back" height="24" />
                     </Button>
-                    <div class="flex-row flex-center-items gap-md">
-                        <div>
+                    <div class="flex-col">
+                        <div class="flex-row flex-center-items gap-sm">
                             <h1>{{ battleStore.title }}</h1>
-                            <p>Configure your battle and join the game</p>
+                            <Button v-tooltip.bottom="'Edit Lobby Settings'" class="icon slim" @click="openEditLobbyModal">
+                                <Icon :icon="pencilIcon" height="16" />
+                            </Button>
                         </div>
-                        <Button class="icon" @click="editTitle">
-                            <Icon :icon="pencilIcon" height="20" />
-                        </Button>
+                        <p>Level {{ lobbyMinLevel }}-{{ lobbyMaxLevel }} • Chevron {{ lobbyMinChevron }}-{{ lobbyMaxChevron }}</p>
                     </div>
                 </div>
             </div>
+            
+            <LuaOptionsModal
+                id="lobby-options"
+                title="Lobby Settings"
+                v-model="editLobbyModalOpen"
+                :options="battleStore.battleOptions.gameMode.options"
+                :sections="gameStore.selectedGameVersion?.luaOptionSections || []"
+                :show-lobby-settings="true"
+                @set-options="onOptionsChanged"
+            />
             <div class="lobby-container flex-col fullheight">
                 <!-- Top Row: Three Main Panels -->
                 <div class="lobby-layout flex-row gap-xl flex-grow min-height-0">
@@ -49,6 +59,13 @@ SPDX-License-Identifier: MIT
                                         </div>
                                         <div class="terrain-icons-container flex-row flex-center-items gap-sm flex-wrap flex-grow">
                                             <TerrainIcon v-for="terrain in map?.terrain" :terrain="terrain" v-bind:key="terrain" />
+                                        </div>
+                                        <div class="map-start-position-controls flex-row flex-center-items gap-sm">
+                                            <span class="body-2">{{ currentStartSystemText }}</span>
+                                            <Button class="grey slim" @click="openMapOptions" v-tooltip.left="'Configure start positions'">
+                                                <Icon :icon="pencilIcon" height="16" />
+                                            </Button>
+                                            <MapOptionsModal v-if="battleStore.battleOptions.map" v-model="mapOptionsOpen" />
                                         </div>
                                     </div>
                                 </div>
@@ -73,11 +90,140 @@ SPDX-License-Identifier: MIT
                         </div>
                     </Panel>
 
-                    <!-- Right Panel: Settings and Chat -->
-                    <Panel class="settings-panel" no-padding>
+                    <!-- Right Panel: Chat -->
+                    <Panel class="chat-panel" no-padding>
                         <div class="panel-content flex-col fullheight">
-                            <div class="panel-body flex-grow padding-left-xxl padding-right-xxl padding-top-xxl padding-bottom-xxl flex-col gap-md">
-                                <GameModeComponent />
+                            <div class="chat-messages-container scroll-container main-panel-scroll flex-grow">
+                                <div class="chat-messages flex-col gap-lg padding-md">
+                                    <!-- Mock conversation -->
+                                    <div class="chat-message flex-col gap-xs">
+                                        <div class="player-chip">
+                                            <Flag countryCode="DE" class="flag" />
+                                            <span>CommanderX</span>
+                                        </div>
+                                        <div class="message-text">Hey everyone! Ready for some 8v8?</div>
+                                    </div>
+                                    
+                                    <div class="chat-message flex-col gap-xs">
+                                        <div class="player-chip">
+                                            <Flag countryCode="US" class="flag" />
+                                            <span>TankMaster42</span>
+                                        </div>
+                                        <div class="message-text">Let's go! I'll take south spawn</div>
+                                    </div>
+                                    
+                                    <div class="chat-message flex-col gap-xs">
+                                        <div class="player-chip">
+                                            <Flag countryCode="GB" class="flag" />
+                                            <span>AirSupreme</span>
+                                        </div>
+                                        <div class="message-text">I'll go air this game if that's ok</div>
+                                    </div>
+                                    
+                                    <div class="chat-message flex-col gap-xs">
+                                        <div class="player-chip">
+                                            <Flag countryCode="DE" class="flag" />
+                                            <span>CommanderX</span>
+                                        </div>
+                                        <div class="message-text">Sounds good! Anyone want to go navy?</div>
+                                    </div>
+                                    
+                                    <div class="chat-message flex-col gap-xs">
+                                        <div class="player-chip">
+                                            <Flag countryCode="FR" class="flag" />
+                                            <span>NavalKnight</span>
+                                        </div>
+                                        <div class="message-text">I got navy covered 🚢</div>
+                                    </div>
+                                    
+                                    <div class="chat-message flex-col gap-xs">
+                                        <div class="player-chip">
+                                            <Flag countryCode="PL" class="flag" />
+                                            <span>RushBot</span>
+                                        </div>
+                                        <div class="message-text">glhf!</div>
+                                    </div>
+                                    
+                                    <div class="chat-message flex-col gap-xs">
+                                        <div class="player-chip">
+                                            <Flag countryCode="SE" class="flag" />
+                                            <span>VikingStorm</span>
+                                        </div>
+                                        <div class="message-text">Same here, good luck all!</div>
+                                    </div>
+                                    
+                                    <div class="chat-message flex-col gap-xs">
+                                        <div class="player-chip">
+                                            <Flag countryCode="US" class="flag" />
+                                            <span>TankMaster42</span>
+                                        </div>
+                                        <div class="message-text">Who's going eco? We need someone to pump metal</div>
+                                    </div>
+                                    
+                                    <div class="chat-message flex-col gap-xs">
+                                        <div class="player-chip">
+                                            <Flag countryCode="CA" class="flag" />
+                                            <span>MapleReclaimer</span>
+                                        </div>
+                                        <div class="message-text">I can eco mid, I'll build up and support both flanks</div>
+                                    </div>
+                                    
+                                    <div class="chat-message flex-col gap-xs">
+                                        <div class="player-chip">
+                                            <Flag countryCode="DE" class="flag" />
+                                            <span>CommanderX</span>
+                                        </div>
+                                        <div class="message-text">Perfect. Let's coordinate early game</div>
+                                    </div>
+                                    
+                                    <div class="chat-message flex-col gap-xs">
+                                        <div class="player-chip">
+                                            <Flag countryCode="AU" class="flag" />
+                                            <span>OutbackTactics</span>
+                                        </div>
+                                        <div class="message-text">I'll push north with some early bots</div>
+                                    </div>
+                                    
+                                    <div class="chat-message flex-col gap-xs">
+                                        <div class="player-chip">
+                                            <Flag countryCode="JP" class="flag" />
+                                            <span>NinjaMech</span>
+                                        </div>
+                                        <div class="message-text">Watch out for early rush, they have RushBot on the other team 😅</div>
+                                    </div>
+                                    
+                                    <div class="chat-message flex-col gap-xs">
+                                        <div class="player-chip">
+                                            <Flag countryCode="PL" class="flag" />
+                                            <span>RushBot</span>
+                                        </div>
+                                        <div class="message-text">👀</div>
+                                    </div>
+                                    
+                                    <div class="chat-message flex-col gap-xs">
+                                        <div class="player-chip">
+                                            <Flag countryCode="GB" class="flag" />
+                                            <span>AirSupreme</span>
+                                        </div>
+                                        <div class="message-text">lol I'll scout early, don't worry</div>
+                                    </div>
+                                    
+                                    <div class="chat-message flex-col gap-xs">
+                                        <div class="player-chip">
+                                            <Flag countryCode="FR" class="flag" />
+                                            <span>NavalKnight</span>
+                                        </div>
+                                        <div class="message-text">Ready when you are, host</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-input-container">
+                                <Textbox 
+                                    v-model="chatInput"
+                                    placeholder="Type a message..."
+                                    class="chat-input fullwidth"
+                                    @keydown.enter="sendChatMessage"
+                                />
                             </div>
                         </div>
                     </Panel>
@@ -154,7 +300,7 @@ import { db } from "@renderer/store/db";
 import { useDexieLiveQueryWithDeps } from "@renderer/composables/useDexieLiveQuery";
 import MapBattlePreview from "@renderer/components/maps/MapBattlePreview.vue";
 import { MapData } from "@main/content/maps/map-data";
-import GameModeComponent from "@renderer/components/battle/GameModeComponent.vue";
+import LuaOptionsModal from "@renderer/components/battle/LuaOptionsModal.vue";
 import { GameStatus, gameStore } from "@renderer/store/game.store";
 import DownloadContentButton from "@renderer/components/controls/DownloadContentButton.vue";
 import TerrainIcon from "@renderer/components/maps/filters/TerrainIcon.vue";
@@ -163,7 +309,10 @@ import gridIcon from "@iconify-icons/mdi/grid";
 import arrow_back from "@iconify-icons/mdi/arrow-back";
 import pencilIcon from "@iconify-icons/mdi/pencil";
 import Playerlist from "@renderer/components/battle/Playerlist.vue";
-import { GameModeID } from "@main/game/battle/battle-types";
+import MapOptionsModal from "@renderer/components/battle/MapOptionsModal.vue";
+import Flag from "@renderer/components/misc/Flag.vue";
+import Textbox from "@renderer/components/controls/Textbox.vue";
+import { GameModeID, StartPosType } from "@main/game/battle/battle-types";
 import { me } from "@renderer/store/me.store";
 
 const router = useRouter();
@@ -276,9 +425,47 @@ function toggleReady(value?: boolean) {
     // TODO: Send ready state to server
 }
 
-function editTitle() {
-    // TODO: Implement title editing functionality
-    console.log("Edit title clicked");
+const editLobbyModalOpen = ref(false);
+const mapOptionsOpen = ref(false);
+const chatInput = ref("");
+
+// Lobby restriction settings (placeholder values)
+const lobbyMinLevel = ref(5);
+const lobbyMaxLevel = ref(30);
+const lobbyMinChevron = ref(0);
+const lobbyMaxChevron = ref(5);
+
+function openEditLobbyModal() {
+    editLobbyModalOpen.value = true;
+}
+
+function openMapOptions() {
+    mapOptionsOpen.value = true;
+}
+
+// Current start system text
+const currentStartSystemText = computed(() => {
+    const startPosType = battleStore.battleOptions.mapOptions.startPosType;
+    if (startPosType === StartPosType.Boxes) {
+        return "Start Boxes";
+    } else if (startPosType === StartPosType.Fixed) {
+        return "Fixed Positions";
+    } else if (startPosType === StartPosType.Random) {
+        return "Random Positions";
+    }
+    return "Start Boxes"; // Default
+});
+
+function sendChatMessage() {
+    if (chatInput.value.trim()) {
+        // TODO: Send message to server
+        console.log("Send message:", chatInput.value);
+        chatInput.value = "";
+    }
+}
+
+function onOptionsChanged(options: Record<string, boolean | string | number>) {
+    battleStore.battleOptions.gameMode.options = options;
 }
 
 
@@ -398,6 +585,12 @@ onMounted(async () => {
     min-width: 0;
 }
 
+.map-start-position-controls {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
 .teams-settings-panel {
     min-height: 0;
     flex: 1;
@@ -405,12 +598,95 @@ onMounted(async () => {
     flex-direction: column;
 }
 
-.settings-panel {
+.chat-panel {
     width: 350px;
     min-height: 0;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+    
+    :deep(.panel) {
+        min-height: 0;
+        height: 100%;
+    }
+    
+    :deep(.content) {
+        min-height: 0;
+        overflow: hidden;
+    }
+    
+    .panel-content {
+        min-height: 0;
+        overflow: hidden;
+    }
+}
+
+.chat-messages-container {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-message {
+    align-items: flex-start;
+}
+
+.player-chip {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.4);
+    font-size: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    white-space: nowrap;
+    
+    .flag {
+        width: 14px;
+        height: 10px;
+    }
+}
+
+.message-text {
+    font-size: 14px;
+    line-height: 1.4;
+    word-break: break-word;
+    color: rgba(255, 255, 255, 0.9);
+    padding-left: map-get($spacing, "xs");
+}
+
+.chat-input-container {
+    flex-shrink: 0;
+    width: 100%;
+    
+    .chat-input {
+        width: 100%;
+    }
+    
+    :deep(.control) {
+        width: 100%;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+    }
+    
+    :deep(.p-inputtext) {
+        padding: map-get($spacing, "md") map-get($spacing, "lg");
+        width: 100% !important;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
 }
 
 .panel-content {
