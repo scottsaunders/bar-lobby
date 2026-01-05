@@ -19,15 +19,16 @@ function onMouseEnter() {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .participant {
-    height: map-get($spacing, "xxl");
+    height: map.get($spacing, "xxl");
     width: 100%;
     display: flex;
     align-items: center;
-    gap: map-get($spacing, "xs");
-    padding: map-get($spacing, "xs") map-get($spacing, "sm");
+    gap: map.get($spacing, "xs");
+    padding: map.get($spacing, "xs") map.get($spacing, "sm");
     border-radius: 3px;
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.1);

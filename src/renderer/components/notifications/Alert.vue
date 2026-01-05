@@ -56,6 +56,7 @@ if (props.alert.timeoutMs) {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .alert {
@@ -65,14 +66,14 @@ if (props.alert.timeoutMs) {
     pointer-events: auto;
     text-align: center;
     flex-direction: row;
-    gap: map-get($spacing, "sm");
+    gap: map.get($spacing, "sm");
     align-items: center;
     justify-content: space-between;
     @extend .body-1 !optional;
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
     height: 30px;
     overflow: hidden;
-    margin-bottom: map-get($spacing, "xs");
+    margin-bottom: map.get($spacing, "xs");
     border-top: 1px solid rgba(255, 255, 255, 0.3);
     background: linear-gradient(to bottom, rgb(84, 94, 110), rgb(63, 69, 99));
     max-width: fit-content;
@@ -87,14 +88,14 @@ if (props.alert.timeoutMs) {
 }
 .icon {
     display: flex;
-    padding-left: map-get($spacing, "sm");
+    padding-left: map.get($spacing, "sm");
 }
 .text {
     white-space: nowrap;
 }
 .close {
     color: rgba(255, 255, 255, 0.7);
-    padding-right: map-get($spacing, "sm");
+    padding-right: map.get($spacing, "sm");
     height: 100%;
     display: flex;
     align-items: center;

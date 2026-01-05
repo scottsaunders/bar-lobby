@@ -219,6 +219,7 @@ async function addFriend() {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .user-list {
@@ -227,7 +228,7 @@ async function addFriend() {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    gap: map-get($spacing, "xs");
+    gap: map.get($spacing, "xs");
 }
 :deep(.FriendId) {
     flex-grow: 1;

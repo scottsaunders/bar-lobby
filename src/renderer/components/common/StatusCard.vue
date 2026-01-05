@@ -26,13 +26,14 @@ defineProps<{
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .status-card {
     display: flex;
     flex-direction: column;
-    gap: map-get($spacing, "xs");
-    padding: map-get($spacing, "sm");
+    gap: map.get($spacing, "xs");
+    padding: map.get($spacing, "sm");
     border-radius: 2px;
     transition: all 0.2s ease;
     

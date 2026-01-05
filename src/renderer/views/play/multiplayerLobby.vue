@@ -477,6 +477,7 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .view-container {
@@ -485,7 +486,7 @@ onMounted(async () => {
     flex: 1;
     min-height: 0;
     width: 100%;
-    padding: 0 map-get($spacing, "xxl") map-get($spacing, "sm") map-get($spacing, "xxl");
+    padding: 0 map.get($spacing, "xxl") map.get($spacing, "sm") map.get($spacing, "xxl");
     overflow: visible;
     box-sizing: border-box;
     position: relative;
@@ -505,7 +506,7 @@ onMounted(async () => {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: map-get($spacing, "lg");
+    gap: map.get($spacing, "lg");
 }
 
 .lobby-layout {
@@ -563,14 +564,14 @@ onMounted(async () => {
     width: 100%;
     border: 1px solid rgba(255, 255, 255, 0.1);
     background-color: rgba(0, 0, 0, 0.3);
-    padding: map-get($spacing, "md");
+    padding: map.get($spacing, "md");
     border-radius: 2px;
     box-sizing: border-box;
 }
 
 .map-features-row {
     flex-shrink: 0;
-    gap: map-get($spacing, "md");
+    gap: map.get($spacing, "md");
     flex-wrap: nowrap;
     align-items: center;
 }
@@ -662,7 +663,7 @@ onMounted(async () => {
     line-height: 1.4;
     word-break: break-word;
     color: rgba(255, 255, 255, 0.9);
-    padding-left: map-get($spacing, "xs");
+    padding-left: map.get($spacing, "xs");
 }
 
 .chat-input-container {
@@ -682,7 +683,7 @@ onMounted(async () => {
     }
     
     :deep(.p-inputtext) {
-        padding: map-get($spacing, "md") map-get($spacing, "lg");
+        padding: map.get($spacing, "md") map.get($spacing, "lg");
         width: 100% !important;
         max-width: 100%;
         box-sizing: border-box;
@@ -718,7 +719,7 @@ onMounted(async () => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: map-get($spacing, "lg");
+    gap: map.get($spacing, "lg");
     width: 100%;
     
     // Override DownloadContentButton wrapper width in button bar (same as skirmish)
@@ -728,7 +729,7 @@ onMounted(async () => {
     }
     
     > .flex-row {
-        gap: map-get($spacing, "md");
+        gap: map.get($spacing, "md");
     }
     
     

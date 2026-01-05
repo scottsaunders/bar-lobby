@@ -36,6 +36,7 @@ import NewsFeed from "@renderer/components/misc/NewsFeed.vue";
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .view-container {
@@ -43,7 +44,7 @@ import NewsFeed from "@renderer/components/misc/NewsFeed.vue";
     flex-direction: column;
     width: 100%;
     height: 100%;
-    padding: map-get($spacing, "md") map-get($spacing, "xl");
+    padding: map.get($spacing, "md") map.get($spacing, "xl");
     box-sizing: border-box;
 }
 

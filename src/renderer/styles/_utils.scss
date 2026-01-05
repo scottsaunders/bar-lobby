@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
+@use "sass:map";
 @use "spacing" as *;
 
 .fullsize {
@@ -26,8 +27,8 @@
 .gridform {
     display: grid;
     grid-template-columns: auto minmax(300px, 2fr);
-    row-gap: map-get($spacing, "sm"); // 8px - aligned to 4px grid (was 10px)
-    column-gap: map-get($spacing, "xl"); // 24px - aligned to 4px grid (was 20px)
+    row-gap: map.get($spacing, "sm");
+    column-gap: map.get($spacing, "xl");
     > :nth-child(2n + 1) {
         display: flex;
         flex-direction: column;

@@ -37,6 +37,7 @@ defineProps<{
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .interactive-tile {
@@ -149,7 +150,7 @@ defineProps<{
         bottom: 0;
         left: 0;
         width: 100%;
-        padding: map-get($spacing, "sm");
+        padding: map.get($spacing, "sm");
         background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
         z-index: 2;
         pointer-events: none;
@@ -185,7 +186,7 @@ defineProps<{
             left: 0;
             width: 100%;
             height: 100%;
-            padding: map-get($spacing, "lg");
+            padding: map.get($spacing, "lg");
             background: rgba(0, 0, 0, 0.95);
             z-index: 2;
             pointer-events: none;
@@ -200,7 +201,7 @@ defineProps<{
         .read-more-content {
             display: flex;
             flex-direction: column;
-            gap: map-get($spacing, "md");
+            gap: map.get($spacing, "md");
             width: 100%;
             height: 100%;
             text-align: left;

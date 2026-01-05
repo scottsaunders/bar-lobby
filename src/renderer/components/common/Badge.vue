@@ -17,12 +17,13 @@ defineProps<{
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .badge {
     display: inline-flex;
     align-items: center;
-    padding: map-get($spacing, "xxs") map-get($spacing, "sm");
+    padding: map.get($spacing, "xxs") map.get($spacing, "sm");
     border-radius: 4px;
     white-space: nowrap;
     @extend .caption-1 !optional;

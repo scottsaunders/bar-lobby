@@ -38,6 +38,7 @@ function onMouseEnter() {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .control {
@@ -54,7 +55,7 @@ function onMouseEnter() {
         border-color: rgba(255, 255, 255, 0.2);
     }
     .label {
-        padding: map-get($spacing, "xs") map-get($spacing, "sm");
+        padding: map.get($spacing, "xs") map.get($spacing, "sm");
         border-radius: 0px;
         border-right: 1px solid rgba(255, 255, 255, 0.1);
         align-self: stretch;
@@ -62,7 +63,7 @@ function onMouseEnter() {
         justify-content: center;
         display: flex;
         white-space: nowrap;
-        margin-top: map-get($spacing, "xxs");
+        margin-top: map.get($spacing, "xxs");
     }
     &.disabled {
         background-color: rgba(128, 128, 128, 0.3);

@@ -61,6 +61,7 @@ const subStories = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .news-layout {
@@ -94,7 +95,7 @@ const subStories = computed(() => {
 
 .sub-stories :deep(.interactive-tile) {
     flex: 0 0 auto;
-    height: calc((100% - (2 * map-get($spacing, "lg"))) / 3);
+    height: calc((100% - (2 * map.get($spacing, "lg"))) / 3);
     width: 100%;
     min-height: 0;
 }

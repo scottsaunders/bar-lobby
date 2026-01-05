@@ -161,7 +161,7 @@ function onMenuClick(event: MouseEvent) {
     }
 }
 
-const toggleProfile = inject<Ref<((userId?: string) => void) | undefined>>("toggleProfile");
+const toggleProfile = inject<Ref<((userId?: string) => void) | undefined>>("toggleProfile", ref(undefined));
 
 async function viewProfile() {
     if (toggleProfile?.value) {
@@ -217,6 +217,7 @@ function onBonusSave(bonus: number) {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .player-participant-wrapper {
@@ -264,7 +265,7 @@ function onBonusSave(bonus: number) {
     border: none;
     color: rgba(255, 255, 255, 0.5);
     cursor: pointer;
-    padding: map-get($spacing, "xxs");
+    padding: map.get($spacing, "xxs");
     border-radius: 3px;
     transition: all 0.2s ease;
     opacity: 0;

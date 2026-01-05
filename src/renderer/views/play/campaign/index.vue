@@ -195,6 +195,7 @@ function selectCampaign(campaignId: string) {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .view-container {
@@ -203,7 +204,7 @@ function selectCampaign(campaignId: string) {
     flex: 1;
     min-height: 0;
     width: 100%;
-    padding: 0 map-get($spacing, "xxl") map-get($spacing, "sm") map-get($spacing, "xxl");
+    padding: 0 map.get($spacing, "xxl") map.get($spacing, "sm") map.get($spacing, "xxl");
     overflow: hidden;
     box-sizing: border-box;
     
@@ -336,7 +337,7 @@ function selectCampaign(campaignId: string) {
 .locked-message {
     color: rgba(255, 255, 255, 0.5);
     text-align: center;
-    padding: map-get($spacing, "xs") 0;
+    padding: map.get($spacing, "xs") 0;
 }
 
 .campaign-actions {
@@ -346,7 +347,7 @@ function selectCampaign(campaignId: string) {
 .action-button {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: map-get($spacing, "lg") map-get($spacing, "xl");
+    padding: map.get($spacing, "lg") map.get($spacing, "xl");
     transition: all 0.2s ease;
     
     &:hover {

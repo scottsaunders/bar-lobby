@@ -22,7 +22,9 @@ import { setupI18n } from "@renderer/i18n";
 setupVue();
 
 new ResizeObserver(() => {
-    window.mainWindow.resized();
+    if (window.mainWindow) {
+        window.mainWindow.resized();
+    }
 }).observe(document.body);
 
 async function setupVue() {

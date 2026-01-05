@@ -55,6 +55,7 @@ const mapSizeOptions = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .map-size-container {
@@ -62,7 +63,7 @@ const mapSizeOptions = computed(() => {
     flex-flow: row wrap;
 }
 .map-size-option {
-    padding: map-get($spacing, "sm"); // 8px
+    padding: map.get($spacing, "sm"); // 8px
     flex-grow: 0;
 }
 </style>

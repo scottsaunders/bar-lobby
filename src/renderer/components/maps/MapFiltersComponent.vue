@@ -63,9 +63,10 @@ const { t } = useTypedI18n();
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .filters {
-    padding: map-get($spacing, "xxl"); // Padding on all sides to match scenarios page
+    padding: map.get($spacing, "xxl"); // Padding on all sides to match scenarios page
 }
 </style>

@@ -1151,6 +1151,7 @@ function getRowClass(data: BattleWithComputed) {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .view-container {
@@ -1159,7 +1160,7 @@ function getRowClass(data: BattleWithComputed) {
     flex: 1;
     min-height: 0;
     width: 100%;
-    padding: 0 map-get($spacing, "xxl") map-get($spacing, "sm") map-get($spacing, "xxl");
+    padding: 0 map.get($spacing, "xxl") map.get($spacing, "sm") map.get($spacing, "xxl");
     overflow: hidden;
     box-sizing: border-box;
     

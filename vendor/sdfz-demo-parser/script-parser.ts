@@ -142,28 +142,40 @@ export class ScriptParser {
             }
         }
 
+        const validPlayers: DemoModel.Info.Player[] = [];
         for (const player of partialPlayers) {
             const team = teams[player.teamId!];
+            if (!team) {
+                console.warn(`Team ${player.teamId} not found for player ${player.playerId}, skipping player`);
+                continue;
+            }
             if (team.rgbColor) {
                 player.rgbColor = { r: 255 * team.rgbColor[0], g: 255 * team.rgbColor[1], b: 255 * team.rgbColor[2] };
             }
             player.allyTeamId = team.allyTeamId;
             player.handicap = team.handicap;
             player.faction = team.faction;
+            validPlayers.push(player as DemoModel.Info.Player);
         }
 
+        const validAis: DemoModel.Info.AI[] = [];
         for (const ai of partialAis) {
             const team = teams[ai.teamId!];
-            if (ai.rgbColor) {
+            if (!team) {
+                console.warn(`Team ${ai.teamId} not found for AI ${ai.aiId}, skipping AI`);
+                continue;
+            }
+            if (team.rgbColor) {
                 ai.rgbColor = { r: 255 * team.rgbColor[0], g: 255 * team.rgbColor[1], b: 255 * team.rgbColor[2] };
             }
             ai.allyTeamId = team.allyTeamId;
             ai.handicap = team.handicap;
             ai.faction = team.faction;
+            validAis.push(ai as DemoModel.Info.AI);
         }
 
-        const players = partialPlayers as DemoModel.Info.Player[];
-        const ais = partialAis as DemoModel.Info.AI[];
+        const players = validPlayers;
+        const ais = validAis;
 
         const allyTeamPlayerCounts: Record<number, number> = {};
         for (const player of [...players, ...ais]) {

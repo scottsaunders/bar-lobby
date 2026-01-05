@@ -178,6 +178,7 @@ function startLesson(lessonId: number) {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .view-container {
@@ -186,7 +187,7 @@ function startLesson(lessonId: number) {
     flex: 1;
     min-height: 0;
     width: 100%;
-    padding: 0 map-get($spacing, "xxl") map-get($spacing, "sm") map-get($spacing, "xxl");
+    padding: 0 map.get($spacing, "xxl") map.get($spacing, "sm") map.get($spacing, "xxl");
     overflow: hidden;
     box-sizing: border-box;
 }
@@ -220,18 +221,18 @@ function startLesson(lessonId: number) {
 .lessons-grid {
     display: flex;
     flex-direction: column;
-    gap: map-get($spacing, "md");
-    padding-bottom: map-get($spacing, "xl");
+    gap: map.get($spacing, "md");
+    padding-bottom: map.get($spacing, "xl");
 }
 
 .lesson-card {
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 4px;
-    padding: map-get($spacing, "lg");
+    padding: map.get($spacing, "lg");
     display: flex;
     align-items: center;
-    gap: map-get($spacing, "lg");
+    gap: map.get($spacing, "lg");
     cursor: pointer;
     transition: all 0.2s ease;
     
@@ -270,7 +271,7 @@ function startLesson(lessonId: number) {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: map-get($spacing, "xs");
+    gap: map.get($spacing, "xs");
     
     h3 {
         margin: 0;
@@ -284,9 +285,9 @@ function startLesson(lessonId: number) {
 
 .lesson-meta {
     display: flex;
-    gap: map-get($spacing, "md");
+    gap: map.get($spacing, "md");
     color: rgba(255, 255, 255, 0.6);
-    margin-top: map-get($spacing, "xs");
+    margin-top: map.get($spacing, "xs");
 }
 
 .completed-badge {

@@ -362,6 +362,7 @@ function onModalClose() {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .container {
@@ -369,7 +370,7 @@ function onModalClose() {
     max-height: 80vh;
     position: relative;
     display: flex;
-    gap: map-get($spacing, "md");
+    gap: map.get($spacing, "md");
     min-height: 0;
     overflow: hidden;
 }
@@ -384,7 +385,7 @@ function onModalClose() {
 .box-buttons {
     display: flex;
     flex-direction: row;
-    gap: map-get($spacing, "xs");
+    gap: map.get($spacing, "xs");
     flex-wrap: wrap;
     :deep(.control.grey) {
         background-color: rgba(255, 255, 255, 0.1) !important;
@@ -448,7 +449,7 @@ function onModalClose() {
         }
     }
     :deep(button) {
-        padding: map-get($spacing, "xs");
+        padding: map.get($spacing, "xs");
         &:hover {
             img {
                 opacity: 1;

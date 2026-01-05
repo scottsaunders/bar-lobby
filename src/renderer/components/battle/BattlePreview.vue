@@ -172,6 +172,7 @@ function onMapClick() {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .battle-preview-content {
@@ -282,7 +283,7 @@ function onMapClick() {
     justify-content: center;
     text-align: center;
     word-break: break-word;
-    padding: map-get($spacing, "sm");
+    padding: map.get($spacing, "sm");
     font-size: 1.75rem;
     font-weight: 600;
     text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
@@ -303,17 +304,17 @@ function onMapClick() {
     background: rgba(0, 0, 0, 0.2);
     font-size: 0.875rem;
     font-weight: 600;
-    padding: map-get($spacing, "xxs") map-get($spacing, "xs");
+    padding: map.get($spacing, "xxs") map.get($spacing, "xs");
     transition: 0.2s opacity;
     
     &.bl {
-        bottom: map-get($spacing, "sm");
-        left: map-get($spacing, "sm");
+        bottom: map.get($spacing, "sm");
+        left: map.get($spacing, "sm");
     }
     
     &.br {
-        bottom: map-get($spacing, "sm");
-        right: map-get($spacing, "sm");
+        bottom: map.get($spacing, "sm");
+        right: map.get($spacing, "sm");
         flex-wrap: wrap-reverse;
         justify-content: flex-end;
         max-width: 55%;
@@ -336,7 +337,7 @@ function onMapClick() {
 }
 
 .team-section {
-    margin-bottom: map-get($spacing, "md");
+    margin-bottom: map.get($spacing, "md");
 }
 
 .team-title {

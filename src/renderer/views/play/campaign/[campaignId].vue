@@ -305,6 +305,7 @@ function getDifficultyClass(difficulty: string): string {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .view-container {
@@ -313,7 +314,7 @@ function getDifficultyClass(difficulty: string): string {
     flex: 1;
     min-height: 0;
     width: 100%;
-    padding: 0 map-get($spacing, "xxl") map-get($spacing, "sm") map-get($spacing, "xxl");
+    padding: 0 map.get($spacing, "xxl") map.get($spacing, "sm") map.get($spacing, "xxl");
     overflow: hidden;
     box-sizing: border-box;
 }
@@ -352,8 +353,8 @@ function getDifficultyClass(difficulty: string): string {
 .missions-list {
     display: flex;
     flex-direction: column;
-    gap: map-get($spacing, "lg");
-    padding: map-get($spacing, "xxl");
+    gap: map.get($spacing, "lg");
+    padding: map.get($spacing, "xxl");
 }
 
 .mission-tile-wrapper {
@@ -413,7 +414,7 @@ function getDifficultyClass(difficulty: string): string {
 .mission-tile-content {
     display: flex;
     flex-direction: column;
-    gap: map-get($spacing, "xs");
+    gap: map.get($spacing, "xs");
     
     h3 {
         margin: 0;
@@ -426,7 +427,7 @@ function getDifficultyClass(difficulty: string): string {
 }
 
 .mission-badges {
-    margin-top: map-get($spacing, "xs");
+    margin-top: map.get($spacing, "xs");
     flex-wrap: wrap;
 }
 
@@ -518,7 +519,7 @@ function getDifficultyClass(difficulty: string): string {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: map-get($spacing, "md");
+    gap: map.get($spacing, "md");
     color: rgba(255, 255, 255, 0.4);
     text-align: center;
     
@@ -551,7 +552,7 @@ function getDifficultyClass(difficulty: string): string {
     .stat {
         display: flex;
         flex-direction: column;
-        gap: map-get($spacing, "xs");
+        gap: map.get($spacing, "xs");
         
         .caption-1 {
             color: rgba(255, 255, 255, 0.6);

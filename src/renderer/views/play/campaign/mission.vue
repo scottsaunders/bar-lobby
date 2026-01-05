@@ -252,6 +252,7 @@ function getDifficultyClass(difficulty: string): string {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .view-container {
@@ -260,7 +261,7 @@ function getDifficultyClass(difficulty: string): string {
     flex: 1;
     min-height: 0;
     width: 100%;
-    padding: 0 map-get($spacing, "xxl") map-get($spacing, "sm") map-get($spacing, "xxl");
+    padding: 0 map.get($spacing, "xxl") map.get($spacing, "sm") map.get($spacing, "xxl");
     overflow: hidden;
     box-sizing: border-box;
 }
@@ -281,7 +282,7 @@ function getDifficultyClass(difficulty: string): string {
 }
 
 .mission-section {
-    margin-bottom: map-get($spacing, "xl");
+    margin-bottom: map.get($spacing, "xl");
     
     &:last-child {
         margin-bottom: 0;
@@ -328,7 +329,7 @@ function getDifficultyClass(difficulty: string): string {
     flex: 1;
     
     h4 {
-        margin: 0 0 map-get($spacing, "xs") 0;
+        margin: 0 0 map.get($spacing, "xs") 0;
     }
     
     p {
@@ -339,13 +340,13 @@ function getDifficultyClass(difficulty: string): string {
 
 .rewards-section {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-top: map-get($spacing, "xl");
+    padding-top: map.get($spacing, "xl");
 }
 
 .reward-item {
     display: flex;
     align-items: center;
-    gap: map-get($spacing, "sm");
+    gap: map.get($spacing, "sm");
     color: #22c55e;
 }
 

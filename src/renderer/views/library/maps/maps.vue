@@ -37,9 +37,7 @@ SPDX-License-Identifier: MIT
             </div>
         </div>
         <!-- Modal variant -->
-        <Transition name="map-detail-modal">
-            <MapDetailModal v-if="selectedMap && !useAnimatedView && showMapDetail" v-model="showMapDetail" :map="selectedMap" />
-        </Transition>
+        <MapDetailModal v-if="selectedMap && !useAnimatedView && showMapDetail" v-model="showMapDetail" :map="selectedMap" />
     </div>
 </template>
 
@@ -95,6 +93,7 @@ watch(useAnimatedView, (newValue) => {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .view-container {
@@ -103,7 +102,7 @@ watch(useAnimatedView, (newValue) => {
     flex: 1;
     min-height: 0;
     width: 100%;
-    padding: 0 map-get($spacing, "xxl") map-get($spacing, "sm") map-get($spacing, "xxl");
+    padding: 0 map.get($spacing, "xxl") map.get($spacing, "sm") map.get($spacing, "xxl");
     overflow: hidden;
     box-sizing: border-box;
     
@@ -120,7 +119,7 @@ watch(useAnimatedView, (newValue) => {
     flex-direction: row;
     position: relative;
     align-items: stretch;
-    gap: map-get($spacing, "xl");
+    gap: map.get($spacing, "xl");
     transition: gap 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     
     // When in detail mode, remove gap so panel can expand

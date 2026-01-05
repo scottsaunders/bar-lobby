@@ -31,6 +31,7 @@ const devlogRssFeed = await window.misc.getDevlogRssFeed(3);
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .devlog-layout {
@@ -41,9 +42,9 @@ const devlogRssFeed = await window.misc.getDevlogRssFeed(3);
     min-height: 0;
     padding-top: 0;
     padding-bottom: 0;
-    margin-left: map-get($spacing, "xxl");
-    margin-right: map-get($spacing, "xxl");
-    margin-bottom: map-get($spacing, "xxl");
+    margin-left: map.get($spacing, "xxl");
+    margin-right: map.get($spacing, "xxl");
+    margin-bottom: map.get($spacing, "xxl");
     overflow-x: hidden;
 }
 </style>

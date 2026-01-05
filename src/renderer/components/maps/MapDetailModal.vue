@@ -132,6 +132,7 @@ watch(
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .map-detail-content {
@@ -144,7 +145,7 @@ watch(
 .container {
     display: flex;
     flex-direction: row;
-    gap: map-get($spacing, "lg");
+    gap: map.get($spacing, "lg");
     height: 100%;
     min-height: 0;
     flex: 1;
@@ -173,9 +174,9 @@ watch(
 .details {
     display: flex;
     flex-direction: column;
-    gap: map-get($spacing, "xs");
+    gap: map.get($spacing, "xs");
     width: 512px;
-    margin-bottom: map-get($spacing, "lg");
+    margin-bottom: map.get($spacing, "lg");
 }
 
 .item-title {

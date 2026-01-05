@@ -19,6 +19,7 @@ SPDX-License-Identifier: MIT
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .scrolling-text-panel {
@@ -46,10 +47,10 @@ SPDX-License-Identifier: MIT
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
-    padding-top: map-get($spacing, "lg");
-    padding-bottom: map-get($spacing, "lg");
-    padding-left: map-get($spacing, "lg");
-    padding-right: map-get($spacing, "lg");
+    padding-top: map.get($spacing, "lg");
+    padding-bottom: map.get($spacing, "lg");
+    padding-left: map.get($spacing, "lg");
+    padding-right: map.get($spacing, "lg");
     word-wrap: break-word;
     overflow-wrap: break-word;
     // Fade effect only at the bottom

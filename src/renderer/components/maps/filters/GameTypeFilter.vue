@@ -48,6 +48,7 @@ const gameTypeOptions: GameType[] = [
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .game-type-container {
@@ -55,7 +56,7 @@ const gameTypeOptions: GameType[] = [
     flex-flow: row wrap;
 }
 .game-type-option {
-    padding: map-get($spacing, "sm"); // 8px (closest to 6px)
+    padding: map.get($spacing, "sm"); // 8px (closest to 6px)
     flex-grow: 0;
 }
 </style>

@@ -83,11 +83,12 @@ function onClose() {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .modal-content {
     width: 480px;
-    padding: map-get($spacing, "md");
+    padding: map.get($spacing, "md");
 }
 
 // Match the Panel's content padding (30px) plus modal-content padding
@@ -99,8 +100,8 @@ function onClose() {
 
 .modal-footer {
     width: 100%;
-    padding: map-get($spacing, "xxl");
-    gap: map-get($spacing, "md");
+    padding: map.get($spacing, "xxl");
+    gap: map.get($spacing, "md");
     
     :deep(.button) {
         flex: 1;

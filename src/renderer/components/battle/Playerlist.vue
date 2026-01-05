@@ -295,12 +295,13 @@ function onPlayingToggle(value: boolean) {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .playerlist-layout {
     display: grid;
     grid-template-columns: 1fr 1fr 210px;
-    gap: map-get($spacing, "md");
+    gap: map.get($spacing, "md");
     align-items: start;
     
     &.dragging .group > * {
@@ -313,7 +314,7 @@ function onPlayingToggle(value: boolean) {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-auto-rows: max-content;
-    gap: map-get($spacing, "sm");
+    gap: map.get($spacing, "sm");
     
     &.dragging .group > * {
         pointer-events: none;
@@ -324,7 +325,7 @@ function onPlayingToggle(value: boolean) {
     display: grid;
     grid-template-columns: 1fr;
     grid-auto-rows: max-content;
-    gap: map-get($spacing, "sm");
+    gap: map.get($spacing, "sm");
     
     &.dragging .group > * {
         pointer-events: none;
@@ -334,7 +335,7 @@ function onPlayingToggle(value: boolean) {
         // Teams tile in 2-column grid for skirmish (original layout)
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: map-get($spacing, "md");
+        gap: map.get($spacing, "md");
     }
 }
 
@@ -345,7 +346,7 @@ function onPlayingToggle(value: boolean) {
 }
 
 .playing-toggle-wrapper {
-    padding-bottom: map-get($spacing, "sm");
+    padding-bottom: map.get($spacing, "sm");
     display: flex;
     justify-content: center;
     align-items: center;
@@ -359,7 +360,7 @@ function onPlayingToggle(value: boolean) {
         width: 100%;
         
         .p-button {
-            padding: map-get($spacing, "sm") map-get($spacing, "md");
+            padding: map.get($spacing, "sm") map.get($spacing, "md");
         }
     }
     

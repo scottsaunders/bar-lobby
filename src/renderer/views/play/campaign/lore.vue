@@ -257,6 +257,7 @@ function getEntryById(id: string) {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .view-container {
@@ -265,7 +266,7 @@ function getEntryById(id: string) {
     flex: 1;
     min-height: 0;
     width: 100%;
-    padding: 0 map-get($spacing, "xxl") map-get($spacing, "sm") map-get($spacing, "xxl");
+    padding: 0 map.get($spacing, "xxl") map.get($spacing, "sm") map.get($spacing, "xxl");
     overflow: hidden;
     box-sizing: border-box;
 }
@@ -286,8 +287,8 @@ function getEntryById(id: string) {
 .category-item {
     display: flex;
     align-items: center;
-    gap: map-get($spacing, "md");
-    padding: map-get($spacing, "md") map-get($spacing, "lg");
+    gap: map.get($spacing, "md");
+    padding: map.get($spacing, "md") map.get($spacing, "lg");
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 4px;
@@ -321,7 +322,7 @@ function getEntryById(id: string) {
 .entries-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: map-get($spacing, "lg");
+    gap: map.get($spacing, "lg");
 }
 
 .entry-card {
@@ -343,7 +344,7 @@ function getEntryById(id: string) {
     }
     
     p {
-        margin: map-get($spacing, "xs") 0 0 0;
+        margin: map.get($spacing, "xs") 0 0 0;
         color: rgba(255, 255, 255, 0.7);
     }
 }
@@ -351,7 +352,7 @@ function getEntryById(id: string) {
 .locked-text {
     display: flex;
     align-items: center;
-    gap: map-get($spacing, "xs");
+    gap: map.get($spacing, "xs");
     color: rgba(255, 255, 255, 0.5);
 }
 
@@ -370,7 +371,7 @@ function getEntryById(id: string) {
     line-height: 1.6;
     
     p {
-        margin: 0 0 map-get($spacing, "md") 0;
+        margin: 0 0 map.get($spacing, "md") 0;
         
         &:last-child {
             margin-bottom: 0;

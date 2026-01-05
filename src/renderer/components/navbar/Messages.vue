@@ -157,6 +157,7 @@ function close(userId: number) {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .messages-tabview,
@@ -183,13 +184,13 @@ function close(userId: number) {
     display: flex;
     flex-direction: column-reverse;
     overflow-y: scroll;
-    padding: map-get($spacing, "sm");
+    padding: map.get($spacing, "sm");
     flex: 1 1 auto;
     height: 0;
 }
 .message {
     word-break: break-word;
-    padding: map-get($spacing, "xxs") map-get($spacing, "sm");
+    padding: map.get($spacing, "xxs") map.get($spacing, "sm");
     user-select: text;
     display: flex;
     flex-direction: row;
@@ -203,8 +204,8 @@ function close(userId: number) {
     }
 }
 .reply-container {
-    padding: map-get($spacing, "sm");
-    padding-right: map-get($spacing, "xl");
+    padding: map.get($spacing, "sm");
+    padding-right: map.get($spacing, "xl");
 }
 .reply {
     width: 100%;
@@ -219,7 +220,7 @@ function close(userId: number) {
     background: none;
     border: none;
     opacity: 0.5;
-    padding: map-get($spacing, "sm");
+    padding: map.get($spacing, "sm");
     &:hover {
         opacity: 1;
     }

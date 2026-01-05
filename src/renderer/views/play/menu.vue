@@ -89,10 +89,11 @@ const openTournaments = () => {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .view-adjust-bottom {
-    padding-bottom: map-get($spacing, "xl");
+    padding-bottom: map.get($spacing, "xl");
     display: flex;
     flex-direction: column-reverse;
 }
@@ -105,13 +106,13 @@ const openTournaments = () => {
     flex-direction: column;
     width: 28%;
     height: 100%;
-    padding: map-get($spacing, "xxxxl") map-get($spacing, "xxxxl");
+    padding: map.get($spacing, "xxxxl") map.get($spacing, "xxxxl");
 }
 
 .game-modes-grid {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
-    gap: map-get($spacing, "xl");
+    gap: map.get($spacing, "xl");
     margin: 0 0;
     flex: 1;
 }
@@ -129,13 +130,13 @@ const openTournaments = () => {
 
 @media (max-width: 768px) {
     .game-menu-container {
-        padding: map-get($spacing, "xl");
+        padding: map.get($spacing, "xl");
     }
 
     .game-modes-grid {
         grid-template-columns: 1fr;
         grid-template-rows: repeat(6, minmax(150px, auto));
-        gap: map-get($spacing, "lg");
+        gap: map.get($spacing, "lg");
     }
 
     .game-mode-card {

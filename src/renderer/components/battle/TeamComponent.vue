@@ -169,20 +169,21 @@ function onDrop(event: DragEvent, teamId: number) {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .group {
     border: 1px inset rgba(255, 255, 255, 0.1);
     background: rgba(0, 0, 0, 0.5);
     min-height: 100px;
-    padding-left: map-get($spacing, "sm");
-    padding-right: map-get($spacing, "sm");
-    padding-top: map-get($spacing, "sm");
-    padding-bottom: map-get($spacing, "sm");
+    padding-left: map.get($spacing, "sm");
+    padding-right: map.get($spacing, "sm");
+    padding-top: map.get($spacing, "sm");
+    padding-bottom: map.get($spacing, "sm");
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: map-get($spacing, "xs");
+    gap: map.get($spacing, "xs");
     &.highlight {
         &:before {
             width: 100%;
@@ -214,12 +215,12 @@ function onDrop(event: DragEvent, teamId: number) {
 }
 
 .group-header {
-    margin-bottom: map-get($spacing, "xs");
+    margin-bottom: map.get($spacing, "xs");
     position: relative;
 }
 
 .participant {
-    height: map-get($spacing, "xxl");
+    height: map.get($spacing, "xxl");
     width: 100%;
     margin: 0;
     display: flex;
@@ -239,9 +240,9 @@ function onDrop(event: DragEvent, teamId: number) {
 .team-members {
     display: flex;
     flex-direction: column;
-    gap: map-get($spacing, "xs");
+    gap: map.get($spacing, "xs");
     flex-wrap: wrap;
-    margin-top: map-get($spacing, "xs");
+    margin-top: map.get($spacing, "xs");
 }
 
 .delete-team-button {
@@ -252,7 +253,7 @@ function onDrop(event: DragEvent, teamId: number) {
     border: none;
     color: rgba(255, 255, 255, 0.5);
     cursor: pointer;
-    padding: map-get($spacing, "xxs");
+    padding: map.get($spacing, "xxs");
     border-radius: 3px;
     transition: all 0.2s ease;
     opacity: 0;
@@ -273,12 +274,12 @@ function onDrop(event: DragEvent, teamId: number) {
 }
 
 .join-button {
-    height: map-get($spacing, "xxl");
+    height: map.get($spacing, "xxl");
     &.first {
         border-top: none;
     }
     border-top: 1px solid rgba(255, 255, 255, 0.05);
-    padding: map-get($spacing, "xs");
+    padding: map.get($spacing, "xs");
     width: 100%;
     text-align: center;
     text-transform: uppercase;

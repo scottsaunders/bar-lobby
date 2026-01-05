@@ -113,13 +113,14 @@ function mapSelected(map: MapData) {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .maps {
     display: grid;
-    grid-gap: map-get($spacing, "lg"); // 16px (closest to 15px)
+    grid-gap: map.get($spacing, "lg"); // 16px (closest to 15px)
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    padding-right: map-get($spacing, "sm"); // 8px (closest to 10px)
+    padding-right: map.get($spacing, "sm"); // 8px (closest to 10px)
 }
 
 // Transition

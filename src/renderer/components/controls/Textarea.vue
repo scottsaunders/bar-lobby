@@ -19,13 +19,14 @@ import Control from "@renderer/components/controls/Control.vue";
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .textarea {
     textarea {
         width: 100%;
         max-width: 100%;
-        padding: map-get($spacing, "xs");
+        padding: map.get($spacing, "xs");
     }
 }
 </style>

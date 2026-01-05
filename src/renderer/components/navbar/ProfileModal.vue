@@ -58,6 +58,7 @@ const user = useDexieLiveQueryWithDeps([() => props.userId], () => {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .profile-content {
@@ -70,8 +71,8 @@ const user = useDexieLiveQueryWithDeps([() => props.userId], () => {
 .profile-header {
     display: flex;
     align-items: center;
-    margin-bottom: map-get($spacing, "md");
-    margin-top: map-get($spacing, "xxl");
+    margin-bottom: map.get($spacing, "md");
+    margin-top: map.get($spacing, "xxl");
     div {
         margin-right: auto;
     }
@@ -81,7 +82,7 @@ const user = useDexieLiveQueryWithDeps([() => props.userId], () => {
     width: 184px;
     height: 184px;
     border-radius: 1%;
-    margin-right: map-get($spacing, "xl");
+    margin-right: map.get($spacing, "xl");
     border: 1px solid #5e5757;
     backdrop-filter: blur(2px);
 }
@@ -89,7 +90,7 @@ const user = useDexieLiveQueryWithDeps([() => props.userId], () => {
 .profile-user-info {
     display: flex;
     flex-direction: column;
-    gap: map-get($spacing, "xxs");
+    gap: map.get($spacing, "xxs");
 }
 </style>
 

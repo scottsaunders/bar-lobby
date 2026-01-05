@@ -203,6 +203,7 @@ async function removeFriend() {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .friend {
@@ -210,16 +211,16 @@ async function removeFriend() {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    gap: map-get($spacing, "sm");
+    gap: map.get($spacing, "sm");
     background: rgba(0, 0, 0, 0.3);
-    padding: map-get($spacing, "xs") map-get($spacing, "sm");
+    padding: map.get($spacing, "xs") map.get($spacing, "sm");
     border-radius: 3px;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .square {
     :deep(.p-button) {
-        padding: map-get($spacing, "xxs");
+        padding: map.get($spacing, "xxs");
         @extend .body-1 !optional;
     }
 }

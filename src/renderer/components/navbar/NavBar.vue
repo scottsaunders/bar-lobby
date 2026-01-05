@@ -303,6 +303,7 @@ function prefetchRoute(path: string) {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .nav {
@@ -316,7 +317,7 @@ function prefetchRoute(path: string) {
         0 1px 0 rgba(0, 0, 0, 0.4),
         0 3px 5px rgba(0, 0, 0, 0.5);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    gap: map-get($spacing, "xxs"); // 2px - aligned to 4px grid (minimum visual separation)
+    gap: map.get($spacing, "xxs");
     transition:
         transform 0.3s,
         opacity 0.3s;
@@ -381,12 +382,12 @@ function prefetchRoute(path: string) {
             line-height: 1.3;
         }
         :deep(.p-button) {
-            padding: 0 map-get($spacing, "xl"); // 24px - aligned to 4px grid (was 22px)
+            padding: 0 map.get($spacing, "xl");
             border-radius: 0 !important; // Intentional: NavBar buttons require square corners
         }
         &.icon {
             :deep(.p-button) {
-                padding: 0 map-get($spacing, "md"); // 12px - aligned to 4px grid (was 14px)
+                padding: 0 map.get($spacing, "md");
                 border-radius: 0 !important; // Intentional: NavBar buttons require square corners
             }
         }
@@ -414,7 +415,7 @@ function prefetchRoute(path: string) {
 .primary-right {
     display: flex;
     flex-direction: row;
-    gap: map-get($spacing, "xxs"); // 2px - aligned to 4px grid (minimum visual separation)
+    gap: map.get($spacing, "xxs");
 }
 .primary-left {
     box-shadow: 5px 0 20px rgba(0, 0, 0, 0.4);
@@ -453,7 +454,7 @@ function prefetchRoute(path: string) {
         border-radius: 0;
         color: rgba(255, 255, 255, 0.5);
         flex-grow: 0;
-        height: map-get($spacing, "xxxl"); // 48px - aligned to 4px grid (match small button height)
+        height: map.get($spacing, "xxxl");
         :deep(.button-content) {
             font-size: 14px; // 1 size smaller than body-1 (16px) -> body-2 (14px)
             font-weight: 400;
@@ -461,7 +462,7 @@ function prefetchRoute(path: string) {
             line-height: 1.4;
         }
         :deep(> button) {
-            padding: 0 map-get($spacing, "xl"); // 24px - aligned to 4px grid (was 20px, using xl for consistency)
+            padding: 0 map.get($spacing, "xl");
             height: 100%;
             border-radius: 0 !important; // Intentional: NavBar buttons require square corners
         }
@@ -505,11 +506,11 @@ function prefetchRoute(path: string) {
 }
 .unread-dot {
     position: absolute;
-    width: map-get($spacing, "sm"); // 8px - aligned to 4px grid (was 10px)
-    height: map-get($spacing, "sm"); // 8px - aligned to 4px grid (was 10px)
+    width: map.get($spacing, "sm");
+    height: map.get($spacing, "sm");
     border-radius: 100%;
-    right: map-get($spacing, "lg"); // 16px - aligned to 4px grid (was 17px)
-    bottom: map-get($spacing, "lg"); // 16px - aligned to 4px grid (was 17px)
+    right: map.get($spacing, "lg");
+    bottom: map.get($spacing, "lg");
     background: red;
 }
 

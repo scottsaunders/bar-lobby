@@ -123,6 +123,7 @@ function sound() {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .container {
@@ -140,7 +141,7 @@ function sound() {
     background: rgba(0, 0, 0, 0.5);
 }
 .title {
-    padding: map-get($spacing, "xs") map-get($spacing, "sm");
+    padding: map.get($spacing, "xs") map.get($spacing, "sm");
     flex-grow: 1;
     text-transform: capitalize;
     @extend .body-1-strong !optional;
@@ -148,7 +149,7 @@ function sound() {
 .close {
     display: flex;
     margin-left: auto;
-    padding: map-get($spacing, "xs") map-get($spacing, "sm");
+    padding: map.get($spacing, "xs") map.get($spacing, "sm");
     &:hover {
         background: rgba(219, 20, 20, 0.6);
     }

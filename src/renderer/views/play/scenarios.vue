@@ -191,6 +191,7 @@ async function launch() {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .view-container {
@@ -199,7 +200,7 @@ async function launch() {
     flex: 1;
     min-height: 0;
     width: 100%;
-    padding: 0 map-get($spacing, "xxl") map-get($spacing, "sm") map-get($spacing, "xxl"); // xxl (32px) for left/right, sm (8px) for bottom
+    padding: 0 map.get($spacing, "xxl") map.get($spacing, "sm") map.get($spacing, "xxl"); // xxl (32px) for left/right, sm (8px) for bottom
     overflow: hidden;
     box-sizing: border-box;
     
@@ -225,9 +226,9 @@ async function launch() {
 .scenarios-grid {
     width: 100%;
     display: grid;
-    grid-gap: map-get($spacing, "lg"); // lg spacing
+    grid-gap: map.get($spacing, "lg"); // lg spacing
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    padding: map-get($spacing, "xxl"); // xxl spacing (doubled from lg/16px) - padding on all sides to prevent clipping of box-shadow/outline effects
+    padding: map.get($spacing, "xxl"); // xxl spacing (doubled from lg/16px) - padding on all sides to prevent clipping of box-shadow/outline effects
 }
 
 .scenario-details-panel {
@@ -246,8 +247,8 @@ async function launch() {
     min-height: 0;
     padding-top: 0; // No top padding
     padding-bottom: 0; // No bottom padding
-    margin-left: map-get($spacing, "xxl"); // Left margin to prevent touching panel edge
-    margin-right: map-get($spacing, "xxl"); // Right margin to prevent touching panel edge
+    margin-left: map.get($spacing, "xxl"); // Left margin to prevent touching panel edge
+    margin-right: map.get($spacing, "xxl"); // Right margin to prevent touching panel edge
 }
 
 .scenario-controls {
@@ -260,7 +261,7 @@ async function launch() {
 }
 
 .scenario-conditions {
-    padding: map-get($spacing, "md");
+    padding: map.get($spacing, "md");
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 2px;

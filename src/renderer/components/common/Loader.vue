@@ -26,11 +26,12 @@ withDefaults(
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .loader {
     //background: radial-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0) 50%);
-    padding: map-get($spacing, "xxl");
+    padding: map.get($spacing, "xxl");
     display: flex;
     align-items: center;
     justify-content: center;

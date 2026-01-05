@@ -88,6 +88,7 @@ async function uploadLogsCommand() {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .error-modal {
@@ -97,7 +98,7 @@ async function uploadLogsCommand() {
     @extend .body-1 !optional;
     white-space: pre-line;
     border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: map-get($spacing, "sm");
+    padding: map.get($spacing, "sm");
     user-select: all;
 }
 .container {
@@ -109,7 +110,7 @@ async function uploadLogsCommand() {
     backdrop-filter: blur(5px);
 }
 .title {
-    padding: map-get($spacing, "xs") map-get($spacing, "sm");
+    padding: map.get($spacing, "xs") map.get($spacing, "sm");
     flex-grow: 1;
     text-transform: capitalize;
     @extend .body-1-strong !optional;

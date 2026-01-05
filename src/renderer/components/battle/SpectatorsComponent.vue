@@ -64,6 +64,7 @@ function onDrop(event: DragEvent) {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .group {
@@ -71,7 +72,7 @@ function onDrop(event: DragEvent) {
     background: radial-gradient(circle, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8));
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 1);
     min-height: 100px;
-    padding: map-get($spacing, "sm");
+    padding: map.get($spacing, "sm");
     position: relative;
     width: 100%;
     min-width: 0;
@@ -108,7 +109,7 @@ function onDrop(event: DragEvent) {
 .participants {
     display: flex;
     flex-direction: column;
-    gap: map-get($spacing, "xs");
-    margin-top: map-get($spacing, "xs");
+    gap: map.get($spacing, "xs");
+    margin-top: map.get($spacing, "xs");
 }
 </style>

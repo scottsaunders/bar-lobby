@@ -51,6 +51,7 @@ SPDX-License-Identifier: MIT
         <Settings v-model="settingsOpen" />
         <ServerSettings v-model="serverSettingsOpen" />
         <ChatComponent v-if="state === 'default' && me.isAuthenticated && tachyonStore.isConnected" />
+        <MatchmakingProgressWidget v-if="state === 'default'" />
         <LogInConfirmationModal v-model="logInConfirmationIsOpen" :intendedRoute="logInConfirmationIntendedRoute" />
     </div>
     <Error />
@@ -83,12 +84,23 @@ import { playRandomMusic } from "@renderer/utils/play-random-music";
 import { settingsStore } from "./store/settings.store";
 import { infosStore } from "@renderer/store/infos.store";
 import ChatComponent from "@renderer/components/social/ChatComponent.vue";
+import MatchmakingProgressWidget from "@renderer/components/battle/MatchmakingProgressWidget.vue";
 import { battleStore } from "@renderer/store/battle.store";
 import { useGlobalKeybindings } from "@renderer/composables/useGlobalKeybindings";
 import { me } from "@renderer/store/me.store";
 import { tachyonStore } from "@renderer/store/tachyon.store";
 import { auth } from "@renderer/store/me.store";
 import { useLogInConfirmation } from "@renderer/composables/useLogInConfirmation";
+
+// Mock state for matchmaking widget (for UI prototyping)
+const matchmakingWidgetState = ref({
+    isVisible: false,
+    isSearching: false,
+    isMatchFound: false,
+    playersQueued: 42,
+});
+
+provide("matchmakingWidgetState", matchmakingWidgetState);
 
 const router = useRouter();
 const videoVisible = toRef(!toValue(settingsStore.skipIntro));
@@ -188,6 +200,7 @@ if (!settingsStore.devMode) {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .view-container {
@@ -217,10 +230,10 @@ if (!settingsStore.devMode) {
     position: fixed;
     display: flex;
     flex-direction: row;
-    gap: map-get($spacing, "xs");
+    gap: map.get($spacing, "xs");
     right: 0;
     top: 0;
-    padding: map-get($spacing, "sm");
+    padding: map.get($spacing, "sm");
     z-index: 5;
     .option {
         opacity: 0.8;

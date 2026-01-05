@@ -36,6 +36,7 @@ const { t } = useTypedI18n();
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .view-container {
@@ -44,7 +45,7 @@ const { t } = useTypedI18n();
     flex: 1;
     min-height: 0;
     width: 100%;
-    padding: 0 map-get($spacing, "xxl") map-get($spacing, "sm") map-get($spacing, "xxl");
+    padding: 0 map.get($spacing, "xxl") map.get($spacing, "sm") map.get($spacing, "xxl");
     overflow: hidden;
     box-sizing: border-box;
     
@@ -64,7 +65,7 @@ const { t } = useTypedI18n();
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: map-get($spacing, "lg");
+    gap: map.get($spacing, "lg");
     text-align: center;
     opacity: 0.7;
 }

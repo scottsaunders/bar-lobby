@@ -98,6 +98,7 @@ if (hasCredentials.value && settingsStore.loginAutomatically) {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .container {
@@ -120,7 +121,7 @@ if (hasCredentials.value && settingsStore.loginAutomatically) {
 .play-offline {
     display: flex;
     align-self: center;
-    margin-top: map-get($spacing, "xl");
+    margin-top: map.get($spacing, "xl");
     @extend .title-1 !optional;
     opacity: 0.3;
     &:hover {
@@ -131,7 +132,7 @@ if (hasCredentials.value && settingsStore.loginAutomatically) {
 .go-back-button {
     display: flex;
     align-self: center;
-    margin-top: map-get($spacing, "xxxxl");
+    margin-top: map.get($spacing, "xxxxl");
     @extend .title-1 !optional;
     opacity: 0.3;
     &:hover {
@@ -145,7 +146,7 @@ if (hasCredentials.value && settingsStore.loginAutomatically) {
     text-transform: uppercase;
     font-family: Rajdhani;
     @extend .subtitle-1-strong !optional;
-    padding: map-get($spacing, "xl") map-get($spacing, "xxxxl");
+    padding: map.get($spacing, "xl") map.get($spacing, "xxxxl");
     color: #fff;
     background: linear-gradient(90deg, #22c55e, #16a34a);
     border: none;
@@ -182,7 +183,7 @@ if (hasCredentials.value && settingsStore.loginAutomatically) {
 
 .buttons-container {
     display: flex;
-    gap: map-get($spacing, "xl");
+    gap: map.get($spacing, "xl");
     flex-direction: column;
     align-items: center;
 }

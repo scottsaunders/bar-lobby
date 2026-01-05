@@ -14,7 +14,7 @@ export function preloadCommonRoutes(router: Router) {
         "/play/menu",
         "/play/skirmishVsAi",
         "/play/scenarios",
-        "/library/maps",
+        "/library/maps/maps",
         "/watch/replays",
         "/news/overview",
     ];
@@ -45,6 +45,8 @@ export function preloadCommonRoutes(router: Router) {
                             });
                         }
                     });
+                } else {
+                    // Route not found - skip silently (route may not be registered yet)
                 }
             } catch (error) {
                 // Silently fail if route doesn't exist

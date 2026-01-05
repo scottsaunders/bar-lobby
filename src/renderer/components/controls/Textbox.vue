@@ -17,6 +17,7 @@ import Control from "@renderer/components/controls/Control.vue";
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .textbox {
@@ -24,6 +25,6 @@ import Control from "@renderer/components/controls/Control.vue";
 }
 .p-inputtext {
     width: 100%;
-    padding: 0 map-get($spacing, "sm");
+    padding: 0 map.get($spacing, "sm");
 }
 </style>

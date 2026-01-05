@@ -527,6 +527,7 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .view-container {
@@ -535,7 +536,7 @@ onMounted(async () => {
     flex: 1;
     min-height: 0;
     width: 100%;
-    padding: 0 map-get($spacing, "xxl") map-get($spacing, "sm") map-get($spacing, "xxl");
+    padding: 0 map.get($spacing, "xxl") map.get($spacing, "sm") map.get($spacing, "xxl");
     overflow: visible; // Allow panel shadows to be visible
     box-sizing: border-box;
     position: relative;
@@ -551,7 +552,7 @@ onMounted(async () => {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: map-get($spacing, "lg"); // Gap between top row and bottom row
+    gap: map.get($spacing, "lg"); // Gap between top row and bottom row
 }
 
 .skirmish-layout {
@@ -601,7 +602,7 @@ onMounted(async () => {
     width: 100%; // Fill panel width
     border: 1px solid rgba(255, 255, 255, 0.1);
     background-color: rgba(0, 0, 0, 0.3);
-    padding: map-get($spacing, "md");
+    padding: map.get($spacing, "md");
     border-radius: 2px;
     box-sizing: border-box; // Include padding in width calculation
 }
@@ -638,7 +639,7 @@ onMounted(async () => {
 
 .map-features-row {
     flex-shrink: 0;
-    gap: map-get($spacing, "md");
+    gap: map.get($spacing, "md");
     flex-wrap: nowrap; // Don't wrap the row itself
     align-items: center; // Center all items vertically
 }
@@ -686,7 +687,7 @@ onMounted(async () => {
 .bottom-action-content {
     display: flex;
     align-items: center;
-    gap: map-get($spacing, "lg");
+    gap: map.get($spacing, "lg");
     
     // Override DownloadContentButton wrapper width in button bar
     :deep(.download-button-wrapper) {
@@ -723,7 +724,7 @@ onMounted(async () => {
     right: 64px; // 64px from right side of screen
     display: flex;
     flex-direction: row; // Side-by-side layout
-    gap: map-get($spacing, "sm");
+    gap: map.get($spacing, "sm");
     z-index: 1; // Lower z-index so button bar appears above
     align-items: flex-end; // Align to the bottom
 }

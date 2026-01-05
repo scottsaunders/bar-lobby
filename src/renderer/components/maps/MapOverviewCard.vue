@@ -50,6 +50,7 @@ const imageUrl = computed(() =>
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .map {
@@ -113,13 +114,13 @@ const imageUrl = computed(() =>
 }
 .favorite {
     position: absolute;
-    top: map-get($spacing, "sm"); // 8px (closest to 10px)
-    right: map-get($spacing, "sm"); // 8px (closest to 10px)
+    top: map.get($spacing, "sm"); // 8px (closest to 10px)
+    right: map.get($spacing, "sm"); // 8px (closest to 10px)
     transition: 0.2s opacity;
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(0, 0, 0, 0.1);
     font-size: 1.5625rem; // 25px - using rem for typography
-    padding: map-get($spacing, "xs"); // 4px (closest to 3px)
+    padding: map.get($spacing, "xs"); // 4px (closest to 3px)
 }
 .name {
     @extend .fullsize;
@@ -130,7 +131,7 @@ const imageUrl = computed(() =>
     justify-content: center;
     text-align: center;
     word-break: break-word;
-    padding: map-get($spacing, "sm"); // 8px (closest to 10px)
+    padding: map.get($spacing, "sm"); // 8px (closest to 10px)
     font-size: 2.375rem; // 38px - using rem for typography
     font-weight: 600;
     text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
@@ -142,16 +143,16 @@ const imageUrl = computed(() =>
     background: rgba(0, 0, 0, 0.2);
     font-size: 1rem; // 16px - body-1 size
     font-weight: 600;
-    padding: map-get($spacing, "xxs") map-get($spacing, "xs"); // 2px 4px (closest to 2px 5px)
+    padding: map.get($spacing, "xxs") map.get($spacing, "xs"); // 2px 4px (closest to 2px 5px)
     transition: 0.2s opacity;
 
     &.bl {
-        bottom: map-get($spacing, "sm"); // 8px (closest to 10px)
-        left: map-get($spacing, "sm"); // 8px (closest to 10px)
+        bottom: map.get($spacing, "sm"); // 8px (closest to 10px)
+        left: map.get($spacing, "sm"); // 8px (closest to 10px)
     }
     &.br {
-        bottom: map-get($spacing, "sm"); // 8px (closest to 10px)
-        right: map-get($spacing, "sm"); // 8px (closest to 10px)
+        bottom: map.get($spacing, "sm"); // 8px (closest to 10px)
+        right: map.get($spacing, "sm"); // 8px (closest to 10px)
         flex-wrap: wrap-reverse;
         justify-content: flex-end;
         max-width: 55%;

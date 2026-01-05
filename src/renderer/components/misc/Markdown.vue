@@ -39,12 +39,13 @@ const processedText = computedAsync(async () => {
 });
 </script>
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .text {
     width: 100%;
     word-break: break-word;
-    padding: map-get($spacing, "xxs") map-get($spacing, "sm");
+    padding: map.get($spacing, "xxs") map.get($spacing, "sm");
     user-select: text;
     .system & {
         color: rgb(82, 215, 255);

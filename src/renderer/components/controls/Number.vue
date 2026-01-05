@@ -28,13 +28,14 @@ const maxInputWidth = computed(() => `${max.value.toString().length + 1}ch`);
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 :deep(.p-inputtext) {
-    padding: 0 map-get($spacing, "sm");
+    padding: 0 map.get($spacing, "sm");
     width: v-bind(maxInputWidth);
 }
 :deep(.p-button) {
-    margin-right: map-get($spacing, "xs");
+    margin-right: map.get($spacing, "xs");
 }
 </style>
