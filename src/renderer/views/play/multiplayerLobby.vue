@@ -743,7 +743,7 @@ onMounted(async () => {
             .label {
                 font-size: 20px; // Match subtitle-1 from large button
                 font-weight: 600;
-                font-family: Poppins, sans-serif;
+                font-family: Montserrat, sans-serif;
                 line-height: 1.4;
                 padding-left: 24px; // Match large button padding
                 padding-right: 24px;

@@ -285,7 +285,7 @@ function onDrop(event: DragEvent, teamId: number) {
     text-transform: uppercase;
     text-shadow: inset 0 0 10px rgba(0, 0, 0, 1);
     @extend .body-1-strong !optional;
-    font-family: Poppins, sans-serif;
+    font-family: Montserrat, sans-serif;
     line-height: 1.4;
     color: rgba(255, 255, 255, 0.15);
     cursor: pointer;

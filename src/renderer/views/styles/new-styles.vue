@@ -55,58 +55,58 @@ SPDX-License-Identifier: MIT
                             <h3>Typography Scale</h3>
                             <div class="design-constants">
                                 <div class="constant-item">
-                                    <code>.display</code> = <span class="constant-value">68px Semibold</span> (Poppins)
+                                    <code>.display</code> = <span class="constant-value">68px Semibold</span> (Montserrat)
                                 </div>
                                 <div class="constant-item">
-                                    <code>.large-title</code> = <span class="constant-value">40px Semibold</span> (Poppins)
+                                    <code>.large-title</code> = <span class="constant-value">40px Semibold</span> (Montserrat)
                                 </div>
                                 <div class="constant-item">
-                                    <code>.title-1</code> = <span class="constant-value">32px Semibold</span> (Poppins)
+                                    <code>.title-1</code> = <span class="constant-value">32px Semibold</span> (Montserrat)
                                 </div>
                                 <div class="constant-item">
-                                    <code>.title-2</code> = <span class="constant-value">28px Semibold</span> (Poppins)
+                                    <code>.title-2</code> = <span class="constant-value">28px Semibold</span> (Montserrat)
                                 </div>
                                 <div class="constant-item">
-                                    <code>.title-3</code> = <span class="constant-value">24px Semibold</span> (Poppins)
+                                    <code>.title-3</code> = <span class="constant-value">24px Semibold</span> (Montserrat)
                                 </div>
                                 <div class="constant-item">
-                                    <code>.subtitle-1</code> = <span class="constant-value">20px Semibold</span> (Poppins)
+                                    <code>.subtitle-1</code> = <span class="constant-value">20px Semibold</span> (Montserrat)
                                 </div>
                                 <div class="constant-item">
-                                    <code>.subtitle-2</code> = <span class="constant-value">16px Semibold</span> (Poppins)
+                                    <code>.subtitle-2</code> = <span class="constant-value">16px Semibold</span> (Montserrat)
                                 </div>
                                 <div class="constant-item">
-                                    <code>.subtitle-2-stronger</code> = <span class="constant-value">16px Bold</span> (Poppins)
+                                    <code>.subtitle-2-stronger</code> = <span class="constant-value">16px Bold</span> (Montserrat)
                                 </div>
                                 <div class="constant-item">
-                                    <code>.body-1</code> = <span class="constant-value">16px Regular</span> (Poppins) - Default body copy
+                                    <code>.body-1</code> = <span class="constant-value">16px Regular</span> (Montserrat) - Default body copy
                                 </div>
                                 <div class="constant-item">
-                                    <code>.body-1-strong</code> = <span class="constant-value">16px Semibold</span> (Poppins)
+                                    <code>.body-1-strong</code> = <span class="constant-value">16px Semibold</span> (Montserrat)
                                 </div>
                                 <div class="constant-item">
-                                    <code>.body-2</code> = <span class="constant-value">14px Regular</span> (Poppins)
+                                    <code>.body-2</code> = <span class="constant-value">14px Regular</span> (Montserrat)
                                 </div>
                                 <div class="constant-item">
-                                    <code>.body-2-strong</code> = <span class="constant-value">14px Semibold</span> (Poppins)
+                                    <code>.body-2-strong</code> = <span class="constant-value">14px Semibold</span> (Montserrat)
                                 </div>
                                 <div class="constant-item">
-                                    <code>.body-2-stronger</code> = <span class="constant-value">14px Bold</span> (Poppins)
+                                    <code>.body-2-stronger</code> = <span class="constant-value">14px Bold</span> (Montserrat)
                                 </div>
                                 <div class="constant-item">
-                                    <code>.caption-1</code> = <span class="constant-value">12px Regular</span> (Poppins)
+                                    <code>.caption-1</code> = <span class="constant-value">12px Regular</span> (Montserrat)
                                 </div>
                                 <div class="constant-item">
-                                    <code>.caption-1-strong</code> = <span class="constant-value">12px Semibold</span> (Poppins)
+                                    <code>.caption-1-strong</code> = <span class="constant-value">12px Semibold</span> (Montserrat)
                                 </div>
                                 <div class="constant-item">
-                                    <code>.caption-1-stronger</code> = <span class="constant-value">12px Bold</span> (Poppins)
+                                    <code>.caption-1-stronger</code> = <span class="constant-value">12px Bold</span> (Montserrat)
                                 </div>
                                 <div class="constant-item">
-                                    <code>.caption-2</code> = <span class="constant-value">10px Regular</span> (Poppins)
+                                    <code>.caption-2</code> = <span class="constant-value">10px Regular</span> (Montserrat)
                                 </div>
                                 <div class="constant-item">
-                                    <code>.caption-2-strong</code> = <span class="constant-value">10px Semibold</span> (Poppins)
+                                    <code>.caption-2-strong</code> = <span class="constant-value">10px Semibold</span> (Montserrat)
                                 </div>
                                 <p class="body-2" style="margin-top: 10px;">Heading mappings: <code>h1</code> = Large Title, <code>h2</code> = Title 1, <code>h3</code> = Title 2, <code>h4</code> = Title 3, <code>h5</code> = Subtitle 1, <code>h6</code> = Subtitle 2, <code>p</code> = Body 1 Regular</p>
                             </div>
@@ -209,7 +209,7 @@ SPDX-License-Identifier: MIT
                                     <code>color</code> = <span class="constant-value">#fff</span>
                                 </div>
                                 <div class="constant-item">
-                                    <code>font-family</code> = <span class="constant-value">Poppins, sans-serif</span>
+                                    <code>font-family</code> = <span class="constant-value">Montserrat, sans-serif</span>
                                 </div>
                                 <div class="constant-item">
                                     <code>font-size</code> = <span class="constant-value">16px</span>
@@ -269,75 +269,75 @@ SPDX-License-Identifier: MIT
                     <div class="flex-col gap-sm">
                         <div>
                             <div class="display">Display</div>
-                            <span class="typography-spec">68px Semibold (Poppins)</span>
+                            <span class="typography-spec">68px Semibold (Montserrat)</span>
                         </div>
                         <div>
                             <div class="large-title">Large Title</div>
-                            <span class="typography-spec">40px Semibold (Poppins)</span>
+                            <span class="typography-spec">40px Semibold (Montserrat)</span>
                         </div>
                         <div>
                             <div class="title-1">Title 1</div>
-                            <span class="typography-spec">32px Semibold (Poppins)</span>
+                            <span class="typography-spec">32px Semibold (Montserrat)</span>
                         </div>
                         <div>
                             <div class="title-2">Title 2</div>
-                            <span class="typography-spec">28px Semibold (Poppins)</span>
+                            <span class="typography-spec">28px Semibold (Montserrat)</span>
                         </div>
                         <div>
                             <div class="title-3">Title 3</div>
-                            <span class="typography-spec">24px Semibold (Poppins)</span>
+                            <span class="typography-spec">24px Semibold (Montserrat)</span>
                         </div>
                         <div>
                             <div class="subtitle-1">Subtitle 1</div>
-                            <span class="typography-spec">20px Semibold (Poppins)</span>
+                            <span class="typography-spec">20px Semibold (Montserrat)</span>
                         </div>
                         <div>
                             <div class="subtitle-2">Subtitle 2</div>
-                            <span class="typography-spec">16px Semibold (Poppins)</span>
+                            <span class="typography-spec">16px Semibold (Montserrat)</span>
                         </div>
                         <div>
                             <div class="subtitle-2-stronger">Subtitle 2 Stronger</div>
-                            <span class="typography-spec">16px Bold (Poppins)</span>
+                            <span class="typography-spec">16px Bold (Montserrat)</span>
                         </div>
                         <div>
                             <p class="body-1">Body 1</p>
-                            <span class="typography-spec caption-1">16px Regular (Poppins) - Default paragraph</span>
+                            <span class="typography-spec caption-1">16px Regular (Montserrat) - Default paragraph</span>
                         </div>
                         <div>
                             <div class="body-1-strong">Body 1 Strong</div>
-                            <span class="typography-spec caption-1">16px Semibold (Poppins)</span>
+                            <span class="typography-spec caption-1">16px Semibold (Montserrat)</span>
                         </div>
                         <div>
                             <p class="body-2">Body 2</p>
-                            <span class="typography-spec caption-1">14px Regular (Poppins)</span>
+                            <span class="typography-spec caption-1">14px Regular (Montserrat)</span>
                         </div>
                         <div>
                             <div class="body-2-strong">Body 2 Strong</div>
-                            <span class="typography-spec caption-1">14px Semibold (Poppins)</span>
+                            <span class="typography-spec caption-1">14px Semibold (Montserrat)</span>
                         </div>
                         <div>
                             <div class="body-2-stronger">Body 2 Stronger</div>
-                            <span class="typography-spec caption-1">14px Bold (Poppins)</span>
+                            <span class="typography-spec caption-1">14px Bold (Montserrat)</span>
                         </div>
                         <div>
                             <div class="caption-1">Caption 1</div>
-                            <span class="typography-spec">12px Regular (Poppins)</span>
+                            <span class="typography-spec">12px Regular (Montserrat)</span>
                         </div>
                         <div>
                             <div class="caption-1-strong">Caption 1 Strong</div>
-                            <span class="typography-spec">12px Semibold (Poppins)</span>
+                            <span class="typography-spec">12px Semibold (Montserrat)</span>
                         </div>
                         <div>
                             <div class="caption-1-stronger">Caption 1 Stronger</div>
-                            <span class="typography-spec">12px Bold (Poppins)</span>
+                            <span class="typography-spec">12px Bold (Montserrat)</span>
                         </div>
                         <div>
                             <div class="caption-2">Caption 2</div>
-                            <span class="typography-spec">10px Regular (Poppins)</span>
+                            <span class="typography-spec">10px Regular (Montserrat)</span>
                         </div>
                         <div>
                             <div class="caption-2-strong">Caption 2 Strong</div>
-                            <span class="typography-spec">10px Semibold (Poppins)</span>
+                            <span class="typography-spec">10px Semibold (Montserrat)</span>
                         </div>
                     </div>
                 </div>
@@ -1709,7 +1709,7 @@ button.quick-play-button {
     text-transform: capitalize;
     font-size: 20px;
     font-weight: 600;
-    font-family: Poppins, sans-serif;
+    font-family: Montserrat, sans-serif;
 }
 
 .modal-close {
@@ -1727,7 +1727,7 @@ button.quick-play-button {
 .modal-section-header {
     font-size: 16px;
     font-weight: 600;
-    font-family: Poppins, sans-serif;
+    font-family: Montserrat, sans-serif;
     margin: 0;
     padding: 0;
 }

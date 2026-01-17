@@ -208,19 +208,19 @@ async function onClick() {
     &.subtitle-1 {
         font-size: 20px;
         font-weight: 600;
-        font-family: Poppins, sans-serif;
+        font-family: Montserrat, sans-serif;
         line-height: 1.4;
     }
     &.body-1-strong {
         font-size: 16px;
         font-weight: 600;
-        font-family: Poppins, sans-serif;
+        font-family: Montserrat, sans-serif;
         line-height: 1.4;
     }
     &.body-2-strong {
         font-size: 14px;
         font-weight: 600;
-        font-family: Poppins, sans-serif;
+        font-family: Montserrat, sans-serif;
         line-height: 1.4;
     }
 }

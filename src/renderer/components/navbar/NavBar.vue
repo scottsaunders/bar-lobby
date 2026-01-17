@@ -378,7 +378,7 @@ function prefetchRoute(path: string) {
         :deep(.button-content) {
             font-size: 20px; // subtitle-1 size (1 size smaller than title-3/24px)
             font-weight: 400; // Regular weight
-            font-family: Poppins, sans-serif;
+            font-family: Montserrat, sans-serif;
             line-height: 1.3;
         }
         :deep(.p-button) {
@@ -458,7 +458,7 @@ function prefetchRoute(path: string) {
         :deep(.button-content) {
             font-size: 14px; // 1 size smaller than body-1 (16px) -> body-2 (14px)
             font-weight: 400;
-            font-family: Poppins, sans-serif;
+            font-family: Montserrat, sans-serif;
             line-height: 1.4;
         }
         :deep(> button) {
@@ -486,7 +486,7 @@ function prefetchRoute(path: string) {
             padding: 0;
             :deep(.button-content) {
                 @extend .body-1 !optional; // 16px - for player name and server status
-                font-family: Poppins, sans-serif;
+                font-family: Montserrat, sans-serif;
                 line-height: 1.4;
             }
         }
