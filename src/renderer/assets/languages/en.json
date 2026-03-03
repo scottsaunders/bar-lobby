@@ -2025,8 +2025,11 @@
             }
         },
         "navbar": {
+            "chatPanel": {
+                "close": "Close"
+            },
             "tooltips": {
-                "directMessages": "Direct Messages",
+                "directMessages": "Chat & Direct Messages",
                 "friends": "Friends",
                 "downloads": "Downloads",
                 "settings": "Settings",
@@ -2075,10 +2078,12 @@
                 "offline": "Offline"
             },
             "messages": {
+                "title": "Direct messages",
                 "message": "Message",
                 "userID": "UserID",
                 "userIDPlaceholder": "32452",
-                "send": "Send"
+                "send": "Send",
+                "newConversation": "New conversation"
             },
             "settings": {
                 "title": "settings",
@@ -2137,8 +2142,10 @@
             },
             "social": {
                 "chat": {
+                    "title": "Chat",
                     "to": "To",
-                    "typeHerePlaceholder": "Type here to chat. Use '/' for commands."
+                    "typeHerePlaceholder": "Type here to chat. Use '/' for commands.",
+                    "inputPlaceholder": "Type a message"
                 }
             },
             "misc": {

@@ -17,6 +17,7 @@ SPDX-License-Identifier: MIT
         <Notifications v-if="state === 'default'" />
         <PromptContainer v-if="state === 'default'" />
         <NavBar :class="{ hidden: empty || state === 'preloader' || state === 'initial-setup' }" />
+        <Messages v-if="state === 'default'" v-show="messagesOpen" v-model="messagesOpen" v-click-away:messages="closeMessages" />
         <div class="lobby-version">
             {{ infosStore.lobby.version }}
         </div>
@@ -50,7 +51,6 @@ SPDX-License-Identifier: MIT
         </Transition>
         <Settings v-model="settingsOpen" />
         <ServerSettings v-model="serverSettingsOpen" />
-        <ChatComponent v-if="state === 'default' && me.isAuthenticated && tachyonStore.isConnected" />
         <MatchmakingProgressWidget v-if="state === 'default'" />
         <LogInConfirmationModal v-model="logInConfirmationIsOpen" :intendedRoute="logInConfirmationIntendedRoute" />
     </div>
@@ -74,6 +74,7 @@ import InitialSetup from "@renderer/components/misc/InitialSetup.vue";
 import IntroVideo from "@renderer/components/misc/IntroVideo.vue";
 import Preloader from "@renderer/components/misc/Preloader.vue";
 import NavBar from "@renderer/components/navbar/NavBar.vue";
+import Messages from "@renderer/components/navbar/Messages.vue";
 import Settings from "@renderer/components/navbar/Settings.vue";
 import ServerSettings from "@renderer/components/navbar/ServerSettings.vue";
 import Notifications from "@renderer/components/notifications/Notifications.vue";
@@ -83,12 +84,10 @@ import LogInConfirmationModal from "@renderer/components/misc/LogInConfirmationM
 import { playRandomMusic } from "@renderer/utils/play-random-music";
 import { settingsStore } from "./store/settings.store";
 import { infosStore } from "@renderer/store/infos.store";
-import ChatComponent from "@renderer/components/social/ChatComponent.vue";
 import MatchmakingProgressWidget from "@renderer/components/battle/MatchmakingProgressWidget.vue";
 import { battleStore } from "@renderer/store/battle.store";
 import { useGlobalKeybindings } from "@renderer/composables/useGlobalKeybindings";
 import { me } from "@renderer/store/me.store";
-import { tachyonStore } from "@renderer/store/tachyon.store";
 import { auth } from "@renderer/store/me.store";
 import { useLogInConfirmation } from "@renderer/composables/useLogInConfirmation";
 
@@ -118,6 +117,13 @@ const { isOpen: logInConfirmationIsOpen, intendedRoute: logInConfirmationIntende
 provide("settingsOpen", settingsOpen);
 provide("serverSettingsOpen", serverSettingsOpen);
 provide("exitOpen", exitOpen);
+
+const messagesOpen = ref(false);
+provide("messagesOpen", messagesOpen);
+
+function closeMessages() {
+    messagesOpen.value = false;
+}
 
 useGlobalKeybindings({ exitOpen });
 

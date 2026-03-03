@@ -28,11 +28,11 @@ SPDX-License-Identifier: MIT
                 <div class="drag-window-area"></div>
                 <div class="primary-right">
                     <Button
-                        v-if="me.isAuthenticated && settingsStore.devMode"
+                        v-if="me.isAuthenticated"
                         v-tooltip.bottom="t('lobby.navbar.tooltips.directMessages')"
-                        v-click-away:messages="() => (messagesOpen = false)"
-                        :class="['icon', 'dev-only', { active: messagesOpen }]"
-                        @click="messagesOpen = true"
+                        v-click-away:messages="closeMessages"
+                        :class="['icon', { active: messagesOpenRef }]"
+                        @click="openMessages"
                     >
                         <Icon :icon="messageIcon" :height="40" />
                         <div v-if="messagesUnread" class="unread-dot"></div>
@@ -102,7 +102,6 @@ SPDX-License-Identifier: MIT
         </div>
 
         <TransitionGroup name="slide-right">
-            <Messages v-show="messagesOpen" key="messages" v-model="messagesOpen" v-click-away:messages="() => (messagesOpen = false)" />
             <Friends v-show="friendsOpen" key="friends" v-model="friendsOpen" v-click-away:friends="() => (friendsOpen = false)" />
             <Downloads
                 v-show="downloadsOpen"
@@ -138,7 +137,6 @@ import Downloads from "@renderer/components/navbar/Downloads.vue";
 import DownloadsButton from "@renderer/components/navbar/DownloadsButton.vue";
 import Exit from "@renderer/components/navbar/Exit.vue";
 import Friends from "@renderer/components/navbar/Friends.vue";
-import Messages from "@renderer/components/navbar/Messages.vue";
 import ProfileModal from "@renderer/components/navbar/ProfileModal.vue";
 import { useRouter } from "vue-router";
 import { settingsStore } from "@renderer/store/settings.store";
@@ -230,8 +228,15 @@ const secondaryRoutes = computed(() => {
             },
         }));
 });
-const messagesOpen = ref(false);
+const messagesOpenRef = inject<Ref<boolean>>("messagesOpen")!;
 const friendsOpen = ref(false);
+
+function openMessages() {
+    messagesOpenRef.value = true;
+}
+function closeMessages() {
+    messagesOpenRef.value = false;
+}
 const downloadsOpen = ref(false);
 const profileOpen = ref(false);
 const profileUserId = ref<string | undefined>(undefined);

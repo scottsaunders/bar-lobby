@@ -109,7 +109,13 @@ export const chatActions = {
         }
     },
     sendMessage(message: ChatMessage) {
-        if (!chatStore.selectedChatRoom) throw new Error("failed to access chat room");
+        if (!chatStore.selectedChatRoom) {
+            const fallbackRoom = chatStore.chatRooms.at(0);
+            if (!fallbackRoom) return;
+            fallbackRoom.messages.push(message);
+            chatStore.selectedChatRoom = fallbackRoom;
+            return;
+        }
 
         chatStore.selectedChatRoom.messages.push(message);
     },
@@ -117,7 +123,10 @@ export const chatActions = {
         const room = chatStore.chatRooms.find((room) => room.id === roomId);
         if (room) {
             room.messages.push(message);
-            if (!chatStore.selectedChatRoom) throw new Error("failed to access chat room");
+            if (!chatStore.selectedChatRoom) {
+                chatStore.selectedChatRoom = room;
+                return;
+            }
 
             if (chatStore.selectedChatRoom.id !== roomId) {
                 room.unreadMessages++;
@@ -125,7 +134,12 @@ export const chatActions = {
         }
     },
     closeChatRoom(id: string) {
-        chatStore.chatRooms = chatStore.chatRooms.filter((room) => room.id !== id);
+        const remainingRooms = chatStore.chatRooms.filter((room) => room.id !== id);
+        chatStore.chatRooms = remainingRooms;
+
+        if (chatStore.selectedChatRoom?.id === id) {
+            chatStore.selectedChatRoom = remainingRooms.at(0);
+        }
     },
     openChatRoom(room: ChatRoom) {
         chatStore.chatRooms.push(room);

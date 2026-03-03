@@ -6,7 +6,9 @@ SPDX-License-Identifier: MIT
 
 <template>
     <Panel class="popout-panel" :class="{ hidden: !open }" no-padding>
-        <slot></slot>
+        <div class="popout-panel-inner">
+            <slot></slot>
+        </div>
     </Panel>
 </template>
 
@@ -22,19 +24,30 @@ defineProps<{
 .popout-panel {
     position: fixed;
     right: 0;
-    top: 70px;
-    z-index: 2;
-    min-width: 475px;
-    max-width: 475px;
-    min-height: 400px;
-    max-height: 400px;
+    top: 0;
+    bottom: 0;
+    z-index: 100;
+    width: 720px;
+    min-width: 720px;
+    max-width: 720px;
     background: rgba(0, 0, 0, 0.95);
     font-family: Montserrat;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
     :deep(.content) {
         padding: 0;
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
     }
-    :deep(.p-tabview-panel) {
-        padding: 15px;
-    }
+}
+
+.popout-panel-inner {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
 }
 </style>
