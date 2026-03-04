@@ -759,7 +759,7 @@ SPDX-License-Identifier: MIT
 
                         <div class="subtitle-2">Toggle Switch</div>
                         <div class="flex-row gap-md">
-                            <InputSwitch v-model="toggleChecked" />
+                            <ToggleSwitch v-model="toggleChecked" />
                         </div>
 
                         <div class="subtitle-2">Radio Buttons (Circular)</div>
@@ -1063,7 +1063,7 @@ import InteractiveTile from "@renderer/components/common/InteractiveTile.vue";
 import StatusCard from "@renderer/components/common/StatusCard.vue";
 import Badge from "@renderer/components/common/Badge.vue";
 import ScrollingTextPanel from "@renderer/components/common/ScrollingTextPanel.vue";
-import InputSwitch from "primevue/inputswitch";
+import ToggleSwitch from "@renderer/components/controls/ToggleSwitch.vue";
 import Progress from "@renderer/components/common/Progress.vue";
 import Loader from "@renderer/components/common/Loader.vue";
 import Accordion from "@renderer/components/common/Accordion.vue";
@@ -1162,38 +1162,6 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss">
-// Toggle Switch Styles
-.p-inputswitch {
-    width: 3rem;
-    height: 32px;
-
-    &.p-inputswitch-checked {
-        .p-inputswitch-slider {
-            background: #22c55e;
-            &:before {
-                transform: translateX(1.25rem);
-            }
-        }
-    }
-
-    .p-inputswitch-slider {
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
-        border-radius: 4px; // Rectangular style
-
-        &:before {
-            background: #ffffff;
-            width: 1.25rem;
-            height: 1.25rem;
-            left: 0.25rem;
-            margin-top: -0.625rem;
-            border-radius: 2px; // Rectangular thumb
-            transition-duration: 0.2s;
-        }
-    }
-}
-
 // Range Slider text alignment
 .p-slider-handle {
     display: flex;
