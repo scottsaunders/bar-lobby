@@ -56,6 +56,14 @@
     will-change: scroll-position;
 }
 
+.min-height-0 {
+    min-height: 0;
+}
+
+.flex-shrink-0 {
+    flex-shrink: 0;
+}
+
 // Primary scrollview style for main panels (with fade effects)
 // Use this class in addition to .scroll-container for main panel scrollviews
 .scroll-container.main-panel-scroll {
