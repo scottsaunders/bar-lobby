@@ -6,33 +6,34 @@ SPDX-License-Identifier: MIT
 
 <template>
     <div v-if="settingsStore.isInitialized" id="wrapper" class="wrapper fullsize">
-        <transition mode="in-out" name="intro">
-            <IntroVideo v-if="!settingsStore.skipIntro && videoVisible" @complete="onIntroEnd" />
-        </transition>
-        <Suspense>
-            <DebugSidebar v-if="settingsStore.devMode" />
-        </Suspense>
-        <StickyBattle v-if="state === 'default'" />
-        <Background :blur="blurBg" />
-        <Notifications v-if="state === 'default'" />
-        <PromptContainer v-if="state === 'default'" />
-        <NavBar :class="{ hidden: empty || state === 'preloader' || state === 'initial-setup' }" />
-        <Messages v-if="state === 'default'" v-show="messagesOpen" v-model="messagesOpen" v-click-away:messages="closeMessages" />
-        <div class="lobby-version">
-            {{ infosStore.lobby.version }}
-        </div>
-        <div v-if="empty" class="splash-options">
-            <div class="option" @click="settingsOpen = true">
-                <Icon :icon="cog" height="21" />
+        <Transition name="fade">
+            <SplashScreen v-if="loading" />
+        </Transition>
+        <template v-if="!loading">
+            <transition mode="in-out" name="intro">
+                <IntroVideo v-if="!settingsStore.skipIntro && videoVisible" @complete="onIntroEnd" />
+            </transition>
+            <Suspense>
+                <DebugSidebar v-if="settingsStore.devMode" />
+            </Suspense>
+            <StickyBattle />
+            <Background :blur="blurBg" />
+            <Notifications />
+            <PromptContainer />
+            <NavBar :class="{ hidden: empty }" />
+            <Messages v-show="messagesOpen" v-model="messagesOpen" v-click-away:messages="closeMessages" />
+            <div class="lobby-version">
+                {{ infosStore.lobby.version }}
             </div>
-            <div class="option" @click="exitOpen = true">
-                <Icon :icon="closeThick" height="21" />
+            <div v-if="empty" class="splash-options">
+                <div class="option" @click="settingsOpen = true">
+                    <Icon :icon="cog" height="21" />
+                </div>
+                <div class="option" @click="exitOpen = true">
+                    <Icon :icon="closeThick" height="21" />
+                </div>
             </div>
-        </div>
-        <Transition mode="out-in" name="fade">
-            <Preloader v-if="state === 'preloader'" @complete="onPreloadDone" />
-            <InitialSetup v-else-if="state === 'initial-setup'" @complete="onInitialSetupDone" />
-            <div class="view-container" :class="{ 'translated-right': battleStore.isLobbyOpened }" v-else>
+            <div class="view-container" :class="{ 'translated-right': battleStore.isLobbyOpened }">
                 <RouterView v-slot="{ Component, route }">
                     <template v-if="Component">
                         <Transition v-bind="route.meta.transition" mode="out-in">
@@ -48,11 +49,11 @@ SPDX-License-Identifier: MIT
                     </template>
                 </RouterView>
             </div>
-        </Transition>
-        <Settings v-model="settingsOpen" />
-        <ServerSettings v-model="serverSettingsOpen" />
-        <MatchmakingProgressWidget v-if="state === 'default'" />
-        <LogInConfirmationModal v-model="logInConfirmationIsOpen" :intendedRoute="logInConfirmationIntendedRoute" />
+            <Settings v-model="settingsOpen" />
+            <ServerSettings v-model="serverSettingsOpen" />
+            <MatchmakingProgressWidget />
+            <LogInConfirmationModal v-model="logInConfirmationIsOpen" :intendedRoute="logInConfirmationIntendedRoute" />
+        </template>
     </div>
     <Error />
 </template>
@@ -61,7 +62,7 @@ SPDX-License-Identifier: MIT
 import { Icon } from "@iconify/vue";
 import closeThick from "@iconify-icons/mdi/close-thick";
 import cog from "@iconify-icons/mdi/cog";
-import { provide, Ref, toRef, toValue } from "vue";
+import { onMounted, provide, Ref, toRef, toValue } from "vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
@@ -70,9 +71,8 @@ import Loader from "@renderer/components/common/Loader.vue";
 import Background from "@renderer/components/misc/Background.vue";
 import DebugSidebar from "@renderer/components/misc/DebugSidebar.vue";
 import Error from "@renderer/components/misc/Error.vue";
-import InitialSetup from "@renderer/components/misc/InitialSetup.vue";
 import IntroVideo from "@renderer/components/misc/IntroVideo.vue";
-import Preloader from "@renderer/components/misc/Preloader.vue";
+import SplashScreen from "@renderer/components/misc/SplashScreen.vue";
 import NavBar from "@renderer/components/navbar/NavBar.vue";
 import Messages from "@renderer/components/navbar/Messages.vue";
 import Settings from "@renderer/components/navbar/Settings.vue";
@@ -82,6 +82,7 @@ import PromptContainer from "@renderer/components/prompts/PromptContainer.vue";
 import LogInConfirmationModal from "@renderer/components/misc/LogInConfirmationModal.vue";
 
 import { playRandomMusic } from "@renderer/utils/play-random-music";
+import { runInit } from "@renderer/utils/background-init";
 import { settingsStore } from "./store/settings.store";
 import { infosStore } from "@renderer/store/infos.store";
 import MatchmakingProgressWidget from "@renderer/components/battle/MatchmakingProgressWidget.vue";
@@ -91,7 +92,6 @@ import { me } from "@renderer/store/me.store";
 import { auth } from "@renderer/store/me.store";
 import { useLogInConfirmation } from "@renderer/composables/useLogInConfirmation";
 
-// Mock state for matchmaking widget (for UI prototyping)
 const matchmakingWidgetState = ref({
     isVisible: false,
     isSearching: false,
@@ -103,8 +103,8 @@ provide("matchmakingWidgetState", matchmakingWidgetState);
 
 const router = useRouter();
 const videoVisible = toRef(!toValue(settingsStore.skipIntro));
+const loading = ref(true);
 
-const state: Ref<"preloader" | "initial-setup" | "default"> = ref("preloader");
 const empty = ref(router.currentRoute.value?.meta?.empty ?? false);
 const blurBg = ref(router.currentRoute.value?.meta?.blurBg ?? false);
 
@@ -138,6 +138,17 @@ provide("toggleDownloads", toggleDownloads);
 
 playRandomMusic();
 
+onMounted(async () => {
+    await runInit(router);
+    loading.value = false;
+
+    // In non-dev mode, skip login and go directly to the menu
+    if (!settingsStore.devMode) {
+        auth.playOffline();
+        router.push("/play/menu");
+    }
+});
+
 window.barNavigation.onNavigateTo((target: string) => {
     router.push(target);
 });
@@ -150,7 +161,6 @@ router.beforeEach(async (to) => {
     const rememberedPath = simpleRouterMemory.get(section);
     const defaultRedirect = to.meta.redirect;
 
-    // If no remembered path, or if remembered path is the menu, use default redirect
     if (!rememberedPath || rememberedPath === "/play/menu") {
         return { path: router.resolve(defaultRedirect).fullPath };
     }
@@ -170,7 +180,6 @@ router.beforeEach(async (to) => {
 
 router.afterEach(async (to) => {
     const section = to.fullPath.split("/")[1];
-    // Don't remember the menu route - it should only be accessed via logo
     if (to.fullPath !== "/play/menu") {
         simpleRouterMemory.set(section, to.fullPath);
     }
@@ -180,28 +189,6 @@ router.afterEach(async (to) => {
 
 function onIntroEnd() {
     videoVisible.value = false;
-}
-
-async function onPreloadDone() {
-    state.value = "initial-setup";
-}
-
-function onInitialSetupDone() {
-    state.value = "default";
-    console.debug("Initial setup done");
-    
-    // Preload common routes in the background to improve first-time load performance
-    import("@renderer/utils/route-preloader").then(({ preloadCommonRoutes }) => {
-        preloadCommonRoutes(router);
-    });
-}
-
-// Currently we support multiplayer only in dev mode, as it's very not finished.
-// We do it here and not in index.vue to avoid flashing login page for user before
-// continuing to overview.
-if (!settingsStore.devMode) {
-    auth.playOffline();
-    router.push("/play/menu");
 }
 </script>
 

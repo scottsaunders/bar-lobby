@@ -129,12 +129,13 @@ app.whenReady().then(async () => {
             },
         });
     });
-    // Initialize services
-    await engineService.init();
-    await Promise.all([settingsService.init(), accountService.init(), replaysService.init(), gameService.init(), mapsService.init(), autoUpdaterService.init()]);
+    // Init settings first (fast JSON read) so we can create the window immediately.
+    // The window starts loading the renderer while remaining services initialize.
+    await settingsService.init();
     const mainWindow = createWindow();
     const webContents = typedWebContents(mainWindow.webContents);
-    // Handlers may need the webContents to send events
+
+    // Register IPC handlers before service init so they're wired up when renderer calls them
     logService.registerIpcHandlers();
     infoService.registerIpcHandlers();
     settingsService.registerIpcHandlers();
@@ -149,4 +150,14 @@ app.whenReady().then(async () => {
     miscService.registerIpcHandlers();
     autoUpdaterService.registerIpcHandlers();
     navigationService.registerIpcHandlers(webContents);
+
+    // Init remaining services in parallel. The renderer HTML/JS is loading concurrently.
+    await Promise.all([
+        engineService.init(),
+        accountService.init(),
+        replaysService.init(),
+        gameService.init(),
+        mapsService.init(),
+        autoUpdaterService.init(),
+    ]);
 });

@@ -24,6 +24,9 @@ import { fetchMissingMapImages, initMapsStore } from "@renderer/store/maps.store
 import { initReplaysStore } from "@renderer/store/replays.store";
 import { initDb } from "@renderer/store/db";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _fontFilesRef = fontFiles;
+
 const { t } = useTypedI18n();
 
 const emit = defineEmits(["complete"]);
@@ -32,16 +35,15 @@ const thingsToPreload: [string, () => Promise<unknown>][] = [
     [t("lobby.components.misc.preloader.loadingFonts"), loadAllFonts],
     [t("lobby.components.misc.preloader.initializingIndexDB"), initDb],
     [t("lobby.components.misc.preloader.initializingMaps"), initMapsStore],
-    [t("lobby.components.misc.preloader.fetchingMissingMapImages"), fetchMissingMapImages],
     [t("lobby.components.misc.preloader.initializingReplays"), initReplaysStore],
 ];
 
-const total = Object.values(fontFiles).length + thingsToPreload.length;
+const total = thingsToPreload.length;
 const text = ref("");
 const progress = ref(0);
 const loadedPercent = computed(() => progress.value / total);
 
-console.debug(`Loading ${total} font files...`);
+console.debug(`Loading ${Object.values(fontFiles).length} font files...`);
 console.debug(`Loading ${Object.values(backgroundImages).length} background images...`);
 const randomBackgroundImage = randomFromArray(Object.values(backgroundImages));
 console.debug("Setting background image:", randomBackgroundImage);
@@ -54,6 +56,9 @@ onMounted(async () => {
         progress.value++;
     }
     audioApi.load();
+
+    // Fetch map images in the background — don't block startup for potentially hundreds of images
+    fetchMissingMapImages().catch((e) => console.warn("Background map image fetch failed:", e));
 
     // Signal to main process that renderer is ready to receive events
     window.barNavigation.signalReady();

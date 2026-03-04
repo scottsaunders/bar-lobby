@@ -9,7 +9,6 @@ import Dexie, { EntityTable } from "dexie";
 
 export async function initDb() {
     await db.open();
-    await db.maps.toArray();
 }
 
 export const db = new Dexie("BarLobby") as Dexie & {

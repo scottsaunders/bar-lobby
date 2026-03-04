@@ -40,7 +40,7 @@ async function setupVue() {
     app.directive("in-view", elementInViewDirective);
     app.directive("tooltip", Tooltip);
 
-    // Init stores before mounting app
+    // Init stores first (settings needed for audio volume), then audio
     await initPreMountStores();
     await audioApi.init();
 

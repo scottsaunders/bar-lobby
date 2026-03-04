@@ -64,6 +64,7 @@ watch(
         width: var(--progress);
         height: 100%;
         background: rgba(255, 255, 255, 0.3);
+        transition: width 0.3s ease;
     }
     &.themed .progress__current {
         background: linear-gradient(rgba(217, 255, 0, 0.5) 0%, rgba(217, 255, 0, 0.5) 50%, rgba(194, 228, 0, 0.5) 51%);

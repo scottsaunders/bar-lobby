@@ -5,53 +5,27 @@
 import type { Router } from "vue-router";
 
 /**
- * Preloads commonly visited routes to improve first-time load performance.
- * Routes are preloaded in the background after a short delay to avoid blocking initial render.
+ * Preloads all registered route chunks so navigation is instant once the user is in the client.
+ * Iterates over every route in the router (instead of a hardcoded list) so new views are
+ * automatically covered.
  */
-export function preloadCommonRoutes(router: Router) {
-    // Common routes that users are likely to visit
-    const commonRoutes = [
-        "/play/menu",
-        "/play/skirmishVsAi",
-        "/play/scenarios",
-        "/library/maps/maps",
-        "/watch/replays",
-        "/news/overview",
-    ];
+export function preloadCommonRoutes(router: Router): Promise<void> {
+    const promises: Promise<unknown>[] = [];
 
-    // Preload routes after a short delay to avoid blocking initial render
-    setTimeout(() => {
-        const currentPath = router.currentRoute.value.path;
-        
-        commonRoutes.forEach((path) => {
-            // Skip if already on this route
-            if (path === currentPath) return;
-            
-            try {
-                // Use router.resolve to get the route and trigger component loading
-                const route = router.resolve(path);
-                if (route && route.matched.length > 0) {
-                    // Access the matched routes to trigger lazy loading
-                    route.matched.forEach((matched) => {
-                        if (matched.components) {
-                            // Trigger lazy loading by accessing the component functions
-                            Object.values(matched.components).forEach((component) => {
-                                if (component && typeof component === "function") {
-                                    // Call the lazy loader function to preload
-                                    component().catch(() => {
-                                        // Silently fail if component fails to load
-                                    });
-                                }
-                            });
-                        }
-                    });
-                } else {
-                    // Route not found - skip silently (route may not be registered yet)
+    for (const route of router.getRoutes()) {
+        if (route.components) {
+            for (const component of Object.values(route.components)) {
+                if (component && typeof component === "function") {
+                    promises.push(
+                        (component as () => Promise<unknown>)().catch(() => {
+                            // Silently fail — route chunk may not exist or may already be loaded
+                        })
+                    );
                 }
-            } catch (error) {
-                // Silently fail if route doesn't exist
             }
-        });
-    }, 1000); // Wait 1 second after app load to start preloading
+        }
+    }
+
+    return Promise.all(promises).then(() => {});
 }
 

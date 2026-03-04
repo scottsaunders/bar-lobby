@@ -61,15 +61,12 @@ async function login() {
         await auth.login();
         await tachyon.connect();
         const redirect = router.currentRoute.value.query.redirect as string | undefined;
-        router.push(redirect || "/play/menu");
+        await router.push(redirect || "/play/menu");
     } catch (e) {
         console.error(e);
         error.value = (e as Error).message;
     } finally {
-        // Removes the stutter when transitioning to the next page
-        setTimeout(() => {
-            connecting.value = false;
-        }, 1000);
+        connecting.value = false;
     }
 }
 

@@ -40,7 +40,7 @@
     "dependencies": {
         "@extractus/feed-extractor": "^7.1.6",
         "@iconify-icons/mdi": "^1.2.48",
-        "@iconify/json": "^2.2.362",
+        "@iconify/json": "^2.2.445",
         "@iconify/vue": "^5.0.0",
         "@sinclair/typebox": "^0.34.38",
         "@vueuse/core": "^13.5.0",
