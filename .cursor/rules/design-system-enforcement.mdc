@@ -1,0 +1,81 @@
+---
+description: Enforce design system compliance when editing Vue components
+globs: **/*.vue
+---
+
+# Design System Enforcement
+
+After every `.vue` file edit, verify the following checklist. Flag violations and suggest the design system alternative.
+
+## Post-Edit Checklist
+
+1. **No hardcoded `font-size`** in `<style>` blocks → use a typography class instead (see scale below)
+2. **No hardcoded `padding`, `margin`, or `gap`** values in `<style>` blocks → use spacing utility classes or `map.get($spacing, "key")` in SCSS
+3. **No native `<button>` elements** → use `<Button>` from `@renderer/components/controls/Button.vue`
+4. **No native `<input>` or `<select>` elements** → use design system controls (`Textbox`, `Select`, `Checkbox`, `ToggleSwitch`, `Number`, `SearchBox`, `Range`, `Options`)
+5. **No raw PrimeVue imports when a wrapper exists** — known mappings:
+   - `primevue/inputswitch` → `ToggleSwitch` (`@renderer/components/controls/ToggleSwitch.vue`)
+   - `primevue/dropdown` → `Select` (`@renderer/components/controls/Select.vue`)
+6. **No `!important`** without a comment explaining the specificity issue
+
+## Typography Scale
+
+| Size & Weight | Class |
+|---|---|
+| 68px Semibold | `.display` |
+| 40px Semibold | `.large-title` |
+| 32px Semibold | `.title-1` |
+| 28px Semibold | `.title-2` |
+| 24px Semibold | `.title-3` |
+| 20px Semibold | `.subtitle-1` |
+| 16px Semibold | `.subtitle-2` |
+| 16px Bold | `.subtitle-2-stronger` |
+| 16px Regular | `.body-1` (default) |
+| 16px Semibold | `.body-1-strong` |
+| 14px Regular | `.body-2` |
+| 14px Semibold | `.body-2-strong` |
+| 14px Bold | `.body-2-stronger` |
+| 12px Regular | `.caption-1` |
+| 12px Semibold | `.caption-1-strong` |
+| 12px Bold | `.caption-1-stronger` |
+| 10px Regular | `.caption-2` |
+| 10px Semibold | `.caption-2-strong` |
+
+## Spacing Scale
+
+| Value | Token | Example classes |
+|---|---|---|
+| 2px | `xxs` | `gap-xxs`, `padding-xxs`, `margin-xxs` |
+| 4px | `xs` | `gap-xs`, `padding-top-xs` |
+| 8px | `sm` | `gap-sm`, `padding-sm` |
+| 12px | `md` | `gap-md`, `margin-bottom-md` |
+| 16px | `lg` | `gap-lg`, `padding-left-lg` |
+| 24px | `xl` | `gap-xl`, `padding-xl` |
+| 32px | `xxl` | `gap-xxl`, `margin-xxl` |
+| 48px | `xxxl` | `padding-xxxl` |
+| 56px | `xxxxl` | `padding-xxxxl` |
+
+Class patterns: `gap-{size}`, `padding-{size}`, `padding-{direction}-{size}`, `margin-{size}`, `margin-{direction}-{size}`
+
+SCSS usage: `map.get($spacing, "size")`
+
+## Design System Component Registry
+
+**Layout:** `Panel`, `Divider`, `InteractiveTile`, `ScrollingTextPanel`, `Modal`
+
+**Controls:** `Button`, `Textbox`, `Number`, `SearchBox`, `Textarea`, `Select`, `Checkbox`, `ToggleSwitch`, `Options`, `Range`
+
+**Feedback:** `Loader`, `Progress`, `StatusCard`, `Badge`
+
+**Container:** `Accordion` (wraps PrimeVue AccordionTab)
+
+All located in `src/renderer/components/common/` and `src/renderer/components/controls/`.
+
+## Allowed Exceptions
+
+These are OK and should not be flagged:
+
+- **Dynamic inline styles** computed from JS (e.g., `:style="{ width: computedWidth + 'px' }"`)
+- **Showcase / demo styles** in `src/renderer/views/styles/` (one-off visual demos)
+- **Genuinely unique values** not in the spacing scale, with a comment explaining why
+- **`!important`** with a comment explaining the specificity issue
