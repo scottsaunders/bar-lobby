@@ -1,0 +1,45 @@
+---
+description: Run GSD (Get Shit Done) workflows from Cursor — new-project, plan-phase, execute-phase, etc.
+alwaysApply: true
+---
+
+# GSD in Cursor
+
+**GSD is installed** in this project at `.claude/get-shit-done/`. Use it when the user asks to run GSD or uses slash-style commands.
+
+## Command triggers
+
+When the user says any of the following, run the corresponding workflow:
+
+| User says | Workflow file | Action |
+|-----------|----------------|--------|
+| `/gsd:help`, "gsd help" | `workflows/help.md` | Show command reference (output help content). |
+| `/gsd:new-project`, "gsd new project" | `workflows/new-project.md` | Initialize project: questioning → config → PROJECT.md → optional research → REQUIREMENTS.md → ROADMAP.md. |
+| `/gsd:map-codebase`, "gsd map codebase" | `workflows/map-codebase.md` | Analyze codebase; create `.planning/codebase/` (STACK, ARCHITECTURE, etc.). |
+| `/gsd:progress`, "gsd progress" | `workflows/progress.md` | Show status, next phase, suggest next command. |
+| `/gsd:discuss-phase N`, "gsd discuss phase N" | `workflows/discuss-phase.md` | Capture context for phase N → `{N}-CONTEXT.md`. |
+| `/gsd:plan-phase N`, "gsd plan phase N" | `workflows/plan-phase.md` | Research (optional) + create plans for phase N in `.planning/phases/`. |
+| `/gsd:execute-phase N`, "gsd execute phase N" | `workflows/execute-phase.md` | Run plans for phase N (waves, commits, verification). |
+| `/gsd:verify-work [N]`, "gsd verify work" | `workflows/verify-work.md` | UAT for phase N (or current). |
+| `/gsd:quick`, "gsd quick" | `workflows/quick.md` | Ad-hoc task with GSD structure (`.planning/quick/`). |
+
+Read the workflow from `.claude/get-shit-done/workflows/<name>.md` and execute it step by step.
+
+## Cursor adaptations
+
+- **Choices:** Workflows mention "AskUserQuestion". In Cursor, present options clearly in your reply and continue based on the user's next message.
+- **gsd-tools:** Run from project root: `node "./.claude/get-shit-done/bin/gsd-tools.cjs" <command> [args]`. Use for `init new-project`, `commit`, `state`, `roadmap analyze`, etc.
+- **Subagents:** Workflows that "spawn 4 researchers" or similar: do the work in this agent. Produce the same outputs (e.g. `.planning/research/STACK.md`, `FEATURES.md`) using the workflow’s prompts and templates under `.claude/get-shit-done/templates/`.
+- **Paths:** All GSD paths are relative to the project root (this repo). Use `.planning/` for artifacts.
+
+## Artifacts
+
+- `.planning/PROJECT.md` — vision, requirements, decisions  
+- `.planning/config.json` — mode, granularity, workflow toggles  
+- `.planning/REQUIREMENTS.md` — v1/v2/out-of-scope, REQ-IDs  
+- `.planning/ROADMAP.md` — phases, success criteria  
+- `.planning/STATE.md` — memory, blockers, position  
+- `.planning/phases/` — phase plans and summaries  
+- `.planning/research/` or `.planning/codebase/` — research outputs  
+
+When in doubt, run `node "./.claude/get-shit-done/bin/gsd-tools.cjs"` with no args to see available commands.
