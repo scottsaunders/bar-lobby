@@ -1151,24 +1151,6 @@ function getRowClass(data: BattleWithComputed) {
 </script>
 
 <style lang="scss" scoped>
-@use "sass:map";
-@use "@renderer/styles/spacing" as *;
-
-.view-container {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
-    width: 100%;
-    padding: 0 map.get($spacing, "xxl") map.get($spacing, "sm") map.get($spacing, "xxl");
-    overflow: hidden;
-    box-sizing: border-box;
-    
-    .view-title {
-        padding-left: 0; // Ensure title isn't cut off - padding is handled by view-container
-    }
-}
-
 .lobbies-layout {
     min-height: 0;
 }
@@ -1189,17 +1171,17 @@ function getRowClass(data: BattleWithComputed) {
 // Row background colors for running vs waiting lobbies
 :deep(.lobbies-table) {
     .lobby-running {
-        background-color: rgba(244, 67, 54, 0.08) !important; // Red tint for running games
+        background-color: rgba(244, 67, 54, 0.08) !important; /* Override PrimeVue DataTable row background — red tint for running games */
         
         &:hover {
-            background-color: rgba(244, 67, 54, 0.15) !important;
+            background-color: rgba(244, 67, 54, 0.15) !important; /* Override PrimeVue DataTable row hover — running game highlight */
         }
     }
     
     .lobby-waiting {
         // Normal white background for waiting games (no tint)
         &:hover {
-            background-color: rgba(255, 255, 255, 0.2) !important;
+            background-color: rgba(255, 255, 255, 0.2) !important; /* Override PrimeVue DataTable row hover */
         }
     }
 }

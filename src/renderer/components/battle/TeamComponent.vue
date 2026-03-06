@@ -22,6 +22,7 @@ SPDX-License-Identifier: MIT
             <div class="member-count body-2" v-if="!isRaptorTeam(teamId) && !isScavengerTeam(teamId)">
                 {{ t("lobby.components.battle.teamComponent.players", { count: memberCount, maxCount: maxPlayersPerTeam }) }}
             </div>
+            <!-- Native button intentional: compact hover-reveal delete icon within team header — Button's Control wrapper adds audio/min-size inappropriate for inline icon triggers -->
             <button 
                 v-if="canDeleteTeam" 
                 class="delete-team-button" 
@@ -44,6 +45,7 @@ SPDX-License-Identifier: MIT
             <BotParticipant v-else-if="isBot(member)" :bot="member" :team-id="teamId" />
         </div>
         <template v-if="!isRaptorTeam(teamId) && !isScavengerTeam(teamId)">
+            <!-- Native button intentional: team slot placeholder with full-width inset styling and per-slot rendering — not a standard action button -->
             <button
                 v-for="(_, i) in getAmountOfJoinButtons(maxPlayersPerTeam, memberCount)"
                 :key="i"

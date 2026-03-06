@@ -401,12 +401,12 @@ function changeFromPresetToCustomBoxes(newBox: StartBox, startBoxesIndex: number
     justify-content: center;
     align-items: center;
     color: white;
-    font-size: 1.5rem;
+    font-size: 1.5rem; // Intentional: 24px/regular is off-scale (title-3 is 24px/semibold) — box label number
     position: relative;
 
     cursor:
         url("/src/renderer/assets/images/uimove_0.png") 16 16,
-        move !important;
+        move !important; /* Game-specific custom cursor — must override default */
 }
 
 .box-tooltip-side,
@@ -435,13 +435,14 @@ $centerOffset: -5px;
 $sideWidth: 10px;
 $sideLength: calc(100% - $sideWidth);
 
+/* Game-specific custom cursors for start box resize handles — must override default cursor */
 .box-tooltip-side.n-side {
     width: $sideLength;
     height: $sideWidth;
     top: $centerOffset;
     cursor:
         url("/src/renderer/assets/images/uiresizev_0.png") 16 16,
-        ns-resize !important;
+        ns-resize !important; /* Game-specific cursor override */
 }
 
 .box-tooltip-side.e-side {
@@ -450,7 +451,7 @@ $sideLength: calc(100% - $sideWidth);
     right: $centerOffset;
     cursor:
         url("/src/renderer/assets/images/uiresizeh_0.png") 16 16,
-        ew-resize !important;
+        ew-resize !important; /* Game-specific cursor override */
 }
 
 .box-tooltip-side.s-side {
@@ -459,7 +460,7 @@ $sideLength: calc(100% - $sideWidth);
     bottom: $centerOffset;
     cursor:
         url("/src/renderer/assets/images/uiresizev_0.png") 16 16,
-        ns-resize !important;
+        ns-resize !important; /* Game-specific cursor override */
 }
 
 .box-tooltip-side.w-side {
@@ -468,7 +469,7 @@ $sideLength: calc(100% - $sideWidth);
     left: $centerOffset;
     cursor:
         url("/src/renderer/assets/images/uiresizeh_0.png") 16 16,
-        ew-resize !important;
+        ew-resize !important; /* Game-specific cursor override */
 }
 
 .box-tooltip-corner.ne-corner {
@@ -478,7 +479,7 @@ $sideLength: calc(100% - $sideWidth);
     right: $centerOffset;
     cursor:
         url("/src/renderer/assets/images/uiresized2_0.png") 16 16,
-        nesw-resize !important;
+        nesw-resize !important; /* Game-specific cursor override */
 }
 
 .box-tooltip-corner.se-corner {
@@ -488,7 +489,7 @@ $sideLength: calc(100% - $sideWidth);
     right: $centerOffset;
     cursor:
         url("/src/renderer/assets/images/uiresized1_0.png") 16 16,
-        nwse-resize !important;
+        nwse-resize !important; /* Game-specific cursor override */
 }
 
 .box-tooltip-corner.nw-corner {
@@ -498,7 +499,7 @@ $sideLength: calc(100% - $sideWidth);
     left: $centerOffset;
     cursor:
         url("/src/renderer/assets/images/uiresized1_0.png") 16 16,
-        nwse-resize !important;
+        nwse-resize !important; /* Game-specific cursor override */
 }
 
 .box-tooltip-corner.sw-corner {
@@ -508,7 +509,7 @@ $sideLength: calc(100% - $sideWidth);
     left: $centerOffset;
     cursor:
         url("/src/renderer/assets/images/uiresized2_0.png") 16 16,
-        nesw-resize !important;
+        nesw-resize !important; /* Game-specific cursor override */
 }
 
 @keyframes subtleGlow {
@@ -542,13 +543,13 @@ $sideLength: calc(100% - $sideWidth);
     // Orange tint for Raptors - inline styles will override, but this ensures consistency
     box-shadow:
         0 0 15px rgba(206, 73, 73, 0.5),
-        0 0 25px rgba(206, 73, 73, 0.4) !important;
+        0 0 25px rgba(206, 73, 73, 0.4) !important; /* Override base box-shadow for team-colored glow */
 }
 
 .scavenger-box {
     // Purple tint for Scavengers - inline styles will override, but this ensures consistency
     box-shadow:
         0 0 15px rgba(135, 69, 176, 0.5),
-        0 0 25px rgba(135, 69, 176, 0.4) !important;
+        0 0 25px rgba(135, 69, 176, 0.4) !important; /* Override base box-shadow for team-colored glow */
 }
 </style>

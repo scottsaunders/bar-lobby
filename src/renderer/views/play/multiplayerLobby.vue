@@ -9,7 +9,7 @@ SPDX-License-Identifier: MIT
 </route>
 
 <template>
-    <div class="view" style="position: relative;">
+    <div class="view">
         <div class="view-container">
             <div class="view-title flex-row flex-space-between flex-center-items">
                 <div class="flex-row flex-center-items gap-md">
@@ -97,123 +97,123 @@ SPDX-License-Identifier: MIT
                                 <div class="chat-messages flex-col gap-lg padding-md">
                                     <!-- Mock conversation -->
                                     <div class="chat-message flex-col gap-xs">
-                                        <div class="player-chip">
+                                        <div class="player-chip caption-1">
                                             <Flag countryCode="DE" class="flag" />
                                             <span>CommanderX</span>
                                         </div>
-                                        <div class="message-text">Hey everyone! Ready for some 8v8?</div>
+                                        <div class="message-text body-2">Hey everyone! Ready for some 8v8?</div>
                                     </div>
                                     
                                     <div class="chat-message flex-col gap-xs">
-                                        <div class="player-chip">
+                                        <div class="player-chip caption-1">
                                             <Flag countryCode="US" class="flag" />
                                             <span>TankMaster42</span>
                                         </div>
-                                        <div class="message-text">Let's go! I'll take south spawn</div>
+                                        <div class="message-text body-2">Let's go! I'll take south spawn</div>
                                     </div>
                                     
                                     <div class="chat-message flex-col gap-xs">
-                                        <div class="player-chip">
+                                        <div class="player-chip caption-1">
                                             <Flag countryCode="GB" class="flag" />
                                             <span>AirSupreme</span>
                                         </div>
-                                        <div class="message-text">I'll go air this game if that's ok</div>
+                                        <div class="message-text body-2">I'll go air this game if that's ok</div>
                                     </div>
                                     
                                     <div class="chat-message flex-col gap-xs">
-                                        <div class="player-chip">
+                                        <div class="player-chip caption-1">
                                             <Flag countryCode="DE" class="flag" />
                                             <span>CommanderX</span>
                                         </div>
-                                        <div class="message-text">Sounds good! Anyone want to go navy?</div>
+                                        <div class="message-text body-2">Sounds good! Anyone want to go navy?</div>
                                     </div>
                                     
                                     <div class="chat-message flex-col gap-xs">
-                                        <div class="player-chip">
+                                        <div class="player-chip caption-1">
                                             <Flag countryCode="FR" class="flag" />
                                             <span>NavalKnight</span>
                                         </div>
-                                        <div class="message-text">I got navy covered 🚢</div>
+                                        <div class="message-text body-2">I got navy covered 🚢</div>
                                     </div>
                                     
                                     <div class="chat-message flex-col gap-xs">
-                                        <div class="player-chip">
+                                        <div class="player-chip caption-1">
                                             <Flag countryCode="PL" class="flag" />
                                             <span>RushBot</span>
                                         </div>
-                                        <div class="message-text">glhf!</div>
+                                        <div class="message-text body-2">glhf!</div>
                                     </div>
                                     
                                     <div class="chat-message flex-col gap-xs">
-                                        <div class="player-chip">
+                                        <div class="player-chip caption-1">
                                             <Flag countryCode="SE" class="flag" />
                                             <span>VikingStorm</span>
                                         </div>
-                                        <div class="message-text">Same here, good luck all!</div>
+                                        <div class="message-text body-2">Same here, good luck all!</div>
                                     </div>
                                     
                                     <div class="chat-message flex-col gap-xs">
-                                        <div class="player-chip">
+                                        <div class="player-chip caption-1">
                                             <Flag countryCode="US" class="flag" />
                                             <span>TankMaster42</span>
                                         </div>
-                                        <div class="message-text">Who's going eco? We need someone to pump metal</div>
+                                        <div class="message-text body-2">Who's going eco? We need someone to pump metal</div>
                                     </div>
                                     
                                     <div class="chat-message flex-col gap-xs">
-                                        <div class="player-chip">
+                                        <div class="player-chip caption-1">
                                             <Flag countryCode="CA" class="flag" />
                                             <span>MapleReclaimer</span>
                                         </div>
-                                        <div class="message-text">I can eco mid, I'll build up and support both flanks</div>
+                                        <div class="message-text body-2">I can eco mid, I'll build up and support both flanks</div>
                                     </div>
                                     
                                     <div class="chat-message flex-col gap-xs">
-                                        <div class="player-chip">
+                                        <div class="player-chip caption-1">
                                             <Flag countryCode="DE" class="flag" />
                                             <span>CommanderX</span>
                                         </div>
-                                        <div class="message-text">Perfect. Let's coordinate early game</div>
+                                        <div class="message-text body-2">Perfect. Let's coordinate early game</div>
                                     </div>
                                     
                                     <div class="chat-message flex-col gap-xs">
-                                        <div class="player-chip">
+                                        <div class="player-chip caption-1">
                                             <Flag countryCode="AU" class="flag" />
                                             <span>OutbackTactics</span>
                                         </div>
-                                        <div class="message-text">I'll push north with some early bots</div>
+                                        <div class="message-text body-2">I'll push north with some early bots</div>
                                     </div>
                                     
                                     <div class="chat-message flex-col gap-xs">
-                                        <div class="player-chip">
+                                        <div class="player-chip caption-1">
                                             <Flag countryCode="JP" class="flag" />
                                             <span>NinjaMech</span>
                                         </div>
-                                        <div class="message-text">Watch out for early rush, they have RushBot on the other team 😅</div>
+                                        <div class="message-text body-2">Watch out for early rush, they have RushBot on the other team 😅</div>
                                     </div>
                                     
                                     <div class="chat-message flex-col gap-xs">
-                                        <div class="player-chip">
+                                        <div class="player-chip caption-1">
                                             <Flag countryCode="PL" class="flag" />
                                             <span>RushBot</span>
                                         </div>
-                                        <div class="message-text">👀</div>
+                                        <div class="message-text body-2">👀</div>
                                     </div>
                                     
                                     <div class="chat-message flex-col gap-xs">
-                                        <div class="player-chip">
+                                        <div class="player-chip caption-1">
                                             <Flag countryCode="GB" class="flag" />
                                             <span>AirSupreme</span>
                                         </div>
-                                        <div class="message-text">lol I'll scout early, don't worry</div>
+                                        <div class="message-text body-2">lol I'll scout early, don't worry</div>
                                     </div>
                                     
                                     <div class="chat-message flex-col gap-xs">
-                                        <div class="player-chip">
+                                        <div class="player-chip caption-1">
                                             <Flag countryCode="FR" class="flag" />
                                             <span>NavalKnight</span>
                                         </div>
-                                        <div class="message-text">Ready when you are, host</div>
+                                        <div class="message-text body-2">Ready when you are, host</div>
                                     </div>
                                 </div>
                             </div>
@@ -481,22 +481,12 @@ onMounted(async () => {
 @use "@renderer/styles/spacing" as *;
 
 .view-container {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
     width: 100%;
-    padding: 0 map.get($spacing, "xxl") map.get($spacing, "sm") map.get($spacing, "xxl");
     overflow: visible;
-    box-sizing: border-box;
     position: relative;
     
-    .view-title {
-        padding-left: 0;
-        
-        .icon {
-            flex-shrink: 0;
-        }
+    .view-title .icon {
+        flex-shrink: 0;
     }
 }
 
@@ -644,11 +634,10 @@ onMounted(async () => {
     display: inline-flex;
     flex-direction: row;
     align-items: center;
-    gap: 5px;
-    padding: 2px 8px;
+    gap: 5px; /* intentional: 5px off-scale, compact chip alignment */
+    padding: map.get($spacing, "xxs") map.get($spacing, "sm");
     border-radius: 3px;
     background: rgba(0, 0, 0, 0.4);
-    font-size: 12px;
     border: 1px solid rgba(255, 255, 255, 0.15);
     white-space: nowrap;
     
@@ -659,7 +648,6 @@ onMounted(async () => {
 }
 
 .message-text {
-    font-size: 14px;
     line-height: 1.4;
     word-break: break-word;
     color: rgba(255, 255, 255, 0.9);
@@ -684,7 +672,7 @@ onMounted(async () => {
     
     :deep(.p-inputtext) {
         padding: map.get($spacing, "md") map.get($spacing, "lg");
-        width: 100% !important;
+        width: 100% !important; /* Override PrimeVue InputText default width */
         max-width: 100%;
         box-sizing: border-box;
     }
@@ -741,12 +729,12 @@ onMounted(async () => {
             height: 100%;
             
             .label {
-                font-size: 20px; // Match subtitle-1 from large button
-                font-weight: 600;
+                font-size: 20px; /* intentional: :deep() override, matches subtitle-1 */
+                font-weight: 600; /* intentional: :deep() override, matches subtitle-1 */
                 font-family: Montserrat, sans-serif;
                 line-height: 1.4;
-                padding-left: 24px; // Match large button padding
-                padding-right: 24px;
+                padding-left: map.get($spacing, "xl");
+                padding-right: map.get($spacing, "xl");
             }
             
             .check-wrapper {

@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT
 
 <template>
     <Modal v-model="isOpen" :title="t('lobby.views.index.needToLogIn')">
-        <div class="container flex-col gap-lg">
+        <div class="container flex-col gap-xl">
             <div>{{ t("lobby.views.index.needToLogInToAccess") }}</div>
             <Button class="quick-play-button fullwidth" @click="onlogIn">
                 {{ t("lobby.views.index.login") }}
@@ -56,17 +56,19 @@ function onCancel() {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
+@use "@renderer/styles/spacing" as *;
+
 .container {
     width: 352px;
-    gap: 20px;
 }
 
 .quick-download-button {
     align-self: center;
     font-family: Rajdhani;
     font-weight: bold;
-    font-size: 1.4rem;
-    padding: 10px 40px;
+    font-size: 1.4rem; /* off-scale (~22.4px) — Rajdhani display font, intentional */
+    padding: map.get($spacing, "sm") 40px; /* 40px: off-scale — intentional for wide button padding */
     color: #fff;
     border: none;
     border-radius: 2px;
@@ -83,8 +85,8 @@ function onCancel() {
     align-self: center;
     font-family: Rajdhani;
     font-weight: bold;
-    font-size: 1.4rem;
-    padding: 10px 40px;
+    font-size: 1.4rem; /* off-scale (~22.4px) — Rajdhani display font, intentional */
+    padding: map.get($spacing, "sm") 40px; /* 40px: off-scale — intentional for wide button padding */
     color: #fff;
     background: linear-gradient(90deg, #22c55e, #16a34a);
     border: none;

@@ -10,11 +10,11 @@ SPDX-License-Identifier: MIT
         <div class="map-preview-container" @click="onMapClick" :class="{ 'has-map': map }">
             <div v-if="mapTextureUrl" class="map-image-wrapper">
                 <div class="map-background" :style="`background-image: url('${mapTextureUrl}')`"></div>
-                <div v-if="map" class="map-name">
+                <div v-if="map" class="map-name title-2">
                     {{ map.displayName }}
                 </div>
                 <div v-if="map" class="map-attributes">
-                    <div class="attributes bl">
+                    <div class="attributes bl body-2-strong">
                         <div class="flex-row flex-center-items gap-sm">
                             <Icon :icon="gridIcon" />
                             <span>{{ mapSize }}</span>
@@ -24,7 +24,7 @@ SPDX-License-Identifier: MIT
                             <span>{{ map.playerCountMin }} - {{ map.playerCountMax }}</span>
                         </div>
                     </div>
-                    <div class="attributes br flex-row gap-sm">
+                    <div class="attributes br body-2-strong flex-row gap-sm">
                         <TerrainIcon v-for="terrain in map.terrain" :terrain="terrain" :key="terrain" />
                     </div>
                 </div>
@@ -37,10 +37,10 @@ SPDX-License-Identifier: MIT
             <Icon :icon="swordCross" height="18" />
             <span>Runtime: {{ formattedRuntime }}</span>
         </div>
-        <div class="teams scroll-container flex-grow">
+        <div class="teams scroll-container flex-grow gap-xs">
             <div v-if="isFFA" class="team-section">
-                <div class="team-title">{{ t("lobby.components.battle.battlePreview.players") }}</div>
-                <div class="contenders">
+                <div class="team-title gap-sm">{{ t("lobby.components.battle.battlePreview.players") }}</div>
+                <div class="contenders gap-xs">
                     <template v-for="(contender, i) in battle.contenders" :key="`contender${i}`">
                         <BattlePreviewParticipant :contender="contender" />
                     </template>
@@ -48,8 +48,8 @@ SPDX-License-Identifier: MIT
             </div>
             <template v-for="[teamId, contenders] in teams" v-else :key="`team${teamId}`">
                 <div class="team-section">
-                    <div class="team-title">Team {{ teamId + 1 }}</div>
-                    <div class="contenders">
+                    <div class="team-title gap-sm">Team {{ teamId + 1 }}</div>
+                    <div class="contenders gap-xs">
                         <BattlePreviewParticipant
                             v-for="(contender, contenderIndex) in contenders"
                             :key="`contender${contenderIndex}`"
@@ -59,8 +59,8 @@ SPDX-License-Identifier: MIT
                 </div>
             </template>
             <div v-if="battle.spectators.length" class="team-section">
-                <div class="team-title">{{ t("lobby.components.battle.battlePreview.spectators") }}</div>
-                <div class="contenders">
+                <div class="team-title gap-sm">{{ t("lobby.components.battle.battlePreview.spectators") }}</div>
+                <div class="contenders gap-xs">
                     <BattlePreviewParticipant
                         v-for="(spectator, spectatorIndex) in battle.spectators"
                         :key="`spectator${spectatorIndex}`"
@@ -284,8 +284,6 @@ function onMapClick() {
     text-align: center;
     word-break: break-word;
     padding: map.get($spacing, "sm");
-    font-size: 1.75rem;
-    font-weight: 600;
     text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
     transition: 0.2s opacity;
     z-index: 3;
@@ -302,8 +300,6 @@ function onMapClick() {
     position: absolute;
     border: 1px solid rgba(0, 0, 0, 0.1);
     background: rgba(0, 0, 0, 0.2);
-    font-size: 0.875rem;
-    font-weight: 600;
     padding: map.get($spacing, "xxs") map.get($spacing, "xs");
     transition: 0.2s opacity;
     
@@ -332,7 +328,6 @@ function onMapClick() {
 }
 
 .teams {
-    gap: 5px;
     min-height: 0;
 }
 
@@ -343,27 +338,25 @@ function onMapClick() {
 .team-title {
     display: flex;
     flex-direction: row;
-    gap: 10px;
     font-weight: 500;
-    margin-bottom: 3px;
+    margin-bottom: 3px; /* Intentional: off-scale (3px), no exact token */
 }
 
 .contenders {
     display: flex;
     flex-direction: row;
-    gap: 4px;
     flex-wrap: wrap;
 }
 
 .inline-icon {
-    margin-top: 2px;
+    margin-top: map.get($spacing, "xxs");
 }
 
 .trophy {
     color: #ffbc00;
     display: flex;
     align-self: center;
-    margin-bottom: 1px;
+    margin-bottom: 1px; /* Intentional: off-scale (1px), no exact token */
 }
 
 .check {

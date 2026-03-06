@@ -32,7 +32,7 @@ SPDX-License-Identifier: MIT
                         v-setPlayerColor="rgbColors[sideIndex]"
                         class="start-pos"
                     >
-                        <div class="start-pos-tooltip">
+                        <div class="start-pos-tooltip caption-1">
                             <span>{{ spawnPoint.spawnPoint }}</span>
                         </div>
                     </div>
@@ -155,7 +155,6 @@ const rgbColors = [
         transform: translateX(-50%);
         left: 6px;
         bottom: 13px;
-        font-size: 12px;
         width: max-content;
         color: white;
         box-shadow:

@@ -7,8 +7,9 @@ This roadmap takes the client from current state (slow load, i18n key leakage, s
 ## Phases
 
 - [ ] **Phase 1: Foundation** — i18n, load performance, and startup stability so the client is reliable
-- [ ] **Phase 2: Design System** — Harden and document the design system; Styles tab as source of truth
-- [ ] **Phase 3: Screen Design & IA** — Design all screens; iterate layouts and information architecture
+- [x] **Phase 2: Design System** — Harden and document the design system; Styles tab as source of truth (completed 2026-03-04)
+- [x] **Phase 3: Screen Design & IA** — Design all screens; iterate layouts and information architecture
+ (completed 2026-03-04)
 - [ ] **Phase 4: Selective Functionality** — Build enough real behavior so designed flows work
 
 ## Phase Details
@@ -36,11 +37,15 @@ Plans:
   1. Styles tab reflects all reusable components and tokens
   2. New or refactored screens use design system components and utilities consistently
   3. Conventions documented (e.g. in .cursorrules or design doc)  
-**Plans:** TBD
+**Plans:** 6 plans
 
 Plans:
-- [ ] 02-01: TBD (e.g. Audit and document design system; align Styles tab)
-- [ ] 02-02: TBD (e.g. Apply design system to key screens as reference)
+- [x] 02-01-PLAN.md — Typography + spacing migration: battle components (16 files)
+- [x] 02-02-PLAN.md — Typography + spacing migration: views & pages (9 files)
+- [x] 02-03-PLAN.md — Typography + spacing migration: nav, map, social & notification components (12 files)
+- [x] 02-04-PLAN.md — Typography + spacing migration: common, controls & misc components (13 files)
+- [x] 02-05-PLAN.md — Native element replacement: buttons & inputs (7 files)
+- [x] 02-06-PLAN.md — !important triage + Styles tab completeness (17 files)
 
 ### Phase 3: Screen Design & IA
 **Goal:** All client screens designed with consistent layout and information architecture; faked data OK.  
@@ -50,12 +55,13 @@ Plans:
   1. All major screens have defined layout and IA
   2. Navigation and hierarchy are consistent
   3. Design system is applied across screens  
-**Plans:** TBD (can be broken by area: play, library, settings, etc.)
+**Plans:** 4/4 plans complete
 
 Plans:
-- [ ] 03-01: TBD (e.g. Play flow: menu, skirmish, campaign, multiplayer, matchmaking)
-- [ ] 03-02: TBD (e.g. Library, watch, settings, news)
-- [ ] 03-03: TBD (e.g. Polish and consistency pass)
+- [x] 03-01-PLAN.md — Layout spec + _views.scss foundation; View Shell section in Styles tab
+- [x] 03-02-PLAN.md — Play screens alignment (remove inline styles, standardize view-container)
+- [x] 03-03-PLAN.md — Library + Watch screens alignment (commands→view-container, maps, replays)
+- [ ] 03-04-PLAN.md — News + Profile + Breadcrumbs + human verification
 
 ### Phase 4: Selective Functionality
 **Goal:** Enough real functionality so designed flows work (navigation, real data where it serves design).  

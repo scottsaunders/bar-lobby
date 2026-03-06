@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT
 -->
 
 <template>
-    <div class="participant" data-type="participant" @mouseenter.stop="onMouseEnter">
+    <div class="participant body-1" data-type="participant" @mouseenter.stop="onMouseEnter">
         <slot></slot>
     </div>
 </template>
@@ -32,8 +32,6 @@ function onMouseEnter() {
     border-radius: 3px;
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    font-size: 16px;
-    font-weight: 400;
     font-family: Montserrat, sans-serif;
     line-height: 1.4;
     backdrop-filter: blur(5px);

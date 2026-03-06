@@ -6,8 +6,8 @@ SPDX-License-Identifier: MIT
 
 <template>
     <Modal :title="title" style="height: 80vh; width: 80vw; max-width: 1440px">
-        <div class="layout">
-            <div class="map-filters">
+        <div class="layout gap-xl">
+            <div class="map-filters gap-xl">
                 <MapFiltersComponent />
             </div>
             <MapListComponent @map-selected="mapSelected" />
@@ -36,13 +36,11 @@ function mapSelected(map: MapData) {
 .layout {
     display: flex;
     flex-direction: row;
-    gap: 20px;
     height: 100%;
 }
 .map-filters {
     width: 300px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
 }
 </style>

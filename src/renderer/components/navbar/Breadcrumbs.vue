@@ -6,13 +6,13 @@ SPDX-License-Identifier: MIT
 
 <template>
     <div class="breadcrumbs">
-        <div class="item back" @click="onBack">
+        <div class="item back body-1" @click="onBack">
             <Icon :icon="chevronLeft" height="21" />
             <div>{{ t("lobby.navbar.breadcrumbs.back") }}</div>
         </div>
         <template v-for="item in currentRoute.matched" :key="item.path">
             <div v-if="item.children" class="separator">/</div>
-            <router-link class="item" :class="{ active: item.path === currentRoute.path }" :to="item.path">
+            <router-link class="item body-1" :class="{ active: item.path === currentRoute.path }" :to="item.path">
                 {{ item.meta.title ?? item.name }}
             </router-link>
         </template>
@@ -43,26 +43,25 @@ function onBack() {
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding-right: 10px;
-    padding-bottom: 3px;
+    padding-right: 10px; // Intentional: 10px is off-scale, between sm(8px) and md(12px)
+    padding-bottom: 3px; // Intentional: 3px is off-scale, between xxs(2px) and xs(4px)
     transition: 0.4s opacity;
     &.hidden {
         opacity: 0;
     }
 }
 .item {
-    padding: 5px 10px;
+    padding: 5px 10px; // Intentional: 5px/10px are off-scale (nearest xs/sm), preserving original visual spacing
     color: rgba(255, 255, 255, 0.5);
     display: flex;
     align-items: center;
-    font-size: 16px;
     &:hover,
     &.active {
         color: #fff;
     }
 }
 .back {
-    padding: 5px 5px;
+    padding: 5px 5px; // Intentional: 5px is off-scale (nearest xs=4px), preserving original
 }
 .separator {
     color: rgba(255, 255, 255, 0.5);

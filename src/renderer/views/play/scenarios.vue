@@ -194,21 +194,6 @@ async function launch() {
 @use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
-.view-container {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
-    width: 100%;
-    padding: 0 map.get($spacing, "xxl") map.get($spacing, "sm") map.get($spacing, "xxl"); // xxl (32px) for left/right, sm (8px) for bottom
-    overflow: hidden;
-    box-sizing: border-box;
-    
-    .view-title {
-        padding-left: 0; // Ensure title isn't cut off - padding is handled by view-container
-    }
-}
-
 .scenarios-layout {
     width: 100%;
     height: 100%;

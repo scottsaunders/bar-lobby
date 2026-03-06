@@ -47,6 +47,9 @@ function toggle(event: Event): void {
 </script>
 
 <style lang="scss">
+@use "sass:map";
+@use "@renderer/styles/spacing" as *;
+
 .p-contextmenu,
 .p-submenu-list {
     border: 1px solid rgb(51, 51, 51);
@@ -54,11 +57,11 @@ function toggle(event: Event): void {
     font-weight: 500;
 }
 .p-submenu-list {
-    margin-top: -1px !important;
+    margin-top: -1px !important; /* PrimeVue override — collapse submenu border gap */
 }
 .p-menuitem-link {
     background: rgba(10, 10, 10, 1);
-    padding: 10px !important;
+    padding: map.get($spacing, "sm") !important; /* PrimeVue override — must use !important to override PrimeVue inline styles */
     &:hover {
         background: rgb(223, 223, 223);
         color: #111;
@@ -67,7 +70,7 @@ function toggle(event: Event): void {
 }
 .p-menuitem-link {
     display: flex;
-    gap: 5px;
-    font-size: 16px;
+    gap: map.get($spacing, "xs");
+    font-size: 16px; /* body-1 equivalent — PrimeVue internal, can't use utility class */
 }
 </style>

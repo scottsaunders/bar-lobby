@@ -23,11 +23,12 @@ SPDX-License-Identifier: MIT
             <div class="sidebar flex-col">
                 <div class="sidebar-list flex-col flex-grow gap-xxs padding-md">
                     <!-- Chat rooms -->
+                    <!-- Native button intentional: sidebar navigation list items with left-aligned text, hover/active states, and inline child elements — Button component's Control wrapper (audio, centered text, background) is structurally incompatible -->
                     <button
                         v-for="room in chatStore.chatRooms"
                         :key="'room-' + room.id"
                         type="button"
-                        class="sidebar-item"
+                        class="sidebar-item body-2"
                         :class="{ active: activeConversation?.type === 'room' && activeConversation?.id === room.id }"
                         @click="selectRoom(room)"
                     >
@@ -42,11 +43,12 @@ SPDX-License-Identifier: MIT
                         </span>
                     </button>
                     <!-- Direct messages -->
+                    <!-- Native button intentional: sidebar navigation list item (same pattern as chat rooms above) -->
                     <button
                         v-for="[userId, messages] in dmEntries"
                         :key="'dm-' + userId"
                         type="button"
-                        class="sidebar-item"
+                        class="sidebar-item body-2"
                         :class="{ active: activeConversation?.type === 'dm' && activeConversation?.userId === userId }"
                         @click="selectDm(userId)"
                     >
@@ -56,9 +58,10 @@ SPDX-License-Identifier: MIT
                         </span>
                     </button>
                     <!-- New conversation -->
+                    <!-- Native button intentional: sidebar navigation list item (same pattern as chat rooms above) -->
                     <button
                         type="button"
-                        class="sidebar-item new-conversation"
+                        class="sidebar-item new-conversation body-2"
                         :class="{ active: activeConversation?.type === 'new-dm' }"
                         @click="activeConversation = { type: 'new-dm' }"
                     >
@@ -133,7 +136,7 @@ SPDX-License-Identifier: MIT
                         ref="mainInputRef"
                         v-model="mainInputText"
                         type="text"
-                        class="input-field"
+                        class="input-field body-2"
                         :placeholder="t('lobby.components.social.chat.inputPlaceholder')"
                         @keydown.enter.stop.prevent="onMainInputEnter"
                     />
@@ -396,7 +399,6 @@ function startNewDm() {
     border: none;
     border-radius: 4px;
     color: rgba(255, 255, 255, 0.85);
-    font-size: 14px;
     cursor: pointer;
     position: relative;
 
@@ -410,7 +412,7 @@ function startNewDm() {
     }
 
     .unread-dot {
-        font-size: 8px;
+        font-size: 8px; // Intentional: off-scale decorative dot indicator "⬤", controls dot visual size
         color: rgb(226, 91, 91);
         visibility: hidden;
         &.visible {
@@ -475,7 +477,7 @@ function startNewDm() {
     flex-direction: row;
     gap: map.get($spacing, "xs");
     align-items: baseline;
-    font-size: 13px;
+    font-size: 13px; // Intentional: 13px is off-scale, between caption-1(12px) and body-2(14px)
 }
 
 .message-row .username {
@@ -513,7 +515,6 @@ function startNewDm() {
     border-radius: 6px;
     background: rgba(0, 0, 0, 0.4);
     color: #e0e0e0;
-    font-size: 14px;
     font-family: inherit;
 
     &::placeholder {

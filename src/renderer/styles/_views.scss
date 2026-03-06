@@ -21,6 +21,20 @@
     contain: layout style paint;
 }
 
+.view-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+    padding: 0 map.get($spacing, "xxl") map.get($spacing, "sm") map.get($spacing, "xxl");
+
+    .view-title {
+        padding-left: 0;
+    }
+}
+
 .view-title {
     margin-bottom: map.get($spacing, "xl");
     h1 {

@@ -9,16 +9,16 @@ SPDX-License-Identifier: MIT
         <Panel class="voting-panel">
             <div :class="['remaining-time', { animating: showTimeRemaining }]"></div>
 
-            <div class="title">
+            <div class="title title-3">
                 <strong>{{ t("lobby.components.battle.votePanel.vote") }}</strong> {{ vote.command }}
             </div>
 
-            <div class="actions">
-                <Button class="vote-button green" @click="onYes" @keyup.f1="onYes">{{ t("lobby.components.battle.votePanel.yes") }}</Button>
-                <Button class="vote-button red" @click="onNo">{{ t("lobby.components.battle.votePanel.no") }}</Button>
+            <div class="actions gap-sm">
+                <Button class="vote-button subtitle-1 green" @click="onYes" @keyup.f1="onYes">{{ t("lobby.components.battle.votePanel.yes") }}</Button>
+                <Button class="vote-button subtitle-1 red" @click="onNo">{{ t("lobby.components.battle.votePanel.no") }}</Button>
             </div>
 
-            <div v-if="vote.callerName" class="caller">{{ t("lobby.components.battle.votePanel.calledBy") }} {{ vote.callerName }}</div>
+            <div v-if="vote.callerName" class="caller body-2">{{ t("lobby.components.battle.votePanel.calledBy") }} {{ vote.callerName }}</div>
 
             <div v-if="missingYesVotes" class="vote-display">
                 <div v-for="i in vote.yesVotes" :key="i" class="segment yes"></div>
@@ -89,6 +89,9 @@ function onNo() {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
+@use "@renderer/styles/spacing" as *;
+
 .voting-container {
     position: fixed;
     width: 100%;
@@ -105,10 +108,9 @@ function onNo() {
     overflow: hidden;
     pointer-events: auto;
     :deep(.content) {
-        padding: 10px 15px;
-        padding-top: 13px;
-        padding-bottom: 23px;
-        gap: 10px;
+        padding: map.get($spacing, "md") map.get($spacing, "lg");
+        padding-bottom: map.get($spacing, "xl");
+        gap: map.get($spacing, "sm");
         overflow: hidden;
     }
 }
@@ -131,23 +133,18 @@ function onNo() {
 }
 .title {
     text-align: center;
-    font-size: 24px;
 }
 .actions {
     display: flex;
     flex-direction: row;
     width: 100%;
     justify-content: center;
-    gap: 10px;
 }
 .vote-button {
-    font-size: 20px;
-    font-weight: 600;
     flex-grow: 1;
 }
 .caller {
     text-align: center;
-    font-size: 14px;
     opacity: 0.8;
 }
 .vote-display {

@@ -11,6 +11,9 @@ SPDX-License-Identifier: MIT
 <template>
     <div class="view">
         <div class="view-container">
+            <div class="view-title">
+                <h1>{{ t("lobby.views.news.overview.title") }}</h1>
+            </div>
             <div class="overview-layout flex-row gap-lg fullheight">
                 <div class="news-section">
                     <Suspense>
@@ -33,6 +36,8 @@ SPDX-License-Identifier: MIT
 import Loader from "@renderer/components/common/Loader.vue";
 import DevlogFeed from "@renderer/components/misc/DevlogFeed.vue";
 import NewsFeed from "@renderer/components/misc/NewsFeed.vue";
+import { useTypedI18n } from "@renderer/i18n";
+const { t } = useTypedI18n();
 </script>
 
 <style lang="scss" scoped>
@@ -44,7 +49,7 @@ import NewsFeed from "@renderer/components/misc/NewsFeed.vue";
     flex-direction: column;
     width: 100%;
     height: 100%;
-    padding: map.get($spacing, "md") map.get($spacing, "xl");
+    padding: 0 map.get($spacing, "xxl") map.get($spacing, "sm") map.get($spacing, "xxl");
     box-sizing: border-box;
 }
 

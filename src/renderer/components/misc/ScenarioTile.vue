@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT
 
 <template>
     <div class="scenario-tile">
-        <div class="title">
+        <div class="title title-3">
             {{ scenario.title }}
         </div>
     </div>
@@ -24,6 +24,9 @@ const backgroundImageCss = ref(`url('bar://${encodeURIComponent(props.scenario.i
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
+@use "@renderer/styles/spacing" as *;
+
 .scenario-tile {
     height: 200px;
     display: flex;
@@ -66,12 +69,11 @@ const backgroundImageCss = ref(`url('bar://${encodeURIComponent(props.scenario.i
     }
 }
 .title {
-    font-size: 24px;
     text-align: left;
     font-weight: 500;
     z-index: 2;
-    padding: 10px;
-    padding-bottom: 6px;
+    padding: map.get($spacing, "sm");
+    padding-bottom: 6px; /* off-scale — intentional tighter bottom spacing for tile text */
     width: 100%;
     transition: 0.1s all;
 }

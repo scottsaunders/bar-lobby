@@ -16,7 +16,7 @@ SPDX-License-Identifier: MIT
                             <span></span>
                             <span></span>
                         </div>
-                        <div v-else-if="isMatchFound" class="match-found-icon">✓</div>
+                        <div v-else-if="isMatchFound" class="match-found-icon caption-1-stronger">✓</div>
                     </div>
                     
                     <div class="status-text-section flex-col gap-xxs">
@@ -154,7 +154,7 @@ onUnmounted(() => {
 
 .searching-dots {
     display: flex;
-    gap: 3px;
+    gap: 3px; /* Intentional: off-scale (3px), no exact token */
     
     span {
         width: 6px;
@@ -186,8 +186,6 @@ onUnmounted(() => {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
-    font-weight: bold;
 }
 
 @keyframes pulse {

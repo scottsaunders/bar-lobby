@@ -14,10 +14,10 @@ SPDX-License-Identifier: MIT
             </TabPanel>
             <TabPanel header="Details">
                 <div class="scroll-container flex-col flex-grow">
-                    <div class="teams padding-bottom-sm">
+                    <div class="teams padding-bottom-sm gap-xs">
                         <div v-if="isFFA">
-                            <div class="team-title">{{ t("lobby.components.battle.replayPreview.players") }}</div>
-                            <div class="contenders">
+                            <div class="team-title gap-sm">{{ t("lobby.components.battle.replayPreview.players") }}</div>
+                            <div class="contenders gap-xs">
                                 <template v-for="(contender, i) in replay?.contenders" :key="`contender${i}`">
                                     <BattlePreviewParticipant :contender="contender" />
                                     <Icon
@@ -30,7 +30,7 @@ SPDX-License-Identifier: MIT
                             </div>
                         </div>
                         <div v-for="[teamId, contenders] in teams" v-else :key="`team${teamId}`">
-                            <div class="team-title">
+                            <div class="team-title gap-sm">
                                 <div>Team {{ teamId + 1 }}</div>
                                 <Icon
                                     v-if="replay?.winningTeamId === teamId && showSpoilers"
@@ -39,7 +39,7 @@ SPDX-License-Identifier: MIT
                                     height="18"
                                 />
                             </div>
-                            <div class="contenders">
+                            <div class="contenders gap-xs">
                                 <BattlePreviewParticipant
                                     v-for="(contender, contenderIndex) in contenders"
                                     :key="`contender${contenderIndex}`"
@@ -48,8 +48,8 @@ SPDX-License-Identifier: MIT
                             </div>
                         </div>
                         <div v-if="replay?.spectators.length">
-                            <div class="team-title">{{ t("lobby.components.battle.replayPreview.spectators") }}</div>
-                            <div class="contenders">
+                            <div class="team-title gap-sm">{{ t("lobby.components.battle.replayPreview.spectators") }}</div>
+                            <div class="contenders gap-xs">
                                 <BattlePreviewParticipant
                                     v-for="(spectator, spectatorIndex) in replay.spectators"
                                     :key="`spectator${spectatorIndex}`"
@@ -136,6 +136,7 @@ function getStripeResult(index: number) {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .replay-preview-content {
@@ -177,30 +178,27 @@ function getStripeResult(index: number) {
 }
 
 .teams {
-    gap: 5px;
     height: auto;
 }
 .team-title {
     display: flex;
     flex-direction: row;
-    gap: 10px;
     font-weight: 500;
-    margin-bottom: 3px;
+    margin-bottom: 3px; /* Intentional: off-scale (3px), no exact token */
 }
 .contenders {
     display: flex;
     flex-direction: row;
-    gap: 4px;
     flex-wrap: wrap;
 }
 .inline-icon {
-    margin-top: 2px;
+    margin-top: map.get($spacing, "xxs");
 }
 .trophy {
     color: #ffbc00;
     display: flex;
     align-self: center;
-    margin-bottom: 1px;
+    margin-bottom: 1px; /* Intentional: off-scale (1px), no exact token */
 }
 .check {
     color: rgb(94, 230, 16);

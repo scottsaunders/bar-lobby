@@ -70,17 +70,20 @@ SPDX-License-Identifier: MIT
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
+@use "@renderer/styles/spacing" as *;
+
 .sticky-battle {
     position: absolute;
     bottom: 20px;
     left: -30px;
     z-index: 4;
-    padding: 10px 25px 5px 50px;
-    gap: 10px;
+    padding: map.get($spacing, "sm") map.get($spacing, "xl") map.get($spacing, "xs") map.get($spacing, "xxxl");
+    gap: map.get($spacing, "sm");
     transition: all 0.1s ease-in-out;
     will-change: left;
     &.hidden {
-        left: -400px !important;
+        left: -400px !important; /* Override animated left position for hide transition */
     }
     &:before {
         @extend .fullsize;
@@ -104,14 +107,14 @@ SPDX-License-Identifier: MIT
 }
 
 .title {
-    font-size: 27px;
+    font-size: 27px; /* Intentional: off-scale (27px), nearest title-2 is 28px — component template is commented out */
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .label {
-    font-size: 12px;
+    font-size: 12px; /* Intentional: weight 500 has no exact typography class match — component template is commented out */
     font-weight: 500;
     text-transform: uppercase;
     opacity: 0.7;
@@ -129,7 +132,7 @@ SPDX-License-Identifier: MIT
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 4px;
+    padding: 0 map.get($spacing, "xs");
     &:hover {
         filter: brightness(1.2);
     }

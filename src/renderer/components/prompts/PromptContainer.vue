@@ -80,7 +80,7 @@ export default {
     background: rgba(0, 0, 0, 0.5);
 }
 .title {
-    padding: 5px 10px;
+    padding: 5px 10px; // Intentional: 5px/10px are off-scale (nearest xs/sm)
     flex-grow: 1;
     text-transform: capitalize;
     font-weight: 600;
@@ -88,7 +88,7 @@ export default {
 .close {
     display: flex;
     margin-left: auto;
-    padding: 5px 10px;
+    padding: 5px 10px; // Intentional: 5px/10px are off-scale (nearest xs/sm)
     &:hover {
         background: rgba(219, 20, 20, 0.6);
     }

@@ -47,7 +47,7 @@ onMounted(() => {
     position: fixed;
     right: -2px;
     bottom: -2px;
-    gap: 3px;
+    gap: 3px; // Intentional: 3px is off-scale, between xxs(2px) and xs(4px)
     display: flex;
     flex-direction: column-reverse;
     pointer-events: auto;

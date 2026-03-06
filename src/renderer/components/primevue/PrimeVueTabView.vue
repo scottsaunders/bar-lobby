@@ -443,7 +443,7 @@ export default {
 }
 
 .p-tabview-header-right {
-    width: unset !important;
+    width: unset !important; /* Override PrimeVue TabView header default width */
 }
 
 .p-tabview-ink-bar {

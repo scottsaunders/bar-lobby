@@ -19,7 +19,7 @@ SPDX-License-Identifier: MIT
                     v-setPlayerColor="player.rgbColor"
                     class="start-pos"
                 >
-                    <div class="start-pos-tooltip">
+                    <div class="start-pos-tooltip caption-1">
                         <img v-if="player.faction === 'Armada'" src="/src/renderer/assets/images/factions/armada_faction.png" />
                         <img v-else-if="player.faction === 'Cortex'" src="/src/renderer/assets/images/factions/cortex_faction.png" />
                         <img v-else src="/src/renderer/assets/images/factions/unknown_faction.png" />
@@ -161,7 +161,6 @@ const mapAspectRatioStyle = computed(() => {
         transform: translateX(-50%);
         left: 6px;
         bottom: 13px;
-        font-size: 12px;
         width: max-content;
         .left &,
         .right & {

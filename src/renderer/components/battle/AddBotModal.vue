@@ -11,7 +11,7 @@ SPDX-License-Identifier: MIT
                 v-for="(ai, i) in enginesStore.selectedEngineVersion?.ais"
                 :key="i"
                 v-tooltip.bottom="{ value: ai.description }"
-                class="ai-button"
+                class="ai-button padding-lg"
                 @click="addBot(ai)"
             >
                 {{ ai.name }}
@@ -23,7 +23,7 @@ SPDX-License-Identifier: MIT
                 )"
                 :key="i"
                 v-tooltip.bottom="{ value: ai.description }"
-                class="ai-button"
+                class="ai-button padding-lg"
                 @click="addBot(ai)"
             >
                 {{ ai.name }}
@@ -59,9 +59,6 @@ function addBot(ai: EngineAI | GameAI) {
 </script>
 
 <style lang="scss" scoped>
-.ai-button {
-    padding: 15px;
-}
 .container {
     width: 500px;
 }

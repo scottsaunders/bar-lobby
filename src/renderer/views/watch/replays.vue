@@ -391,21 +391,6 @@ function getStripeResult(index: number) {
 @use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
-.view-container {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
-    width: 100%;
-    padding: 0 map.get($spacing, "xxl") map.get($spacing, "sm") map.get($spacing, "xxl");
-    overflow: hidden;
-    box-sizing: border-box;
-    
-    .view-title {
-        padding-left: 0; // Ensure title isn't cut off - padding is handled by view-container
-    }
-}
-
 .replays-layout {
     min-height: 0;
 }
@@ -424,24 +409,24 @@ function getStripeResult(index: number) {
 }
 
 :deep(.tab-panel-no-padding.p-tabview-panel) {
-    padding: 0 !important;
-    margin: 0 !important;
+    padding: 0 !important; /* Override PrimeVue TabView panel default padding */
+    margin: 0 !important; /* Override PrimeVue TabView panel default margin */
     min-height: 0;
 }
 
 :deep(.replay-side-panel .tab-panel-no-padding.p-tabview-panel) {
-    padding: 0 !important;
-    margin: 0 !important;
+    padding: 0 !important; /* Override PrimeVue TabView panel default padding */
+    margin: 0 !important; /* Override PrimeVue TabView panel default margin */
 }
 
 :deep(.replay-side-panel .p-tabview-panel) {
-    padding: 0 !important;
-    margin: 0 !important;
+    padding: 0 !important; /* Override PrimeVue TabView panel default padding */
+    margin: 0 !important; /* Override PrimeVue TabView panel default margin */
 }
 
 .tab-panel-inner-container {
-    padding: 0 !important;
-    margin: 0 !important;
+    padding: 0 !important; /* Override PrimeVue TabView inherited padding */
+    margin: 0 !important; /* Override PrimeVue TabView inherited margin */
     width: 100%;
     height: 100%;
 }
@@ -458,8 +443,8 @@ function getStripeResult(index: number) {
     min-height: 0;
     display: flex;
     flex-direction: column;
-    padding: 0 !important;
-    margin: 0 !important;
+    padding: 0 !important; /* Override PrimeVue TabView panels container padding */
+    margin: 0 !important; /* Override PrimeVue TabView panels container margin */
 }
 
 .inner-panel-container {
@@ -495,22 +480,22 @@ function getStripeResult(index: number) {
 }
 
 .teams {
-    gap: 5px;
+    gap: 5px; /* intentional: 5px off-scale, compact team list */
     height: auto;
 }
 
 .team-title {
     display: flex;
     flex-direction: row;
-    gap: 10px;
+    gap: 10px; /* intentional: 10px off-scale, between sm (8px) and md (12px) */
     font-weight: 500;
-    margin-bottom: 3px;
+    margin-bottom: 3px; /* intentional: 3px off-scale, tight label spacing */
 }
 
 .contenders {
     display: flex;
     flex-direction: row;
-    gap: 4px;
+    gap: map.get($spacing, "xs");
     flex-wrap: wrap;
 }
 
@@ -518,7 +503,7 @@ function getStripeResult(index: number) {
     color: #ffbc00;
     display: flex;
     align-self: center;
-    margin-bottom: 1px;
+    margin-bottom: 1px; /* intentional: 1px off-scale, sub-pixel alignment */
 }
 
 .datagrid {
@@ -537,7 +522,7 @@ function getStripeResult(index: number) {
 
 
 :deep(.p-datatable-tbody tr.highlighted-replay td) {
-    background-color: rgba(255, 200, 0, 0.3) !important;
+    background-color: rgba(255, 200, 0, 0.3) !important; /* Override PrimeVue DataTable row background for highlight */
 }
 
 .folder-button {

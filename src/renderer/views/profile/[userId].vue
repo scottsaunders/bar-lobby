@@ -9,7 +9,11 @@ SPDX-License-Identifier: MIT
 </route>
 <template>
     <div class="view">
-        <Panel class="profile-container" v-if="user">
+        <div class="view-container">
+            <div class="view-title">
+                <h1>{{ user?.displayName ?? t("lobby.views.profile.title") }}</h1>
+            </div>
+            <Panel class="profile-container" v-if="user">
             <div class="profile-header">
                 <img ref="logo" class="avatar" src="/src/renderer/assets/images/BARLogoFull.png" />
                 <div class="profile-user-info">
@@ -25,6 +29,7 @@ SPDX-License-Identifier: MIT
         <Panel class="profile-container" v-else>
             <p>{{ t("lobby.views.profile.userNotFound") }}</p>
         </Panel>
+        </div>
     </div>
 </template>
 
@@ -46,6 +51,9 @@ const user = useDexieLiveQueryWithDeps([() => props.userId], () => {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
+@use "@renderer/styles/spacing" as *;
+
 .profile-container {
     display: flex;
     height: 100%;
@@ -56,8 +64,8 @@ const user = useDexieLiveQueryWithDeps([() => props.userId], () => {
 .profile-header {
     display: flex;
     align-items: center;
-    margin-bottom: 15px;
-    margin-top: 25px;
+    margin-bottom: map.get($spacing, "lg");
+    margin-top: map.get($spacing, "xl");
     div {
         margin-right: auto;
     }
@@ -67,7 +75,7 @@ const user = useDexieLiveQueryWithDeps([() => props.userId], () => {
     width: 184px;
     height: 184px;
     border-radius: 1%;
-    margin-right: 20px;
+    margin-right: 20px; /* intentional: 20px off-scale, between lg (16px) and xl (24px) */
     border: 1px solid #5e5757;
     backdrop-filter: blur(2px);
 }
@@ -75,6 +83,6 @@ const user = useDexieLiveQueryWithDeps([() => props.userId], () => {
 .profile-user-info {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 3px; /* intentional: 3px off-scale, tight info spacing */
 }
 </style>

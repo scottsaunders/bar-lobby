@@ -15,9 +15,11 @@ SPDX-License-Identifier: MIT
                 </div>
                 <div class="flex-grow">{{ displayName }}</div>
                 <span v-if="difficultyLabel" class="difficulty-badge body-2">{{ difficultyLabel }}</span>
+                <!-- Native button intentional: compact hover-reveal context menu trigger within participant row — Button's Control wrapper adds audio/min-size inappropriate for inline icon triggers -->
                 <button class="menu-button" @click.stop="onMenuClick" title="Menu">
                     <Icon :icon="dotsVerticalIcon" />
                 </button>
+                <!-- Native button intentional: compact hover-reveal delete icon within participant row — Button's Control wrapper adds audio/min-size inappropriate for inline icon triggers -->
                 <button class="delete-bot-button" @click.stop="kickBot" :title="t('lobby.components.battle.botParticipant.kick')">
                     <Icon :icon="closeIcon" />
                 </button>

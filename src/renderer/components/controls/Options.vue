@@ -19,6 +19,9 @@ import Control from "@renderer/components/controls/Control.vue";
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
+@use "@renderer/styles/spacing" as *;
+
 .options {
     align-items: unset;
     &:hover {
@@ -29,10 +32,10 @@ import Control from "@renderer/components/controls/Control.vue";
 :deep(.p-selectbutton) {
     display: flex;
     flex-direction: row;
-    gap: 1px;
+    gap: 1px; /* off-scale — visual separator between option buttons, must be 1px */
     .p-button {
         height: 100%;
-        padding: 0 10px;
+        padding: 0 map.get($spacing, "sm");
         position: relative;
         flex-grow: 1;
         &:not(:last-child) {

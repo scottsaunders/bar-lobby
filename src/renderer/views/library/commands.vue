@@ -10,11 +10,12 @@ SPDX-License-Identifier: MIT
 
 <template>
     <div class="view">
-        <div class="commands-container">
+        <div class="view-container">
             <div class="view-title">
                 <h1>{{ route.meta.title }}</h1>
             </div>
-            <Panel class="fullheight">
+            <div class="commands-content">
+                <Panel class="fullheight">
                 <div class="flex-col gap-lg flex-grow fullheight">
                     <div class="flex-row gap-md">
                         <SearchBox v-model="searchVal" />
@@ -30,6 +31,7 @@ SPDX-License-Identifier: MIT
                     </div>
                 </div>
             </Panel>
+            </div>
         </div>
     </div>
 </template>
@@ -109,36 +111,40 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.commands-container {
+@use "sass:map";
+@use "@renderer/styles/spacing" as *;
+
+.commands-content {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    flex: 1;
+    min-height: 0;
     align-self: center;
-    width: 1600px;
+    width: 1600px; /* Layout-specific max width for commands list */
 }
 
 .command {
     display: flex;
     align-items: center;
-    margin-bottom: 5px;
+    margin-bottom: map.get($spacing, "xs");
 }
 
 .cmd {
     background-color: rgba(0, 0, 0, 0.3);
     color: white;
-    font-size: 13px;
+    font-size: 13px; /* intentional: 13px off-scale, between caption-1 (12px) and body-2 (14px) */
     font-weight: bold;
-    padding: 10px;
+    padding: 10px; /* intentional: 10px off-scale, between sm (8px) and md (12px) */
     border-radius: 3px;
-    margin-right: 10px;
+    margin-right: 10px; /* intentional: 10px off-scale, between sm (8px) and md (12px) */
     min-width: 162px;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .cmdDescription {
     flex-grow: 1;
-    margin-left: 5px;
-    font-size: 13px;
+    margin-left: map.get($spacing, "xs");
+    font-size: 13px; /* intentional: 13px off-scale, between caption-1 (12px) and body-2 (14px) */
     color: white;
 }
 </style>

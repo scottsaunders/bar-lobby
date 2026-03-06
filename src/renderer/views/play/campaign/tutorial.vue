@@ -181,19 +181,6 @@ function startLesson(lessonId: number) {
 @use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
-.view-container {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
-    width: 100%;
-    padding: 0 map.get($spacing, "xxl") map.get($spacing, "sm") map.get($spacing, "xxl");
-    overflow: hidden;
-    box-sizing: border-box;
-}
-
-
-
 .tutorial-layout {
     min-height: 0;
     overflow-y: auto;

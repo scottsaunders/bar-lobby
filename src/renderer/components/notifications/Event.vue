@@ -59,16 +59,16 @@ if (props.event.timeoutMs) {
 }
 .text {
     text-align: center;
-    font-size: 18px;
-    padding: 6px 10px;
-    padding-right: 20px;
+    font-size: 18px; // Intentional: 18px is off-scale, between body-1(16px) and subtitle-1(20px)
+    padding: 6px 10px; // Intentional: 6px/10px are off-scale (nearest sm=8px for both)
+    padding-right: 20px; // Intentional: 20px is off-scale, between lg(16px) and xl(24px)
 }
 .close {
     display: flex;
     position: absolute;
     top: 0;
     right: 0;
-    padding: 5px;
+    padding: 5px; // Intentional: 5px is off-scale (nearest xs=4px)
     color: rgba(255, 255, 255, 0.3);
     margin-left: auto;
     &:hover {

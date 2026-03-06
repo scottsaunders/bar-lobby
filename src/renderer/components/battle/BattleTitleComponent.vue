@@ -43,12 +43,12 @@ function handleEnter() {
 
 <style lang="scss" scoped>
 .control-not-editable.control {
-    background: none !important;
+    background: none !important; /* Override Button .control base background for non-editable display */
     border: 0px;
 }
 .title-textbox {
     width: 100%;
-    font-size: 36px;
+    font-size: 36px; /* Intentional: off-scale (36px), between title-1 (32px) and large-title (40px) */
     font-weight: bold;
     text-transform: uppercase;
     filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.9));

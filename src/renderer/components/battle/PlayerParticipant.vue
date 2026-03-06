@@ -20,7 +20,7 @@ SPDX-License-Identifier: MIT
                     class="rank-icon"
                 />
                 <!-- Show skill level next to rank in multiplayer lobby -->
-                <span v-if="isMultiplayerLobby" class="skill-level">
+                <span v-if="isMultiplayerLobby" class="skill-level caption-1-strong">
                     {{ player.user.skillLevel ?? 17 }}
                 </span>
                 <span>{{ displayName }}</span>
@@ -39,6 +39,7 @@ SPDX-License-Identifier: MIT
                     </template>
                 </div>
             </div>
+            <!-- Native button intentional: compact hover-reveal context menu trigger within participant row — Button's Control wrapper adds audio/min-size inappropriate for inline icon triggers -->
             <button class="menu-button" @click.stop="onMenuClick" title="Menu">
                 <Icon :icon="dotsVerticalIcon" />
             </button>
@@ -235,7 +236,7 @@ function onBonusSave(bonus: number) {
     width: 20px;
 }
 .ready {
-    font-size: 12px;
+    font-size: 12px; /* Intentional: dead CSS rule (no template element), would be caption-1 */
     color: rgb(226, 0, 0);
     text-shadow: none;
     &.isReady {
@@ -251,10 +252,8 @@ function onBonusSave(bonus: number) {
 }
 
 .skill-level {
-    font-size: 12px;
-    font-weight: 600;
     color: rgba(255, 255, 255, 0.9);
-    padding: 0 4px;
+    padding: 0 map.get($spacing, "xs");
 }
 
 .menu-button {

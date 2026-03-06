@@ -375,14 +375,14 @@ function prefetchRoute(path: string) {
             1px 0 0 rgba(255, 255, 255, 0.05),
             -1px 0 0 rgba(255, 255, 255, 0.05);
         border: none;
-        border-radius: 0 !important;
+        border-radius: 0 !important; /* Intentional: NavBar buttons require square corners */
         flex-grow: 0;
         height: 100%;
         text-transform: uppercase;
         max-height: unset;
         :deep(.button-content) {
-            font-size: 20px; // subtitle-1 size (1 size smaller than title-3/24px)
-            font-weight: 400; // Regular weight
+            font-size: 20px; // Intentional: :deep() override — 20px/regular is off-scale (subtitle-1 is 20px/semibold)
+            font-weight: 400; // Intentional: regular weight for nav buttons, not semibold
             font-family: Montserrat, sans-serif;
             line-height: 1.3;
         }
@@ -406,7 +406,7 @@ function prefetchRoute(path: string) {
                 -1px 0 0 rgba(255, 255, 255, 0.2),
                 0 1px 0 rgba(255, 255, 255, 0.2),
                 7px -3px 10px rgba(0, 0, 0, 0.5),
-                -7px -3px 10px rgba(0, 0, 0, 0.5) !important;
+                -7px -3px 10px rgba(0, 0, 0, 0.5) !important; /* Override Button default box-shadow for NavBar active/hover glow */
         }
         &.active {
             z-index: 2;
@@ -461,8 +461,8 @@ function prefetchRoute(path: string) {
         flex-grow: 0;
         height: map.get($spacing, "xxxl");
         :deep(.button-content) {
-            font-size: 14px; // 1 size smaller than body-1 (16px) -> body-2 (14px)
-            font-weight: 400;
+            font-size: 14px; // Intentional: :deep() override — can't add utility class to inner component element
+            font-weight: 400; // Intentional: body-2 equivalent (14px/regular)
             font-family: Montserrat, sans-serif;
             line-height: 1.4;
         }
@@ -504,7 +504,7 @@ function prefetchRoute(path: string) {
         -1px 0 0 rgba(255, 47, 47, 0.418),
         0 1px 0 rgba(255, 47, 47, 0.418),
         7px -3px 10px rgba(0, 0, 0, 0.5),
-        -7px -3px 10px rgba(0, 0, 0, 0.5) !important;
+        -7px -3px 10px rgba(0, 0, 0, 0.5) !important; /* Override Button default box-shadow for close button hover */
 }
 .user {
     text-transform: unset;
@@ -521,6 +521,6 @@ function prefetchRoute(path: string) {
 
 .drag-window-area {
     flex-grow: 1;
-    -webkit-app-region: drag !important;
+    -webkit-app-region: drag !important; /* Required for Electron window drag — must override any inherited region */
 }
 </style>

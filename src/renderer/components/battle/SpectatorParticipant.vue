@@ -19,7 +19,7 @@ SPDX-License-Identifier: MIT
                     :title="`Rank ${effectiveRank}`"
                     class="rank-icon"
                 />
-                <span v-if="isMultiplayerLobby" class="skill-level">
+                <span v-if="isMultiplayerLobby" class="skill-level caption-1-strong">
                     {{ player.user.skillLevel ?? 17 }}
                 </span>
                 <span 
@@ -152,6 +152,7 @@ async function addFriend() {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
 .player-participant-wrapper {
@@ -166,7 +167,7 @@ async function addFriend() {
 }
 
 :deep(.participant) {
-    width: 100% !important;
+    width: 100% !important; /* Override child component internal width for full-width layout */
     box-sizing: border-box;
 }
 
@@ -186,10 +187,8 @@ async function addFriend() {
 }
 
 .skill-level {
-    font-size: 12px;
-    font-weight: 600;
     color: rgba(255, 255, 255, 0.9);
-    padding: 0 4px;
+    padding: 0 map.get($spacing, "xs");
     flex-shrink: 0;
     white-space: nowrap;
 }

@@ -61,7 +61,7 @@ withDefaults(
     position: relative;
     box-sizing: border-box;
     display: block;
-    font-size: 0;
+    font-size: 0; /* layout technique — removes inline-block whitespace, not typography */
     color: #fff;
     > div {
         position: relative;

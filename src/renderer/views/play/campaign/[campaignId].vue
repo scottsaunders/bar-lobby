@@ -11,6 +11,7 @@ SPDX-License-Identifier: MIT
 <template>
     <div class="view">
         <div class="view-container">
+            <Breadcrumbs />
             <div class="view-title">
                 <div class="flex-row flex-center-items gap-md">
                     <Button class="icon" @click="goBack">
@@ -146,6 +147,7 @@ import checkIcon from "@iconify-icons/mdi/check-circle";
 import skullIcon from "@iconify-icons/mdi/skull";
 import planetIcon from "@iconify-icons/mdi/planet";
 
+import Breadcrumbs from "@renderer/components/navbar/Breadcrumbs.vue";
 import Button from "@renderer/components/controls/Button.vue";
 import Panel from "@renderer/components/common/Panel.vue";
 import InteractiveTile from "@renderer/components/common/InteractiveTile.vue";
@@ -308,17 +310,6 @@ function getDifficultyClass(difficulty: string): string {
 @use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
-.view-container {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
-    width: 100%;
-    padding: 0 map.get($spacing, "xxl") map.get($spacing, "sm") map.get($spacing, "xxl");
-    overflow: hidden;
-    box-sizing: border-box;
-}
-
 .campaign-layout {
     width: 100%;
     height: 100%;
@@ -391,8 +382,8 @@ function getDifficultyClass(difficulty: string): string {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
-    font-weight: 700;
+    font-size: 24px; /* intentional: 24px/700 off-scale, no matching typography class */
+    font-weight: 700; /* intentional: bold badge number, nearest is title-3 (600) */
     
     .completed & {
         border-color: #22c55e;
@@ -432,9 +423,9 @@ function getDifficultyClass(difficulty: string): string {
 }
 
 .badge {
-    padding: 2px 8px;
+    padding: map.get($spacing, "xxs") map.get($spacing, "sm");
     border-radius: 2px;
-    font-size: 11px;
+    font-size: 11px; /* intentional: 11px off-scale, between caption-2 (10px) and caption-1 (12px) */
     font-weight: 600;
     text-transform: uppercase;
     
@@ -543,8 +534,8 @@ function getDifficultyClass(difficulty: string): string {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
-    font-weight: 700;
+    font-size: 24px; /* intentional: 24px/700 off-scale, no matching typography class */
+    font-weight: 700; /* intentional: bold badge number, nearest is title-3 (600) */
     color: #3b82f6;
 }
 

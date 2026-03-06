@@ -1923,6 +1923,11 @@
                     "description": "Participate in competitive tournaments"
                 }
             },
+            "news": {
+                "overview": {
+                    "title": "Overview"
+                }
+            },
             "watch": {
                 "replays": {
                     "title": "Replays",

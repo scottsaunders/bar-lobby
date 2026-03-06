@@ -102,7 +102,7 @@ SPDX-License-Identifier: MIT
             </TabPanel>
             
             <TabPanel v-for="section of sections.filter((section) => !section.hidden)" :key="section.key" :header="section.name">
-                <div class="gridform">
+                <div class="gridform padding-bottom-xl">
                     <template v-for="o in section.options.filter((option) => !option.hidden)" :key="o.key">
                         <div>
                             <div
@@ -162,7 +162,7 @@ SPDX-License-Identifier: MIT
             </TabPanel>
         </TabView>
         <template #footer>
-            <div class="actions">
+            <div class="actions padding-sm gap-sm">
                 <Button class="fullwidth" @click="reset">{{ t("lobby.components.battle.luaOptionsModal.resetAllToDefault") }}</Button>
                 <Button class="green fullwidth" @click="close">{{ t("lobby.components.battle.luaOptionsModal.close") }}</Button>
             </div>
@@ -309,13 +309,7 @@ function reset() {
 .actions {
     display: flex;
     flex-direction: row;
-    padding: 10px;
-    gap: 10px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.gridform {
-    padding-bottom: 25px;
 }
 
 .overriden {

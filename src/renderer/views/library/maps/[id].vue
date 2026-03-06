@@ -10,17 +10,19 @@ SPDX-License-Identifier: MIT
 
 <template>
     <div class="view">
-        <div class="map-details-container">
-            <Panel class="flex-grow">
+        <div class="view-container">
+            <Breadcrumbs />
+            <div v-if="map" class="flex-row gap-md flex-center-items">
+                <Button v-tooltip.bottom="t('lobby.library.maps.back')" class="icon close" @click="returnToMaps">
+                    <Icon :icon="arrow_back" :height="40" />
+                </Button>
+                <div class="view-title">
+                    <h1>{{ map.displayName }}</h1>
+                </div>
+            </div>
+            <div class="map-details-content">
+                <Panel class="flex-grow">
                 <div v-if="map" class="gap-md page">
-                    <div class="gridform">
-                        <div class="flex-right">
-                            <Button v-tooltip.bottom="t('lobby.library.maps.back')" class="icon close flex-right" @click="returnToMaps">
-                                <Icon :icon="arrow_back" :height="40" />
-                            </Button>
-                        </div>
-                        <h1>{{ map.displayName }}</h1>
-                    </div>
                     <div class="container">
                         <MapSimplePreview :map="map" />
                         <div class="flex-row flex-space-between">
@@ -87,6 +89,7 @@ SPDX-License-Identifier: MIT
                     </div>
                 </div>
             </Panel>
+            </div>
         </div>
     </div>
 </template>
@@ -101,6 +104,7 @@ SPDX-License-Identifier: MIT
  * - 3D model
  * Back button to return to map list
  */
+import Breadcrumbs from "@renderer/components/navbar/Breadcrumbs.vue";
 import Button from "@renderer/components/controls/Button.vue";
 import { db } from "@renderer/store/db";
 import { battleActions, battleStore } from "@renderer/store/battle.store";
@@ -155,11 +159,16 @@ watch(
 </script>
 
 <style lang="scss" scoped>
-.map-details-container {
+@use "sass:map";
+@use "@renderer/styles/spacing" as *;
+
+.map-details-content {
     display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
     align-self: center;
-    height: 100%;
-    width: 1600px;
+    width: 1600px; /* Layout-specific max width for map detail */
 }
 
 .page {
@@ -172,16 +181,16 @@ watch(
 .container {
     display: flex;
     flex-direction: row;
-    gap: 15px;
+    gap: map.get($spacing, "lg");
     height: 100%;
 }
 .details {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 5px; /* intentional: 5px off-scale, compact detail list */
     width: 512px;
-    font-size: 1.2em;
-    margin-bottom: 15px;
+    font-size: 1.2em; /* intentional: relative unit for detail text scaling */
+    margin-bottom: map.get($spacing, "lg");
 }
 
 .item-title {

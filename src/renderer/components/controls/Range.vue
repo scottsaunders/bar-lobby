@@ -99,9 +99,9 @@ function onFocus(event: Event) {
         opacity: 0.4;
     }
     :deep(.p-inputtext) {
-        text-align: center !important;
-        line-height: normal !important;
-        padding: 0 !important; // Reset internal padding
+        text-align: center !important; /* Override PrimeVue InputText default alignment */
+        line-height: normal !important; /* Override PrimeVue InputText default line-height */
+        padding: 0 !important; /* Override PrimeVue InputText default padding */
         user-select: none; // Prevent text selection by default
         caret-color: transparent; // Hide cursor by default
         

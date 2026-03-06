@@ -387,65 +387,67 @@ function onModalClose() {
     flex-direction: row;
     gap: map.get($spacing, "xs");
     flex-wrap: wrap;
+    /* Override Button .grey variant — custom translucent option-tile appearance for map options.
+       All !important needed to override Button component's scoped color/shadow/opacity styles. */
     :deep(.control.grey) {
-        background-color: rgba(255, 255, 255, 0.1) !important;
-        border-color: rgba(255, 255, 255, 0.15) !important;
-        box-shadow: none !important;
+        background-color: rgba(255, 255, 255, 0.1) !important; /* Override Button .grey variant */
+        border-color: rgba(255, 255, 255, 0.15) !important; /* Override Button .grey variant */
+        box-shadow: none !important; /* Override Button .grey variant */
         &.selected {
-            background-color: rgba(255, 255, 255, 0.6) !important;
-            border-color: rgba(255, 255, 255, 0.6) !important;
-            color: #fff !important;
+            background-color: rgba(255, 255, 255, 0.6) !important; /* Override Button .grey variant — selected state */
+            border-color: rgba(255, 255, 255, 0.6) !important; /* Override Button .grey variant — selected state */
+            color: #fff !important; /* Override Button .grey variant — selected state */
             :deep(.p-button) {
-                color: #fff !important;
-                opacity: 1 !important;
+                color: #fff !important; /* Override PrimeVue Button internals — selected state */
+                opacity: 1 !important; /* Override PrimeVue Button internals — selected state */
             }
             :deep(.p-button:disabled) {
-                color: #fff !important;
-                opacity: 1 !important;
+                color: #fff !important; /* Override PrimeVue disabled opacity — selected state */
+                opacity: 1 !important; /* Override PrimeVue disabled opacity — selected state */
             }
             :deep(span) {
-                color: #fff !important;
-                opacity: 1 !important;
+                color: #fff !important; /* Override PrimeVue Button internals — selected state */
+                opacity: 1 !important; /* Override PrimeVue Button internals — selected state */
             }
             :deep(.title-3) {
-                color: #fff !important;
-                opacity: 1 !important;
+                color: #fff !important; /* Override PrimeVue Button internals — selected state */
+                opacity: 1 !important; /* Override PrimeVue Button internals — selected state */
             }
             :deep(.button-content) {
-                color: #fff !important;
-                opacity: 1 !important;
+                color: #fff !important; /* Override PrimeVue Button internals — selected state */
+                opacity: 1 !important; /* Override PrimeVue Button internals — selected state */
             }
             &.disabled {
-                background-color: rgba(255, 255, 255, 0.6) !important;
-                border-color: rgba(255, 255, 255, 0.6) !important;
+                background-color: rgba(255, 255, 255, 0.6) !important; /* Override Button .grey variant — selected+disabled */
+                border-color: rgba(255, 255, 255, 0.6) !important; /* Override Button .grey variant — selected+disabled */
                 :deep(.p-button) {
-                    color: #fff !important;
-                    opacity: 1 !important;
+                    color: #fff !important; /* Override PrimeVue disabled opacity — selected+disabled */
+                    opacity: 1 !important; /* Override PrimeVue disabled opacity — selected+disabled */
                 }
                 :deep(.p-button:disabled) {
-                    color: #fff !important;
-                    opacity: 1 !important;
+                    color: #fff !important; /* Override PrimeVue disabled opacity — selected+disabled */
+                    opacity: 1 !important; /* Override PrimeVue disabled opacity — selected+disabled */
                 }
                 :deep(span) {
-                    color: #fff !important;
-                    opacity: 1 !important;
+                    color: #fff !important; /* Override PrimeVue disabled opacity — selected+disabled */
+                    opacity: 1 !important; /* Override PrimeVue disabled opacity — selected+disabled */
                 }
                 :deep(.title-3) {
-                    color: #fff !important;
-                    opacity: 1 !important;
+                    color: #fff !important; /* Override PrimeVue disabled opacity — selected+disabled */
+                    opacity: 1 !important; /* Override PrimeVue disabled opacity — selected+disabled */
                 }
                 :deep(.button-content) {
-                    color: #fff !important;
-                    opacity: 1 !important;
+                    color: #fff !important; /* Override PrimeVue disabled opacity — selected+disabled */
+                    opacity: 1 !important; /* Override PrimeVue disabled opacity — selected+disabled */
                 }
             }
             &:hover {
-                background-color: rgba(255, 255, 255, 0.5) !important;
+                background-color: rgba(255, 255, 255, 0.5) !important; /* Override Button .grey variant — selected hover */
             }
         }
         &:hover:not(.selected) {
-            background-color: rgba(255, 255, 255, 0.2) !important;
-            border-color: rgba(255, 255, 255, 0.2) !important;
+            background-color: rgba(255, 255, 255, 0.2) !important; /* Override Button .grey variant — hover */
+            border-color: rgba(255, 255, 255, 0.2) !important; /* Override Button .grey variant — hover */
         }
     }
     :deep(button) {

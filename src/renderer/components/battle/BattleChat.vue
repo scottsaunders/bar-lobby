@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT
 -->
 
 <template>
-    <div class="battle-chat">
+    <div class="battle-chat gap-sm">
         <div class="messages-container">
             <div
                 v-tooltip="
@@ -13,13 +13,13 @@ SPDX-License-Identifier: MIT
                         ? t('lobby.components.battle.battleChat.hideJunkMessages')
                         : t('lobby.components.battle.battleChat.showJunkMessages')
                 "
-                class="toggle-hidden"
+                class="toggle-hidden padding-xs"
                 :class="{ enabled: showHiddenMessages }"
                 @click="showHiddenMessages = !showHiddenMessages"
             >
                 <Icon :icon="eyeIcon" height="18" />
             </div>
-            <div class="messages">
+            <div class="messages padding-sm gap-xs">
                 <BattleMessage v-for="(message, i) in messages" v-show="!message.hide || showHiddenMessages" :key="i" :message="message" />
             </div>
         </div>
@@ -108,7 +108,6 @@ onUnmounted(() => {
 .battle-chat {
     display: flex;
     flex-direction: column;
-    gap: 10px;
     position: relative;
     height: 100%;
 }
@@ -129,7 +128,6 @@ onUnmounted(() => {
     position: absolute;
     top: 0;
     right: 11px;
-    padding: 5px;
     display: flex;
     opacity: 0.2;
     &:hover,
@@ -140,7 +138,5 @@ onUnmounted(() => {
 .messages {
     display: flex;
     flex-direction: column;
-    padding: 10px;
-    gap: 5px;
 }
 </style>

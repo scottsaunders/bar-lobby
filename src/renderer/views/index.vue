@@ -17,11 +17,11 @@ SPDX-License-Identifier: MIT
                     <Loader></Loader>
                 </div>
                 <Transition :appear="true" name="delayed-fade">
-                    <button class="go-back-button" @click="abort">{{ t("lobby.views.index.goBack") }}</button>
+                    <Button class="slim go-back-button" @click="abort">{{ t("lobby.views.index.goBack") }}</Button>
                 </Transition>
             </div>
             <div v-else class="buttons-container">
-                <button class="login-button" @click="login">{{ t("lobby.views.index.login") }}</button>
+                <Button class="green large fullwidth login-button" @click="login">{{ t("lobby.views.index.login") }}</Button>
                 <div v-if="hasCredentials" class="play-offline" @click="changeAccount">{{ t("lobby.views.index.changeAccount") }}</div>
                 <div v-if="error" class="txt-error">{{ error }}</div>
                 <div class="play-offline" @click="playOffline">{{ t("lobby.views.index.playOffline") }}</div>
@@ -34,6 +34,7 @@ SPDX-License-Identifier: MIT
 import { onActivated, ref } from "vue";
 import { useTypedI18n } from "@renderer/i18n";
 
+import Button from "@renderer/components/controls/Button.vue";
 import Loader from "@renderer/components/common/Loader.vue";
 import { useRouter } from "vue-router";
 import { auth } from "@renderer/store/me.store";
@@ -127,55 +128,15 @@ if (hasCredentials.value && settingsStore.loginAutomatically) {
 }
 
 .go-back-button {
-    display: flex;
     align-self: center;
     margin-top: map.get($spacing, "xxxxl");
-    @extend .title-1 !optional;
+    background: transparent;
+    border: none;
     opacity: 0.3;
     &:hover {
         opacity: 1;
+        background: transparent;
     }
-}
-
-.login-button {
-    align-self: center;
-    width: 500px;
-    text-transform: uppercase;
-    font-family: Rajdhani;
-    @extend .subtitle-1-strong !optional;
-    padding: map.get($spacing, "xl") map.get($spacing, "xxxxl");
-    color: #fff;
-    background: linear-gradient(90deg, #22c55e, #16a34a);
-    border: none;
-    border-radius: 2px;
-    box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
-    text-align: center;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition:
-        transform 0.3s ease,
-        box-shadow 0.3s ease;
-}
-
-.login-button:hover {
-    box-shadow: 0 0 25px rgba(34, 197, 94, 0.6);
-}
-
-.login-button::before {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 200%;
-    height: 200%;
-    background: rgba(255, 255, 255, 0.2);
-    transform: translate(-50%, -50%) scale(0);
-    border-radius: 50%;
-    transition: transform 0.4s ease;
-}
-
-.login-button:hover::before {
-    box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
 }
 
 .buttons-container {
@@ -183,6 +144,12 @@ if (hasCredentials.value && settingsStore.loginAutomatically) {
     gap: map.get($spacing, "xl");
     flex-direction: column;
     align-items: center;
+    width: 100%;
+}
+
+.login-button {
+    min-width: 400px;
+    max-width: 100%;
 }
 
 .delayed-fade-enter-active {

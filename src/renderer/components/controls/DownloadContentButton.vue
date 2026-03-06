@@ -40,7 +40,7 @@ SPDX-License-Identifier: MIT
                 <span v-else-if="isDownloading">{{ t("lobby.components.controls.downloadContentButton.downloading") }}</span>
                 <span v-else>{{ downloadText || t("lobby.components.controls.downloadContentButton.download") }}</span>
             </span>
-            <!-- Click handler -->
+            <!-- Native button intentional: invisible click-capture overlays (position: absolute, inset: 0, transparent) — not visible action buttons -->
             <button
                 v-if="ready"
                 class="download-button__clickable"
@@ -151,10 +151,13 @@ async function beginDownload(maps?: string[], engines?: string[], games?: string
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
+@use "@renderer/styles/spacing" as *;
+
 .download-button-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: map.get($spacing, "sm");
     align-items: flex-start;
     width: 100%;
 }
@@ -178,14 +181,14 @@ async function beginDownload(maps?: string[], engines?: string[], games?: string
     
     // Size variants - match regular and large button sizes
     &--small {
-        padding: 0 16px; // Double padding for small buttons
-        min-height: 48px; // Match regular button height
+        padding: 0 map.get($spacing, "lg");
+        min-height: 48px;
         height: 48px;
     }
     
     &--large {
-        padding: 0 24px; // Triple padding for large buttons
-        height: 72px; // Match large button height
+        padding: 0 map.get($spacing, "xl");
+        height: 72px;
     }
     
     // State: Default (Red - Download) - use solid rgba color matching danger button
@@ -263,20 +266,18 @@ async function beginDownload(maps?: string[], engines?: string[], games?: string
     
     // Scale down text for downloading state to ensure it fits
     &--downloading &__text {
-        font-size: 0.85em; // Scale down "Downloading..." to fit
+        font-size: 0.85em; /* relative em — scales down "Downloading..." text to fit, not a typography token */
     }
     
-    // Small button specific scaling for downloading
     &--small {
         &.download-button--downloading &__text {
-            font-size: 0.75em; // More scaling for small button
+            font-size: 0.75em; /* relative em — more scaling for small button */
         }
     }
     
-    // Large button specific scaling for downloading  
     &--large {
         &.download-button--downloading &__text {
-            font-size: 0.9em; // Less scaling needed for large button
+            font-size: 0.9em; /* relative em — less scaling needed for large button */
         }
     }
     
@@ -311,20 +312,20 @@ async function beginDownload(maps?: string[], engines?: string[], games?: string
     // Disabled state styling - match Button component's disabled style
     // Must override all state variants (ready, downloading, default)
     &--disabled {
-        background-color: rgba(128, 128, 128, 0.3) !important;
-        border-color: rgba(128, 128, 128, 0.2) !important;
-        box-shadow: none !important;
+        background-color: rgba(128, 128, 128, 0.3) !important; /* Override state variant styles for disabled state */
+        border-color: rgba(128, 128, 128, 0.2) !important; /* Override state variant styles for disabled state */
+        box-shadow: none !important; /* Override state variant styles for disabled state */
         
         // Override ready state hover when disabled
         &.download-button--ready:hover {
-            background-color: rgba(128, 128, 128, 0.3) !important;
-            box-shadow: none !important;
+            background-color: rgba(128, 128, 128, 0.3) !important; /* Override ready-state hover for disabled */
+            box-shadow: none !important; /* Override ready-state hover for disabled */
         }
         
         // Override default state hover when disabled
         &.download-button--default:hover {
-            background-color: rgba(128, 128, 128, 0.3) !important;
-            box-shadow: none !important;
+            background-color: rgba(128, 128, 128, 0.3) !important; /* Override default-state hover for disabled */
+            box-shadow: none !important; /* Override default-state hover for disabled */
         }
         
         .download-button__clickable {

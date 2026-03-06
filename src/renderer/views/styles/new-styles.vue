@@ -263,6 +263,156 @@ SPDX-License-Identifier: MIT
 
                 <Divider />
 
+                <!-- Layout Utilities Section -->
+                <div class="flex-col gap-md">
+                    <h2>Layout Utilities</h2>
+
+                    <div class="flex-col gap-lg">
+                        <div class="flex-col gap-sm">
+                            <h3>Flex Direction</h3>
+                            <div class="design-constants">
+                                <div class="constant-item"><code>.flex-row</code> — <span class="constant-value">display: flex; flex-direction: row</span></div>
+                                <div class="constant-item"><code>.flex-col</code> — <span class="constant-value">display: flex; flex-direction: column</span></div>
+                            </div>
+                            <div class="layout-demo flex-row gap-sm">
+                                <div class="layout-demo-box">A</div>
+                                <div class="layout-demo-box">B</div>
+                                <div class="layout-demo-box">C</div>
+                                <span class="caption-1 flex-center-items">.flex-row .gap-sm</span>
+                            </div>
+                            <div class="layout-demo flex-col gap-sm" style="max-width: 200px;">
+                                <div class="layout-demo-box">A</div>
+                                <div class="layout-demo-box">B</div>
+                                <div class="layout-demo-box">C</div>
+                                <span class="caption-1">.flex-col .gap-sm</span>
+                            </div>
+                        </div>
+
+                        <div class="flex-col gap-sm">
+                            <h3>Flex Behavior</h3>
+                            <div class="design-constants">
+                                <div class="constant-item"><code>.flex-grow</code> — <span class="constant-value">flex-grow: 1</span></div>
+                                <div class="constant-item"><code>.flex-shrink</code> — <span class="constant-value">flex-shrink: 1</span></div>
+                                <div class="constant-item"><code>.flex-none</code> — <span class="constant-value">flex: none</span></div>
+                                <div class="constant-item"><code>.flex-wrap</code> — <span class="constant-value">flex-wrap: wrap</span></div>
+                                <div class="constant-item"><code>.flex-nowrap</code> — <span class="constant-value">flex-wrap: nowrap</span></div>
+                            </div>
+                            <div class="layout-demo flex-row gap-sm">
+                                <div class="layout-demo-box">Fixed</div>
+                                <div class="layout-demo-box flex-grow">flex-grow</div>
+                                <div class="layout-demo-box">Fixed</div>
+                            </div>
+                        </div>
+
+                        <div class="flex-col gap-sm">
+                            <h3>Flex Alignment</h3>
+                            <div class="design-constants">
+                                <div class="constant-item"><code>.flex-center</code> — <span class="constant-value">justify-content: center; align-items: center</span></div>
+                                <div class="constant-item"><code>.flex-center-items</code> — <span class="constant-value">align-items: center</span></div>
+                                <div class="constant-item"><code>.flex-center-content</code> — <span class="constant-value">justify-content: center</span></div>
+                                <div class="constant-item"><code>.flex-center-self</code> — <span class="constant-value">align-self: center</span></div>
+                                <div class="constant-item"><code>.flex-space-between</code> — <span class="constant-value">justify-content: space-between</span></div>
+                                <div class="constant-item"><code>.flex-space-around</code> — <span class="constant-value">justify-content: space-around</span></div>
+                                <div class="constant-item"><code>.flex-justify-start</code> — <span class="constant-value">justify-content: flex-start</span></div>
+                                <div class="constant-item"><code>.flex-justify-end</code> — <span class="constant-value">justify-content: flex-end</span></div>
+                                <div class="constant-item"><code>.flex-align-start</code> — <span class="constant-value">align-items: flex-start</span></div>
+                                <div class="constant-item"><code>.flex-align-end</code> — <span class="constant-value">align-items: flex-end</span></div>
+                            </div>
+                        </div>
+
+                        <div class="flex-col gap-sm">
+                            <h3>Flex Positioning</h3>
+                            <div class="design-constants">
+                                <div class="constant-item"><code>.flex-left</code> — <span class="constant-value">margin-right: auto</span> (push to left)</div>
+                                <div class="constant-item"><code>.flex-right</code> — <span class="constant-value">margin-left: auto</span> (push to right)</div>
+                                <div class="constant-item"><code>.flex-top</code> — <span class="constant-value">margin-bottom: auto</span> (push to top)</div>
+                                <div class="constant-item"><code>.flex-bottom</code> — <span class="constant-value">margin-top: auto</span> (push to bottom)</div>
+                            </div>
+                            <div class="layout-demo flex-row gap-sm">
+                                <div class="layout-demo-box flex-left">flex-left</div>
+                                <div class="layout-demo-box flex-right">flex-right</div>
+                            </div>
+                        </div>
+
+                        <div class="flex-col gap-sm">
+                            <h3>Gap Utilities</h3>
+                            <p class="body-2">All spacing tokens work as gap classes: <code>.gap-{size}</code></p>
+                            <div class="flex-col gap-md">
+                                <div v-for="size in ['xxs', 'xs', 'sm', 'md', 'lg', 'xl', 'xxl']" :key="size" class="flex-row flex-center-items gap-md">
+                                    <code class="gap-label">.gap-{{ size }}</code>
+                                    <div class="flex-row" :class="`gap-${size}`">
+                                        <div class="layout-demo-box-small"></div>
+                                        <div class="layout-demo-box-small"></div>
+                                        <div class="layout-demo-box-small"></div>
+                                        <div class="layout-demo-box-small"></div>
+                                        <div class="layout-demo-box-small"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex-col gap-sm">
+                            <h3>Size Utilities</h3>
+                            <div class="design-constants">
+                                <div class="constant-item"><code>.fullwidth</code> — <span class="constant-value">width: 100%</span></div>
+                                <div class="constant-item"><code>.fullheight</code> — <span class="constant-value">height: 100%</span></div>
+                                <div class="constant-item"><code>.fullsize</code> — <span class="constant-value">position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column</span></div>
+                                <div class="constant-item"><code>.min-height-0</code> — <span class="constant-value">min-height: 0</span> (flex overflow fix)</div>
+                                <div class="constant-item"><code>.flex-shrink-0</code> — <span class="constant-value">flex-shrink: 0</span> (prevent shrinking)</div>
+                            </div>
+                        </div>
+
+                        <div class="flex-col gap-sm">
+                            <h3>Scroll Container</h3>
+                            <div class="design-constants">
+                                <div class="constant-item"><code>.scroll-container</code> — <span class="constant-value">Flex-based scrollable container (height: 0; overflow-y: auto; flex-grow: 1)</span></div>
+                                <div class="constant-item"><code>.scroll-container.main-panel-scroll</code> — <span class="constant-value">Scroll container with top/bottom fade mask</span></div>
+                            </div>
+                            <p class="body-2">Requires all ancestor elements to fill their height (<code>flex-col flex-grow fullheight</code>).</p>
+                        </div>
+
+                        <div class="flex-col gap-sm">
+                            <h3>Other Utilities</h3>
+                            <div class="design-constants">
+                                <div class="constant-item"><code>.gridform</code> — <span class="constant-value">CSS Grid: auto | minmax(300px, 2fr) with sm row-gap and xl column-gap</span></div>
+                                <div class="constant-item"><code>.hide-overflow</code> — <span class="constant-value">overflow: hidden</span></div>
+                                <div class="constant-item"><code>.relative</code> — <span class="constant-value">position: relative</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <Divider />
+
+                <!-- View Shell & Layout Section -->
+                <div class="flex-col gap-md">
+                    <h2>View Shell & Layout</h2>
+                    <div class="flex-col gap-lg">
+                        <div class="flex-col gap-sm">
+                            <h3>Structure</h3>
+                            <p class="body-2">All content screens use: <code>view</code> → <code>view-container</code> → <code>view-title</code> (h1 + optional p) → content</p>
+                        </div>
+                        <div class="flex-col gap-sm">
+                            <h3>Canonical Padding</h3>
+                            <p class="body-2"><code>view-container</code> uses <code>0 xxl sm xxl</code> (top right bottom left) via <code>map.get($spacing, ...)</code> in _views.scss.</p>
+                        </div>
+                        <div class="flex-col gap-sm">
+                            <h3>Exceptions</h3>
+                            <p class="body-2"><code>menu.vue</code> — no view-title, hero layout; <code>index.vue</code> — meta.empty, no NavBar.</p>
+                        </div>
+                        <div class="flex-col gap-sm">
+                            <h3>Rules</h3>
+                            <p class="body-2">All content screens get view-title except menu and index. Use design system <code>gap-*</code>, <code>padding-*</code>, <code>flex-row</code>, <code>flex-col</code>. Avoid inline styles on view root.</p>
+                        </div>
+                        <div class="flex-col gap-sm">
+                            <h3>Layout Patterns</h3>
+                            <p class="body-2 caption-1">Two-panel (list + detail), grid of tiles, single-column. See 03-RESEARCH.md for patterns.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <Divider />
+
                 <!-- Typography Section -->
                 <div class="flex-col gap-md">
                     <h2>Typography</h2>
@@ -1172,6 +1322,8 @@ onUnmounted(() => {
 </style>
 
 <style lang="scss" scoped>
+@use "sass:map";
+@use "@renderer/styles/spacing" as *;
 // Using global .main-panel-scroll class now
 
 
@@ -1751,6 +1903,33 @@ button.quick-play-button {
     border: 1px solid rgba(255, 255, 255, 0.2);
     vertical-align: middle;
     margin-left: 5px;
+}
+
+// Layout Utilities demo styles
+.layout-demo {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+    padding: map.get($spacing, "sm");
+}
+.layout-demo-box {
+    background: rgba(100, 150, 255, 0.2);
+    border: 1px solid rgba(100, 150, 255, 0.4);
+    border-radius: 2px;
+    padding: map.get($spacing, "xs") map.get($spacing, "sm");
+    text-align: center;
+    min-width: 40px;
+}
+.layout-demo-box-small {
+    width: 20px;
+    height: 20px;
+    background: rgba(100, 150, 255, 0.3);
+    border: 1px solid rgba(100, 150, 255, 0.5);
+    border-radius: 2px;
+}
+.gap-label {
+    min-width: 80px;
+    text-align: right;
 }
 
 </style>

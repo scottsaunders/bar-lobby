@@ -8,7 +8,7 @@ SPDX-License-Identifier: MIT
     <div class="progress" :class="{ themed: themed, pulse: pulsating }" :style="percentStr">
         <div class="progress__bar" :style="`height: ${height}px`">
             <div class="progress__current" />
-            <div class="progress__text">
+            <div class="progress__text body-2">
                 {{ text }}
             </div>
         </div>
@@ -76,12 +76,11 @@ watch(
     }
     &__text {
         @extend .fullsize;
-        top: 1px;
+        top: 1px; /* off-scale — precise visual offset for text centering */
         left: 0;
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 14px;
     }
 }
 </style>

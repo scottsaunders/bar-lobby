@@ -9,7 +9,7 @@ SPDX-License-Identifier: MIT
 </route>
 
 <template>
-    <div class="view" style="position: relative;">
+    <div class="view">
         <div class="view-container">
             <div class="view-title">
                 <h1>{{ t("lobby.views.play.skirmish") }}</h1>
@@ -128,7 +128,7 @@ SPDX-License-Identifier: MIT
                 <!-- Bottom Row: Button Panel -->
                 <Panel class="bottom-action-panel" no-padding>
                     <div class="bottom-action-content flex-row flex-space-between padding-left-xxl padding-right-xxl padding-top-xxl padding-bottom-xxl">
-                        <Button class="blue large" @click="generateRandomSkirmish">
+                        <Button class="blue large subtitle-1" @click="generateRandomSkirmish">
                         Generate Random Skirmish
                     </Button>
                     <div v-if="map" style="display: flex; align-items: center;">
@@ -531,19 +531,9 @@ onMounted(async () => {
 @use "@renderer/styles/spacing" as *;
 
 .view-container {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
     width: 100%;
-    padding: 0 map.get($spacing, "xxl") map.get($spacing, "sm") map.get($spacing, "xxl");
     overflow: visible; // Allow panel shadows to be visible
-    box-sizing: border-box;
     position: relative;
-    
-    .view-title {
-        padding-left: 0;
-    }
 }
 
 .skirmish-container {
@@ -730,13 +720,13 @@ onMounted(async () => {
 }
 
 .dev-select {
-    width: 200px; // Reduced size
+    width: 200px;
     :deep(.p-dropdown) {
-        font-size: 0.875rem; // Smaller font
-        padding: 4px 8px; // Smaller padding
+        font-size: 0.875rem; /* intentional: :deep() override, matches body-2 scale */
+        padding: map.get($spacing, "xs") map.get($spacing, "sm");
     }
     :deep(.p-dropdown-label) {
-        font-size: 0.875rem; // Smaller label font
+        font-size: 0.875rem; /* intentional: :deep() override, matches body-2 scale */
     }
 }
 </style>

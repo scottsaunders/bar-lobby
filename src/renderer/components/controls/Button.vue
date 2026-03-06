@@ -147,6 +147,9 @@ async function onClick() {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
+@use "@renderer/styles/spacing" as *;
+
 .button {
     padding: 0;
     align-self: unset;
@@ -162,7 +165,7 @@ async function onClick() {
     &.large {
         height: 72px; // Set height on Control wrapper (includes border with box-sizing: border-box)
         .p-button {
-            padding: 0 24px; // Triple padding for large buttons
+            padding: 0 map.get($spacing, "xl");
             height: 100%;
         }
     }
@@ -172,9 +175,9 @@ async function onClick() {
         align-self: center;
         border-radius: 2px;
         .p-button {
-            height: auto; // Let padding determine height
+            height: auto;
             min-height: unset;
-            padding: 4px 8px; // Use padding to define height
+            padding: map.get($spacing, "xs") map.get($spacing, "sm");
         }
     }
 }
@@ -183,7 +186,7 @@ async function onClick() {
     height: 100%;
     display: flex;
     justify-content: center;
-    padding: 0 8px; // Default padding, overridden by large/slim variants
+    padding: 0 map.get($spacing, "sm");
     border-radius: 2px;
     
     // Override border-radius for primary nav buttons (set via class)
@@ -200,29 +203,9 @@ async function onClick() {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: map.get($spacing, "sm");
     width: 100%;
-    font-size: inherit; // Ensure typography classes work correctly
-    
-    // Ensure typography classes override any default font sizes
-    &.subtitle-1 {
-        font-size: 20px;
-        font-weight: 600;
-        font-family: Montserrat, sans-serif;
-        line-height: 1.4;
-    }
-    &.body-1-strong {
-        font-size: 16px;
-        font-weight: 600;
-        font-family: Montserrat, sans-serif;
-        line-height: 1.4;
-    }
-    &.body-2-strong {
-        font-size: 14px;
-        font-weight: 600;
-        font-family: Montserrat, sans-serif;
-        line-height: 1.4;
-    }
+    /* Typography from buttonTextClass (subtitle-1 / body-1-strong / body-2-strong) controls font-size — do not override */
 }
 
 .icon {
@@ -258,9 +241,9 @@ $btnColors: (
         }
         // Override color when disabled
         &.disabled {
-            background-color: rgba(128, 128, 128, 0.3) !important;
-            border-color: rgba(128, 128, 128, 0.2) !important;
-            box-shadow: none !important;
+            background-color: rgba(128, 128, 128, 0.3) !important; /* Override color-variant styles for disabled state */
+            border-color: rgba(128, 128, 128, 0.2) !important; /* Override color-variant styles for disabled state */
+            box-shadow: none !important; /* Override color-variant styles for disabled state */
         }
     }
 }

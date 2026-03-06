@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT
 -->
 
 <template>
-    <div class="contender" :class="{ color: Boolean(color) }">
+    <div class="contender body-2 gap-xs" :class="{ color: Boolean(color) }">
         <Flag v-if="'countryCode' in contender" class="flag" :countryCode="contender.countryCode" />
         <Icon v-if="'aiId' in contender" :icon="robot" :height="16" />
         <div>{{ name }}</div>
@@ -33,16 +33,17 @@ const color = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
+@use "@renderer/styles/spacing" as *;
+
 .contender {
     position: relative;
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 5px;
-    padding: 2px 6px;
+    padding: map.get($spacing, "xxs") 6px; /* 6px: off-scale, no exact token */
     border-radius: 3px;
     background: rgba(0, 0, 0, 0.3);
-    font-size: 14px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     overflow: hidden;
     // &.color { // disabled for now because colors need to be parsed from packet stream (because of colour gadget), and we want to skip packet parsing to speed things up

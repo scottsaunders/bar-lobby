@@ -7,20 +7,20 @@
 
 ### Internationalization
 
-- [ ] **I18N-01**: User sees English (or correct locale) text in the UI, not localization keys or codes
+- [x] **I18N-01**: User sees English (or correct locale) text in the UI, not localization keys or codes
 
 ### Performance & Stability
 
-- [ ] **PERF-01**: Client loads in acceptable time (fast; no extremely long load)
-- [ ] **STAB-01**: Initial setup and loading complete without errors
+- [x] **PERF-01**: Client loads in acceptable time (fast; no extremely long load)
+- [x] **STAB-01**: Initial setup and loading complete without errors
 
 ### Design System
 
-- [ ] **DS-01**: Design system is documented and applied consistently; Styles tab is the source of truth for components and tokens
+- [x] **DS-01**: Design system is documented and applied consistently; Styles tab is the source of truth for components and tokens
 
 ### Screen Design & IA
 
-- [ ] **UX-01**: All client screens are designed with consistent layout and information architecture; faked data is acceptable until UX is locked
+- [x] **UX-01**: All client screens are designed with consistent layout and information architecture; faked data is acceptable until UX is locked
 
 ### Functionality
 
@@ -44,11 +44,11 @@ Deferred; not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| I18N-01 | Phase 1 | Pending |
-| PERF-01 | Phase 1 | Pending |
-| STAB-01 | Phase 1 | Pending |
-| DS-01 | Phase 2 | Pending |
-| UX-01 | Phase 3 | Pending |
+| I18N-01 | Phase 1 | Complete |
+| PERF-01 | Phase 1 | Complete |
+| STAB-01 | Phase 1 | Complete |
+| DS-01 | Phase 2 | Complete |
+| UX-01 | Phase 3 | Complete |
 | FUNC-01 | Phase 4 | Pending |
 
 **Coverage:**

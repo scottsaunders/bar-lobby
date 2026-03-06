@@ -8,7 +8,8 @@
 
 @use "reset";
 
-@use "utils";
+/* Utils loaded via Vite preprocessorOptions.scss.additionalData to avoid duplicate "utils" namespace when this file is compiled */
+// @use "utils";
 
 @use "document";
 @use "flex";

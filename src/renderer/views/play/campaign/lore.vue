@@ -260,19 +260,6 @@ function getEntryById(id: string) {
 @use "sass:map";
 @use "@renderer/styles/spacing" as *;
 
-.view-container {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
-    width: 100%;
-    padding: 0 map.get($spacing, "xxl") map.get($spacing, "sm") map.get($spacing, "xxl");
-    overflow: hidden;
-    box-sizing: border-box;
-}
-
-
-
 .lore-layout {
     min-height: 0;
     overflow: hidden;
@@ -309,7 +296,7 @@ function getEntryById(id: string) {
 .badge {
     margin-left: auto;
     background: rgba(255, 255, 255, 0.2);
-    padding: 2px 8px;
+    padding: map.get($spacing, "xxs") map.get($spacing, "sm");
     border-radius: 10px;
 }
 

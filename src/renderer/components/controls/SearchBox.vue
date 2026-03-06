@@ -25,6 +25,7 @@ SPDX-License-Identifier: MIT
         />
         <slot name="append"></slot>
         <slot v-if="showClearIcon" name="clear-icon" :clear="clear">
+            <!-- Native button intentional: CSS-drawn clear icon (::before/::after pseudo-elements) inside search input — component internal, not a standalone action button -->
             <button class="search-icon clear" aria-label="Clear" @mousedown="clear" @keydown.space.enter="clear"></button>
         </slot>
         <slot name="append-outer"></slot>

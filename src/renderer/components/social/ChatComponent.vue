@@ -11,8 +11,8 @@ SPDX-License-Identifier: MIT
         @focusin="expandChat"
         @focusout="collapseChat"
     >
-        <div class="tabs">
-            <div class="tab" v-for="chatRoom in chatStore.chatRooms" :key="chatRoom.id">
+        <div class="tabs body-2">
+            <div class="tab padding-left-sm padding-top-sm" v-for="chatRoom in chatStore.chatRooms" :key="chatRoom.id">
                 <Button :class="{ active: chatStore.selectedChatRoom?.id === chatRoom.id }" @click="clickTab(chatRoom)">
                     <span class="unread-messages-dot" :class="{ active: chatRoom.unreadMessages > 0 }">⬤</span>
                     {{ chatRoom.name }}
@@ -22,7 +22,7 @@ SPDX-License-Identifier: MIT
                 </Button>
             </div>
         </div>
-        <div class="chat-messages" :class="{ expanded: isExpanded || battleStore.isLobbyOpened }">
+        <div class="chat-messages padding-sm gap-xxs" :class="{ expanded: isExpanded || battleStore.isLobbyOpened }">
             <div
                 v-for="(message, index) in chatStore.selectedChatRoom?.messages.toReversed()"
                 :key="index"
@@ -120,6 +120,9 @@ onKeyDown(
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
+@use "@renderer/styles/spacing" as *;
+
 .tabs {
     transition: all 0.4s ease-in-out;
     flex-direction: row;
@@ -127,18 +130,13 @@ onKeyDown(
     width: 100%;
     border-bottom: 1px solid rgba(255, 255, 255, 0.15);
     display: flex;
-    font-size: 14px;
-    .tab {
-        padding-left: 8px;
-        padding-top: 8px;
-    }
     .button {
         background: rgb(0, 0, 0);
         border: none;
         color: rgba(255, 255, 255, 0.5);
         flex-grow: 0;
         :deep(> button) {
-            padding: 0 20px;
+            padding: 0 20px; // Intentional: :deep() override — 20px is off-scale, between lg(16px) and xl(24px)
         }
         &:hover,
         &.active {
@@ -150,10 +148,10 @@ onKeyDown(
 
 .unread-messages-dot {
     position: absolute;
-    left: 8px;
+    left: map.get($spacing, "sm");
     display: none;
-    font-size: 8px;
-    margin-right: 8px;
+    font-size: 8px; // Intentional: off-scale decorative dot indicator "⬤", controls dot visual size
+    margin-right: map.get($spacing, "sm");
     color: rgb(226, 91, 91);
     &.active {
         display: inline;
@@ -163,11 +161,11 @@ onKeyDown(
 .close-button {
     position: absolute;
     z-index: 1;
-    right: 4px;
-    padding: 3px;
+    right: map.get($spacing, "xs");
+    padding: 3px; // Intentional: 3px is off-scale, between xxs(2px) and xs(4px)
     cursor: pointer;
     line-height: 0;
-    font-size: 8px;
+    font-size: 8px; // Intentional: off-scale, tiny close icon rendered via Icon component
     border-radius: 200px;
     &:hover {
         background-color: rgba(255, 255, 255, 0.1);
@@ -213,10 +211,8 @@ onKeyDown(
 .chat-messages {
     mask-image: linear-gradient(to top, #000 0 70%, transparent);
     flex-grow: 1;
-    padding: 8px;
     display: flex;
     flex-direction: column-reverse;
-    gap: 2px;
     overflow-y: scroll;
 }
 
@@ -226,13 +222,13 @@ onKeyDown(
 }
 
 .chat-message {
-    font-size: 13px;
+    font-size: 13px; // Intentional: 13px is off-scale, between caption-1(12px) and body-2(14px)
 }
 
 .message-content {
     display: flex;
     flex-direction: row;
-    gap: 5px;
+    gap: 5px; // Intentional: 5px is off-scale, between xs(4px) and sm(8px)
     align-items: baseline;
 }
 
@@ -241,7 +237,7 @@ onKeyDown(
 }
 
 .timestamp {
-    font-size: 0.8em;
+    font-size: 0.8em; // Intentional: relative unit scales with parent, no fixed typography class equivalent
     color: #999;
 }
 
@@ -253,16 +249,16 @@ onKeyDown(
 }
 
 .chat-input .target {
-    padding: 4px 8px;
+    padding: map.get($spacing, "xs") map.get($spacing, "sm");
     font-weight: bold;
-    font-size: 13px;
+    font-size: 13px; // Intentional: 13px is off-scale, between caption-1(12px) and body-2(14px)
 }
 
 .chat-input input {
     flex-grow: 1;
-    padding: 0px 8px;
+    padding: 0 map.get($spacing, "sm");
     color: #e0e0e0;
-    font-size: 13px;
+    font-size: 13px; // Intentional: 13px is off-scale, between caption-1(12px) and body-2(14px)
 }
 
 // .chat-input button {

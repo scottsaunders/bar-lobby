@@ -14,7 +14,7 @@ SPDX-License-Identifier: MIT
                 @click="clickOption(option)"
             >
                 <b class="suggestion">{{ option.suggestion }}</b>
-                <p v-if="option.description != null" class="description">{{ option.description }}</p>
+                <p v-if="option.description != null" class="description caption-1">{{ option.description }}</p>
             </div>
         </div>
         <Textbox
@@ -125,6 +125,9 @@ function updateKeyboardSelectionIndex(newSelectionIndex: null | number) {
 }
 </script>
 <style lang="scss" scoped>
+@use "sass:map";
+@use "@renderer/styles/spacing" as *;
+
 .optionsContainer {
     position: absolute;
     z-index: 99;
@@ -133,7 +136,7 @@ function updateKeyboardSelectionIndex(newSelectionIndex: null | number) {
     right: 0;
 }
 .optionsContainer div {
-    padding: 10px;
+    padding: map.get($spacing, "sm");
     cursor: pointer;
     background-color: black;
     border-bottom: 1px solid #d4d4d4;
@@ -148,9 +151,6 @@ function updateKeyboardSelectionIndex(newSelectionIndex: null | number) {
     display: inline-block;
 }
 .suggestion {
-    font-size: 15px;
-}
-.description {
-    font-size: 12px;
+    font-size: 15px; /* off-scale — between body-2 (14px) and body-1 (16px), intentional */
 }
 </style>

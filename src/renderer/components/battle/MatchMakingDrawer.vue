@@ -19,12 +19,15 @@ import { matchmakingStore } from "@renderer/store/matchmaking.store";
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
+@use "@renderer/styles/spacing" as *;
+
 .lobby-drawer {
     position: absolute;
     bottom: 0;
     left: 0;
     height: 100%;
-    padding-top: 96px;
+    padding-top: 96px; /* Intentional: off-scale (96px), matches specific layout constraint */
     width: 1000px;
     transform: translateX(-100%);
     transition: all 0.4s ease-out;
@@ -49,7 +52,7 @@ import { matchmakingStore } from "@renderer/store/matchmaking.store";
 
 .panel {
     height: 100%;
-    padding: 20px;
+    padding: map.get($spacing, "xl");
     background: linear-gradient(rgb(61 61 61), rgb(28 24 30), rgb(0 0 0));
     border: none;
     border-right: 2px solid rgba(255, 255, 255, 0.1);

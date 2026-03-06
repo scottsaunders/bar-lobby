@@ -15,10 +15,10 @@ SPDX-License-Identifier: MIT
             @update:model-value="onGameModeSelected"
             disabled
         />
-        <div class="custom-game-options scroll-container">
+        <div class="custom-game-options scroll-container caption-1 padding-sm gap-xxs">
             <div v-for="[section, options] in groupedBySection.entries()" :key="section.name">
-                <div class="overriden-section">{{ section.name }}</div>
-                <div class="overriden-game-option" v-for="option in options" :key="option.key">
+                <div class="overriden-section padding-xs">{{ section.name }}</div>
+                <div class="overriden-game-option gap-xl" v-for="option in options" :key="option.key">
                     <div>{{ option.name }}</div>
                     <div class="value">{{ option.value }}</div>
                 </div>
@@ -99,24 +99,19 @@ function onOptionsChanged(options: Record<string, boolean | string | number>) {
     flex-direction: column;
 }
 .custom-game-options {
-    padding: 10px;
     display: flex;
     flex-direction: column;
     border: 1px solid rgba(255, 255, 255, 0.1);
     background-color: rgba(0, 0, 0, 0.3);
-    gap: 2px;
-    font-size: smaller;
     color: #ffcc00;
 }
 .overriden-section {
     color: rgba(255, 255, 255, 0.5);
     font-weight: bold;
-    padding: 5px;
 }
 .overriden-game-option {
     display: flex;
     justify-content: space-between;
-    gap: 20px;
 }
 .value {
     overflow-x: hidden;

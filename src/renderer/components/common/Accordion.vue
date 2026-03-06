@@ -16,19 +16,22 @@ import Accordion from "primevue/accordion";
 </script>
 
 <style lang="scss">
+@use "sass:map";
+@use "@renderer/styles/spacing" as *;
+
 .p-accordion {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: map.get($spacing, "sm");
     &-tab {
         display: flex;
         flex-direction: column;
-        gap: 5px;
+        gap: map.get($spacing, "xs");
     }
     &-header-link {
         display: flex;
         flex-direction: row;
-        gap: 5px;
+        gap: map.get($spacing, "xs");
     }
 }
 </style>

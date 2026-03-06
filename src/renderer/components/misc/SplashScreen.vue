@@ -22,6 +22,9 @@ import { initProgress } from "@renderer/utils/background-init";
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
+@use "@renderer/styles/spacing" as *;
+
 .splash {
     position: fixed;
     inset: 0;
@@ -35,7 +38,7 @@ import { initProgress } from "@renderer/utils/background-init";
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 48px;
+        gap: map.get($spacing, "xxxl");
         width: 420px;
         animation: fadeIn 0.8s ease-out both;
     }
@@ -49,7 +52,7 @@ import { initProgress } from "@renderer/utils/background-init";
         width: 100%;
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: map.get($spacing, "sm");
     }
 
     &__label {

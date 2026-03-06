@@ -55,7 +55,7 @@ const processedText = computedAsync(async () => {
     :deep(code) {
         border-radius: 5px;
         border: 1px solid #bcbec0;
-        padding: 1px;
+        padding: 1px; /* off-scale — minimal code inline padding, intentional */
         background-color: #272822;
         font-family: monospace;
     }

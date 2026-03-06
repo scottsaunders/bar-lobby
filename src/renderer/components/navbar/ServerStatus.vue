@@ -7,7 +7,7 @@ SPDX-License-Identifier: MIT
 <template>
     <Button @click="handleClick">
         <div class="flex-row flex-center gap-sm">
-            <div class="server-status-dot" :class="statusClass">⬤</div>
+            <div class="server-status-dot margin-right-xs" :class="statusClass">⬤</div>
             <div>{{ statusText }}</div>
         </div>
     </Button>
@@ -57,8 +57,7 @@ function handleClick() {
 
 <style lang="scss" scoped>
 .server-status-dot {
-    font-size: 12px;
-    margin-right: 4px;
+    font-size: 12px; // Intentional: decorative dot indicator "⬤", not text — controls dot visual size
 
     &.online {
         color: rgb(121, 226, 0);
