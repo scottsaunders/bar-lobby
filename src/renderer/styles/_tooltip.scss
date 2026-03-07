@@ -8,13 +8,26 @@ $color: #222;
 
 .p-tooltip {
     z-index: 10;
-    max-width: 400px;
+    /* Keep tooltip on screen: cap width to viewport so it never extends off the edge */
+    max-width: min(400px, calc(100vw - 2rem));
+    width: max-content;
+    display: inline-block;
     &-text {
         background: $color;
         padding: 2px 7px;
         box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
         border-radius: 3px;
         border: 1px solid rgba(255, 255, 255, 0.08);
-        white-space: nowrap;
+        max-width: min(400px, calc(100vw - 2rem));
+        width: max-content;
+        display: inline-block;
+        /* Allow wrap when constrained so long text stays on screen */
+        white-space: normal;
     }
+}
+
+/* Keep tooltip content within bounds; allow wrap when max-width applies */
+.p-tooltip * {
+    max-width: 100%;
+    white-space: normal;
 }

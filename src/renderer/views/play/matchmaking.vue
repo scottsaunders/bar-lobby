@@ -379,7 +379,7 @@ onMounted(() => {
 
 .queue-list-scroll {
     display: flex;
-    padding: map.get($spacing, "md");
+    padding: map.get($spacing, "xl");
 }
 
 .queue-list {

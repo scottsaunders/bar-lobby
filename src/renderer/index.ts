@@ -14,6 +14,7 @@ import { createApp } from "vue";
 import App from "@renderer/App.vue";
 import { clickAwayDirective } from "@renderer/utils/click-away-directive";
 import { elementInViewDirective } from "@renderer/utils/element-in-view-directive";
+import { initTooltipKeepOnScreen } from "@renderer/utils/tooltip-keep-on-screen";
 import { audioApi } from "@renderer/audio/audio";
 import { router } from "@renderer/router";
 import { initPreMountStores } from "@renderer/store/stores";
@@ -45,4 +46,6 @@ async function setupVue() {
     await audioApi.init();
 
     app.mount("#app");
+
+    initTooltipKeepOnScreen();
 }

@@ -27,6 +27,13 @@ SPDX-License-Identifier: MIT
                 </div>
                 <div class="drag-window-area"></div>
                 <div class="primary-right">
+                    <DownloadsButton
+                        v-if="hasActiveDownload"
+                        v-tooltip.bottom="t('lobby.navbar.tooltips.downloads')"
+                        v-click-away:downloads="() => (downloadsOpen = false)"
+                        :class="['icon', { active: downloadsOpen }]"
+                        @click="downloadsOpen = !downloadsOpen"
+                    />
                     <Button
                         v-if="me.isAuthenticated"
                         v-tooltip.bottom="t('lobby.navbar.tooltips.directMessages')"
@@ -46,31 +53,27 @@ SPDX-License-Identifier: MIT
                     >
                         <Icon :icon="accountMultiple" :height="40" />
                     </Button>
-                    <DownloadsButton
-                        v-tooltip.bottom="t('lobby.navbar.tooltips.downloads')"
-                        v-click-away:downloads="() => (downloadsOpen = false)"
-                        :class="['icon', { active: downloadsOpen }]"
-                        @click="downloadsOpen = !downloadsOpen"
-                    />
                     <Button v-tooltip.bottom="t('lobby.navbar.tooltips.settings')" class="icon" @click="settingsOpen = true">
                         <Icon :icon="cog" :height="40" />
                     </Button>
-                    <Button v-tooltip.bottom="t('lobby.navbar.tooltips.minimize')" class="icon" @click="minimizeWindow">
-                        <Icon :icon="windowMinimize" :height="40"></Icon>
-                    </Button>
-                    <Button
-                        v-tooltip.bottom="
-                            settingsStore.fullscreen ? t('lobby.navbar.tooltips.windowed') : t('lobby.navbar.tooltips.fullscreen')
-                        "
-                        class="icon"
-                        @click="toggleFullscreen"
-                    >
-                        <Icon v-if="settingsStore.fullscreen" :icon="fullscreenExit" :height="40"></Icon>
-                        <Icon v-else :icon="fullscreen" :height="40"></Icon>
-                    </Button>
-                    <Button v-tooltip.bottom="t('lobby.navbar.tooltips.exit')" class="icon close" @click="exitOpen = true">
-                        <Icon :icon="closeThick" :height="40" />
-                    </Button>
+                    <div class="window-controls-stack">
+                        <Button v-tooltip.bottom="t('lobby.navbar.tooltips.exit')" class="icon window-control-btn close" @click="exitOpen = true">
+                            <Icon :icon="closeThick" :height="20" />
+                        </Button>
+                        <Button
+                            v-tooltip.bottom="
+                                settingsStore.fullscreen ? t('lobby.navbar.tooltips.windowed') : t('lobby.navbar.tooltips.fullscreen')
+                            "
+                            class="icon window-control-btn"
+                            @click="toggleFullscreen"
+                        >
+                            <Icon v-if="settingsStore.fullscreen" :icon="fullscreenExit" :height="20"></Icon>
+                            <Icon v-else :icon="fullscreen" :height="20"></Icon>
+                        </Button>
+                        <Button v-tooltip.bottom="t('lobby.navbar.tooltips.minimize')" class="icon window-control-btn" @click="minimizeWindow">
+                            <Icon :icon="windowMinimize" :height="20"></Icon>
+                        </Button>
+                    </div>
                 </div>
             </div>
             <div class="secondary">
@@ -140,6 +143,7 @@ import Friends from "@renderer/components/navbar/Friends.vue";
 import ProfileModal from "@renderer/components/navbar/ProfileModal.vue";
 import { useRouter } from "vue-router";
 import { settingsStore } from "@renderer/store/settings.store";
+import { downloadsStore } from "@renderer/store/downloads.store";
 import { me } from "@renderer/store/me.store";
 import ServerStatus from "@renderer/components/navbar/ServerStatus.vue";
 import { useLogInConfirmation } from "@renderer/composables/useLogInConfirmation";
@@ -228,6 +232,7 @@ const secondaryRoutes = computed(() => {
             },
         }));
 });
+const hasActiveDownload = computed(() => downloadsStore.mapDownloads.length > 0);
 const messagesOpenRef = inject<Ref<boolean>>("messagesOpen")!;
 const friendsOpen = ref(false);
 
@@ -363,8 +368,11 @@ function prefetchRoute(path: string) {
         height: 50px;
     }
 }
+/* Fixed height so row doesn’t stretch; matches close button width for 1:1 aspect ratio (icon 40px + padding md×2) */
 .primary {
-    min-height: 60px;
+    height: 64px;
+    min-height: 64px;
+    flex-shrink: 0;
 }
 .primary,
 .logo {
@@ -420,7 +428,44 @@ function prefetchRoute(path: string) {
 .primary-right {
     display: flex;
     flex-direction: row;
+    align-items: center;
     gap: map.get($spacing, "xxs");
+}
+
+/* Container = 32×64 (50% width of former close button); Close + Window + Minimize stacked */
+.window-controls-stack {
+    display: flex;
+    flex-direction: column;
+    width: 32px;
+    height: 64px;
+    flex-shrink: 0;
+    gap: 0;
+    overflow: hidden;
+    .window-control-btn {
+        flex: 1 1 0;
+        min-height: 0 !important; /* Override Button component default 48px so all three fit */
+        width: 32px;
+        min-width: 32px;
+        height: 100%;
+        display: flex;
+        :deep(.p-button),
+        :deep(.button-content),
+        :deep(button) {
+            min-height: 0 !important; /* Override design system min-height so stack fits in 64px row */
+        }
+        :deep(.p-button),
+        :deep(.button-content) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            min-height: 0;
+            width: 100%;
+            height: 100%;
+            min-width: 32px;
+            padding: 0;
+        }
+    }
 }
 .primary-left {
     box-shadow: 5px 0 20px rgba(0, 0, 0, 0.4);
