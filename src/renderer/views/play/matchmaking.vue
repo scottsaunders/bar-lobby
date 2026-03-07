@@ -16,10 +16,10 @@ SPDX-License-Identifier: MIT
                 <p>{{ t("lobby.views.play.matchmaking.description") }}</p>
             </div>
             <div class="matchmaking-layout flex-row gap-xl fullheight">
-                <!-- Left Panel: Queue Size Selection -->
+                <!-- Left Panel: Game mode selection (Duel, Small Teams, FFA, PvE) -->
                 <Panel class="queue-list-panel" no-padding>
-                    <div class="scroll-container queue-list-scroll">
-                        <TransitionGroup name="fade" tag="div" class="queue-list">
+                    <div class="queue-list-scroll flex-col fullheight">
+                        <TransitionGroup name="fade" tag="div" class="queue-list flex-col fullheight">
                             <div
                                 v-for="queue in availableQueues"
                                 :key="queue.id"
@@ -49,6 +49,26 @@ SPDX-License-Identifier: MIT
                         <!-- Season Title -->
                         <div class="season-title padding-top-xxl padding-bottom-lg">
                             <h2 class="title-1">Season 3</h2>
+                        </div>
+
+                        <!-- Game mode description -->
+                        <div class="mode-description padding-left-xxl padding-right-xxl padding-bottom-lg">
+                            <p class="body-1">{{ currentModeDescription }}</p>
+                        </div>
+
+                        <!-- PvE queue type (only when PvE selected) -->
+                        <div
+                            v-if="selectedQueue === 'pve'"
+                            class="pve-queue-selector padding-left-xxl padding-right-xxl padding-bottom-lg"
+                        >
+                            <h3 class="subtitle-1 padding-bottom-sm">Queue type</h3>
+                            <Options
+                                v-model="selectedPveQueueType"
+                                :options="pveQueueOptions"
+                                option-value="value"
+                                option-label="label"
+                                class="pve-options"
+                            />
                         </div>
 
                         <!-- Maps Container -->
@@ -139,6 +159,7 @@ import { useTypedI18n } from "@renderer/i18n";
 import InteractiveTile from "@renderer/components/common/InteractiveTile.vue";
 import Panel from "@renderer/components/common/Panel.vue";
 import Button from "@renderer/components/controls/Button.vue";
+import Options from "@renderer/components/controls/Options.vue";
 import Progress from "@renderer/components/common/Progress.vue";
 import MapDetailModal from "@renderer/components/maps/MapDetailModal.vue";
 import { Icon } from "@iconify/vue";
@@ -152,20 +173,35 @@ import { useImageBlobUrlCache } from "@renderer/composables/useImageBlobUrlCache
 const { t } = useTypedI18n();
 const cache = useImageBlobUrlCache();
 
-// Mock queue data for UI prototyping
+// Game mode options for left menu
 const availableQueues = ref([
-    { id: "1v1", teamSize: 1, numOfTeams: 2, name: "Duel" },
-    { id: "2v2", teamSize: 2, numOfTeams: 2, name: "2v2" },
-    { id: "3v3", teamSize: 3, numOfTeams: 2, name: "3v3" },
-    { id: "4v4", teamSize: 4, numOfTeams: 2, name: "4v4" },
-    { id: "5v5", teamSize: 5, numOfTeams: 2, name: "5v5" },
+    { id: "duel", name: "Duel" },
+    { id: "small-teams", name: "Small Teams" },
+    { id: "ffa", name: "FFA" },
+    { id: "pve", name: "PvE" },
 ]);
 
-const selectedQueue = ref("1v1");
+const selectedQueue = ref("duel");
+
+// Game mode descriptions for right panel
+const GAME_MODE_DESCRIPTIONS: Record<string, string> = {
+    duel: "Test your skills one on one vs other commanders",
+    "small-teams": "Join teams of 2 to 5 commanders",
+    ffa: "You against the world in matches with 8-16 players",
+    pve: "Cooperative play vs the AI. Join teams of 2 - 8 players as you take on the enemy together",
+};
+
+// PvE queue type (only used when selectedQueue === "pve")
+const pveQueueOptions = [
+    { value: "vs-ai", label: "Vs AI" },
+    { value: "vs-raptors", label: "Vs Raptors" },
+    { value: "vs-scavengers", label: "Vs Scavengers" },
+];
+const selectedPveQueueType = ref("vs-ai");
 
 // Mock maps per queue - in real implementation, these would come from the playlist
 const queueMaps: Record<string, string[]> = {
-    "1v1": [
+    duel: [
         "Red Comet Remake 1.8",
         "Supreme Crossing v1",
         "Twin Lakes Park Redux 1.2.2",
@@ -173,7 +209,7 @@ const queueMaps: Record<string, string[]> = {
         "Tundra Continents v2.3.1",
         "Tetrad v2",
     ],
-    "2v2": [
+    "small-teams": [
         "Ghenna Rising 4.0.1",
         "Koom Valley 3 3.1",
         "Lavender Bender v2",
@@ -181,7 +217,7 @@ const queueMaps: Record<string, string[]> = {
         "Silveridge v1.0.1",
         "Sunderance v1.3",
     ],
-    "3v3": [
+    ffa: [
         "All That Glitters v2.2",
         "All That Simmers v1.1.1",
         "All That Smolders v1.2",
@@ -189,21 +225,13 @@ const queueMaps: Record<string, string[]> = {
         "Avalanche 3.4",
         "Bismuth Valley v2.4.1",
     ],
-    "4v4": [
+    pve: [
         "Carrot Mountains v2.0",
         "Centerrock Remake 1.2",
         "Charlie in the Hills Remake v1.1.1",
         "Claymore 3.0.3",
         "Comet Catcher Remake 1.8",
         "Crater Islands Remake v1.0.1",
-    ],
-    "5v5": [
-        "Gasbag Grabens 1.0.2",
-        "Gods of War Remake v1.3",
-        "Hide and Seek 2.2.3",
-        "Industrial Revolution v2",
-        "Kings Assault v1.3",
-        "Moonshine Run v1.0.1",
     ],
 };
 
@@ -225,13 +253,11 @@ const playerName = computed(() => me.username || "Player");
 
 // Mock rank/XP data per queue
 const playerRank = computed(() => {
-    // Mock: different ranks for different queues
-    if (selectedQueue.value === "1v1") return 3; // Duel rank
-    if (selectedQueue.value === "2v2") return 5; // 2v2 rank
-    if (selectedQueue.value === "3v3") return 4; // 3v3 rank
-    if (selectedQueue.value === "4v4") return 6; // 4v4 rank
-    if (selectedQueue.value === "5v5") return 7; // 5v5 rank
-    return 4; // Default
+    if (selectedQueue.value === "duel") return 3;
+    if (selectedQueue.value === "small-teams") return 5;
+    if (selectedQueue.value === "ffa") return 4;
+    if (selectedQueue.value === "pve") return 6;
+    return 4;
 });
 
 const rankIcon = computed(() => {
@@ -240,14 +266,14 @@ const rankIcon = computed(() => {
 });
 
 const xpProgress = computed(() => {
-    // Mock: different XP progress for different queues
-    if (selectedQueue.value === "1v1") return 0.45; // Duel XP
-    if (selectedQueue.value === "2v2") return 0.65; // 2v2 XP
-    if (selectedQueue.value === "3v3") return 0.55; // 3v3 XP
-    if (selectedQueue.value === "4v4") return 0.75; // 4v4 XP
-    if (selectedQueue.value === "5v5") return 0.35; // 5v5 XP
-    return 0.55; // Default
+    if (selectedQueue.value === "duel") return 0.45;
+    if (selectedQueue.value === "small-teams") return 0.65;
+    if (selectedQueue.value === "ffa") return 0.55;
+    if (selectedQueue.value === "pve") return 0.75;
+    return 0.55;
 });
+
+const currentModeDescription = computed(() => GAME_MODE_DESCRIPTIONS[selectedQueue.value] ?? "");
 
 function getQueueDisplayName(queueId: string): string {
     const queue = availableQueues.value.find((q) => q.id === queueId);
@@ -352,20 +378,27 @@ onMounted(() => {
 }
 
 .queue-list-scroll {
-    height: 100%;
-    overflow-y: auto;
+    display: flex;
     padding: map.get($spacing, "md");
 }
 
 .queue-list {
     display: flex;
     flex-direction: column;
-    gap: map.get($spacing, "md");
+    flex: 1;
+    min-height: 0;
+    gap: map.get($spacing, "sm");
 }
 
 .queue-tile-wrapper {
-    min-height: 120px;
-    
+    flex: 1;
+    min-height: 0;
+    display: flex;
+
+    .interactive-tile {
+        height: 100%;
+    }
+
     .interactive-tile.disabled {
         opacity: 0.5;
         cursor: not-allowed;
@@ -393,6 +426,18 @@ onMounted(() => {
 .season-title {
     text-align: center;
     width: 100%;
+}
+
+.mode-description {
+    flex-shrink: 0;
+}
+
+.pve-queue-selector {
+    flex-shrink: 0;
+
+    .pve-options {
+        max-width: 360px;
+    }
 }
 
 .maps-container {
