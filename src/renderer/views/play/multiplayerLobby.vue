@@ -13,7 +13,7 @@ SPDX-License-Identifier: MIT
         <div class="view-container">
             <div class="view-title flex-row flex-space-between flex-center-items">
                 <div class="flex-row flex-center-items gap-md">
-                    <Button v-tooltip.bottom="'Back to Lobbies'" class="icon" @click="goBack">
+                    <Button v-tooltip.bottom="'Back to Lobbies'" class="icon view-back-button" @click="goBack">
                         <Icon :icon="arrow_back" height="24" />
                     </Button>
                     <div class="flex-col">

@@ -11,9 +11,18 @@ SPDX-License-Identifier: MIT
 <template>
     <div class="view">
         <div class="view-container">
-            <div class="view-title">
-                <h1>{{ t("lobby.views.play.skirmish") }}</h1>
-                <p>Configure your battle against AI opponents</p>
+            <div class="view-title flex-row flex-center-items gap-md">
+                <Button
+                    v-tooltip.bottom="t('lobby.views.play.skirmishBackToModes')"
+                    class="icon grey view-back-button"
+                    @click="goToModeSelector"
+                >
+                    <Icon :icon="arrowBackIcon" height="24" />
+                </Button>
+                <div class="flex-col gap-xxs">
+                    <h1>{{ skirmishLobbyTitle }}</h1>
+                    <p class="body-2 view-title-subtitle">{{ skirmishLobbySubtitle }}</p>
+                </div>
             </div>
             <div class="skirmish-container flex-col fullheight">
                 <!-- Top Row: Three Main Panels -->
@@ -184,7 +193,8 @@ SPDX-License-Identifier: MIT
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import Panel from "@renderer/components/common/Panel.vue";
 import { useTypedI18n } from "@renderer/i18n";
 import Select from "@renderer/components/controls/Select.vue";
@@ -208,12 +218,51 @@ import TerrainIcon from "@renderer/components/maps/filters/TerrainIcon.vue";
 import personIcon from "@iconify-icons/mdi/person-multiple";
 import gridIcon from "@iconify-icons/mdi/grid";
 import pencilIcon from "@iconify-icons/mdi/pencil";
+import arrowBackIcon from "@iconify-icons/mdi/arrow-back";
 import { getRandomMap } from "@renderer/store/maps.store";
 import Playerlist from "@renderer/components/battle/Playerlist.vue";
 import { GameModeID, type GameModeWithOptions, StartPosType } from "@main/game/battle/battle-types";
 import { getTranslatedGameMode } from "@renderer/store/battle.store";
 
 const { t } = useTypedI18n();
+const route = useRoute();
+const router = useRouter();
+
+const skirmishLobbyTitle = computed(() => {
+    const id = battleStore.battleOptions.gameMode.id;
+    switch (id) {
+        case GameModeID.CLASSIC:
+            return t("lobby.views.play.skirmishLobbyTitle.teamsVsAi");
+        case GameModeID.FFA:
+            return t("lobby.views.play.skirmishLobbyTitle.ffaVsAi");
+        case GameModeID.RAPTORS:
+            return t("lobby.views.play.skirmishLobbyTitle.raptorDefense");
+        case GameModeID.SCAVENGERS:
+            return t("lobby.views.play.skirmishLobbyTitle.scavengerDefense");
+        default:
+            return t("lobby.views.play.skirmish");
+    }
+});
+
+const skirmishLobbySubtitle = computed(() => {
+    const id = battleStore.battleOptions.gameMode.id;
+    switch (id) {
+        case GameModeID.CLASSIC:
+            return t("lobby.views.play.skirmishModeSelector.teamsVsAiDescription");
+        case GameModeID.FFA:
+            return t("lobby.views.play.skirmishModeSelector.ffaVsAiDescription");
+        case GameModeID.RAPTORS:
+            return t("lobby.views.play.skirmishModeSelector.vsRaptorsDescription");
+        case GameModeID.SCAVENGERS:
+            return t("lobby.views.play.skirmishModeSelector.vsScavengersDescription");
+        default:
+            return t("lobby.views.play.skirmishModeSelector.description");
+    }
+});
+
+function goToModeSelector() {
+    router.push("/play/skirmish");
+}
 
 const mapListOpen = ref(false);
 const mapOptionsOpen = ref(false);
@@ -493,31 +542,51 @@ const currentStartSystemText = computed(() => {
     return "Start Boxes"; // Default
 });
 
-// Initialize battle store and ensure game mode is Teams (CLASSIC)
+// Valid mode query param from skirmish mode selector
+const VALID_SKIRMISH_MODES = Object.values(GameModeID);
+
+function getRequestedModeFromQuery(): GameModeID | null {
+    const queryMode = route.query.mode as string | undefined;
+    if (!queryMode || !VALID_SKIRMISH_MODES.includes(queryMode as GameModeID)) return null;
+    return queryMode as GameModeID;
+}
+
+async function applyModeFromSelectorIfPresent() {
+    const requestedMode = getRequestedModeFromQuery();
+    if (requestedMode == null) return;
+    if (battleStore.battleOptions.gameMode.id !== requestedMode) {
+        await battleActions.loadGameMode(requestedMode);
+    }
+    // Clear the query so the lobby dropdown is the single source of truth; avoids re-applying when component re-renders
+    router.replace({ path: route.path, query: {} });
+}
+
+// When returning from mode selector with a different mode, apply it (onMounted only runs on first enter; watch handles later visits)
+watch(
+    () => route.query.mode,
+    async (newMode) => {
+        if (newMode && VALID_SKIRMISH_MODES.includes(newMode as GameModeID)) {
+            await applyModeFromSelectorIfPresent();
+        }
+    }
+);
+
+// Initialize battle store on first mount
 onMounted(async () => {
-    // Get a map first if we don't have one
     let mapToUse = battleStore.battleOptions.map;
     if (!mapToUse) {
         const randomMap = await getRandomMap();
-        if (randomMap) {
-            mapToUse = randomMap;
-        }
+        if (randomMap) mapToUse = randomMap;
     }
-    
-    // Always reset battle store to clear any multiplayer placeholder data
-    // This ensures clean state when coming from multiplayer lobby
+
     battleActions.resetToDefaultBattle(
         enginesStore.selectedEngineVersion,
         gameStore.selectedGameVersion,
         mapToUse
     );
-    
-    // Ensure game mode is set to Teams (CLASSIC)
-    if (battleStore.battleOptions.gameMode.id !== GameModeID.CLASSIC) {
-        await battleActions.loadGameMode(GameModeID.CLASSIC);
-    }
-    
-    // Ensure we have at least 2 teams for classic mode
+
+    await applyModeFromSelectorIfPresent();
+
     if (battleStore.teams.length < 2) {
         while (battleStore.teams.length < 2) {
             battleActions.addTeam();

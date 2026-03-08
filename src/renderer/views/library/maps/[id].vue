@@ -13,8 +13,8 @@ SPDX-License-Identifier: MIT
         <div class="view-container">
             <Breadcrumbs />
             <div v-if="map" class="flex-row gap-md flex-center-items">
-                <Button v-tooltip.bottom="t('lobby.library.maps.back')" class="icon close" @click="returnToMaps">
-                    <Icon :icon="arrow_back" :height="40" />
+                <Button v-tooltip.bottom="t('lobby.library.maps.back')" class="icon view-back-button" @click="returnToMaps">
+                    <Icon :icon="arrow_back" :height="24" />
                 </Button>
                 <div class="view-title">
                     <h1>{{ map.displayName }}</h1>

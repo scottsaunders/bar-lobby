@@ -13,7 +13,7 @@ SPDX-License-Identifier: MIT
         <div class="view-container">
             <div class="view-title">
                 <div class="flex-row flex-center-items gap-md">
-                    <Button class="icon" @click="goBack">
+                    <Button class="icon view-back-button" @click="goBack">
                         <Icon :icon="arrowLeftIcon" height="24" />
                     </Button>
                     <div>

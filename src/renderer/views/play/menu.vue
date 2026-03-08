@@ -64,7 +64,7 @@ const router = useRouter();
 
 // Game mode handlers
 const startSkirmish = () => {
-    router.push("/play/skirmishVsAi");
+    router.push("/play/skirmish");
 };
 
 const startCampaign = () => {

@@ -220,6 +220,7 @@ const secondaryRoutes = computed(() => {
 
     return allRoutes
         .filter((r) => r.path.startsWith(`/${router.currentRoute.value.path.split("/")[1]}/`))
+        .filter((r) => r.path !== "/play/skirmishVsAi") // Lobby: reachable only after choosing a mode; subtab goes to mode selector
         .filter(
             (r) => (r.meta.hide === false || r.meta.hide === undefined) && ((r.meta.devOnly && settingsStore.devMode) || !r.meta.devOnly)
         )
@@ -228,7 +229,7 @@ const secondaryRoutes = computed(() => {
             ...r,
             meta: {
                 ...r.meta,
-                title: translateRouteTitle(r.meta.title),
+                title: r.path === "/play/skirmish" ? translateRouteTitle("Skirmish vs AI") : translateRouteTitle(r.meta.title),
             },
         }));
 });
@@ -503,6 +504,7 @@ function prefetchRoute(path: string) {
         border: none;
         border-radius: 0;
         color: rgba(255, 255, 255, 0.5);
+        text-transform: none; // Preserve casing (e.g. "Skirmish vs AI" with lowercase "vs")
         flex-grow: 0;
         height: map.get($spacing, "xxxl");
         :deep(.button-content) {

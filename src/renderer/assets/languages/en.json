@@ -1905,6 +1905,25 @@
             "play": {
                 "comingSoon": "(Coming Soon)",
                 "skirmish": "Skirmish vs AI",
+                "skirmishModeSelector": {
+                    "title": "Choose Skirmish Mode",
+                    "description": "Select a game mode to configure your battle",
+                    "teamsVsAi": "Teams vs AI",
+                    "teamsVsAiDescription": "Team-based battle against AI opponents",
+                    "ffaVsAi": "FFA vs AI",
+                    "ffaVsAiDescription": "Free-for-all against AI—last commander standing wins",
+                    "vsRaptors": "vs Raptors",
+                    "vsRaptorsDescription": "Defend against the Raptor horde",
+                    "vsScavengers": "vs Scavengers",
+                    "vsScavengersDescription": "Hold the line against Scavenger waves"
+                },
+                "skirmishLobbyTitle": {
+                    "teamsVsAi": "Teams Skirmish vs AI",
+                    "ffaVsAi": "FFA vs AI",
+                    "raptorDefense": "Raptor Defense",
+                    "scavengerDefense": "Scavenger Defense"
+                },
+                "skirmishBackToModes": "Back to mode selection",
                 "campaign": {
                     "title": "Campaign",
                     "description": "Play through the official campaign missions"

@@ -11,10 +11,9 @@ SPDX-License-Identifier: MIT
 <template>
     <div class="view">
         <div class="view-container">
-            <Breadcrumbs />
             <div class="view-title">
                 <div class="flex-row flex-center-items gap-md">
-                    <Button class="icon" @click="goBack">
+                    <Button class="icon view-back-button" @click="goBack">
                         <Icon :icon="arrowLeftIcon" height="24" />
                     </Button>
                     <div>
@@ -147,7 +146,6 @@ import checkIcon from "@iconify-icons/mdi/check-circle";
 import skullIcon from "@iconify-icons/mdi/skull";
 import planetIcon from "@iconify-icons/mdi/planet";
 
-import Breadcrumbs from "@renderer/components/navbar/Breadcrumbs.vue";
 import Button from "@renderer/components/controls/Button.vue";
 import Panel from "@renderer/components/common/Panel.vue";
 import InteractiveTile from "@renderer/components/common/InteractiveTile.vue";

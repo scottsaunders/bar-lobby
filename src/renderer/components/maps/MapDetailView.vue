@@ -9,7 +9,7 @@ SPDX-License-Identifier: MIT
         <div class="scroll-container main-panel-scroll">
             <div class="gap-md page padding-xxl">
                 <div class="header-row">
-                    <Button v-tooltip.bottom="t('lobby.library.maps.back')" class="icon back-button" @click="$emit('close')">
+                    <Button v-tooltip.bottom="t('lobby.library.maps.back')" class="icon view-back-button back-button" @click="$emit('close')">
                         <Icon :icon="arrow_back" :height="24" />
                     </Button>
                     <h1 class="title-1">{{ map.displayName }}</h1>
