@@ -222,6 +222,14 @@ const autoUpdaterApi = {
 export type AutoUpdaterApi = typeof autoUpdaterApi;
 contextBridge.exposeInMainWorld("autoUpdater", autoUpdaterApi);
 
+const keybindsApi = {
+    read: (): Promise<string> => ipcRenderer.invoke("keybinds:read"),
+    write: (content: string): Promise<void> => ipcRenderer.invoke("keybinds:write", content),
+    getPath: (): Promise<string> => ipcRenderer.invoke("keybinds:getPath"),
+};
+export type KeybindsApi = typeof keybindsApi;
+contextBridge.exposeInMainWorld("keybinds", keybindsApi);
+
 const notificationsApi = {
     // Events
     onShowAlert: (callback: (alertConfig: { text: string; severity?: "info" | "warning" | "error"; timeoutMs?: number }) => void) =>

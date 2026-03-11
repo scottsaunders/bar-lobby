@@ -6,6 +6,13 @@ SPDX-License-Identifier: MIT
 
 <template>
     <Modal :title="t('lobby.navbar.settings.title')">
+        <div class="keybinds-shortcut">
+            <div class="keybinds-label">Game Keybinds</div>
+            <Button @click="openKeybindEditor">
+                <Icon icon="mdi:keyboard" style="margin-right: 6px" />
+                Open Keybind Editor
+            </Button>
+        </div>
         <div class="gridform">
             <div>{{ t("lobby.navbar.settings.fullscreen") }}</div>
             <Checkbox v-model="settingsStore.fullscreen" />
@@ -47,10 +54,15 @@ SPDX-License-Identifier: MIT
             <Button @click="uploadLogsCommand">{{ t("lobby.navbar.settings.uploadLogs") }}</Button>
         </div>
     </Modal>
+
 </template>
 
+
 <script lang="ts" setup>
-import { ref } from "vue";
+import { inject, ref } from "vue";
+import type { Ref } from "vue";
+import { useRouter } from "vue-router";
+import { Icon } from "@iconify/vue";
 import Modal from "@renderer/components/common/Modal.vue";
 import Checkbox from "@renderer/components/controls/Checkbox.vue";
 import Range from "@renderer/components/controls/Range.vue";
@@ -63,6 +75,14 @@ import { infosStore } from "@renderer/store/infos.store";
 import { uploadLogs } from "@renderer/utils/log";
 import { useTypedI18n } from "@renderer/i18n";
 const { t } = useTypedI18n();
+
+const router = useRouter();
+const settingsOpen = inject<Ref<boolean>>("settingsOpen");
+
+function openKeybindEditor() {
+    if (settingsOpen) settingsOpen.value = false;
+    router.push("/keybinds");
+}
 
 const op = ref();
 const tooltipMessage = ref("");
@@ -108,5 +128,20 @@ async function uploadLogsCommand(event) {
 .container {
     background-color: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(5px);
+}
+
+.keybinds-shortcut {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 14px;
+    gap: 12px;
+}
+
+.keybinds-label {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.85);
 }
 </style>

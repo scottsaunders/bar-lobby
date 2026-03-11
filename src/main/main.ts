@@ -35,6 +35,7 @@ import { authService } from "@main/services/auth.service";
 import { tachyonService } from "@main/services/tachyon.service";
 import { typedWebContents } from "@main/typed-ipc";
 import { navigationService } from "@main/services/navigation.service";
+import { keybindsService } from "@main/services/keybinds.service";
 
 // Enable happy eyeballs for IPv6/IPv4 dual stack.
 netFromNode.setDefaultAutoSelectFamily(true);
@@ -150,6 +151,7 @@ app.whenReady().then(async () => {
     miscService.registerIpcHandlers();
     autoUpdaterService.registerIpcHandlers();
     navigationService.registerIpcHandlers(webContents);
+    keybindsService.registerIpcHandlers();
 
     // Init remaining services in parallel. The renderer HTML/JS is loading concurrently.
     await Promise.all([

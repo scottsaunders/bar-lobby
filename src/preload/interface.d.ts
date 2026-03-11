@@ -10,6 +10,7 @@ import type {
     EngineApi,
     GameApi,
     InfoApi,
+    KeybindsApi,
     LogApi,
     MainWindowApi,
     MapsApi,
@@ -38,6 +39,7 @@ declare global {
         log: LogApi;
         autoUpdater: AutoUpdaterApi;
         barNavigation: BarNavigationApi;
+        keybinds: KeybindsApi;
         notifications: NotificationsApi;
     }
 }
