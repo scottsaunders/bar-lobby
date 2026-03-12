@@ -6,6 +6,7 @@
         class="keyboard-key"
         :class="{
             'is-modifier': keyDef.isModifier,
+            'is-active-modifier': isActiveModifier,
             'has-binding': !!primaryBinding,
             'has-any-binding': !!anyBinding && !primaryBinding,
             'is-drag-over': isDragOver,
@@ -68,6 +69,19 @@
     const isDragOver = ref(false);
 
     const activeModifiers = computed(() => modifierStateToArray(keybindsStore.activeModifiers));
+
+    // Maps engineKey → which modifier flag it corresponds to
+    const MODIFIER_KEY_MAP: Record<string, keyof typeof keybindsStore.activeModifiers> = {
+        shift: "shift",
+        ctrl: "ctrl",
+        alt: "alt",
+    };
+
+    const isActiveModifier = computed(() => {
+        if (!props.keyDef.isModifier) return false;
+        const flag = MODIFIER_KEY_MAP[props.keyDef.engineKey];
+        return flag ? !!keybindsStore.activeModifiers[flag] : false;
+    });
 
     const primaryBinding = computed(() => getExactBinding(props.keyDef.engineKey, activeModifiers.value));
 
@@ -206,6 +220,16 @@
     .is-modifier .key-inner {
         background: rgba(255, 255, 255, 0.03);
         border-color: rgba(255, 255, 255, 0.07);
+    }
+
+    .is-active-modifier .key-inner {
+        background: rgba(37, 99, 235, 0.35);
+        border-color: rgba(96, 165, 250, 0.6);
+        box-shadow: 0 0 8px rgba(37, 99, 235, 0.35);
+    }
+
+    .is-active-modifier .key-label {
+        color: rgba(150, 200, 255, 0.9);
     }
 
     .key-top {

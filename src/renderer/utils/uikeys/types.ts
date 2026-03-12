@@ -41,6 +41,7 @@ export interface KeyDef {
     width: number; // relative width in units (1 = normal key)
     engineKey: string; // engine key name e.g. 'sc_a', 'esc', 'F1', '1'
     isModifier?: boolean; // is this a modifier key itself
+    isSpacer?: boolean; // render as invisible gap between key groups, not interactive
 }
 
 export interface KeyboardRow {

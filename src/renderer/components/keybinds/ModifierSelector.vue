@@ -16,16 +16,11 @@
                 <span v-else>{{ combo.label }}</span>
             </button>
         </div>
-        <div class="active-display" :class="{ 'has-mods': activeLabel !== 'Base' }">
-            <span class="caption-1">Layer: </span>
-            <span class="active-label body-2-strong">{{ activeLabel }}</span>
-        </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-    import { computed } from "vue";
-    import { keybindsStore, modifierStateToArray } from "@renderer/store/keybinds.store";
+    import { keybindsStore } from "@renderer/store/keybinds.store";
     import type { ModifierState } from "@renderer/utils/uikeys/types";
 
     interface ModifierCombo {
@@ -65,10 +60,6 @@
         keybindsStore.activeModifiers.any = !!combo.state.any;
     }
 
-    const activeLabel = computed(() => {
-        const mods = modifierStateToArray(keybindsStore.activeModifiers);
-        return mods.length === 0 ? "Base" : mods.join("+");
-    });
 </script>
 
 <style lang="scss" scoped>
@@ -116,21 +107,4 @@
         }
     }
 
-    .active-display {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        padding: 4px 8px;
-        background: rgba(0, 0, 0, 0.3);
-        border-radius: 4px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-
-        .active-label {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        &.has-mods .active-label {
-            color: rgb(96, 165, 250);
-        }
-    }
 </style>

@@ -5,18 +5,21 @@
 import type { KeyDef, KeyboardRow } from "./types";
 
 export const KEYBOARD_ROWS: KeyboardRow[] = [
-    // Function row
+    // Function row — 3 group spacers (36px each) align right edge with Backspace
     {
         keys: [
             { id: "esc", label: "Esc", width: 1, engineKey: "esc" },
+            { id: "fn-sp-1", label: "", width: 36 / 56, engineKey: "", isSpacer: true },
             { id: "F1", label: "F1", width: 1, engineKey: "F1" },
             { id: "F2", label: "F2", width: 1, engineKey: "F2" },
             { id: "F3", label: "F3", width: 1, engineKey: "F3" },
             { id: "F4", label: "F4", width: 1, engineKey: "F4" },
+            { id: "fn-sp-2", label: "", width: 36 / 56, engineKey: "", isSpacer: true },
             { id: "F5", label: "F5", width: 1, engineKey: "F5" },
             { id: "F6", label: "F6", width: 1, engineKey: "F6" },
             { id: "F7", label: "F7", width: 1, engineKey: "F7" },
             { id: "F8", label: "F8", width: 1, engineKey: "F8" },
+            { id: "fn-sp-3", label: "", width: 36 / 56, engineKey: "", isSpacer: true },
             { id: "F9", label: "F9", width: 1, engineKey: "F9" },
             { id: "F10", label: "F10", width: 1, engineKey: "F10" },
             { id: "F11", label: "F11", width: 1, engineKey: "F11" },
@@ -101,7 +104,7 @@ export const KEYBOARD_ROWS: KeyboardRow[] = [
         keys: [
             { id: "ctrl_l", label: "Ctrl", width: 1.25, engineKey: "ctrl", isModifier: true },
             { id: "alt_l", label: "Alt", width: 1.25, engineKey: "alt", isModifier: true },
-            { id: "space", label: "Space", width: 6.25, engineKey: "space" },
+            { id: "space", label: "Space", width: 10.25, engineKey: "space" },
             { id: "alt_r", label: "Alt", width: 1.25, engineKey: "alt", isModifier: true },
             { id: "ctrl_r", label: "Ctrl", width: 1.25, engineKey: "ctrl", isModifier: true },
         ],
@@ -184,6 +187,7 @@ export const NUMPAD_ROWS: KeyboardRow[] = [
 export const ALL_KEYS: Record<string, KeyDef> = {};
 for (const row of [...KEYBOARD_ROWS, ...NAV_CLUSTER_ROWS, ...NUMPAD_ROWS]) {
     for (const key of row.keys) {
+        if (key.isSpacer || !key.engineKey) continue;
         if (!ALL_KEYS[key.engineKey]) {
             ALL_KEYS[key.engineKey] = key;
         }

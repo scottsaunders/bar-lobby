@@ -11,12 +11,8 @@
             <!-- Toolbar -->
             <div class="editor-toolbar">
                 <div class="mode-tabs">
-                    <button class="mode-tab" :class="{ active: keybindsStore.viewMode === 'visual' }" @click="keybindsStore.viewMode = 'visual'">
-                        <Icon icon="mdi:keyboard" /> Visual
-                    </button>
-                    <button class="mode-tab" :class="{ active: keybindsStore.viewMode === 'list' }" @click="keybindsStore.viewMode = 'list'">
-                        <Icon icon="mdi:format-list-bulleted" /> List
-                    </button>
+                    <button class="mode-tab" :class="{ active: keybindsStore.viewMode === 'visual' }" @click="keybindsStore.viewMode = 'visual'">Visual</button>
+                    <button class="mode-tab" :class="{ active: keybindsStore.viewMode === 'list' }" @click="keybindsStore.viewMode = 'list'">List</button>
                 </div>
 
                 <div class="divider" />
@@ -29,18 +25,16 @@
                         class="unit-tab"
                         :class="{ active: keybindsStore.activeUnitType === ut.id }"
                         @click="keybindsStore.activeUnitType = ut.id"
-                    >
-                        <Icon :icon="ut.icon" />
-                        {{ ut.label }}
-                    </button>
+                    >{{ ut.label }}</button>
                 </div>
 
                 <div class="toolbar-spacer" />
 
-                <div v-if="keybindsStore.conflicts.length > 0" class="conflict-warning" title="Multiple commands share the same key+modifier">
+                <button v-if="keybindsStore.conflicts.length > 0" class="conflict-warning" :class="{ active: showConflicts }" @click="showConflicts = !showConflicts" title="Click to view and resolve conflicts">
                     <Icon icon="mdi:alert" />
                     {{ keybindsStore.conflicts.length }} conflict{{ keybindsStore.conflicts.length !== 1 ? "s" : "" }}
-                </div>
+                    <Icon :icon="showConflicts ? 'mdi:chevron-up' : 'mdi:chevron-down'" style="font-size: 14px; margin-left: 2px" />
+                </button>
 
                 <span v-if="keybindsStore.isDirty" class="dirty-dot">Unsaved changes</span>
 
@@ -58,6 +52,32 @@
                         <Icon icon="mdi:content-save" />
                         {{ keybindsStore.isSaving ? "Saving…" : "Save" }}
                     </button>
+                </div>
+            </div>
+
+            <!-- Conflict resolver panel -->
+            <div v-if="showConflicts && keybindsStore.conflicts.length > 0" class="conflict-panel">
+                <div class="conflict-panel-header">
+                    <Icon icon="mdi:alert" style="color: #fbbf24" />
+                    <span class="body-2-strong">Resolve Conflicts</span>
+                    <span class="caption-2" style="color: rgba(255,255,255,0.4)">Same key is bound to multiple commands. Remove the ones you don't need.</span>
+                    <div class="toolbar-spacer" />
+                    <button class="btn-action" @click="showConflicts = false"><Icon icon="mdi:close" /></button>
+                </div>
+                <div class="conflict-list">
+                    <div v-for="conflict in keybindsStore.conflicts" :key="conflict.key + conflict.modifiers.join('+')" class="conflict-group">
+                        <div class="conflict-key-label caption-1-strong">
+                            <span class="key-badge">{{ conflict.modifiers.length > 0 ? conflict.modifiers.join('+') + '+' : '' }}{{ conflict.key }}</span>
+                        </div>
+                        <div class="conflict-bindings">
+                            <div v-for="binding in conflict.bindings" :key="binding.id" class="conflict-binding-row">
+                                <span class="conflict-cmd">{{ binding.command }}</span>
+                                <button class="btn-action btn-remove-conflict" @click="removeBinding(binding.id)">
+                                    <Icon icon="mdi:trash-can-outline" /> Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -85,8 +105,9 @@
                         <VisualKeyboard @keyClicked="onKeyClicked" />
                     </div>
                     <div v-if="keybindsStore.parsed && keybindsStore.parsed.advancedBindings.length > 0" class="advanced-notice caption-2">
-                        <Icon icon="mdi:information-outline" />
-                        {{ keybindsStore.parsed.advancedBindings.length }} advanced bindings (chord sequences) preserved but not shown.
+                        <Icon icon="mdi:information-outline" style="flex-shrink:0" />
+                        <span>{{ keybindsStore.parsed.advancedBindings.length }} chord/sequence bindings are too complex for the visual editor and are hidden — they'll still be saved.</span>
+                        <button class="btn-action btn-advanced-cta" @click="showRaw = true">View in Raw Editor</button>
                     </div>
                     <!-- Legend -->
                     <div class="legend">
@@ -107,7 +128,7 @@
 <script lang="ts" setup>
     import { onMounted, ref, watch } from "vue";
     import { Icon } from "@iconify/vue";
-    import { keybindsStore, loadKeybinds, saveKeybinds, revertKeybinds } from "@renderer/store/keybinds.store";
+    import { keybindsStore, loadKeybinds, saveKeybinds, revertKeybinds, removeBinding } from "@renderer/store/keybinds.store";
     import { serializeUikeys } from "@renderer/utils/uikeys/serializer";
     import { parseUikeys } from "@renderer/utils/uikeys/parser";
     import ModifierSelector from "./ModifierSelector.vue";
@@ -116,12 +137,13 @@
     import ListEditor from "./ListEditor.vue";
 
     const UNIT_TYPES = [
-        { id: "all" as const,     label: "All Units",  icon: "mdi:account-group" },
-        { id: "combat" as const,  label: "Combat",     icon: "mdi:sword" },
-        { id: "builder" as const, label: "Builder",    icon: "mdi:wrench" },
+        { id: "all" as const,     label: "All Units" },
+        { id: "combat" as const,  label: "Combat" },
+        { id: "builder" as const, label: "Builder" },
     ];
 
     const showRaw = ref(false);
+    const showConflicts = ref(false);
     const rawText = ref("");
 
     onMounted(async () => { await loadKeybinds(); });
@@ -192,7 +214,7 @@
         display: flex;
         align-items: center;
         gap: 5px;
-        padding: 5px 12px;
+        padding: 5px 10px;
         background: rgba(255, 255, 255, 0.04);
         border: none;
         color: rgba(255, 255, 255, 0.5);
@@ -245,8 +267,107 @@
         display: flex;
         align-items: center;
         gap: 4px;
+        padding: 4px 8px;
+        background: rgba(251, 191, 36, 0.08);
+        border: 1px solid rgba(251, 191, 36, 0.25);
+        border-radius: 4px;
         color: rgba(251, 191, 36, 0.9);
         font-size: 12px;
+        font-family: inherit;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.15s ease;
+
+        &:hover { background: rgba(251, 191, 36, 0.15); }
+        &.active { background: rgba(251, 191, 36, 0.2); border-color: rgba(251, 191, 36, 0.5); }
+    }
+
+    /* ── Conflict panel ── */
+    .conflict-panel {
+        flex-shrink: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(251, 191, 36, 0.04);
+        max-height: 220px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .conflict-panel-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        flex-shrink: 0;
+        border-bottom: 1px solid rgba(251, 191, 36, 0.1);
+        color: rgba(251, 191, 36, 0.9);
+    }
+
+    .conflict-list {
+        overflow-y: auto;
+        padding: 8px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        &::-webkit-scrollbar { width: 5px; }
+        &::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+    }
+
+    .conflict-group {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .conflict-key-label {
+        flex-shrink: 0;
+        padding-top: 2px;
+    }
+
+    .key-badge {
+        display: inline-block;
+        padding: 2px 6px;
+        background: rgba(0,0,0,0.35);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 4px;
+        font-size: 11px;
+        font-family: monospace;
+        color: rgba(255,255,255,0.8);
+        white-space: nowrap;
+    }
+
+    .conflict-bindings {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        flex: 1;
+    }
+
+    .conflict-binding-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .conflict-cmd {
+        flex: 1;
+        font-size: 12px;
+        color: rgba(255,255,255,0.7);
+        font-family: monospace;
+    }
+
+    .btn-remove-conflict {
+        flex-shrink: 0;
+        color: rgba(220, 80, 80, 0.8) !important;
+        border-color: rgba(220, 80, 80, 0.3) !important;
+        &:hover:not(:disabled) { background: rgba(220, 80, 80, 0.2) !important; color: #fff !important; }
+    }
+
+    .btn-advanced-cta {
+        flex-shrink: 0;
+        margin-left: 4px;
+        font-size: 11px;
+        padding: 2px 8px;
     }
 
     .dirty-dot {
@@ -278,9 +399,12 @@
         display: flex;
         flex-direction: column;
         min-width: 0;
-        overflow: hidden;
+        overflow-y: auto;
+        overflow-x: hidden;
         padding: 14px 16px;
         gap: 10px;
+        &::-webkit-scrollbar { width: 5px; }
+        &::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
     }
 
     .modifier-row { flex-shrink: 0; }
