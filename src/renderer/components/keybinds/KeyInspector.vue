@@ -6,10 +6,7 @@
         <div class="inspector-header">
             <div class="key-name-block">
                 <span class="key-name-label">{{ keyLabel }}</span>
-                <span v-if="sharedEntry" class="status-badge" :class="sharedEntry.severity">
-                    <Icon :icon="sharedEntry.severity === 'conflict' ? 'mdi:alert' : 'mdi:information-outline'" />
-                    {{ sharedEntry.severity === 'conflict' ? 'Conflict' : 'Shared' }}
-                </span>
+                <span v-if="sharedEntry" class="status-badge" :class="sharedEntry.severity">{{ sharedEntry.severity === 'conflict' ? '⚠ Conflict' : 'Shared' }}</span>
             </div>
             <div class="header-spacer" />
             <button class="btn-close" @click="emit('close')">✕</button>

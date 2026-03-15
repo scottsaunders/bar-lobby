@@ -92,7 +92,7 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        flex-wrap: wrap;
+        overflow: hidden;
     }
 
     .modifier-label {
@@ -104,7 +104,6 @@
 
     .modifier-buttons {
         display: flex;
-        flex-wrap: wrap;
         align-items: center;
         gap: 4px;
     }

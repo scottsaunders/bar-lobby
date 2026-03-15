@@ -9,6 +9,9 @@ SPDX-License-Identifier: MIT
         <form v-if="isOpen" ref="form" class="container" @submit.prevent="onSubmit" @keydown.enter="onSubmit">
             <Panel id="modal" class="modal-panel" v-bind="$attrs">
                 <template #header>
+                    <div v-if="props.backAction" class="back" @click="props.backAction" @mouseenter="sound">
+                        <Icon :icon="chevronLeft" height="23" />
+                    </div>
                     <div class="title">
                         <slot name="title">
                             {{ title }}
@@ -36,6 +39,7 @@ export default {
 <script lang="ts" setup>
 import { Icon } from "@iconify/vue";
 import closeThick from "@iconify-icons/mdi/close-thick";
+import chevronLeft from "@iconify-icons/mdi/chevron-left";
 import { nextTick, onMounted, Ref, ref, toRef, watch } from "vue";
 
 import Panel from "@renderer/components/common/Panel.vue";
@@ -46,6 +50,7 @@ export type PanelProps = InstanceType<typeof Panel>["$props"];
 export interface ModalProps extends /* @vue-ignore */ PanelProps {
     modelValue?: boolean;
     title?: string;
+    backAction?: () => void;
 }
 
 const isLoaded = ref(false);
@@ -56,6 +61,7 @@ onMounted(() => {
 const props = withDefaults(defineProps<ModalProps>(), {
     modelValue: false,
     title: undefined,
+    backAction: undefined,
     is: "div",
     activeTab: 0,
 });
@@ -145,6 +151,14 @@ function sound() {
     flex-grow: 1;
     text-transform: capitalize;
     @extend .body-1-strong !optional;
+}
+.back {
+    display: flex;
+    padding: map.get($spacing, "xs") map.get($spacing, "sm");
+    cursor: pointer;
+    &:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
 }
 .close {
     display: flex;

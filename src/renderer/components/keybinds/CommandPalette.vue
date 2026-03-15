@@ -2,10 +2,17 @@
 <!-- SPDX-License-Identifier: MIT -->
 
 <template>
-    <div class="command-palette">
+    <div
+        class="command-palette"
+        :class="{ 'is-drop-target': isDropTarget }"
+        @dragover.prevent="onPaletteDragOver"
+        @dragleave="onPaletteDragLeave"
+        @drop.prevent="onPaletteDrop"
+    >
         <div class="palette-header">
             <span class="body-2-strong">Commands</span>
-            <span class="caption-1" style="color: rgba(255,255,255,0.4)">Drag to assign</span>
+            <span v-if="isDropTarget" class="drop-hint caption-1">Drop to unassign</span>
+            <span v-else class="caption-1" style="color: rgba(255,255,255,0.4)">Drag to assign</span>
         </div>
 
         <input
@@ -47,11 +54,12 @@
 <script lang="ts" setup>
     import { computed, ref } from "vue";
     import { COMMAND_CATEGORIES } from "@renderer/utils/uikeys/commands";
-    import { getBindingsForCommand, keybindsStore } from "@renderer/store/keybinds.store";
+    import { getBindingsForCommand, removeBinding, keybindsStore } from "@renderer/store/keybinds.store";
     import { formatBindingLabel } from "@renderer/utils/uikeys/key-formatter";
     import type { KeyBinding } from "@renderer/utils/uikeys/types";
 
     const search = ref("");
+    const isDropTarget = ref(false);
 
     const filteredCategories = computed(() => {
         const q = search.value.toLowerCase();
@@ -78,6 +86,29 @@
         if (e.dataTransfer) e.dataTransfer.effectAllowed = "copy";
     }
 
+    function isBindingDrag(e: DragEvent): boolean {
+        return !!e.dataTransfer?.types.includes("application/x-keybind-id");
+    }
+
+    function onPaletteDragOver(e: DragEvent) {
+        if (!isBindingDrag(e)) return;
+        isDropTarget.value = true;
+        if (e.dataTransfer) e.dataTransfer.dropEffect = "move";
+    }
+
+    function onPaletteDragLeave(e: DragEvent) {
+        // Only clear if leaving the palette entirely (not just crossing child elements)
+        if (!(e.currentTarget as HTMLElement).contains(e.relatedTarget as Node)) {
+            isDropTarget.value = false;
+        }
+    }
+
+    function onPaletteDrop(e: DragEvent) {
+        isDropTarget.value = false;
+        const id = e.dataTransfer?.getData("application/x-keybind-id");
+        if (id) removeBinding(id);
+    }
+
     function formatBinding(b: KeyBinding): string {
         return formatBindingLabel(b.modifiers, b.key);
     }
@@ -90,6 +121,13 @@
         height: 100%;
         min-height: 0;
         overflow: hidden;
+        transition: background 0.15s ease, border-color 0.15s ease;
+
+        &.is-drop-target {
+            background: rgba(220, 50, 50, 0.08);
+            outline: 2px dashed rgba(220, 80, 80, 0.5);
+            outline-offset: -2px;
+        }
     }
 
     .palette-header {
@@ -99,6 +137,11 @@
         padding: 10px 12px 6px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         flex-shrink: 0;
+    }
+
+    .drop-hint {
+        color: rgba(220, 80, 80, 0.9);
+        font-weight: 600;
     }
 
     .search-input {

@@ -480,8 +480,8 @@
         display: flex;
         align-items: center;
         flex-shrink: 0;
-        flex-wrap: wrap;
         gap: 8px;
+        overflow: hidden;
     }
 
     .controls-spacer { flex: 1; }

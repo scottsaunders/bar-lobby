@@ -26,7 +26,6 @@ declare module 'vue-router/auto-routes' {
     '/debug/script-launcher': RouteRecordInfo<'/debug/script-launcher', '/debug/script-launcher', Record<never, never>, Record<never, never>>,
     '/debug/test': RouteRecordInfo<'/debug/test', '/debug/test', Record<never, never>, Record<never, never>>,
     '/debug/test2': RouteRecordInfo<'/debug/test2', '/debug/test2', Record<never, never>, Record<never, never>>,
-    '/keybinds/': RouteRecordInfo<'/keybinds/', '/keybinds', Record<never, never>, Record<never, never>>,
     '/library/': RouteRecordInfo<'/library/', '/library', Record<never, never>, Record<never, never>>,
     '/library/commands': RouteRecordInfo<'/library/commands', '/library/commands', Record<never, never>, Record<never, never>>,
     '/library/guides': RouteRecordInfo<'/library/guides', '/library/guides', Record<never, never>, Record<never, never>>,
