@@ -3,26 +3,28 @@
 
 <template>
     <div class="modifier-selector">
-        <div class="layer-row">
-            <div class="modifier-label caption-1-strong">Active Layer</div>
-            <div class="modifier-buttons flex-row gap-xs flex-wrap">
-                <button
-                    v-for="combo in MODIFIER_COMBOS"
-                    :key="combo.id"
-                    class="mod-btn"
-                    :class="{ active: isActiveCombo(combo) }"
-                    @click="setCombo(combo)"
-                >
-                    <span v-if="combo.modifiers.length === 0">Base</span>
-                    <span v-else>{{ combo.label }}</span>
-                </button>
-            </div>
-        </div>
+        <div class="modifier-label caption-1-strong">Active Layer</div>
+        <div class="modifier-buttons">
+            <button
+                v-for="combo in MODIFIER_COMBOS"
+                :key="combo.id"
+                class="mod-btn"
+                :class="{ active: isActiveCombo(combo) }"
+                @click="setCombo(combo)"
+            >
+                <span v-if="combo.modifiers.length === 0">Base</span>
+                <span v-else>{{ combo.label }}</span>
+            </button>
 
-        <div class="any-row">
-            <button class="any-toggle" :class="{ active: isAnyActive }" @click="toggleAny">
-                <span class="any-toggle-label">Modifier Key Actions</span>
-                <span class="any-toggle-desc">Bindings that fire on keydown of a modifier key — active on every layer</span>
+            <div class="divider" />
+
+            <button
+                class="mod-btn any-btn"
+                :class="{ active: isAnyActive }"
+                title="Bindings that fire on keydown of a modifier key — active on every layer"
+                @click="toggleAny"
+            >
+                Modifier Keys
             </button>
         </div>
     </div>
@@ -88,26 +90,31 @@
 <style lang="scss" scoped>
     .modifier-selector {
         display: flex;
-        flex-direction: column;
+        align-items: center;
         gap: 8px;
-    }
-
-    .layer-row {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
+        flex-wrap: wrap;
     }
 
     .modifier-label {
         color: rgba(255, 255, 255, 0.5);
         text-transform: uppercase;
         letter-spacing: 0.08em;
+        flex-shrink: 0;
     }
 
     .modifier-buttons {
         display: flex;
         flex-wrap: wrap;
+        align-items: center;
         gap: 4px;
+    }
+
+    .divider {
+        width: 1px;
+        height: 18px;
+        background: rgba(255, 255, 255, 0.12);
+        flex-shrink: 0;
+        margin: 0 2px;
     }
 
     .mod-btn {
@@ -136,52 +143,12 @@
         }
     }
 
-    .any-row {
-        border-top: 1px solid rgba(255, 255, 255, 0.07);
-        padding-top: 8px;
-    }
-
-    .any-toggle {
-        display: flex;
-        align-items: baseline;
-        gap: 10px;
-        padding: 6px 10px;
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 4px;
-        cursor: pointer;
-        font-family: inherit;
-        transition: all 0.15s ease;
-        text-align: left;
-        width: 100%;
-
-        &:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
+    .any-btn {
         &.active {
-            background: rgba(99, 57, 214, 0.25);
-            border-color: rgba(139, 92, 246, 0.6);
-
-            .any-toggle-label { color: rgba(196, 168, 255, 1); }
-            .any-toggle-desc { color: rgba(196, 168, 255, 0.6); }
+            background: rgba(99, 57, 214, 0.4);
+            border-color: rgba(139, 92, 246, 0.7);
+            color: rgba(220, 200, 255, 1);
+            box-shadow: 0 0 8px rgba(139, 92, 246, 0.3);
         }
-    }
-
-    .any-toggle-label {
-        font-size: 12px;
-        font-weight: 700;
-        color: rgba(255, 255, 255, 0.6);
-        white-space: nowrap;
-        flex-shrink: 0;
-        transition: color 0.15s ease;
-    }
-
-    .any-toggle-desc {
-        font-size: 11px;
-        font-weight: 400;
-        color: rgba(255, 255, 255, 0.3);
-        transition: color 0.15s ease;
     }
 </style>

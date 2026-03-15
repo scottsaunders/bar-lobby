@@ -30,9 +30,14 @@
 
                 <div class="toolbar-spacer" />
 
-                <button v-if="keybindsStore.conflicts.length > 0" class="conflict-warning" :class="{ active: showConflicts }" @click="showConflicts = !showConflicts" title="Click to view and resolve conflicts">
+                <button v-if="trueConflicts.length > 0" class="sharedkey-btn is-conflict" :class="{ active: showConflicts }" @click="showConflicts = !showConflicts" title="Two or more commands in the same context share this key — one may override the other unexpectedly">
                     <Icon icon="mdi:alert" />
-                    {{ keybindsStore.conflicts.length }} conflict{{ keybindsStore.conflicts.length !== 1 ? "s" : "" }}
+                    {{ trueConflicts.length }} conflict{{ trueConflicts.length !== 1 ? "s" : "" }}
+                    <Icon :icon="showConflicts ? 'mdi:chevron-up' : 'mdi:chevron-down'" style="font-size: 14px; margin-left: 2px" />
+                </button>
+                <button v-else-if="sharedKeys.length > 0" class="sharedkey-btn is-shared" :class="{ active: showConflicts }" @click="showConflicts = !showConflicts" title="Some keys are shared across unit type contexts — this is usually intentional">
+                    <Icon icon="mdi:information-outline" />
+                    {{ sharedKeys.length }} shared key{{ sharedKeys.length !== 1 ? "s" : "" }}
                     <Icon :icon="showConflicts ? 'mdi:chevron-up' : 'mdi:chevron-down'" style="font-size: 14px; margin-left: 2px" />
                 </button>
 
@@ -48,24 +53,35 @@
                 </div>
             </div>
 
-            <!-- Conflict resolver panel -->
-            <div v-if="showConflicts && keybindsStore.conflicts.length > 0" class="conflict-panel">
+            <!-- Shared keys panel -->
+            <div v-if="showConflicts && keybindsStore.sharedKeys.length > 0" class="conflict-panel">
                 <div class="conflict-panel-header">
-                    <Icon icon="mdi:alert" style="color: #fbbf24" />
-                    <span class="body-2-strong">Resolve Conflicts</span>
-                    <span class="caption-2" style="color: rgba(255,255,255,0.4)">Same key is bound to multiple commands. Remove the ones you don't need.</span>
+                    <Icon v-if="trueConflicts.length > 0" icon="mdi:alert" style="color: #fbbf24" />
+                    <Icon v-else icon="mdi:information-outline" style="color: rgba(148,163,184,0.8)" />
+                    <span class="body-2-strong">Shared Keys</span>
+                    <span class="caption-2" style="color: rgba(255,255,255,0.4)">
+                        <template v-if="trueConflicts.length > 0">Conflicts may cause one command to unexpectedly override another. Shared keys across unit types are usually fine.</template>
+                        <template v-else>These keys are shared across different unit type contexts — this is usually intentional.</template>
+                    </span>
                     <div class="toolbar-spacer" />
                     <button class="btn-action" @click="showConflicts = false">Close</button>
                 </div>
                 <div class="conflict-list">
-                    <div v-for="conflict in keybindsStore.conflicts" :key="conflict.key + conflict.modifiers.join('+')" class="conflict-group">
+                    <div
+                        v-for="entry in keybindsStore.sharedKeys"
+                        :key="entry.key + entry.modifiers.join('+')"
+                        class="conflict-group"
+                        :class="{ 'is-shared': entry.severity === 'shared' }"
+                    >
                         <div class="conflict-key-label caption-1-strong">
-                            <span class="key-badge">{{ conflict.modifiers.length > 0 ? conflict.modifiers.join('+') + '+' : '' }}{{ engineKeyToLabel(conflict.key) }}</span>
+                            <span class="key-badge">{{ entry.modifiers.length > 0 ? entry.modifiers.join('+') + '+' : '' }}{{ engineKeyToLabel(entry.key) }}</span>
+                            <span v-if="entry.severity === 'shared'" class="shared-label caption-2">shared</span>
                         </div>
                         <div class="conflict-bindings">
-                            <div v-for="binding in conflict.bindings" :key="binding.id" class="conflict-binding-row">
-                                <span class="conflict-cmd">{{ binding.command }}</span>
-                                <button class="btn-action btn-remove-conflict" @click="removeBinding(binding.id)">Remove</button>
+                            <div v-for="binding in entry.bindings" :key="binding.id" class="conflict-binding-row">
+                                <span class="conflict-cmd">{{ getCommandLabel(binding.command) }}</span>
+                                <span class="conflict-unit-type caption-2">{{ getCommandUnitType(binding.command) }}</span>
+                                <button v-if="entry.severity === 'conflict'" class="btn-action btn-remove-conflict" @click="removeBinding(binding.id)">Remove</button>
                             </div>
                         </div>
                     </div>
@@ -94,19 +110,30 @@
                 </div>
 
                 <div class="keyboard-section">
-                    <ModifierSelector class="modifier-row" />
+                    <div class="controls-row">
+                        <ModifierSelector />
+                        <div class="controls-spacer" />
+                        <button
+                            v-if="keybindsStore.parsed && keybindsStore.parsed.advancedBindings.length > 0"
+                            class="btn-advanced-cta"
+                            :title="`${keybindsStore.parsed.advancedBindings.length} chord/sequence binding${keybindsStore.parsed.advancedBindings.length !== 1 ? 's' : ''} not shown in the visual editor — they will still be saved`"
+                            @click="showAdvanced = true"
+                        >
+                            Advanced Key Sequences
+                        </button>
+                    </div>
                     <div class="keyboard-scroll">
                         <VisualKeyboard @keyClicked="onKeyClicked" />
                     </div>
-                    <div v-if="keybindsStore.parsed && keybindsStore.parsed.advancedBindings.length > 0" class="advanced-notice caption-2">
-                        <Icon icon="mdi:information-outline" style="flex-shrink:0" />
-                        <span>{{ keybindsStore.parsed.advancedBindings.length }} chord/sequence binding{{ keybindsStore.parsed.advancedBindings.length !== 1 ? 's are' : ' is' }} hidden here — they'll still be saved.</span>
-                        <button class="btn-action btn-advanced-cta" @click="showAdvanced = true">View Advanced Bindings</button>
-                    </div>
+                    <!-- Key inspector -->
+                    <KeyInspector v-if="selectedKey" :engineKey="selectedKey" @close="selectedKey = null" />
+
                     <!-- Legend -->
-                    <div class="legend">
-                        <span class="legend-item"><span class="legend-dot" style="background:#fbbf24" />⚠ = key conflict</span>
+                    <div v-else class="legend">
+                        <span class="legend-item"><span class="legend-dot" style="background:#fbbf24" />⚠ = same-context conflict</span>
+                        <span class="legend-item" style="color: rgba(148,163,184,0.5)">· = shared across unit types</span>
                         <span class="legend-item"><span class="legend-swatch dimmed" />dimmed = not used by selected unit type</span>
+                        <span class="legend-item" style="color: rgba(255,255,255,0.2)">click any key to inspect</span>
                     </div>
                 </div>
             </div>
@@ -120,10 +147,11 @@
 </template>
 
 <script lang="ts" setup>
-    import { onMounted, ref, watch } from "vue";
+    import { computed, onMounted, ref, watch } from "vue";
     import { Icon } from "@iconify/vue";
     import { keybindsStore, loadKeybinds, saveKeybinds, revertKeybinds, removeBinding } from "@renderer/store/keybinds.store";
     import { engineKeyToLabel } from "@renderer/utils/uikeys/key-formatter";
+    import { getCommandLabel, getCommandUnitType } from "@renderer/utils/uikeys/commands";
     import { serializeUikeys } from "@renderer/utils/uikeys/serializer";
     import { parseUikeys } from "@renderer/utils/uikeys/parser";
     import ModifierSelector from "./ModifierSelector.vue";
@@ -131,6 +159,7 @@
     import CommandPalette from "./CommandPalette.vue";
     import ListEditor from "./ListEditor.vue";
     import AdvancedBindingsEditor from "./AdvancedBindingsEditor.vue";
+    import KeyInspector from "./KeyInspector.vue";
 
     const UNIT_TYPES = [
         { id: "all" as const,     label: "All Units" },
@@ -142,6 +171,10 @@
     const showAdvanced = ref(false);
     const showConflicts = ref(false);
     const rawText = ref("");
+    const selectedKey = ref<string | null>(null);
+
+    const trueConflicts = computed(() => keybindsStore.sharedKeys.filter((e) => e.severity === "conflict"));
+    const sharedKeys = computed(() => keybindsStore.sharedKeys.filter((e) => e.severity === "shared"));
 
     onMounted(async () => { await loadKeybinds(); });
 
@@ -159,7 +192,9 @@
         showRaw.value = false;
     }
 
-    function onKeyClicked(_key: string) {}
+    function onKeyClicked(key: string) {
+        selectedKey.value = selectedKey.value === key ? null : key;
+    }
 </script>
 
 <style lang="scss" scoped>
@@ -260,30 +295,40 @@
         }
     }
 
-    .conflict-warning {
+    .sharedkey-btn {
         display: flex;
         align-items: center;
         gap: 4px;
         padding: 4px 8px;
-        background: rgba(251, 191, 36, 0.08);
-        border: 1px solid rgba(251, 191, 36, 0.25);
         border-radius: 4px;
-        color: rgba(251, 191, 36, 0.9);
         font-size: 12px;
         font-family: inherit;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.15s ease;
 
-        &:hover { background: rgba(251, 191, 36, 0.15); }
-        &.active { background: rgba(251, 191, 36, 0.2); border-color: rgba(251, 191, 36, 0.5); }
+        &.is-conflict {
+            background: rgba(251, 191, 36, 0.08);
+            border: 1px solid rgba(251, 191, 36, 0.25);
+            color: rgba(251, 191, 36, 0.9);
+            &:hover { background: rgba(251, 191, 36, 0.15); }
+            &.active { background: rgba(251, 191, 36, 0.2); border-color: rgba(251, 191, 36, 0.5); }
+        }
+
+        &.is-shared {
+            background: rgba(148, 163, 184, 0.06);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            color: rgba(148, 163, 184, 0.7);
+            &:hover { background: rgba(148, 163, 184, 0.12); color: rgba(148, 163, 184, 0.9); }
+            &.active { background: rgba(148, 163, 184, 0.12); border-color: rgba(148, 163, 184, 0.4); }
+        }
     }
 
-    /* ── Conflict panel ── */
+    /* ── Shared keys panel ── */
     .conflict-panel {
         flex-shrink: 0;
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        background: rgba(251, 191, 36, 0.04);
+        background: rgba(0, 0, 0, 0.15);
         max-height: 220px;
         display: flex;
         flex-direction: column;
@@ -296,8 +341,8 @@
         gap: 8px;
         padding: 8px 14px;
         flex-shrink: 0;
-        border-bottom: 1px solid rgba(251, 191, 36, 0.1);
-        color: rgba(251, 191, 36, 0.9);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.7);
     }
 
     .conflict-list {
@@ -314,11 +359,17 @@
         display: flex;
         align-items: flex-start;
         gap: 12px;
+
+        &.is-shared { opacity: 0.6; }
     }
 
     .conflict-key-label {
         flex-shrink: 0;
         padding-top: 2px;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        align-items: flex-start;
     }
 
     .key-badge {
@@ -331,6 +382,12 @@
         font-family: monospace;
         color: rgba(255,255,255,0.8);
         white-space: nowrap;
+    }
+
+    .shared-label {
+        color: rgba(148, 163, 184, 0.6);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
 
     .conflict-bindings {
@@ -350,7 +407,12 @@
         flex: 1;
         font-size: 12px;
         color: rgba(255,255,255,0.7);
-        font-family: monospace;
+    }
+
+    .conflict-unit-type {
+        color: rgba(255,255,255,0.3);
+        font-style: italic;
+        flex-shrink: 0;
     }
 
     .btn-remove-conflict {
@@ -361,10 +423,20 @@
     }
 
     .btn-advanced-cta {
+        padding: 4px 10px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 4px;
+        color: rgba(255, 255, 255, 0.7);
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        white-space: nowrap;
         flex-shrink: 0;
-        margin-left: 4px;
-        font-size: 11px;
-        padding: 2px 8px;
+
+        &:hover { background: rgba(255, 255, 255, 0.15); color: #fff; }
     }
 
     .dirty-dot {
@@ -404,7 +476,16 @@
         &::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
     }
 
-    .modifier-row { flex-shrink: 0; }
+    .controls-row {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .controls-spacer { flex: 1; }
+
 
     .keyboard-scroll {
         overflow-x: auto;
@@ -412,19 +493,6 @@
         flex-shrink: 0;
         &::-webkit-scrollbar { height: 5px; }
         &::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
-    }
-
-    .advanced-notice {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        padding: 5px 10px;
-        background: rgba(255, 200, 50, 0.08);
-        border: 1px solid rgba(255, 200, 50, 0.2);
-        border-radius: 4px;
-        color: rgba(255, 200, 50, 0.7);
-        font-size: 11px;
-        flex-shrink: 0;
     }
 
     .legend {

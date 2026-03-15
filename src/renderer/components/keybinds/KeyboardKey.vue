@@ -25,8 +25,9 @@
             <!-- Key label top-left -->
             <div class="key-top">
                 <span class="key-label">{{ keyDef.label }}</span>
-                <!-- Conflict warning icon -->
-                <span v-if="hasConflict" class="conflict-icon" title="Multiple commands share this key+modifier — check your bindings">⚠</span>
+                <!-- Shared key indicators -->
+                <span v-if="hasConflict" class="conflict-icon" title="Two commands in the same context share this key — one may unexpectedly override the other">⚠</span>
+                <span v-else-if="isShared" class="shared-icon" title="This key is shared across different unit types — likely intentional">·</span>
             </div>
 
             <!-- Binding chip -->
@@ -90,8 +91,8 @@
         return keybindsStore.parsed.bindings.find((b) => b.key === props.keyDef.engineKey && b.modifiers.includes("Any"));
     });
 
-    const hasConflict = computed(() =>
-        keybindsStore.conflicts.some(
+    const sharedKeyEntry = computed(() =>
+        keybindsStore.sharedKeys.find(
             (c) =>
                 c.key === props.keyDef.engineKey &&
                 c.modifiers
@@ -104,6 +105,8 @@
                         .join("+")
         )
     );
+    const hasConflict = computed(() => sharedKeyEntry.value?.severity === "conflict");
+    const isShared = computed(() => sharedKeyEntry.value?.severity === "shared");
 
     const chipColor = computed(() => {
         const cmd = primaryBinding.value?.command ?? anyBinding.value?.command;
@@ -259,6 +262,14 @@
     .conflict-icon {
         font-size: 9px;
         color: rgba(251, 191, 36, 0.9);
+        flex-shrink: 0;
+        cursor: help;
+    }
+
+    .shared-icon {
+        font-size: 14px;
+        line-height: 1;
+        color: rgba(148, 163, 184, 0.5);
         flex-shrink: 0;
         cursor: help;
     }

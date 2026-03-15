@@ -7,6 +7,18 @@ import { parseUikeys } from "@renderer/utils/uikeys/parser";
 import { serializeUikeys } from "@renderer/utils/uikeys/serializer";
 import type { KeyBinding, ModifierState, ParsedUikeys } from "@renderer/utils/uikeys/types";
 import { EMPTY_MODIFIER_STATE } from "@renderer/utils/uikeys/types";
+import { getCommandUnitType } from "@renderer/utils/uikeys/commands";
+
+export type SharedKeySeverity =
+    | "conflict" // same-context commands on same key — genuinely ambiguous
+    | "shared";  // cross-context commands on same key — likely intentional
+
+export interface SharedKey {
+    key: string;
+    modifiers: string[];
+    bindings: KeyBinding[];
+    severity: SharedKeySeverity;
+}
 
 export const keybindsStore = reactive({
     isLoaded: false,
@@ -19,7 +31,7 @@ export const keybindsStore = reactive({
     searchQuery: "",
     selectedBindingId: null as string | null,
     activeUnitType: "all" as "all" | "builder" | "combat",
-    conflicts: [] as Array<{ key: string; modifiers: string[]; bindings: KeyBinding[] }>,
+    sharedKeys: [] as SharedKey[],
 });
 
 export async function loadKeybinds(): Promise<void> {
@@ -197,14 +209,23 @@ function detectConflicts() {
         map.set(mapKey, existing);
     }
 
-    keybindsStore.conflicts = [];
+    keybindsStore.sharedKeys = [];
     for (const [, bindings] of map.entries()) {
-        if (bindings.length > 1) {
-            keybindsStore.conflicts.push({
-                key: bindings[0].key,
-                modifiers: bindings[0].modifiers,
-                bindings,
-            });
-        }
+        if (bindings.length < 2) continue;
+        const unitTypes = bindings.map((b) => getCommandUnitType(b.command));
+        const uniqueTypes = new Set(unitTypes);
+
+        // Cross-context: all types are different and none are "all" — almost certainly intentional
+        // Same-context: any two bindings share a unit type (or either is "all") — genuinely ambiguous
+        const isConflict =
+            uniqueTypes.has("all") ||
+            unitTypes.some((t, i) => unitTypes.findIndex((u, j) => j !== i && u === t) !== -1);
+
+        keybindsStore.sharedKeys.push({
+            key: bindings[0].key,
+            modifiers: bindings[0].modifiers,
+            bindings,
+            severity: isConflict ? "conflict" : "shared",
+        });
     }
 }
