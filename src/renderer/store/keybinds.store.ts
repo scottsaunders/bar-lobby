@@ -144,6 +144,27 @@ export function removeBinding(id: string): void {
     }
 }
 
+export function removeAdvancedBinding(id: string): void {
+    if (!keybindsStore.parsed) return;
+    const idx = keybindsStore.parsed.advancedBindings.findIndex((b) => b.id === id);
+    if (idx >= 0) {
+        keybindsStore.parsed.advancedBindings.splice(idx, 1);
+        keybindsStore.isDirty = true;
+    }
+}
+
+export function addAdvancedBinding(rawLine: string): boolean {
+    if (!keybindsStore.parsed) return false;
+    // Accept with or without the "bind " prefix
+    const normalized = rawLine.trim().startsWith("bind ") ? rawLine.trim() : `bind ${rawLine.trim()}`;
+    const parsed = parseUikeys(normalized);
+    const binding = [...parsed.bindings, ...parsed.advancedBindings][0];
+    if (!binding) return false;
+    keybindsStore.parsed.advancedBindings.push(binding);
+    keybindsStore.isDirty = true;
+    return true;
+}
+
 export function updateBinding(id: string, key: string, modifiers: string[]): void {
     if (!keybindsStore.parsed) return;
     const binding = keybindsStore.parsed.bindings.find((b) => b.id === id);

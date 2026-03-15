@@ -39,17 +39,10 @@
                 <span v-if="keybindsStore.isDirty" class="dirty-dot">Unsaved changes</span>
 
                 <div class="toolbar-actions">
-                    <button class="btn-action" title="Reload from disk" @click="onReload">
-                        <Icon icon="mdi:refresh" /> Reload
-                    </button>
-                    <button class="btn-action" title="Edit raw text" @click="showRaw = !showRaw">
-                        <Icon icon="mdi:code-braces" /> Raw
-                    </button>
-                    <button class="btn-action btn-revert" :disabled="!keybindsStore.isDirty" @click="onRevert">
-                        <Icon icon="mdi:undo" /> Revert
-                    </button>
+                    <button class="btn-action" title="Reload from disk" @click="onReload">Reload</button>
+                    <button class="btn-action" title="Edit raw text" @click="showRaw = !showRaw">Raw</button>
+                    <button class="btn-action btn-revert" :disabled="!keybindsStore.isDirty" @click="onRevert">Revert</button>
                     <button class="btn-action btn-save" :disabled="!keybindsStore.isDirty || keybindsStore.isSaving" @click="onSave">
-                        <Icon icon="mdi:content-save" />
                         {{ keybindsStore.isSaving ? "Saving…" : "Save" }}
                     </button>
                 </div>
@@ -62,27 +55,28 @@
                     <span class="body-2-strong">Resolve Conflicts</span>
                     <span class="caption-2" style="color: rgba(255,255,255,0.4)">Same key is bound to multiple commands. Remove the ones you don't need.</span>
                     <div class="toolbar-spacer" />
-                    <button class="btn-action" @click="showConflicts = false"><Icon icon="mdi:close" /></button>
+                    <button class="btn-action" @click="showConflicts = false">Close</button>
                 </div>
                 <div class="conflict-list">
                     <div v-for="conflict in keybindsStore.conflicts" :key="conflict.key + conflict.modifiers.join('+')" class="conflict-group">
                         <div class="conflict-key-label caption-1-strong">
-                            <span class="key-badge">{{ conflict.modifiers.length > 0 ? conflict.modifiers.join('+') + '+' : '' }}{{ conflict.key }}</span>
+                            <span class="key-badge">{{ conflict.modifiers.length > 0 ? conflict.modifiers.join('+') + '+' : '' }}{{ engineKeyToLabel(conflict.key) }}</span>
                         </div>
                         <div class="conflict-bindings">
                             <div v-for="binding in conflict.bindings" :key="binding.id" class="conflict-binding-row">
                                 <span class="conflict-cmd">{{ binding.command }}</span>
-                                <button class="btn-action btn-remove-conflict" @click="removeBinding(binding.id)">
-                                    <Icon icon="mdi:trash-can-outline" /> Remove
-                                </button>
+                                <button class="btn-action btn-remove-conflict" @click="removeBinding(binding.id)">Remove</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Advanced bindings editor -->
+            <AdvancedBindingsEditor v-if="showAdvanced" @close="showAdvanced = false" />
+
             <!-- Raw editor -->
-            <div v-if="showRaw" class="raw-editor-container">
+            <div v-else-if="showRaw" class="raw-editor-container">
                 <div class="raw-header">
                     <span class="body-2-strong">Raw uikeys.txt</span>
                     <div class="toolbar-spacer" />
@@ -106,8 +100,8 @@
                     </div>
                     <div v-if="keybindsStore.parsed && keybindsStore.parsed.advancedBindings.length > 0" class="advanced-notice caption-2">
                         <Icon icon="mdi:information-outline" style="flex-shrink:0" />
-                        <span>{{ keybindsStore.parsed.advancedBindings.length }} chord/sequence bindings are too complex for the visual editor and are hidden — they'll still be saved.</span>
-                        <button class="btn-action btn-advanced-cta" @click="showRaw = true">View in Raw Editor</button>
+                        <span>{{ keybindsStore.parsed.advancedBindings.length }} chord/sequence binding{{ keybindsStore.parsed.advancedBindings.length !== 1 ? 's are' : ' is' }} hidden here — they'll still be saved.</span>
+                        <button class="btn-action btn-advanced-cta" @click="showAdvanced = true">View Advanced Bindings</button>
                     </div>
                     <!-- Legend -->
                     <div class="legend">
@@ -129,12 +123,14 @@
     import { onMounted, ref, watch } from "vue";
     import { Icon } from "@iconify/vue";
     import { keybindsStore, loadKeybinds, saveKeybinds, revertKeybinds, removeBinding } from "@renderer/store/keybinds.store";
+    import { engineKeyToLabel } from "@renderer/utils/uikeys/key-formatter";
     import { serializeUikeys } from "@renderer/utils/uikeys/serializer";
     import { parseUikeys } from "@renderer/utils/uikeys/parser";
     import ModifierSelector from "./ModifierSelector.vue";
     import VisualKeyboard from "./VisualKeyboard.vue";
     import CommandPalette from "./CommandPalette.vue";
     import ListEditor from "./ListEditor.vue";
+    import AdvancedBindingsEditor from "./AdvancedBindingsEditor.vue";
 
     const UNIT_TYPES = [
         { id: "all" as const,     label: "All Units" },
@@ -143,6 +139,7 @@
     ];
 
     const showRaw = ref(false);
+    const showAdvanced = ref(false);
     const showConflicts = ref(false);
     const rawText = ref("");
 

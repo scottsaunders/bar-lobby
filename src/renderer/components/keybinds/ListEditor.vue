@@ -32,7 +32,7 @@
                             <td class="col-category">
                                 <span class="caption-2" style="color: rgba(255,255,255,0.4)">{{ cat.label }}</span>
                             </td>
-                            <td class="col-command">
+                            <td class="col-command" :title="getCommandDescription(cmd.command) ?? cmd.command">
                                 <span class="body-2">{{ cmd.label }}</span>
                                 <span class="cmd-raw caption-2">{{ cmd.command }}</span>
                             </td>
@@ -81,8 +81,9 @@
 
 <script lang="ts" setup>
     import { computed, nextTick, ref } from "vue";
-    import { COMMAND_CATEGORIES } from "@renderer/utils/uikeys/commands";
+    import { COMMAND_CATEGORIES, getCommandDescription } from "@renderer/utils/uikeys/commands";
     import { getBindingsForCommand, removeBinding, assignBinding } from "@renderer/store/keybinds.store";
+    import { engineKeyToLabel, formatBindingLabel } from "@renderer/utils/uikeys/key-formatter";
     import type { KeyBinding } from "@renderer/utils/uikeys/types";
 
     const search = ref("");
@@ -107,8 +108,7 @@
     });
 
     function formatBinding(b: KeyBinding): string {
-        const mods = b.modifiers.length > 0 ? b.modifiers.join("+") + "+" : "";
-        return `${mods}${b.key}`;
+        return formatBindingLabel(b.modifiers, b.key);
     }
 
     async function startRebind(command: string) {
@@ -215,7 +215,7 @@
 
         capturedKey.value = key;
         capturedModifiers.value = mods;
-        capturedCombo.value = mods.length > 0 ? `${mods.join("+")}+${key}` : key;
+        capturedCombo.value = formatBindingLabel(mods, key);
     }
 </script>
 

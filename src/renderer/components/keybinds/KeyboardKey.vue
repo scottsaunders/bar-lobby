@@ -34,14 +34,14 @@
                 v-if="primaryBinding"
                 class="binding-chip"
                 :style="{ '--chip-color': chipColor }"
-                :title="primaryBinding.command"
+                :title="getCommandDescription(primaryBinding.command) ?? getCommandLabel(primaryBinding.command)"
             >
                 {{ getCommandLabel(primaryBinding.command) }}
             </div>
             <div
                 v-else-if="anyBinding"
                 class="binding-chip any-chip"
-                :title="anyBinding.command + ' (Any+)'"
+                :title="getCommandDescription(anyBinding.command) ?? (getCommandLabel(anyBinding.command) + ' (Any+)')"
             >
                 {{ getCommandLabel(anyBinding.command) }}
             </div>
@@ -52,7 +52,7 @@
 <script lang="ts" setup>
     import { computed, ref } from "vue";
     import type { KeyDef } from "@renderer/utils/uikeys/types";
-    import { getCommandLabel, getCommandColor, getCommandUnitType } from "@renderer/utils/uikeys/commands";
+    import { getCommandLabel, getCommandDescription, getCommandColor, getCommandUnitType } from "@renderer/utils/uikeys/commands";
     import { keybindsStore, getExactBinding, modifierStateToArray, assignBinding, removeBinding } from "@renderer/store/keybinds.store";
 
     const KEY_W = 56;
@@ -222,14 +222,10 @@
         border-color: rgba(255, 255, 255, 0.07);
     }
 
-    .is-active-modifier .key-inner {
-        background: rgba(37, 99, 235, 0.35);
-        border-color: rgba(96, 165, 250, 0.6);
-        box-shadow: 0 0 8px rgba(37, 99, 235, 0.35);
-    }
-
-    .is-active-modifier .key-label {
-        color: rgba(150, 200, 255, 0.9);
+    .keyboard-key.is-active-modifier .key-inner {
+        background: rgba(37, 99, 235, 0.5);
+        border-color: rgba(37, 99, 235, 0.9);
+        border-width: 2px;
     }
 
     .key-top {
@@ -248,6 +244,16 @@
 
     .is-modifier .key-label {
         color: rgba(255, 255, 255, 0.3);
+    }
+
+    .keyboard-key.is-active-modifier .key-label {
+        color: #fff;
+        font-weight: 700;
+    }
+
+    .keyboard-key.is-active-modifier .binding-chip {
+        color: #fff;
+        text-shadow: none;
     }
 
     .conflict-icon {
@@ -271,6 +277,6 @@
     }
 
     .any-chip {
-        opacity: 0.5;
+        opacity: 0.75;
     }
 </style>

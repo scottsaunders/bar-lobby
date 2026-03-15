@@ -9,7 +9,8 @@
       "Bash(find C:/Users/scopa/OneDrive/Documents/GitHub/bar-lobby/src -path \"*/keybind*\" -o -path \"*/uikeys*\" 2>/dev/null | grep -v node_modules | sort)",
       "Bash(python3 -c \"\nimport json\nwith open\\('C:/Users/scopa/OneDrive/Documents/GitHub/bar-lobby/src/renderer/assets/languages/en.json'\\) as f:\n    data = json.load\\(f\\)\nnavbar = data.get\\('lobby', {}\\).get\\('navbar', {}\\).get\\('settings', {}\\)\nprint\\(json.dumps\\(navbar, indent=2\\)\\)\n\")",
       "Bash(node -e \"const d=require\\('./src/renderer/assets/languages/en.json'\\); console.log\\(JSON.stringify\\(d?.lobby?.navbar?.settings, null, 2\\)\\)\" 2>&1 | head -40)",
-      "Bash(cd C:/Users/scopa/OneDrive/Documents/GitHub/bar-lobby && npx tsc --noEmit --project tsconfig.web.json 2>&1 | grep -E \"Settings\\\\.vue|keybind\" | head -20)"
+      "Bash(cd C:/Users/scopa/OneDrive/Documents/GitHub/bar-lobby && npx tsc --noEmit --project tsconfig.web.json 2>&1 | grep -E \"Settings\\\\.vue|keybind\" | head -20)",
+      "Bash(grep -oP \"\\(?<=bind\\\\s{1,20}\\)\\([\\\\w+,]+\\)\" \"C:/Users/scopa/OneDrive/Documents/GitHub/bar-lobby/state/data/uikeys.txt\" | sort -u)"
     ]
   }
 }

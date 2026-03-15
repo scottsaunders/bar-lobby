@@ -25,7 +25,7 @@
                     class="command-item"
                     :class="{ 'is-assigned': isAssigned(cmd.command) }"
                     draggable="true"
-                    :title="cmd.command"
+                    :title="cmd.description ?? cmd.command"
                     @dragstart="onDragStart($event, cmd.command)"
                 >
                     <span class="cmd-label" :style="{ color: cat.color }">{{ cmd.label }}</span>

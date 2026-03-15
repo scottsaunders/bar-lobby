@@ -37,19 +37,23 @@ function parseBindLine(line: string): KeyBinding | null {
     const keyCombo = parts[1]; // e.g. "Ctrl+Shift+esc" or "esc" or "Any+sc_z"
     const command = parts.slice(2).join(" "); // rest is the command
 
+    // Chord sequences contain commas anywhere in the combo (e.g. "Shift+sc_b,Shift+sc_b")
+    // Detect this before splitting so we don't corrupt the modifier list
+    const isChord = keyCombo.includes(",");
+
     // Split the key combo by '+' but handle edge cases
     const segments = keyCombo.split("+");
     const key = segments[segments.length - 1];
     const modifiers = segments.slice(0, -1).filter((m) => m.length > 0);
 
-    const advanced = isAdvancedBinding(modifiers, key);
+    const advanced = isChord || isAdvancedBinding(modifiers, key);
 
     return {
         id: nextId(),
         modifiers,
         key,
         command,
-        isChord: isChordKey(key),
+        isChord,
         isAdvanced: advanced,
         raw: cleaned,
     };
