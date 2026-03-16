@@ -42,6 +42,10 @@ const ENGINE_KEY_LABELS: Record<string, string> = {
     numpad3: "Num3", numpad4: "Num4", numpad5: "Num5",
     numpad6: "Num6", numpad7: "Num7", numpad8: "Num8",
     numpad9: "Num9",
+
+    // Mouse buttons
+    mouse1: "LMB", mouse2: "RMB", mouse3: "MMB",
+    mouse4: "M4", mouse5: "M5",
 };
 
 export function engineKeyToLabel(key: string): string {

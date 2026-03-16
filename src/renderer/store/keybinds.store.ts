@@ -8,6 +8,7 @@ import { serializeUikeys } from "@renderer/utils/uikeys/serializer";
 import type { KeyBinding, ModifierState, ParsedUikeys } from "@renderer/utils/uikeys/types";
 import { EMPTY_MODIFIER_STATE } from "@renderer/utils/uikeys/types";
 import { getCommandUnitType } from "@renderer/utils/uikeys/commands";
+import { PRESET_MAP } from "@renderer/utils/uikeys/presets";
 
 export type SharedKeySeverity =
     | "conflict" // same-context commands on same key — genuinely ambiguous
@@ -32,6 +33,10 @@ export const keybindsStore = reactive({
     selectedBindingId: null as string | null,
     activeUnitType: "all" as "all" | "builder" | "combat",
     sharedKeys: [] as SharedKey[],
+    selectedCommand: null as string | null,
+    activePreset: "custom" as string,
+    showAdvanced: false,
+    pressedKeys: new Set<string>(),
 });
 
 export async function loadKeybinds(): Promise<void> {
@@ -41,6 +46,7 @@ export async function loadKeybinds(): Promise<void> {
     keybindsStore.isDirty = false;
     keybindsStore.isLoaded = true;
     detectConflicts();
+    detectActivePreset();
 }
 
 export async function saveKeybinds(): Promise<void> {
@@ -62,6 +68,26 @@ export function revertKeybinds(): void {
         keybindsStore.isDirty = false;
         detectConflicts();
     }
+}
+
+export function loadPreset(presetId: string): void {
+    const preset = PRESET_MAP.get(presetId);
+    if (!preset) return;
+    keybindsStore.parsed = parseUikeys(preset.content);
+    keybindsStore.isDirty = true;
+    keybindsStore.activePreset = presetId;
+    detectConflicts();
+}
+
+function detectActivePreset(): void {
+    const raw = keybindsStore.rawContent.trim();
+    for (const [id, preset] of PRESET_MAP.entries()) {
+        if (raw === preset.content.trim()) {
+            keybindsStore.activePreset = id;
+            return;
+        }
+    }
+    keybindsStore.activePreset = "custom";
 }
 
 /**
@@ -114,6 +140,14 @@ export function getBindingsForKey(key: string): KeyBinding[] {
 export function getBindingsForCommand(command: string): KeyBinding[] {
     if (!keybindsStore.parsed) return [];
     return keybindsStore.parsed.bindings.filter((b) => b.command === command);
+}
+
+/**
+ * Returns all advanced (chord/sequence) bindings for a given command string.
+ */
+export function getAdvancedBindingsForCommand(command: string): KeyBinding[] {
+    if (!keybindsStore.parsed) return [];
+    return keybindsStore.parsed.advancedBindings.filter((b) => b.command === command);
 }
 
 /**
@@ -186,6 +220,39 @@ export function updateBinding(id: string, key: string, modifiers: string[]): voi
     binding.raw = `bind ${modifiers.length > 0 ? modifiers.join("+") + "+" : ""}${key}  ${binding.command}`;
     keybindsStore.isDirty = true;
     detectConflicts();
+}
+
+/**
+ * Select a command and automatically switch to the modifier layer
+ * that contains its first (simplest) binding so it lights up on the keyboard.
+ * Calling with the already-selected command deselects it.
+ */
+export function selectCommand(command: string | null): void {
+    if (command === null || keybindsStore.selectedCommand === command) {
+        keybindsStore.selectedCommand = null;
+        return;
+    }
+    keybindsStore.selectedCommand = command;
+
+    // Find the binding with the fewest real modifiers (prefer base layer).
+    // Skip Any+ bindings — they have no single matching layer.
+    const bindings = getBindingsForCommand(command).filter((b) => !b.modifiers.includes("Any"));
+    if (!bindings.length) return;
+
+    const best = bindings.reduce((a, b) => (a.modifiers.length <= b.modifiers.length ? a : b));
+    keybindsStore.activeModifiers = modifiersArrayToState(best.modifiers);
+}
+
+function modifiersArrayToState(modifiers: string[]): ModifierState {
+    const state = { ...EMPTY_MODIFIER_STATE };
+    for (const m of modifiers) {
+        const ml = m.toLowerCase();
+        if (ml === "ctrl") state.ctrl = true;
+        else if (ml === "shift") state.shift = true;
+        else if (ml === "alt") state.alt = true;
+        else if (ml === "any") state.any = true;
+    }
+    return state;
 }
 
 export function modifierStateToArray(state: ModifierState): string[] {

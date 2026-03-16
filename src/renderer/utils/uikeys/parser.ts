@@ -41,10 +41,18 @@ function parseBindLine(line: string): KeyBinding | null {
     // Detect this before splitting so we don't corrupt the modifier list
     const isChord = keyCombo.includes(",");
 
-    // Split the key combo by '+' but handle edge cases
+    // Split the key combo by '+' but handle keys whose name ends with '+' (e.g. "numpad+").
+    // When the last segment is empty the key itself contains a trailing '+', so reconstruct it.
     const segments = keyCombo.split("+");
-    const key = segments[segments.length - 1];
-    const modifiers = segments.slice(0, -1).filter((m) => m.length > 0);
+    let key: string;
+    let modifiers: string[];
+    if (segments[segments.length - 1] === "" && segments.length >= 2) {
+        key = segments[segments.length - 2] + "+";
+        modifiers = segments.slice(0, -2).filter((m) => m.length > 0);
+    } else {
+        key = segments[segments.length - 1];
+        modifiers = segments.slice(0, -1).filter((m) => m.length > 0);
+    }
 
     const advanced = isChord || isAdvancedBinding(modifiers, key);
 

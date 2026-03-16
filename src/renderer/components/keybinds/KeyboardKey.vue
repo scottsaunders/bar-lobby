@@ -10,9 +10,13 @@
             'has-binding': !!primaryBinding,
             'has-any-binding': !!anyBinding && !primaryBinding,
             'is-drag-over': isDragOver,
-            'is-dimmed': isDimmed,
+            'is-dimmed': isDimmed && !isHighlighted,
+            'is-highlighted': isHighlighted,
+            'is-pressed': isPressed,
         }"
-        :style="{ width: `${keyDef.width * KEY_W}px`, height: `${KEY_H}px` }"
+        :style="props.fill
+            ? { flex: '1', height: `${props.customHeight ?? KEY_H}px` }
+            : { width: `${keyDef.width * KEY_W}px`, height: `${props.customHeight ?? KEY_H}px` }"
         :draggable="!!primaryBinding"
         @dragstart="onDragStart"
         @dragend="onDragEnd"
@@ -54,13 +58,15 @@
     import { computed, ref } from "vue";
     import type { KeyDef } from "@renderer/utils/uikeys/types";
     import { getCommandLabel, getCommandDescription, getCommandColor, getCommandUnitType } from "@renderer/utils/uikeys/commands";
-    import { keybindsStore, getExactBinding, modifierStateToArray, assignBinding, removeBinding } from "@renderer/store/keybinds.store";
+    import { keybindsStore, getExactBinding, getBindingsForCommand, modifierStateToArray, assignBinding, removeBinding } from "@renderer/store/keybinds.store";
 
     const KEY_W = 56;
     const KEY_H = 76;
 
     const props = defineProps<{
         keyDef: KeyDef;
+        fill?: boolean;        // grow to fill container width instead of using fixed width
+        customHeight?: number; // override default key height in px
     }>();
 
     const emit = defineEmits<{
@@ -111,6 +117,15 @@
     const chipColor = computed(() => {
         const cmd = primaryBinding.value?.command ?? anyBinding.value?.command;
         return cmd ? getCommandColor(cmd) : "#94a3b8";
+    });
+
+    // Light up when physically pressed
+    const isPressed = computed(() => keybindsStore.pressedKeys.has(props.keyDef.engineKey));
+
+    // Highlight key if its bound command is the selected command
+    const isHighlighted = computed(() => {
+        if (!keybindsStore.selectedCommand) return false;
+        return getBindingsForCommand(keybindsStore.selectedCommand).some((b) => b.key === props.keyDef.engineKey);
     });
 
     // Dim key if active unit type filter doesn't match the command's unit type
@@ -218,6 +233,25 @@
         background: rgba(34, 197, 94, 0.25);
         border-color: rgba(34, 197, 94, 0.7);
         box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+    }
+
+    .keyboard-key.is-highlighted .key-inner {
+        background: rgba(251, 191, 36, 0.2);
+        border-color: rgba(251, 191, 36, 0.7);
+        box-shadow: 0 0 10px rgba(251, 191, 36, 0.35);
+        border-width: 2px;
+    }
+
+    .keyboard-key.is-pressed .key-inner {
+        background: rgba(255, 255, 255, 0.22);
+        border-color: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+        border-width: 2px;
+    }
+
+    .keyboard-key.is-pressed .key-label {
+        color: #fff;
+        font-weight: 700;
     }
 
     .is-modifier .key-inner {

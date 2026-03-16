@@ -14,20 +14,40 @@
             </div>
         </div>
 
-        <!-- Nav cluster -->
-        <div class="keyboard-nav">
-            <template v-for="(row, rIdx) in NAV_CLUSTER_ROWS" :key="rIdx">
-                <div v-if="row.keys.length > 0" class="key-row" :style="row.indent ? { paddingLeft: `${row.indent * KEY_UNIT}px` } : {}">
-                    <KeyboardKey v-for="keyDef in row.keys" :key="keyDef.id" :keyDef="keyDef" @keyClicked="onKeyClicked" />
+        <!-- Right side: nav + numpad on top, mouse inset below -->
+        <div class="keyboard-right">
+            <div class="keyboard-clusters">
+                <!-- Nav cluster -->
+                <div class="keyboard-nav">
+                    <template v-for="(row, rIdx) in NAV_CLUSTER_ROWS" :key="rIdx">
+                        <div v-if="row.keys.length > 0" class="key-row" :style="row.indent ? { paddingLeft: `${row.indent * KEY_UNIT}px` } : {}">
+                            <KeyboardKey v-for="keyDef in row.keys" :key="keyDef.id" :keyDef="keyDef" :customHeight="CLUSTER_KEY_H" @keyClicked="onKeyClicked" />
+                        </div>
+                        <div v-else class="key-row-spacer" />
+                    </template>
                 </div>
-                <div v-else class="key-row-spacer" />
-            </template>
-        </div>
 
-        <!-- Numpad -->
-        <div class="keyboard-numpad">
-            <div v-for="(row, rIdx) in NUMPAD_ROWS" :key="rIdx" class="key-row">
-                <KeyboardKey v-for="keyDef in row.keys" :key="keyDef.id" :keyDef="keyDef" @keyClicked="onKeyClicked" />
+                <!-- Numpad -->
+                <div class="keyboard-numpad">
+                    <div v-for="(row, rIdx) in NUMPAD_ROWS" :key="rIdx" class="key-row">
+                        <KeyboardKey v-for="keyDef in row.keys" :key="keyDef.id" :keyDef="keyDef" :customHeight="CLUSTER_KEY_H" @keyClicked="onKeyClicked" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mouse inset box -->
+            <div class="keyboard-mouse-inset">
+                <span class="mouse-inset-label">Mouse</span>
+                <div class="mouse-row">
+                    <KeyboardKey
+                        v-for="keyDef in MOUSE_KEYS"
+                        :key="keyDef.id"
+                        :keyDef="keyDef"
+                        :fill="true"
+                        :customHeight="46"
+                        @keyClicked="onKeyClicked"
+                    />
+                </div>
             </div>
         </div>
     </div>
@@ -36,10 +56,19 @@
 
 <script lang="ts" setup>
     import { ref, onMounted, onUnmounted, nextTick } from "vue";
-    import { KEYBOARD_ROWS, NAV_CLUSTER_ROWS, NUMPAD_ROWS } from "@renderer/utils/uikeys/keyboard-layout";
+    import { KEYBOARD_ROWS, NAV_CLUSTER_ROWS, NUMPAD_ROWS, MOUSE_ROWS } from "@renderer/utils/uikeys/keyboard-layout";
+    import { useLiveKeyPreview } from "@renderer/composables/useLiveKeyPreview";
     import KeyboardKey from "./KeyboardKey.vue";
 
+    useLiveKeyPreview();
+
     const KEY_UNIT = 56;
+    // Slightly reduced key height for nav/numpad so they stack flush with the
+    // main keyboard once the mouse inset box is added below them.
+    const CLUSTER_KEY_H = 73;
+
+    // Flatten mouse rows into a single ordered list: LMB, RMB, MMB, M4, M5
+    const MOUSE_KEYS = MOUSE_ROWS.flatMap((r) => r.keys);
 
     const emit = defineEmits<{
         keyClicked: [key: string];
@@ -97,6 +126,48 @@
         display: flex;
         flex-direction: column;
         gap: 2px;
+    }
+
+    /* Column that holds nav+numpad row then mouse inset below */
+    .keyboard-right {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    /* Nav and numpad side-by-side */
+    .keyboard-clusters {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    /* Mouse inset box */
+    .keyboard-mouse-inset {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 8px 10px;
+        background: rgba(255, 255, 255, 0.025);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        position: relative;
+    }
+
+    .mouse-inset-label {
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: rgba(255, 255, 255, 0.25);
+        line-height: 1;
+    }
+
+    .mouse-row {
+        display: flex;
+        flex-direction: row;
+        gap: 4px;
     }
 
     .key-row {

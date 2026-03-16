@@ -15,11 +15,22 @@
             <span v-else class="caption-1" style="color: rgba(255,255,255,0.4)">Drag to assign</span>
         </div>
 
-        <input
-            v-model="search"
-            class="search-input"
-            placeholder="Search commands..."
-        />
+        <div class="palette-controls">
+            <input
+                v-model="search"
+                class="search-input"
+                placeholder="Search commands..."
+            />
+            <button
+                class="unbound-toggle"
+                :class="{ 'is-active': showUnboundOnly }"
+                :title="showUnboundOnly ? 'Show all commands' : 'Show only unbound commands'"
+                @click="showUnboundOnly = !showUnboundOnly"
+            >
+                <span class="unbound-count" :class="{ 'has-unbound': unboundCount > 0 }">{{ unboundCount }}</span>
+                Unbound
+            </button>
+        </div>
 
         <div class="palette-scroll">
             <template v-for="cat in filteredCategories" :key="cat.id">
@@ -30,9 +41,13 @@
                     v-for="cmd in cat.commands"
                     :key="cmd.command"
                     class="command-item"
-                    :class="{ 'is-assigned': isAssigned(cmd.command) }"
+                    :class="{
+                        'is-assigned': isAssigned(cmd.command),
+                        'is-selected': keybindsStore.selectedCommand === cmd.command,
+                    }"
                     draggable="true"
                     :title="cmd.description ?? cmd.command"
+                    @click="onCommandClick(cmd.command)"
                     @dragstart="onDragStart($event, cmd.command)"
                 >
                     <span class="cmd-label" :style="{ color: cat.color }">{{ cmd.label }}</span>
@@ -40,6 +55,12 @@
                         <span v-for="b in getBindingsForCommand(cmd.command)" :key="b.id" class="binding-tag">
                             {{ formatBinding(b) }}
                         </span>
+                        <button
+                            v-if="advancedLabel(cmd.command)"
+                            class="adv-tag"
+                            :title="advancedLabel(cmd.command) ?? ''"
+                            @click.stop="openAdvanced"
+                        >Adv.</button>
                     </div>
                 </div>
             </template>
@@ -54,12 +75,26 @@
 <script lang="ts" setup>
     import { computed, ref } from "vue";
     import { COMMAND_CATEGORIES } from "@renderer/utils/uikeys/commands";
-    import { getBindingsForCommand, removeBinding, keybindsStore } from "@renderer/store/keybinds.store";
+    import { getBindingsForCommand, getAdvancedBindingsForCommand, removeBinding, keybindsStore, selectCommand } from "@renderer/store/keybinds.store";
+    import { formatAdvancedBindingSteps } from "@renderer/utils/uikeys/key-formatter";
     import { formatBindingLabel } from "@renderer/utils/uikeys/key-formatter";
     import type { KeyBinding } from "@renderer/utils/uikeys/types";
 
     const search = ref("");
+    const showUnboundOnly = ref(false);
     const isDropTarget = ref(false);
+
+    const unboundCount = computed(() => {
+        const unitType = keybindsStore.activeUnitType;
+        let count = 0;
+        for (const cat of COMMAND_CATEGORIES) {
+            if (unitType !== "all" && cat.unitType !== "all" && cat.unitType !== unitType) continue;
+            for (const cmd of cat.commands) {
+                if (!isAssigned(cmd.command)) count++;
+            }
+        }
+        return count;
+    });
 
     const filteredCategories = computed(() => {
         const q = search.value.toLowerCase();
@@ -70,6 +105,8 @@
             commands: cat.commands.filter((c) => {
                 // Unit type filter
                 if (unitType !== "all" && cat.unitType !== "all" && cat.unitType !== unitType) return false;
+                // Unbound filter — skip commands that have any binding (regular or advanced)
+                if (showUnboundOnly.value && isAssigned(c.command)) return false;
                 // Search filter
                 if (!q) return true;
                 return c.label.toLowerCase().includes(q) || c.command.toLowerCase().includes(q);
@@ -78,7 +115,24 @@
     });
 
     function isAssigned(command: string): boolean {
-        return getBindingsForCommand(command).length > 0;
+        return getBindingsForCommand(command).length > 0 || getAdvancedBindingsForCommand(command).length > 0;
+    }
+
+    function advancedLabel(command: string): string | null {
+        const adv = getAdvancedBindingsForCommand(command);
+        if (!adv.length) return null;
+        // Show the first sequence as a preview
+        const steps = formatAdvancedBindingSteps(adv[0].raw);
+        return steps.join(" › ");
+    }
+
+    function openAdvanced() {
+        keybindsStore.viewMode = "visual";
+        keybindsStore.showAdvanced = true;
+    }
+
+    function onCommandClick(command: string) {
+        selectCommand(command);
     }
 
     function onDragStart(e: DragEvent, command: string) {
@@ -144,8 +198,15 @@
         font-weight: 600;
     }
 
+    .palette-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 8px 8px 4px;
+        flex-shrink: 0;
+    }
+
     .search-input {
-        margin: 8px;
         padding: 6px 10px;
         background: rgba(255, 255, 255, 0.08);
         border: 1px solid rgba(255, 255, 255, 0.15);
@@ -154,10 +215,57 @@
         font-family: inherit;
         font-size: 13px;
         outline: none;
-        flex-shrink: 0;
+        width: 100%;
+        box-sizing: border-box;
 
         &::placeholder { color: rgba(255, 255, 255, 0.3); }
         &:focus { border-color: rgba(37, 99, 235, 0.6); }
+    }
+
+    .unbound-toggle {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 8px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 4px;
+        color: rgba(255, 255, 255, 0.5);
+        font-family: inherit;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.1s ease;
+        width: 100%;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        &.is-active {
+            background: rgba(251, 191, 36, 0.12);
+            border-color: rgba(251, 191, 36, 0.4);
+            color: rgba(251, 191, 36, 0.9);
+        }
+    }
+
+    .unbound-count {
+        font-size: 11px;
+        font-weight: 700;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 1px 6px;
+        min-width: 20px;
+        text-align: center;
+
+        .unbound-toggle.is-active & {
+            background: rgba(251, 191, 36, 0.2);
+        }
+
+        &.has-unbound {
+            color: rgba(251, 191, 36, 0.9);
+            background: rgba(251, 191, 36, 0.15);
+        }
     }
 
     .palette-scroll {
@@ -195,6 +303,11 @@
 
         &:hover { background: rgba(255, 255, 255, 0.08); }
         &:active { cursor: grabbing; }
+
+        &.is-selected {
+            background: rgba(251, 191, 36, 0.12);
+            outline: 1px solid rgba(251, 191, 36, 0.35);
+        }
     }
 
     .cmd-label {
@@ -227,6 +340,27 @@
         color: rgba(200, 220, 255, 0.9);
         white-space: nowrap;
         font-family: monospace;
+    }
+
+    .adv-tag {
+        background: rgba(167, 139, 250, 0.12);
+        border: 1px solid rgba(167, 139, 250, 0.35);
+        border-radius: 3px;
+        padding: 2px 5px;
+        font-size: 10px;
+        font-weight: 700;
+        color: rgba(167, 139, 250, 0.85);
+        white-space: nowrap;
+        cursor: pointer;
+        font-family: inherit;
+        letter-spacing: 0.02em;
+        transition: all 0.1s ease;
+
+        &:hover {
+            background: rgba(167, 139, 250, 0.25);
+            border-color: rgba(167, 139, 250, 0.6);
+            color: rgba(200, 180, 255, 1);
+        }
     }
 
     .empty-state {

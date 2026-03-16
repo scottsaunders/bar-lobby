@@ -183,9 +183,27 @@ export const NUMPAD_ROWS: KeyboardRow[] = [
     },
 ];
 
+// Mouse buttons cluster
+export const MOUSE_ROWS: KeyboardRow[] = [
+    {
+        keys: [
+            { id: "mouse1", label: "LMB", width: 1, engineKey: "mouse1" },
+            { id: "mouse2", label: "RMB", width: 1, engineKey: "mouse2" },
+            { id: "mouse3", label: "MMB", width: 1, engineKey: "mouse3" },
+        ],
+    },
+    {
+        keys: [
+            { id: "mouse4", label: "M4", width: 1, engineKey: "mouse4" },
+            { id: "mouse5", label: "M5", width: 1, engineKey: "mouse5" },
+        ],
+        indent: 0,
+    },
+];
+
 // Flat map of all keys by engineKey for quick lookup
 export const ALL_KEYS: Record<string, KeyDef> = {};
-for (const row of [...KEYBOARD_ROWS, ...NAV_CLUSTER_ROWS, ...NUMPAD_ROWS]) {
+for (const row of [...KEYBOARD_ROWS, ...NAV_CLUSTER_ROWS, ...NUMPAD_ROWS, ...MOUSE_ROWS]) {
     for (const key of row.keys) {
         if (key.isSpacer || !key.engineKey) continue;
         if (!ALL_KEYS[key.engineKey]) {

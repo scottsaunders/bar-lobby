@@ -27,7 +27,11 @@
                             v-for="cmd in cat.commands"
                             :key="cmd.command"
                             class="binding-row"
-                            :class="{ 'is-rebinding': rebindingCommand === cmd.command }"
+                            :class="{
+                                'is-rebinding': rebindingCommand === cmd.command,
+                                'is-selected': keybindsStore.selectedCommand === cmd.command,
+                            }"
+                            @click.self="selectCommand(cmd.command)"
                         >
                             <td class="col-category">
                                 <span class="caption-2" style="color: rgba(255,255,255,0.4)">{{ cat.label }}</span>
@@ -82,8 +86,9 @@
 <script lang="ts" setup>
     import { computed, nextTick, ref } from "vue";
     import { COMMAND_CATEGORIES, getCommandDescription } from "@renderer/utils/uikeys/commands";
-    import { getBindingsForCommand, removeBinding, assignBinding } from "@renderer/store/keybinds.store";
+    import { getBindingsForCommand, removeBinding, assignBinding, keybindsStore, selectCommand } from "@renderer/store/keybinds.store";
     import { engineKeyToLabel, formatBindingLabel } from "@renderer/utils/uikeys/key-formatter";
+    import { eventToEngineKey } from "@renderer/utils/uikeys/event-to-key";
     import type { KeyBinding } from "@renderer/utils/uikeys/types";
 
     const search = ref("");
@@ -131,77 +136,6 @@
         if (!capturedKey.value) return;
         assignBinding(capturedKey.value, capturedModifiers.value, command);
         cancelRebind();
-    }
-
-    /**
-     * Convert a browser KeyboardEvent key/code to the engine key name.
-     */
-    function eventToEngineKey(e: KeyboardEvent): string | null {
-        // Modifier-only presses are not standalone keys in this context
-        if (["Control", "Shift", "Alt", "Meta", "CapsLock", "NumLock"].includes(e.key)) return null;
-
-        const code = e.code;
-
-        // Letter keys → sc_X
-        if (/^Key[A-Z]$/.test(code)) {
-            return `sc_${e.key.toLowerCase()}`;
-        }
-
-        // Digit row → "1"-"9", "0"
-        if (/^Digit[0-9]$/.test(code)) {
-            return code.replace("Digit", "");
-        }
-
-        // Function keys
-        if (/^F\d+$/.test(e.key)) return e.key;
-
-        // Numpad
-        if (code === "NumpadAdd") return "numpad+";
-        if (code === "NumpadSubtract") return "numpad-";
-        if (code === "NumpadMultiply") return "numpad*";
-        if (code === "NumpadDivide") return "numpad/";
-        if (code === "NumpadDecimal") return "numpad.";
-        if (/^Numpad\d$/.test(code)) return `numpad${code.replace("Numpad", "")}`;
-
-        // Navigation
-        const nav: Record<string, string> = {
-            Escape: "esc",
-            Enter: "enter",
-            Backspace: "backspace",
-            Tab: "tab",
-            Delete: "delete",
-            Home: "home",
-            End: "end",
-            PageUp: "pageup",
-            PageDown: "pagedown",
-            ArrowUp: "up",
-            ArrowDown: "down",
-            ArrowLeft: "left",
-            ArrowRight: "right",
-            Insert: "insert",
-            Pause: "pause",
-            Space: "space",
-            " ": "space",
-        };
-        if (nav[e.key]) return nav[e.key];
-
-        // Symbol keys → sc_ prefix
-        const symbolMap: Record<string, string> = {
-            BracketLeft: "sc_[",
-            BracketRight: "sc_]",
-            Semicolon: "sc_;",
-            Quote: "sc_'",
-            Backquote: "sc_`",
-            Backslash: "sc_\\",
-            Comma: "sc_,",
-            Period: "sc_.",
-            Slash: "sc_/",
-            Minus: "sc_-",
-            Equal: "sc_=",
-        };
-        if (symbolMap[code]) return symbolMap[code];
-
-        return e.key.toLowerCase();
     }
 
     function onCaptureKey(e: KeyboardEvent) {
@@ -300,6 +234,7 @@
     .binding-row {
         border-bottom: 1px solid rgba(255, 255, 255, 0.04);
         transition: background 0.1s;
+        cursor: pointer;
 
         &:hover {
             background: rgba(255, 255, 255, 0.04);
@@ -307,6 +242,11 @@
 
         &.is-rebinding {
             background: rgba(37, 99, 235, 0.1);
+        }
+
+        &.is-selected {
+            background: rgba(251, 191, 36, 0.08);
+            outline: 1px solid rgba(251, 191, 36, 0.25);
         }
 
         td {

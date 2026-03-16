@@ -28,6 +28,17 @@
                     >{{ ut.label }}</button>
                 </div>
 
+                <div class="divider" />
+
+                <!-- Preset selector -->
+                <div class="preset-selector">
+                    <span class="preset-label caption-2">Preset:</span>
+                    <select class="preset-select" :value="keybindsStore.activePreset" @change="onPresetChange">
+                        <option v-for="p in KEYBIND_PRESETS" :key="p.id" :value="p.id">{{ p.label }}</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                </div>
+
                 <div class="toolbar-spacer" />
 
                 <button v-if="trueConflicts.length > 0" class="sharedkey-btn is-conflict" :class="{ active: showConflicts }" @click="showConflicts = !showConflicts" title="Two or more commands in the same context share this key — one may override the other unexpectedly">
@@ -88,11 +99,8 @@
                 </div>
             </div>
 
-            <!-- Advanced bindings editor -->
-            <AdvancedBindingsEditor v-if="showAdvanced" @close="showAdvanced = false" />
-
             <!-- Raw editor -->
-            <div v-else-if="showRaw" class="raw-editor-container">
+            <div v-if="showRaw" class="raw-editor-container">
                 <div class="raw-header">
                     <span class="body-2-strong">Raw uikeys.txt</span>
                     <div class="toolbar-spacer" />
@@ -110,31 +118,37 @@
                 </div>
 
                 <div class="keyboard-section">
-                    <div class="controls-row">
-                        <ModifierSelector />
-                        <div class="controls-spacer" />
-                        <button
-                            v-if="keybindsStore.parsed && keybindsStore.parsed.advancedBindings.length > 0"
-                            class="btn-advanced-cta"
-                            :title="`${keybindsStore.parsed.advancedBindings.length} chord/sequence binding${keybindsStore.parsed.advancedBindings.length !== 1 ? 's' : ''} not shown in the visual editor — they will still be saved`"
-                            @click="showAdvanced = true"
-                        >
-                            Advanced Key Sequences
-                        </button>
-                    </div>
-                    <div class="keyboard-scroll">
-                        <VisualKeyboard @keyClicked="onKeyClicked" />
-                    </div>
-                    <!-- Key inspector -->
-                    <KeyInspector v-if="selectedKey" :engineKey="selectedKey" @close="selectedKey = null" />
+                    <!-- Advanced bindings panel (replaces keyboard when open) -->
+                    <AdvancedBindingsEditor v-if="keybindsStore.showAdvanced" @close="keybindsStore.showAdvanced = false" />
 
-                    <!-- Legend -->
-                    <div v-else class="legend">
-                        <span class="legend-item"><span class="legend-dot" style="background:#fbbf24" />⚠ = same-context conflict</span>
-                        <span class="legend-item" style="color: rgba(148,163,184,0.5)">· = shared across unit types</span>
-                        <span class="legend-item"><span class="legend-swatch dimmed" />dimmed = not used by selected unit type</span>
-                        <span class="legend-item" style="color: rgba(255,255,255,0.2)">click any key to inspect</span>
-                    </div>
+                    <!-- Normal keyboard view -->
+                    <template v-else>
+                        <div class="controls-row">
+                            <ModifierSelector />
+                            <div class="controls-spacer" />
+                            <button
+                                v-if="keybindsStore.parsed && keybindsStore.parsed.advancedBindings.length > 0"
+                                class="btn-advanced-cta"
+                                :title="`${keybindsStore.parsed.advancedBindings.length} chord/sequence binding${keybindsStore.parsed.advancedBindings.length !== 1 ? 's' : ''} not shown on the keyboard`"
+                                @click="keybindsStore.showAdvanced = true"
+                            >
+                                Advanced Key Sequences
+                            </button>
+                        </div>
+                        <div class="keyboard-scroll">
+                            <VisualKeyboard @keyClicked="onKeyClicked" />
+                        </div>
+                        <!-- Key inspector -->
+                        <KeyInspector v-if="selectedKey" :engineKey="selectedKey" @close="selectedKey = null" />
+
+                        <!-- Legend -->
+                        <div v-else class="legend">
+                            <span class="legend-item"><span class="legend-dot" style="background:#fbbf24" />⚠ = same-context conflict</span>
+                            <span class="legend-item" style="color: rgba(148,163,184,0.5)">· = shared across unit types</span>
+                            <span class="legend-item"><span class="legend-swatch dimmed" />dimmed = not used by selected unit type</span>
+                            <span class="legend-item" style="color: rgba(255,255,255,0.2)">click any key to inspect</span>
+                        </div>
+                    </template>
                 </div>
             </div>
 
@@ -149,11 +163,12 @@
 <script lang="ts" setup>
     import { computed, onMounted, ref, watch } from "vue";
     import { Icon } from "@iconify/vue";
-    import { keybindsStore, loadKeybinds, saveKeybinds, revertKeybinds, removeBinding } from "@renderer/store/keybinds.store";
+    import { keybindsStore, loadKeybinds, saveKeybinds, revertKeybinds, removeBinding, loadPreset } from "@renderer/store/keybinds.store";
     import { engineKeyToLabel } from "@renderer/utils/uikeys/key-formatter";
     import { getCommandLabel, getCommandUnitType } from "@renderer/utils/uikeys/commands";
     import { serializeUikeys } from "@renderer/utils/uikeys/serializer";
     import { parseUikeys } from "@renderer/utils/uikeys/parser";
+    import { KEYBIND_PRESETS } from "@renderer/utils/uikeys/presets";
     import ModifierSelector from "./ModifierSelector.vue";
     import VisualKeyboard from "./VisualKeyboard.vue";
     import CommandPalette from "./CommandPalette.vue";
@@ -168,7 +183,6 @@
     ];
 
     const showRaw = ref(false);
-    const showAdvanced = ref(false);
     const showConflicts = ref(false);
     const rawText = ref("");
     const selectedKey = ref<string | null>(null);
@@ -194,6 +208,20 @@
 
     function onKeyClicked(key: string) {
         selectedKey.value = selectedKey.value === key ? null : key;
+    }
+
+    function onPresetChange(e: Event) {
+        const id = (e.target as HTMLSelectElement).value;
+        if (id === "custom") return;
+        const preset = KEYBIND_PRESETS.find((p) => p.id === id);
+        if (!preset) return;
+        if (keybindsStore.isDirty) {
+            if (!confirm(`Load the "${preset.label}" preset? Your unsaved changes will be lost.`)) {
+                (e.target as HTMLSelectElement).value = keybindsStore.activePreset;
+                return;
+            }
+        }
+        loadPreset(id);
     }
 </script>
 
@@ -227,6 +255,41 @@
     }
 
     .toolbar-spacer { flex: 1; }
+
+    .preset-selector {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .preset-label {
+        color: rgba(255, 255, 255, 0.4);
+        white-space: nowrap;
+    }
+
+    .preset-select {
+        padding: 4px 24px 4px 8px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 4px;
+        color: rgba(255, 255, 255, 0.8);
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        outline: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(255,255,255,0.5)'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 8px center;
+
+        &:focus { border-color: rgba(37, 99, 235, 0.6); }
+
+        option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+    }
 
     .divider {
         width: 1px;
