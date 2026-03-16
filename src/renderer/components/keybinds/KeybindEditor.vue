@@ -470,6 +470,7 @@
         min-width: 0;
         overflow-y: auto;
         overflow-x: hidden;
+        scrollbar-gutter: stable;
         padding: 14px 16px;
         gap: 10px;
         &::-webkit-scrollbar { width: 5px; }
