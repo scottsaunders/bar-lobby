@@ -11,7 +11,9 @@
       "Bash(node -e \"const d=require\\('./src/renderer/assets/languages/en.json'\\); console.log\\(JSON.stringify\\(d?.lobby?.navbar?.settings, null, 2\\)\\)\" 2>&1 | head -40)",
       "Bash(cd C:/Users/scopa/OneDrive/Documents/GitHub/bar-lobby && npx tsc --noEmit --project tsconfig.web.json 2>&1 | grep -E \"Settings\\\\.vue|keybind\" | head -20)",
       "Bash(grep -oP \"\\(?<=bind\\\\s{1,20}\\)\\([\\\\w+,]+\\)\" \"C:/Users/scopa/OneDrive/Documents/GitHub/bar-lobby/state/data/uikeys.txt\" | sort -u)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)"
     ]
   }
 }

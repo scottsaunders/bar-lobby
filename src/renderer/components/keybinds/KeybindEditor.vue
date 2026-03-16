@@ -13,6 +13,7 @@
                 <div class="mode-tabs">
                     <button class="mode-tab" :class="{ active: keybindsStore.viewMode === 'visual' }" @click="keybindsStore.viewMode = 'visual'">Visual</button>
                     <button class="mode-tab" :class="{ active: keybindsStore.viewMode === 'list' }" @click="keybindsStore.viewMode = 'list'">List</button>
+                    <button class="mode-tab" :class="{ active: keybindsStore.viewMode === 'raw' }" @click="onOpenRaw">Raw</button>
                 </div>
 
                 <div class="divider" />
@@ -55,9 +56,9 @@
                 <span v-if="keybindsStore.isDirty" class="dirty-dot">Unsaved changes</span>
 
                 <div class="toolbar-actions">
-                    <button class="btn-action" title="Reload from disk" @click="onReload">Reload</button>
-                    <button class="btn-action" title="Edit raw text" @click="showRaw = !showRaw">Raw</button>
+                    <button class="btn-action" :disabled="keybindsStore.undoStack.length === 0" :title="`Undo (${keybindsStore.undoStack.length} step${keybindsStore.undoStack.length !== 1 ? 's' : ''} available)`" @click="undo()"><Icon :icon="undoIcon" />Undo</button>
                     <button class="btn-action btn-revert" :disabled="!keybindsStore.isDirty" @click="onRevert">Revert</button>
+                    <button class="btn-action" title="Reload from disk" @click="onReload">Reload</button>
                     <button class="btn-action btn-save" :disabled="!keybindsStore.isDirty || keybindsStore.isSaving" @click="onSave">
                         {{ keybindsStore.isSaving ? "Saving…" : "Save" }}
                     </button>
@@ -100,12 +101,11 @@
             </div>
 
             <!-- Raw editor -->
-            <div v-if="showRaw" class="raw-editor-container">
+            <div v-if="keybindsStore.viewMode === 'raw'" class="raw-editor-container">
                 <div class="raw-header">
                     <span class="body-2-strong">Raw uikeys.txt</span>
                     <div class="toolbar-spacer" />
                     <button class="btn-action" @click="onApplyRaw">Apply</button>
-                    <button class="btn-action" @click="showRaw = false">Close</button>
                 </div>
                 <textarea v-model="rawText" class="raw-textarea" spellcheck="false" />
                 <div class="raw-footer caption-2">Advanced bindings (chord sequences) are preserved automatically.</div>
@@ -161,9 +161,10 @@
 </template>
 
 <script lang="ts" setup>
-    import { computed, onMounted, ref, watch } from "vue";
+    import { computed, onMounted, ref } from "vue";
     import { Icon } from "@iconify/vue";
-    import { keybindsStore, loadKeybinds, saveKeybinds, revertKeybinds, removeBinding, loadPreset } from "@renderer/store/keybinds.store";
+    import undoIcon from "@iconify-icons/mdi/undo";
+    import { keybindsStore, loadKeybinds, saveKeybinds, revertKeybinds, removeBinding, loadPreset, undo } from "@renderer/store/keybinds.store";
     import { engineKeyToLabel } from "@renderer/utils/uikeys/key-formatter";
     import { getCommandLabel, getCommandUnitType } from "@renderer/utils/uikeys/commands";
     import { serializeUikeys } from "@renderer/utils/uikeys/serializer";
@@ -182,7 +183,6 @@
         { id: "builder" as const, label: "Builder" },
     ];
 
-    const showRaw = ref(false);
     const showConflicts = ref(false);
     const rawText = ref("");
     const selectedKey = ref<string | null>(null);
@@ -192,18 +192,19 @@
 
     onMounted(async () => { await loadKeybinds(); });
 
-    watch(showRaw, (open) => {
-        if (open && keybindsStore.parsed) rawText.value = serializeUikeys(keybindsStore.parsed);
-    });
-
     async function onSave() { await saveKeybinds(); }
     function onRevert() { revertKeybinds(); }
     async function onReload() { await loadKeybinds(); }
 
+    function onOpenRaw() {
+        if (keybindsStore.parsed) rawText.value = serializeUikeys(keybindsStore.parsed);
+        keybindsStore.viewMode = "raw";
+    }
+
     function onApplyRaw() {
         keybindsStore.parsed = parseUikeys(rawText.value);
         keybindsStore.isDirty = true;
-        showRaw.value = false;
+        keybindsStore.viewMode = "visual";
     }
 
     function onKeyClicked(key: string) {

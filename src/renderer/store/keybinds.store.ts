@@ -21,6 +21,8 @@ export interface SharedKey {
     severity: SharedKeySeverity;
 }
 
+const MAX_UNDO = 20;
+
 export const keybindsStore = reactive({
     isLoaded: false,
     isSaving: false,
@@ -28,7 +30,7 @@ export const keybindsStore = reactive({
     rawContent: "",
     parsed: null as ParsedUikeys | null,
     activeModifiers: { ...EMPTY_MODIFIER_STATE } as ModifierState,
-    viewMode: "visual" as "visual" | "list",
+    viewMode: "visual" as "visual" | "list" | "raw",
     searchQuery: "",
     selectedBindingId: null as string | null,
     activeUnitType: "all" as "all" | "builder" | "combat",
@@ -37,7 +39,22 @@ export const keybindsStore = reactive({
     activePreset: "custom" as string,
     showAdvanced: false,
     pressedKeys: new Set<string>(),
+    undoStack: [] as ParsedUikeys[],
 });
+
+function pushUndo(): void {
+    if (!keybindsStore.parsed) return;
+    keybindsStore.undoStack.push(JSON.parse(JSON.stringify(keybindsStore.parsed)) as ParsedUikeys);
+    if (keybindsStore.undoStack.length > MAX_UNDO) keybindsStore.undoStack.shift();
+}
+
+export function undo(): void {
+    const snapshot = keybindsStore.undoStack.pop();
+    if (!snapshot) return;
+    keybindsStore.parsed = snapshot;
+    keybindsStore.isDirty = true;
+    detectConflicts();
+}
 
 export async function loadKeybinds(): Promise<void> {
     const content = await window.keybinds.read();
@@ -45,6 +62,7 @@ export async function loadKeybinds(): Promise<void> {
     keybindsStore.parsed = parseUikeys(content);
     keybindsStore.isDirty = false;
     keybindsStore.isLoaded = true;
+    keybindsStore.undoStack = [];
     detectConflicts();
     detectActivePreset();
 }
@@ -64,6 +82,7 @@ export async function saveKeybinds(): Promise<void> {
 
 export function revertKeybinds(): void {
     if (keybindsStore.rawContent) {
+        pushUndo();
         keybindsStore.parsed = parseUikeys(keybindsStore.rawContent);
         keybindsStore.isDirty = false;
         detectConflicts();
@@ -73,6 +92,7 @@ export function revertKeybinds(): void {
 export function loadPreset(presetId: string): void {
     const preset = PRESET_MAP.get(presetId);
     if (!preset) return;
+    pushUndo();
     keybindsStore.parsed = parseUikeys(preset.content);
     keybindsStore.isDirty = true;
     keybindsStore.activePreset = presetId;
@@ -157,10 +177,11 @@ export function getAdvancedBindingsForCommand(command: string): KeyBinding[] {
  */
 export function assignBinding(key: string, modifiers: string[], command: string): KeyBinding | null {
     if (!keybindsStore.parsed) return null;
+    pushUndo();
 
     const existing = getExactBinding(key, modifiers);
     if (existing) {
-        removeBinding(existing.id);
+        removeBindingInternal(existing.id);
     }
 
     const newBinding: KeyBinding = {
@@ -180,7 +201,7 @@ export function assignBinding(key: string, modifiers: string[], command: string)
     return existing ?? null;
 }
 
-export function removeBinding(id: string): void {
+function removeBindingInternal(id: string): void {
     if (!keybindsStore.parsed) return;
     const idx = keybindsStore.parsed.bindings.findIndex((b) => b.id === id);
     if (idx >= 0) {
@@ -190,8 +211,14 @@ export function removeBinding(id: string): void {
     }
 }
 
+export function removeBinding(id: string): void {
+    pushUndo();
+    removeBindingInternal(id);
+}
+
 export function removeAdvancedBinding(id: string): void {
     if (!keybindsStore.parsed) return;
+    pushUndo();
     const idx = keybindsStore.parsed.advancedBindings.findIndex((b) => b.id === id);
     if (idx >= 0) {
         keybindsStore.parsed.advancedBindings.splice(idx, 1);
@@ -201,6 +228,7 @@ export function removeAdvancedBinding(id: string): void {
 
 export function addAdvancedBinding(rawLine: string): boolean {
     if (!keybindsStore.parsed) return false;
+    pushUndo();
     // Accept with or without the "bind " prefix
     const normalized = rawLine.trim().startsWith("bind ") ? rawLine.trim() : `bind ${rawLine.trim()}`;
     const parsed = parseUikeys(normalized);
@@ -213,6 +241,7 @@ export function addAdvancedBinding(rawLine: string): boolean {
 
 export function updateBinding(id: string, key: string, modifiers: string[]): void {
     if (!keybindsStore.parsed) return;
+    pushUndo();
     const binding = keybindsStore.parsed.bindings.find((b) => b.id === id);
     if (!binding) return;
     binding.key = key;

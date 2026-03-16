@@ -142,6 +142,7 @@
         e.dataTransfer?.setData("application/x-keybind-id", primaryBinding.value.id);
         e.dataTransfer?.setData("application/x-keybind-command", primaryBinding.value.command);
         e.dataTransfer?.setData("application/x-source-key", props.keyDef.engineKey);
+        e.dataTransfer?.setData("application/x-source-modifiers", JSON.stringify(activeModifiers.value));
     }
 
     function onDragEnd() {
@@ -165,6 +166,9 @@
 
         const command = e.dataTransfer?.getData("application/x-keybind-command") || e.dataTransfer?.getData("application/x-command");
         const sourceBindingId = e.dataTransfer?.getData("application/x-keybind-id");
+        const sourceKey = e.dataTransfer?.getData("application/x-source-key");
+        const sourceModifiersRaw = e.dataTransfer?.getData("application/x-source-modifiers");
+        const sourceModifiers: string[] = sourceModifiersRaw ? JSON.parse(sourceModifiersRaw) : activeModifiers.value;
 
         if (!command) return;
 
@@ -172,7 +176,12 @@
             removeBinding(sourceBindingId);
         }
 
-        assignBinding(props.keyDef.engineKey, activeModifiers.value, command);
+        const displaced = assignBinding(props.keyDef.engineKey, activeModifiers.value, command);
+
+        // Swap: if a key-to-key drag displaced an existing binding, send it to the source key
+        if (displaced && sourceKey) {
+            assignBinding(sourceKey, sourceModifiers, displaced.command);
+        }
     }
 
     function onClick() {
