@@ -76,5 +76,7 @@ export function formatAdvancedBindingSteps(raw: string): string[] {
     // Strip leading "bind " and take first whitespace-token as the combo
     const withoutBind = raw.startsWith("bind ") ? raw.slice(5).trimStart() : raw;
     const comboToken = withoutBind.split(/\s+/)[0];
-    return comboToken.split(",").map(formatChordStep);
+    // Split on commas that are chord separators (have at least one char after them).
+    // This avoids splitting sc_, (the comma key) whose name ends with ",".
+    return comboToken.split(/,(?=.)/).map(formatChordStep);
 }

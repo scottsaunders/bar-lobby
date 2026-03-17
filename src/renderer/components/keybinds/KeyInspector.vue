@@ -39,7 +39,7 @@
                                 {{ getCommandUnitType(b.command) }}
                             </span>
                         </div>
-                        <button class="btn-remove" title="Remove this binding" @click="onRemove(b.id)">Remove</button>
+                        <button class="btn-remove" v-tooltip.left="'Remove this binding'" @click="onRemove(b.id)">Remove</button>
                     </div>
                 </div>
             </div>

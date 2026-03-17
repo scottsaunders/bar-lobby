@@ -10,7 +10,9 @@ function nextId(): string {
 }
 
 function isChordKey(key: string): boolean {
-    return key.includes(",");
+    // sc_, is the comma key — its name ends with ",", so it's not a chord separator.
+    // Real chord separators always have at least one character after the comma.
+    return key.includes(",") && !key.endsWith(",");
 }
 
 function isAdvancedBinding(modifiers: string[], key: string): boolean {
@@ -37,9 +39,9 @@ function parseBindLine(line: string): KeyBinding | null {
     const keyCombo = parts[1]; // e.g. "Ctrl+Shift+esc" or "esc" or "Any+sc_z"
     const command = parts.slice(2).join(" "); // rest is the command
 
-    // Chord sequences contain commas anywhere in the combo (e.g. "Shift+sc_b,Shift+sc_b")
-    // Detect this before splitting so we don't corrupt the modifier list
-    const isChord = keyCombo.includes(",");
+    // Chord sequences contain commas between steps (e.g. "Shift+sc_b,Shift+sc_b").
+    // sc_, is the comma key — its name ends with "," so it is NOT a chord.
+    const isChord = keyCombo.includes(",") && !keyCombo.endsWith(",");
 
     // Split the key combo by '+' but handle keys whose name ends with '+' (e.g. "numpad+").
     // When the last segment is empty the key itself contains a trailing '+', so reconstruct it.
@@ -53,6 +55,9 @@ function parseBindLine(line: string): KeyBinding | null {
         key = segments[segments.length - 1];
         modifiers = segments.slice(0, -1).filter((m) => m.length > 0);
     }
+
+    // Normalize F-key names to uppercase (presets write "f5", layout uses "F5")
+    if (/^f\d+$/i.test(key)) key = key.toUpperCase();
 
     const advanced = isChord || isAdvancedBinding(modifiers, key);
 

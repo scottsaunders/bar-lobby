@@ -36,12 +36,12 @@
                 <span class="row-arrow">→</span>
 
                 <!-- Command label -->
-                <span class="command-label body-2" :title="binding.command">
+                <span class="command-label body-2" v-tooltip.top="binding.command">
                     {{ getCommandLabel(binding.command) }}
                 </span>
 
                 <!-- Delete -->
-                <button class="btn-remove" title="Remove this binding" @click="onRemove(binding.id)">×</button>
+                <button class="btn-remove" v-tooltip.left="'Remove this binding'" @click="onRemove(binding.id)">×</button>
             </div>
         </div>
 

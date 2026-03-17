@@ -36,7 +36,7 @@
                             <td class="col-category">
                                 <span class="caption-2" style="color: rgba(255,255,255,0.4)">{{ cat.label }}</span>
                             </td>
-                            <td class="col-command" :title="getCommandDescription(cmd.command) ?? cmd.command">
+                            <td class="col-command" v-tooltip.right="getCommandDescription(cmd.command) ?? cmd.command">
                                 <span class="body-2">{{ cmd.label }}</span>
                                 <span class="cmd-raw caption-2">{{ cmd.command }}</span>
                             </td>
@@ -48,7 +48,7 @@
                                         class="binding-tag"
                                     >
                                         {{ formatBinding(b) }}
-                                        <button class="remove-btn" title="Remove binding" @click="removeBinding(b.id)">×</button>
+                                        <button class="remove-btn" v-tooltip.top="'Remove binding'" @click="removeBinding(b.id)">×</button>
                                     </span>
                                     <span v-if="getBindingsForCommand(cmd.command).length === 0" class="unbound-label caption-2">
                                         Unbound

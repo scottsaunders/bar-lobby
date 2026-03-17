@@ -2,13 +2,28 @@
 //
 // SPDX-License-Identifier: MIT
 
-import { reactive } from "vue";
+import { reactive, computed } from "vue";
 import { parseUikeys } from "@renderer/utils/uikeys/parser";
 import { serializeUikeys } from "@renderer/utils/uikeys/serializer";
 import type { KeyBinding, ModifierState, ParsedUikeys } from "@renderer/utils/uikeys/types";
 import { EMPTY_MODIFIER_STATE } from "@renderer/utils/uikeys/types";
 import { getCommandUnitType } from "@renderer/utils/uikeys/commands";
-import { PRESET_MAP } from "@renderer/utils/uikeys/presets";
+import { PRESET_MAP, type KeybindPreset } from "@renderer/utils/uikeys/presets";
+
+const CUSTOM_PRESETS_KEY = "bar-lobby-keybind-custom-presets";
+
+function loadCustomPresetsFromStorage(): KeybindPreset[] {
+    try {
+        const raw = localStorage.getItem(CUSTOM_PRESETS_KEY);
+        return raw ? (JSON.parse(raw) as KeybindPreset[]) : [];
+    } catch {
+        return [];
+    }
+}
+
+function saveCustomPresetsToStorage(presets: KeybindPreset[]): void {
+    localStorage.setItem(CUSTOM_PRESETS_KEY, JSON.stringify(presets));
+}
 
 export type SharedKeySeverity =
     | "conflict" // same-context commands on same key — genuinely ambiguous
@@ -26,7 +41,8 @@ const MAX_UNDO = 20;
 export const keybindsStore = reactive({
     isLoaded: false,
     isSaving: false,
-    isDirty: false,
+    isDirty: false,        // user edited bindings (shows "Unsaved changes" dot)
+    isPresetSwitched: false, // preset loaded but not yet written to disk
     rawContent: "",
     parsed: null as ParsedUikeys | null,
     activeModifiers: { ...EMPTY_MODIFIER_STATE } as ModifierState,
@@ -40,7 +56,82 @@ export const keybindsStore = reactive({
     showAdvanced: false,
     pressedKeys: new Set<string>(),
     undoStack: [] as ParsedUikeys[],
+    customPresets: loadCustomPresetsFromStorage() as KeybindPreset[],
 });
+
+// ── Indexed lookup maps (O(1) access, lazily recomputed by Vue) ──────────────
+
+/** command → regular bindings */
+export const bindingsByCommand = computed((): Map<string, KeyBinding[]> => {
+    const map = new Map<string, KeyBinding[]>();
+    if (!keybindsStore.parsed) return map;
+    for (const b of keybindsStore.parsed.bindings) {
+        const arr = map.get(b.command);
+        if (arr) arr.push(b);
+        else map.set(b.command, [b]);
+    }
+    return map;
+});
+
+/** command → advanced (chord) bindings */
+export const advancedByCommand = computed((): Map<string, KeyBinding[]> => {
+    const map = new Map<string, KeyBinding[]>();
+    if (!keybindsStore.parsed) return map;
+    for (const b of keybindsStore.parsed.advancedBindings) {
+        const arr = map.get(b.command);
+        if (arr) arr.push(b);
+        else map.set(b.command, [b]);
+    }
+    return map;
+});
+
+/** "modStr|key" → exact (non-Any) binding */
+export const bindingsByKeyMod = computed((): Map<string, KeyBinding> => {
+    const map = new Map<string, KeyBinding>();
+    if (!keybindsStore.parsed) return map;
+    for (const b of keybindsStore.parsed.bindings) {
+        if (b.modifiers.includes("Any")) continue;
+        const k = `${b.modifiers.map((m) => m.toLowerCase()).sort().join("+")}|${b.key}`;
+        map.set(k, b);
+    }
+    return map;
+});
+
+/** key → Any+ binding */
+export const anyBindingsByKey = computed((): Map<string, KeyBinding> => {
+    const map = new Map<string, KeyBinding>();
+    if (!keybindsStore.parsed) return map;
+    for (const b of keybindsStore.parsed.bindings) {
+        if (b.modifiers.length === 1 && b.modifiers[0].toLowerCase() === "any") {
+            map.set(b.key, b);
+        }
+    }
+    return map;
+});
+
+/** key → all bindings (any modifier) */
+export const bindingsByKey = computed((): Map<string, KeyBinding[]> => {
+    const map = new Map<string, KeyBinding[]>();
+    if (!keybindsStore.parsed) return map;
+    for (const b of keybindsStore.parsed.bindings) {
+        const arr = map.get(b.key);
+        if (arr) arr.push(b);
+        else map.set(b.key, [b]);
+    }
+    return map;
+});
+
+/** "modStr|key" → SharedKey entry */
+export const sharedKeysByKeyMod = computed((): Map<string, SharedKey> => {
+    const map = new Map<string, SharedKey>();
+    for (const s of keybindsStore.sharedKeys) {
+        const modStr = s.modifiers.map((m) => m.toLowerCase()).sort().join("+");
+        map.set(`${modStr}|${s.key}`, s);
+    }
+    return map;
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 function pushUndo(): void {
     if (!keybindsStore.parsed) return;
@@ -61,6 +152,7 @@ export async function loadKeybinds(): Promise<void> {
     keybindsStore.rawContent = content;
     keybindsStore.parsed = parseUikeys(content);
     keybindsStore.isDirty = false;
+    keybindsStore.isPresetSwitched = false;
     keybindsStore.isLoaded = true;
     keybindsStore.undoStack = [];
     detectConflicts();
@@ -75,6 +167,7 @@ export async function saveKeybinds(): Promise<void> {
         await window.keybinds.write(content);
         keybindsStore.rawContent = content;
         keybindsStore.isDirty = false;
+        keybindsStore.isPresetSwitched = false;
     } finally {
         keybindsStore.isSaving = false;
     }
@@ -82,21 +175,47 @@ export async function saveKeybinds(): Promise<void> {
 
 export function revertKeybinds(): void {
     if (keybindsStore.rawContent) {
-        pushUndo();
         keybindsStore.parsed = parseUikeys(keybindsStore.rawContent);
         keybindsStore.isDirty = false;
+        keybindsStore.isPresetSwitched = false;
         detectConflicts();
     }
 }
 
 export function loadPreset(presetId: string): void {
-    const preset = PRESET_MAP.get(presetId);
+    const preset = PRESET_MAP.get(presetId) ?? keybindsStore.customPresets.find((p) => p.id === presetId);
     if (!preset) return;
-    pushUndo();
     keybindsStore.parsed = parseUikeys(preset.content);
-    keybindsStore.isDirty = true;
+    keybindsStore.isDirty = false;
+    keybindsStore.isPresetSwitched = true;
     keybindsStore.activePreset = presetId;
+    keybindsStore.undoStack = [];
     detectConflicts();
+}
+
+export function saveCustomPreset(name: string, content: string): string {
+    const id = `custom_${Date.now()}`;
+    const preset: KeybindPreset = { id, label: name, description: "Custom preset", content };
+    keybindsStore.customPresets.push(preset);
+    saveCustomPresetsToStorage(keybindsStore.customPresets);
+    keybindsStore.activePreset = id;
+    return id;
+}
+
+export function updateCustomPreset(id: string, content: string): void {
+    const preset = keybindsStore.customPresets.find((p) => p.id === id);
+    if (!preset) return;
+    preset.content = content;
+    saveCustomPresetsToStorage(keybindsStore.customPresets);
+}
+
+export function deleteCustomPreset(id: string): void {
+    const idx = keybindsStore.customPresets.findIndex((p) => p.id === id);
+    if (idx >= 0) {
+        keybindsStore.customPresets.splice(idx, 1);
+        saveCustomPresetsToStorage(keybindsStore.customPresets);
+        if (keybindsStore.activePreset === id) keybindsStore.activePreset = "custom";
+    }
 }
 
 function detectActivePreset(): void {
@@ -104,6 +223,12 @@ function detectActivePreset(): void {
     for (const [id, preset] of PRESET_MAP.entries()) {
         if (raw === preset.content.trim()) {
             keybindsStore.activePreset = id;
+            return;
+        }
+    }
+    for (const preset of keybindsStore.customPresets) {
+        if (raw === preset.content.trim()) {
+            keybindsStore.activePreset = preset.id;
             return;
         }
     }
@@ -115,59 +240,46 @@ function detectActivePreset(): void {
  * Includes exact modifier matches and Any+ bindings.
  */
 export function getBindingsForModifiers(modifiers: string[]): KeyBinding[] {
-    if (!keybindsStore.parsed) return [];
-    const modSet = new Set(modifiers.map((m) => m.toLowerCase()));
-
-    return keybindsStore.parsed.bindings.filter((b) => {
-        const bModSet = new Set(b.modifiers.map((m) => m.toLowerCase()));
-        // Exact match
-        if (bModSet.size === modSet.size && [...bModSet].every((m) => modSet.has(m))) return true;
-        // Any+ matches all states
-        if (b.modifiers.length === 1 && b.modifiers[0].toLowerCase() === "any") return true;
-        return false;
-    });
+    const modStr = modifiers.map((m) => m.toLowerCase()).sort().join("+");
+    const result: KeyBinding[] = [];
+    const byKeyMod = bindingsByKeyMod.value;
+    const anyMap = anyBindingsByKey.value;
+    // Collect exact-match bindings for this modifier state
+    for (const [k, b] of byKeyMod) {
+        if (k.startsWith(`${modStr}|`)) result.push(b);
+    }
+    // Add Any+ bindings
+    for (const b of anyMap.values()) result.push(b);
+    return result;
 }
 
 /**
  * Get the binding for an exact key+modifier combo (not Any+).
  */
 export function getExactBinding(key: string, modifiers: string[]): KeyBinding | undefined {
-    if (!keybindsStore.parsed) return undefined;
-    const modStr = modifiers
-        .map((m) => m.toLowerCase())
-        .sort()
-        .join("+");
-    return keybindsStore.parsed.bindings.find((b) => {
-        const bModStr = b.modifiers
-            .map((m) => m.toLowerCase())
-            .sort()
-            .join("+");
-        return b.key === key && bModStr === modStr;
-    });
+    const modStr = modifiers.map((m) => m.toLowerCase()).sort().join("+");
+    return bindingsByKeyMod.value.get(`${modStr}|${key}`);
 }
 
 /**
  * Returns all bindings for a given key across all modifier states.
  */
 export function getBindingsForKey(key: string): KeyBinding[] {
-    if (!keybindsStore.parsed) return [];
-    return keybindsStore.parsed.bindings.filter((b) => b.key === key);
+    return bindingsByKey.value.get(key) ?? [];
 }
 
 /**
  * Returns all bindings for a given command string.
  */
 export function getBindingsForCommand(command: string): KeyBinding[] {
-    if (!keybindsStore.parsed) return [];
-    return keybindsStore.parsed.bindings.filter((b) => b.command === command);
+    return bindingsByCommand.value.get(command) ?? [];
 }
 
 /**
  * Returns all advanced (chord/sequence) bindings for a given command string.
  */
 export function getAdvancedBindingsForCommand(command: string): KeyBinding[] {
-    if (!keybindsStore.parsed) return [];
-    return keybindsStore.parsed.advancedBindings.filter((b) => b.command === command);
+    return advancedByCommand.value.get(command) ?? [];
 }
 
 /**
@@ -207,7 +319,7 @@ function removeBindingInternal(id: string): void {
     if (idx >= 0) {
         keybindsStore.parsed.bindings.splice(idx, 1);
         keybindsStore.isDirty = true;
-        detectConflicts();
+        // detectConflicts is called by the public callers after all mutations are done
     }
 }
 

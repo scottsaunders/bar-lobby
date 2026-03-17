@@ -322,6 +322,288 @@ bind           Alt+sc_]  blueprint_next
 bind           Alt+sc_g  factoryqueuemode
 `.trim();
 
+// BAR legacy keybind layout — classic named hotkeys (A=Attack, G=Guard, etc.)
+// Derived from the BAR keybind reference sheet (legacy keybind column).
+const LEGACY_KEYS_CONTENT = `
+unbindall          // clear the defaults
+unbind enter chat  // clear the defaults
+
+fakemeta  space
+
+// --- System ---
+bind                esc  select AllMap++_ClearSelection_SelectNum_0+
+bind                esc  quitmessage
+bind          Shift+esc  quitmenu
+bind     Ctrl+Shift+esc  quitforce
+bind      Alt+Shift+esc  reloadforce
+bind         Any+escape  edit_escape
+bind          Any+pause  pause
+bind                esc  teamstatus_close
+bind                esc  customgameinfo_close
+bind                esc  buildmenu_pregame_deselect
+bind         Alt+return  fullscreen
+
+// --- Selection modifiers ---
+bind          Any+sc_z  selectbox_same
+bind          Any+space  selectbox_idle
+bind          Any+shift  selectbox_append
+bind          Any+shift  selectbox_any
+bind           Any+ctrl  selectbox_deselect
+bind            Any+alt  selectbox_mobile
+bind          Any+space  selectloop
+bind           Any+ctrl  selectloop_invert
+bind          Any+shift  selectloop_add
+bind          Any+space  buildsplit
+bind          Any+space  commandinsert prepend_between
+
+// --- Chat ---
+bind          Any+enter  chat
+bind      Alt+ctrl+sc_a  chatswitchally
+bind      Alt+ctrl+sc_s  chatswitchspec
+bind            Any+tab  edit_complete
+bind      Any+backspace  edit_backspace
+bind         Any+delete  edit_delete
+bind           Any+home  edit_home
+bind           Alt+left  edit_home
+bind            Any+end  edit_end
+bind          Alt+right  edit_end
+bind             Any+up  edit_prev_line
+bind           Any+down  edit_next_line
+bind          Any+enter  edit_return
+bind             Ctrl+v  pastetext
+
+// --- Camera movement ---
+bind             Any+up  moveforward
+bind           Any+down  moveback
+bind          Any+right  moveright
+bind           Any+left  moveleft
+bind         Any+pageup  moveup
+bind       Any+pagedown  movedown
+bind            Any+alt  movereset
+bind            Any+alt  moverotate
+bind           Any+ctrl  movetilt
+bind            numpad8  moveforward
+bind            numpad2  moveback
+bind            numpad6  moveright
+bind            numpad4  moveleft
+bind            numpad9  moveup
+bind            numpad3  movedown
+bind            numpad1  movefast
+
+// --- Camera controls ---
+bind                tab  selectcomm focus
+bind          Shift+tab  selectcomm append
+bind                tab  toggleoverview
+bind           Ctrl+sc_t  trackmode
+bind               sc_t  track
+bind            Ctrl+f1  viewfps
+bind            Ctrl+f2  viewta
+bind            Ctrl+f3  viewspring
+bind            Ctrl+f4  viewrot
+bind                 f3  LastMsgPos
+bind     Ctrl+Shift+sc_o  cameraflip
+
+// --- Camera anchors ---
+bind             Ctrl+f5  set_camera_anchor 1
+bind             Ctrl+f6  set_camera_anchor 2
+bind             Ctrl+f7  set_camera_anchor 3
+bind             Ctrl+f8  set_camera_anchor 4
+bind                  f5  focus_camera_anchor 1
+bind                  f6  focus_camera_anchor 2
+bind                  f7  focus_camera_anchor 3
+bind                  f8  focus_camera_anchor 4
+
+// --- Groups ---
+bind                  0  group select 0
+bind                  1  group select 1
+bind                  2  group select 2
+bind                  3  group select 3
+bind                  4  group select 4
+bind                  5  group select 5
+bind                  6  group select 6
+bind                  7  group select 7
+bind                  8  group select 8
+bind                  9  group select 9
+bind              Ctrl+0  group set 0
+bind              Ctrl+1  group set 1
+bind              Ctrl+2  group set 2
+bind              Ctrl+3  group set 3
+bind              Ctrl+4  group set 4
+bind              Ctrl+5  group set 5
+bind              Ctrl+6  group set 6
+bind              Ctrl+7  group set 7
+bind              Ctrl+8  group set 8
+bind              Ctrl+9  group set 9
+bind             Shift+0  group selectadd 0
+bind             Shift+1  group selectadd 1
+bind             Shift+2  group selectadd 2
+bind             Shift+3  group selectadd 3
+bind             Shift+4  group selectadd 4
+bind             Shift+5  group selectadd 5
+bind             Shift+6  group selectadd 6
+bind             Shift+7  group selectadd 7
+bind             Shift+8  group selectadd 8
+bind             Shift+9  group selectadd 9
+bind        Ctrl+Shift+0  group add 0
+bind        Ctrl+Shift+1  group add 1
+bind        Ctrl+Shift+2  group add 2
+bind        Ctrl+Shift+3  group add 3
+bind        Ctrl+Shift+4  group add 4
+bind        Ctrl+Shift+5  group add 5
+bind        Ctrl+Shift+6  group add 6
+bind        Ctrl+Shift+7  group add 7
+bind        Ctrl+Shift+8  group add 8
+bind        Ctrl+Shift+9  group add 9
+bind          Ctrl+Alt+0  group selecttoggle 0
+bind          Ctrl+Alt+1  group selecttoggle 1
+bind          Ctrl+Alt+2  group selecttoggle 2
+bind          Ctrl+Alt+3  group selecttoggle 3
+bind          Ctrl+Alt+4  group selecttoggle 4
+bind          Ctrl+Alt+5  group selecttoggle 5
+bind          Ctrl+Alt+6  group selecttoggle 6
+bind          Ctrl+Alt+7  group selecttoggle 7
+bind          Ctrl+Alt+8  group selecttoggle 8
+bind          Ctrl+Alt+9  group selecttoggle 9
+bind                0,0  group focus 0
+bind                1,1  group focus 1
+bind                2,2  group focus 2
+bind                3,3  group focus 3
+bind                4,4  group focus 4
+bind                5,5  group focus 5
+bind                6,6  group focus 6
+bind                7,7  group focus 7
+bind                8,8  group focus 8
+bind                9,9  group focus 9
+bind           Ctrl+sc_\`  group unset
+bind            Alt+sc_\`  remove_from_autogroup
+bind              Alt+0  add_to_autogroup 0
+bind              Alt+1  add_to_autogroup 1
+bind              Alt+2  add_to_autogroup 2
+bind              Alt+3  add_to_autogroup 3
+bind              Alt+4  add_to_autogroup 4
+bind              Alt+5  add_to_autogroup 5
+bind              Alt+6  add_to_autogroup 6
+bind              Alt+7  add_to_autogroup 7
+bind              Alt+8  add_to_autogroup 8
+bind              Alt+9  add_to_autogroup 9
+bind        Shift+Alt+0  load_autogroup_preset 0
+bind        Shift+Alt+1  load_autogroup_preset 1
+bind        Shift+Alt+2  load_autogroup_preset 2
+bind        Shift+Alt+3  load_autogroup_preset 3
+bind        Shift+Alt+4  load_autogroup_preset 4
+bind        Shift+Alt+5  load_autogroup_preset 5
+bind        Shift+Alt+6  load_autogroup_preset 6
+bind        Shift+Alt+7  load_autogroup_preset 7
+bind        Shift+Alt+8  load_autogroup_preset 8
+bind        Shift+Alt+9  load_autogroup_preset 9
+
+// --- Selection commands ---
+bind          Ctrl+sc_a  select AllMap++_ClearSelection_SelectAll+
+bind          Ctrl+sc_b  select AllMap+_Builder_Idle+_ClearSelection_SelectOne+
+bind          Ctrl+sc_c  select AllMap+_ManualFireUnit_Not_IdMatches_cordecom_Not_IdMatches_armdecom_Not_IdMatches_armthor+_ClearSelection_SelectOne+
+bind          Ctrl+sc_z  select AllMap+_InPrevSel+_ClearSelection_SelectAll+
+
+// --- Orders ---
+bind               sc_a  attack
+bind         Shift+sc_a  attack
+bind           Alt+sc_a  areaattack
+bind     Shift+Alt+sc_a  areaattack
+bind               sc_d  manualfire
+bind         Shift+sc_d  manualfire
+bind               sc_d  manuallaunch
+bind         Shift+sc_d  manuallaunch
+bind          Ctrl+sc_d  selfd
+bind    Ctrl+Shift+sc_d  selfd queued
+bind               sc_e  reclaim
+bind         Shift+sc_e  reclaim
+bind               sc_f  fight
+bind         Shift+sc_f  fight
+bind               sc_g  guard
+bind         Shift+sc_g  guard
+bind               sc_k  cloak
+bind         Shift+sc_k  cloak
+bind               sc_k  wantcloak
+bind           Any+sc_k  wantcloak
+bind               sc_l  loadunits
+bind         Shift+sc_l  loadunits
+bind               sc_u  unloadunits
+bind         Shift+sc_u  unloadunits
+bind               sc_m  move
+bind         Shift+sc_m  move
+bind               sc_p  patrol
+bind         Shift+sc_p  patrol
+bind               sc_r  repair
+bind         Shift+sc_r  repair
+bind               sc_s  stop
+bind         Shift+sc_s  stop
+bind          Ctrl+sc_s  stopproduction
+bind    Ctrl+Shift+sc_s  stopproduction
+bind               sc_w  wait
+bind         Shift+sc_w  wait queued
+bind               sc_x  onoff
+bind           Alt+sc_y  settarget
+bind     Shift+Alt+sc_y  settarget
+bind               sc_y  settargetnoground
+bind         Shift+sc_y  settargetnoground
+bind               sc_j  canceltarget
+bind          Alt+sc_g  factoryqueuemode
+bind    Shift+Alt+sc_g  factoryqueuemode
+bind               sc_i  unit_stats
+bind          Ctrl+sc_i  customgameinfo
+bind               sc_h  sharedialog
+
+// --- Building ---
+bind               sc_[  buildfacing inc
+bind         Shift+sc_[  buildfacing inc
+bind               sc_]  buildfacing dec
+bind         Shift+sc_]  buildfacing dec
+bind           Alt+sc_z  buildspacing inc
+bind     Shift+Alt+sc_z  buildspacing inc
+bind           Alt+sc_x  buildspacing dec
+bind     Shift+Alt+sc_x  buildspacing dec
+
+// --- Map drawing ---
+bind               sc_q  drawinmap
+bind          sc_q,sc_q  drawlabel
+
+// --- Map overlays ---
+bind                  f1  ShowElevation
+bind                  f2  ShowPathTraversability
+bind                  f4  ShowMetalMap
+bind                  f5  HideInterface
+bind              sc_l,sc_l,sc_l  firestate 1
+bind                   sc_l,sc_l  firestate 0
+bind                        sc_l  firestate 2
+
+// --- Audio / speed ---
+bind              Alt+sc_=  increasespeed
+bind           Alt+numpad+  increasespeed
+bind              Alt+sc_-  decreasespeed
+bind           Alt+numpad-  decreasespeed
+bind              numpad+  snd_volume_increase
+bind               sc_=  snd_volume_increase
+bind               sc_-  snd_volume_decrease
+bind            numpad-  snd_volume_decrease
+bind                 f6  MuteSound
+bind                f10  options
+bind            Any+f12  screenshot png
+
+// --- Attack range display ---
+bind           Alt+sc_.  attack_range_inc
+bind           Alt+sc_,  attack_range_dec
+
+// --- Spectator team select ---
+bind                  1  specteam 0
+bind                  2  specteam 1
+bind                  3  specteam 2
+bind                  4  specteam 3
+bind                  5  specteam 4
+bind                  6  specteam 5
+bind                  7  specteam 6
+bind                  8  specteam 7
+bind                  9  specteam 8
+`.trim();
+
 export const KEYBIND_PRESETS: KeybindPreset[] = [
     {
         id: "grid",
@@ -329,13 +611,12 @@ export const KEYBIND_PRESETS: KeybindPreset[] = [
         description: "BAR default — commands bound to grid positions (Z/X/C/V rows)",
         content: GRID_KEYS_CONTENT,
     },
-    // TODO: Add Legacy preset content once the BAR legacy uikeys.txt is available.
-    // {
-    //     id: "legacy",
-    //     label: "Legacy",
-    //     description: "Classic named hotkeys (A=Attack, G=Guard, etc.)",
-    //     content: LEGACY_KEYS_CONTENT,
-    // },
+    {
+        id: "legacy",
+        label: "Legacy",
+        description: "Classic named hotkeys (A=Attack, G=Guard, P=Patrol, etc.)",
+        content: LEGACY_KEYS_CONTENT,
+    },
 ];
 
 export const PRESET_MAP = new Map(KEYBIND_PRESETS.map((p) => [p.id, p]));

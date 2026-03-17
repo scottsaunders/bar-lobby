@@ -13,7 +13,9 @@
       "Bash(grep -oP \"\\(?<=bind\\\\s{1,20}\\)\\([\\\\w+,]+\\)\" \"C:/Users/scopa/OneDrive/Documents/GitHub/bar-lobby/state/data/uikeys.txt\" | sort -u)",
       "Bash(cd:*)",
       "Bash(find:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(python3:*)",
+      "Bash(python:*)"
     ]
   }
 }

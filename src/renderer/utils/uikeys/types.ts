@@ -55,9 +55,13 @@ export interface CommandCategory {
     commands: CommandDef[];
 }
 
+export type UserRequirement = "deleted" | "devmode" | "widget" | "hardcoded";
+
 export interface CommandDef {
     command: string; // full command string
     label: string; // human readable label
     category: string; // category id
     description?: string;
+    comment?: string; // design rationale / tooltip note (from keybind reference sheet)
+    userRequirement?: UserRequirement;
 }

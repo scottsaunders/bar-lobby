@@ -24,12 +24,28 @@
             <button
                 class="unbound-toggle"
                 :class="{ 'is-active': showUnboundOnly }"
-                :title="showUnboundOnly ? 'Show all commands' : 'Show only unbound commands'"
+                v-tooltip.right="showUnboundOnly ? 'Show all commands' : 'Show only unbound commands'"
                 @click="showUnboundOnly = !showUnboundOnly"
             >
                 <span class="unbound-count" :class="{ 'has-unbound': unboundCount > 0 }">{{ unboundCount }}</span>
                 Unbound
             </button>
+            <div class="palette-filter-row">
+                <select v-model="selectedCategory" class="category-select">
+                    <option :value="null">All categories</option>
+                    <option v-for="cat in COMMAND_CATEGORIES" :key="cat.id" :value="cat.id">
+                        {{ cat.label }}
+                    </option>
+                </select>
+                <button
+                    class="dev-toggle"
+                    :class="{ 'is-active': showDevmode }"
+                    v-tooltip.right="'Show dev/debug commands (quit, reload, debug overlays)'"
+                    @click="showDevmode = !showDevmode"
+                >
+                    Dev
+                </button>
+            </div>
         </div>
 
         <div class="palette-scroll">
@@ -42,23 +58,26 @@
                     :key="cmd.command"
                     class="command-item"
                     :class="{
-                        'is-assigned': isAssigned(cmd.command),
+                        'is-assigned': cmd.assigned,
                         'is-selected': keybindsStore.selectedCommand === cmd.command,
                     }"
                     draggable="true"
-                    :title="cmd.description ?? cmd.command"
+                    v-tooltip.right="{ value: cmd.comment ? `${cmd.description ?? cmd.command}<br><br><em style='opacity:0.65'>${cmd.comment}</em>` : (cmd.description ?? cmd.command), escape: false, disabled: isDragging }"
                     @click="onCommandClick(cmd.command)"
                     @dragstart="onDragStart($event, cmd.command)"
+                    @dragend="onDragEnd"
                 >
                     <span class="cmd-label" :style="{ color: cat.color }">{{ cmd.label }}</span>
                     <div class="cmd-bindings">
                         <span v-for="b in getBindingsForCommand(cmd.command)" :key="b.id" class="binding-tag">
                             {{ formatBinding(b) }}
                         </span>
+                        <span v-if="cmd.userRequirement === 'widget'" class="widget-tag" v-tooltip.top="'Requires a Lua widget to be active'">Widget</span>
+                        <span v-if="cmd.userRequirement === 'hardcoded'" class="hardcoded-tag" v-tooltip.top="'This binding is hardcoded and cannot be changed'">Locked</span>
                         <button
-                            v-if="advancedLabel(cmd.command)"
+                            v-if="cmd.advLabel"
                             class="adv-tag"
-                            :title="advancedLabel(cmd.command) ?? ''"
+                            v-tooltip.top="cmd.advLabel"
                             @click.stop="openAdvanced"
                         >Adv.</button>
                     </div>
@@ -82,7 +101,10 @@
 
     const search = ref("");
     const showUnboundOnly = ref(false);
+    const showDevmode = ref(false);
+    const selectedCategory = ref<string | null>(null);
     const isDropTarget = ref(false);
+    const isDragging = ref(false);
 
     const unboundCount = computed(() => {
         const unitType = keybindsStore.activeUnitType;
@@ -90,6 +112,8 @@
         for (const cat of COMMAND_CATEGORIES) {
             if (unitType !== "all" && cat.unitType !== "all" && cat.unitType !== unitType) continue;
             for (const cmd of cat.commands) {
+                if (cmd.userRequirement === "deleted") continue;
+                if (showDevmode.value ? cmd.userRequirement !== "devmode" : cmd.userRequirement === "devmode") continue;
                 if (!isAssigned(cmd.command)) count++;
             }
         }
@@ -99,31 +123,43 @@
     const filteredCategories = computed(() => {
         const q = search.value.toLowerCase();
         const unitType = keybindsStore.activeUnitType;
+        const catFilter = selectedCategory.value;
 
-        return COMMAND_CATEGORIES.map((cat) => ({
-            ...cat,
-            commands: cat.commands.filter((c) => {
-                // Unit type filter
-                if (unitType !== "all" && cat.unitType !== "all" && cat.unitType !== unitType) return false;
-                // Unbound filter — skip commands that have any binding (regular or advanced)
-                if (showUnboundOnly.value && isAssigned(c.command)) return false;
-                // Search filter
-                if (!q) return true;
-                return c.label.toLowerCase().includes(q) || c.command.toLowerCase().includes(q);
-            }),
-        })).filter((cat) => cat.commands.length > 0);
+        return COMMAND_CATEGORIES
+            .filter((cat) => catFilter === null || cat.id === catFilter)
+            .map((cat) => ({
+                ...cat,
+                commands: cat.commands
+                    .filter((c) => {
+                        // Always hide deleted commands
+                        if (c.userRequirement === "deleted") return false;
+                        // Dev filter: when active show only devmode commands; when inactive hide them
+                        if (showDevmode.value ? c.userRequirement !== "devmode" : c.userRequirement === "devmode") return false;
+                        // Unit type filter
+                        if (unitType !== "all" && cat.unitType !== "all" && cat.unitType !== unitType) return false;
+                        // Unbound filter — skip commands that have any binding (regular or advanced)
+                        if (showUnboundOnly.value && isAssigned(c.command)) return false;
+                        // Search filter
+                        if (!q) return true;
+                        return c.label.toLowerCase().includes(q) || c.command.toLowerCase().includes(q);
+                    })
+                    .map((c) => ({
+                        ...c,
+                        assigned: isAssigned(c.command),
+                        advLabel: computeAdvancedLabel(c.command),
+                    })),
+            }))
+            .filter((cat) => cat.commands.length > 0);
     });
 
     function isAssigned(command: string): boolean {
         return getBindingsForCommand(command).length > 0 || getAdvancedBindingsForCommand(command).length > 0;
     }
 
-    function advancedLabel(command: string): string | null {
+    function computeAdvancedLabel(command: string): string | null {
         const adv = getAdvancedBindingsForCommand(command);
         if (!adv.length) return null;
-        // Show the first sequence as a preview
-        const steps = formatAdvancedBindingSteps(adv[0].raw);
-        return steps.join(" › ");
+        return formatAdvancedBindingSteps(adv[0].raw).join(" › ");
     }
 
     function openAdvanced() {
@@ -138,6 +174,11 @@
     function onDragStart(e: DragEvent, command: string) {
         e.dataTransfer?.setData("application/x-command", command);
         if (e.dataTransfer) e.dataTransfer.effectAllowed = "copy";
+        isDragging.value = true;
+    }
+
+    function onDragEnd() {
+        isDragging.value = false;
     }
 
     function isBindingDrag(e: DragEvent): boolean {
@@ -204,6 +245,60 @@
         gap: 6px;
         padding: 8px 8px 4px;
         flex-shrink: 0;
+    }
+
+    .palette-filter-row {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+    }
+
+    .category-select {
+        flex: 1;
+        min-width: 0;
+        padding: 4px 22px 4px 7px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 4px;
+        color: rgba(255, 255, 255, 0.7);
+        font-family: inherit;
+        font-size: 12px;
+        cursor: pointer;
+        outline: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(255,255,255,0.4)'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 7px center;
+
+        option { background: #1a1a2e; color: #fff; }
+
+        &:focus { border-color: rgba(37, 99, 235, 0.6); }
+    }
+
+    .dev-toggle {
+        flex-shrink: 0;
+        padding: 4px 8px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 4px;
+        color: rgba(255, 255, 255, 0.45);
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.1s ease;
+        white-space: nowrap;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        &.is-active {
+            background: rgba(251, 191, 36, 0.12);
+            border-color: rgba(251, 191, 36, 0.4);
+            color: rgba(251, 191, 36, 0.9);
+        }
     }
 
     .search-input {
@@ -341,6 +436,31 @@
         white-space: nowrap;
         font-family: monospace;
     }
+
+    .widget-tag {
+        background: rgba(20, 184, 166, 0.12);
+        border: 1px solid rgba(20, 184, 166, 0.35);
+        border-radius: 3px;
+        padding: 2px 5px;
+        font-size: 10px;
+        font-weight: 700;
+        color: rgba(20, 184, 166, 0.85);
+        white-space: nowrap;
+        letter-spacing: 0.02em;
+    }
+
+    .hardcoded-tag {
+        background: rgba(148, 163, 184, 0.1);
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        border-radius: 3px;
+        padding: 2px 5px;
+        font-size: 10px;
+        font-weight: 700;
+        color: rgba(148, 163, 184, 0.7);
+        white-space: nowrap;
+        letter-spacing: 0.02em;
+    }
+
 
     .adv-tag {
         background: rgba(167, 139, 250, 0.12);

@@ -2,7 +2,7 @@
 <!-- SPDX-License-Identifier: MIT -->
 
 <template>
-    <div class="keybind-editor" :class="{ loading: !keybindsStore.isLoaded }">
+    <div class="keybind-editor" :class="{ loading: !keybindsStore.isLoaded }" @keydown.esc.stop="closeAllDialogs">
         <div v-if="!keybindsStore.isLoaded" class="loading-state">
             <span class="body-1">Loading keybinds...</span>
         </div>
@@ -19,7 +19,7 @@
                 <div class="divider" />
 
                 <!-- Unit type filter -->
-                <div class="unit-type-tabs" title="Filter commands by unit type">
+                <div class="unit-type-tabs" v-tooltip.bottom="'Filter commands by unit type'">
                     <button
                         v-for="ut in UNIT_TYPES"
                         :key="ut.id"
@@ -36,18 +36,19 @@
                     <span class="preset-label caption-2">Preset:</span>
                     <select class="preset-select" :value="keybindsStore.activePreset" @change="onPresetChange">
                         <option v-for="p in KEYBIND_PRESETS" :key="p.id" :value="p.id">{{ p.label }}</option>
-                        <option value="custom">Custom</option>
+                        <option v-for="p in keybindsStore.customPresets" :key="p.id" :value="p.id">★ {{ p.label }}</option>
+                        <option value="custom" disabled style="color: rgba(255,255,255,0.3)">— Unsaved —</option>
                     </select>
                 </div>
 
                 <div class="toolbar-spacer" />
 
-                <button v-if="trueConflicts.length > 0" class="sharedkey-btn is-conflict" :class="{ active: showConflicts }" @click="showConflicts = !showConflicts" title="Two or more commands in the same context share this key — one may override the other unexpectedly">
+                <button v-if="trueConflicts.length > 0" class="sharedkey-btn is-conflict" :class="{ active: showConflicts }" @click="showConflicts = !showConflicts" v-tooltip.bottom="'Two or more commands in the same context share this key — one may override the other unexpectedly'">
                     <Icon icon="mdi:alert" />
                     {{ trueConflicts.length }} conflict{{ trueConflicts.length !== 1 ? "s" : "" }}
                     <Icon :icon="showConflicts ? 'mdi:chevron-up' : 'mdi:chevron-down'" style="font-size: 14px; margin-left: 2px" />
                 </button>
-                <button v-else-if="sharedKeys.length > 0" class="sharedkey-btn is-shared" :class="{ active: showConflicts }" @click="showConflicts = !showConflicts" title="Some keys are shared across unit type contexts — this is usually intentional">
+                <button v-else-if="sharedKeys.length > 0" class="sharedkey-btn is-shared" :class="{ active: showConflicts }" @click="showConflicts = !showConflicts" v-tooltip.bottom="'Some keys are shared across unit type contexts — this is usually intentional'">
                     <Icon icon="mdi:information-outline" />
                     {{ sharedKeys.length }} shared key{{ sharedKeys.length !== 1 ? "s" : "" }}
                     <Icon :icon="showConflicts ? 'mdi:chevron-up' : 'mdi:chevron-down'" style="font-size: 14px; margin-left: 2px" />
@@ -56,10 +57,10 @@
                 <span v-if="keybindsStore.isDirty" class="dirty-dot">Unsaved changes</span>
 
                 <div class="toolbar-actions">
-                    <button class="btn-action" :disabled="keybindsStore.undoStack.length === 0" :title="`Undo (${keybindsStore.undoStack.length} step${keybindsStore.undoStack.length !== 1 ? 's' : ''} available)`" @click="undo()"><Icon :icon="undoIcon" />Undo</button>
+                    <button class="btn-action" :disabled="keybindsStore.undoStack.length === 0" v-tooltip.bottom="`Undo (${keybindsStore.undoStack.length} step${keybindsStore.undoStack.length !== 1 ? 's' : ''} available)`" @click="undo()"><Icon :icon="undoIcon" />Undo</button>
                     <button class="btn-action btn-revert" :disabled="!keybindsStore.isDirty" @click="onRevert">Revert</button>
-                    <button class="btn-action" title="Reload from disk" @click="onReload">Reload</button>
-                    <button class="btn-action btn-save" :disabled="!keybindsStore.isDirty || keybindsStore.isSaving" @click="onSave">
+                    <button class="btn-action" @click="showRestoreDialog = true">Restore Defaults</button>
+                    <button class="btn-action btn-save" :disabled="(!keybindsStore.isDirty && !keybindsStore.isPresetSwitched) || keybindsStore.isSaving" @click="showSaveDialog = true">
                         {{ keybindsStore.isSaving ? "Saving…" : "Save" }}
                     </button>
                 </div>
@@ -129,7 +130,7 @@
                             <button
                                 v-if="keybindsStore.parsed && keybindsStore.parsed.advancedBindings.length > 0"
                                 class="btn-advanced-cta"
-                                :title="`${keybindsStore.parsed.advancedBindings.length} chord/sequence binding${keybindsStore.parsed.advancedBindings.length !== 1 ? 's' : ''} not shown on the keyboard`"
+                                v-tooltip.bottom="`${keybindsStore.parsed.advancedBindings.length} chord/sequence binding${keybindsStore.parsed.advancedBindings.length !== 1 ? 's' : ''} not shown on the keyboard`"
                                 @click="keybindsStore.showAdvanced = true"
                             >
                                 Advanced Key Sequences
@@ -157,19 +158,80 @@
                 <ListEditor />
             </div>
         </template>
+
+        <!-- Restore defaults dialog -->
+        <div v-if="showRestoreDialog" class="dialog-backdrop" @click.self="showRestoreDialog = false">
+            <div class="dialog-panel">
+                <div class="dialog-title body-2-strong">Restore Default Layout</div>
+                <div class="dialog-body caption-1">
+                    This will replace your current keybinds with the <strong>{{ restoreTargetPreset.label }}</strong> default layout. Any unsaved changes will be lost.
+                </div>
+                <div class="dialog-actions">
+                    <button class="btn-action" @click="showRestoreDialog = false">Cancel</button>
+                    <button class="btn-action btn-danger" @click="onConfirmRestore">Restore</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preset switch confirmation dialog -->
+        <div v-if="showPresetConfirm" class="dialog-backdrop" @click.self="cancelPresetSwitch">
+            <div class="dialog-panel">
+                <div class="dialog-title body-2-strong">Load Preset</div>
+                <div class="dialog-body caption-1">
+                    Load <strong>{{ pendingPreset?.label }}</strong>? Your unsaved changes will be lost.
+                </div>
+                <div class="dialog-actions">
+                    <button class="btn-action" @click="cancelPresetSwitch">Cancel</button>
+                    <button class="btn-action btn-danger" @click="confirmPresetSwitch">Load Preset</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Save dialog -->
+        <div v-if="showSaveDialog" class="dialog-backdrop" @click.self="showSaveDialog = false">
+            <div class="dialog-panel">
+                <div class="dialog-title body-2-strong">Save Keybinds</div>
+                <div class="dialog-body caption-1">
+                    Writes your changes to <code>uikeys.txt</code>.
+                    <template v-if="keybindsStore.activePreset.startsWith('custom_')">
+                        Leave the name blank to update <strong>{{ keybindsStore.customPresets.find(p => p.id === keybindsStore.activePreset)?.label }}</strong> in place, or enter a new name to save a separate copy.
+                    </template>
+                    <template v-else>
+                        Optionally enter a name to save a copy to the preset list for quick recall.
+                    </template>
+                </div>
+                <div class="dialog-field">
+                    <label class="dialog-field-label caption-2">Save as preset (optional)</label>
+                    <input
+                        ref="presetNameInput"
+                        v-model="presetName"
+                        class="dialog-input"
+                        placeholder="e.g. My layout"
+                        maxlength="48"
+                        @keydown.enter="onConfirmSave"
+                    />
+                </div>
+                <div class="dialog-actions">
+                    <button class="btn-action" @click="showSaveDialog = false">Cancel</button>
+                    <button class="btn-action btn-save" @click="onConfirmSave">
+                        {{ presetName.trim() ? "Save &amp; Add Preset" : "Save" }}
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-    import { computed, onMounted, ref } from "vue";
+    import { computed, nextTick, onMounted, ref, watch } from "vue";
     import { Icon } from "@iconify/vue";
     import undoIcon from "@iconify-icons/mdi/undo";
-    import { keybindsStore, loadKeybinds, saveKeybinds, revertKeybinds, removeBinding, loadPreset, undo } from "@renderer/store/keybinds.store";
+    import { keybindsStore, loadKeybinds, saveKeybinds, revertKeybinds, removeBinding, loadPreset, saveCustomPreset, updateCustomPreset, undo } from "@renderer/store/keybinds.store";
     import { engineKeyToLabel } from "@renderer/utils/uikeys/key-formatter";
     import { getCommandLabel, getCommandUnitType } from "@renderer/utils/uikeys/commands";
     import { serializeUikeys } from "@renderer/utils/uikeys/serializer";
     import { parseUikeys } from "@renderer/utils/uikeys/parser";
-    import { KEYBIND_PRESETS } from "@renderer/utils/uikeys/presets";
+    import { KEYBIND_PRESETS, type KeybindPreset } from "@renderer/utils/uikeys/presets";
     import ModifierSelector from "./ModifierSelector.vue";
     import VisualKeyboard from "./VisualKeyboard.vue";
     import CommandPalette from "./CommandPalette.vue";
@@ -187,14 +249,33 @@
     const rawText = ref("");
     const selectedKey = ref<string | null>(null);
 
+    // Restore defaults dialog
+    const showRestoreDialog = ref(false);
+    const restoreTargetPreset = computed(() =>
+        KEYBIND_PRESETS.find((p) => p.id === keybindsStore.activePreset) ?? KEYBIND_PRESETS[0]
+    );
+
+    function onConfirmRestore() {
+        loadPreset(restoreTargetPreset.value.id);
+        showRestoreDialog.value = false;
+    }
+
+    // Preset switch confirmation
+    const showPresetConfirm = ref(false);
+    const pendingPreset = ref<KeybindPreset | null>(null);
+    const pendingPresetSelectEl = ref<HTMLSelectElement | null>(null);
+
+    // Save dialog
+    const showSaveDialog = ref(false);
+    const presetName = ref("");
+    const presetNameInput = ref<HTMLInputElement | null>(null);
+
     const trueConflicts = computed(() => keybindsStore.sharedKeys.filter((e) => e.severity === "conflict"));
     const sharedKeys = computed(() => keybindsStore.sharedKeys.filter((e) => e.severity === "shared"));
 
     onMounted(async () => { await loadKeybinds(); });
 
-    async function onSave() { await saveKeybinds(); }
     function onRevert() { revertKeybinds(); }
-    async function onReload() { await loadKeybinds(); }
 
     function onOpenRaw() {
         if (keybindsStore.parsed) rawText.value = serializeUikeys(keybindsStore.parsed);
@@ -211,19 +292,61 @@
         selectedKey.value = selectedKey.value === key ? null : key;
     }
 
+    function closeAllDialogs() {
+        if (showPresetConfirm.value) cancelPresetSwitch();
+        if (showSaveDialog.value) showSaveDialog.value = false;
+        if (showRestoreDialog.value) showRestoreDialog.value = false;
+    }
+
     function onPresetChange(e: Event) {
         const id = (e.target as HTMLSelectElement).value;
         if (id === "custom") return;
-        const preset = KEYBIND_PRESETS.find((p) => p.id === id);
+        const allPresets = [...KEYBIND_PRESETS, ...keybindsStore.customPresets];
+        const preset = allPresets.find((p) => p.id === id);
         if (!preset) return;
         if (keybindsStore.isDirty) {
-            if (!confirm(`Load the "${preset.label}" preset? Your unsaved changes will be lost.`)) {
-                (e.target as HTMLSelectElement).value = keybindsStore.activePreset;
-                return;
-            }
+            pendingPreset.value = preset;
+            pendingPresetSelectEl.value = e.target as HTMLSelectElement;
+            showPresetConfirm.value = true;
+            // Reset the select visually while the dialog is open
+            (e.target as HTMLSelectElement).value = keybindsStore.activePreset;
+            return;
         }
         loadPreset(id);
     }
+
+    function cancelPresetSwitch() {
+        showPresetConfirm.value = false;
+        pendingPreset.value = null;
+        pendingPresetSelectEl.value = null;
+    }
+
+    function confirmPresetSwitch() {
+        if (!pendingPreset.value) return;
+        loadPreset(pendingPreset.value.id);
+        showPresetConfirm.value = false;
+        pendingPreset.value = null;
+        pendingPresetSelectEl.value = null;
+    }
+
+    async function onConfirmSave() {
+        await saveKeybinds();
+        const name = presetName.value.trim();
+        const content = serializeUikeys(keybindsStore.parsed!);
+        if (name) {
+            saveCustomPreset(name, content);
+        } else if (keybindsStore.activePreset.startsWith("custom_")) {
+            // No new name given — overwrite the existing custom preset's stored content
+            updateCustomPreset(keybindsStore.activePreset, content);
+        }
+        showSaveDialog.value = false;
+        presetName.value = "";
+    }
+
+    // Focus the name input when save dialog opens
+    watch(showSaveDialog, (open) => {
+        if (open) nextTick(() => presetNameInput.value?.focus());
+    });
 </script>
 
 <style lang="scss" scoped>
@@ -233,6 +356,7 @@
         height: 100%;
         min-height: 0;
         overflow: hidden;
+        position: relative;
     }
 
     .loading-state {
@@ -599,6 +723,89 @@
         overflow: hidden;
         display: flex;
         flex-direction: column;
+    }
+
+    /* ── In-client dialogs ── */
+    .dialog-backdrop {
+        position: absolute;
+        inset: 0;
+        z-index: 20;
+        background: rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(3px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .dialog-panel {
+        background: rgba(15, 20, 35, 0.97);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 8px;
+        padding: 20px 24px;
+        width: 360px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    }
+
+    .dialog-title {
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .dialog-body {
+        color: rgba(255, 255, 255, 0.55);
+        line-height: 1.5;
+
+        strong { color: rgba(255, 255, 255, 0.85); font-weight: 600; }
+        code {
+            font-family: monospace;
+            font-size: 11px;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 1px 5px;
+            border-radius: 3px;
+            color: rgba(200, 220, 255, 0.8);
+        }
+    }
+
+    .dialog-field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .dialog-field-label {
+        color: rgba(255, 255, 255, 0.4);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .dialog-input {
+        padding: 7px 10px;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 4px;
+        color: #fff;
+        font-family: inherit;
+        font-size: 13px;
+        outline: none;
+
+        &::placeholder { color: rgba(255, 255, 255, 0.25); }
+        &:focus { border-color: rgba(37, 99, 235, 0.6); }
+    }
+
+    .dialog-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 6px;
+        padding-top: 4px;
+    }
+
+    .btn-danger {
+        background: rgba(220, 50, 50, 0.25) !important;
+        border-color: rgba(220, 50, 50, 0.45) !important;
+        color: rgba(255, 160, 160, 0.9) !important;
+        &:hover:not(:disabled) { background: rgba(220, 50, 50, 0.45) !important; color: #fff !important; }
     }
 
     /* ── Raw editor ── */

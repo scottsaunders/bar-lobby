@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: MIT
 
-import type { CommandCategory } from "./types";
+import type { CommandCategory, UserRequirement } from "./types";
 
 export type UnitType = "all" | "builder" | "combat";
 
@@ -10,6 +10,8 @@ export interface CommandCategoryWithMeta extends CommandCategory {
     color: string;
     unitType: UnitType;
 }
+
+export { UserRequirement };
 
 export const COMMAND_CATEGORIES: CommandCategoryWithMeta[] = [
     {
@@ -19,7 +21,7 @@ export const COMMAND_CATEGORIES: CommandCategoryWithMeta[] = [
         unitType: "combat",
         commands: [
             { command: "attack",                 label: "Attack",                  category: "unit",      description: "Order selected units to attack a target. -High" },
-            { command: "areaattack",             label: "Area Attack",             category: "unit",      description: "Order selected units to attack all enemies in a dragged area. -High" },
+            { command: "areaattack",             label: "Area Attack",             category: "unit",      description: "Order selected units to attack all enemies in a dragged area. -High", comment: "For bombers and select ground artillery units only" },
             { command: "manualfire",             label: "Manual Fire",             category: "unit",      description: "Manually fire a weapon that is otherwise automatic (e.g. artillery, tactical missiles). -High" },
             { command: "manuallaunch",           label: "Manual Launch",           category: "unit",      description: "Manually launch a projectile such as a nuclear missile. -High" },
             { command: "fight",                  label: "Fight",                   category: "unit",      description: "Move to a destination while attacking any enemies encountered along the way. -High" },
@@ -76,6 +78,10 @@ export const COMMAND_CATEGORIES: CommandCategoryWithMeta[] = [
             { command: "movestate 2",         label: "Roam",              category: "unitstate", description: "Units move freely, wandering and chasing enemies. -High" },
             { command: "repeat 0",            label: "Repeat Off",        category: "unitstate", description: "Factory stops producing after completing its build queue once. -High" },
             { command: "repeat 1",            label: "Repeat On",         category: "unitstate", description: "Factory loops its build queue continuously. -High" },
+            { command: "priority 0",          label: "Builder Priority: Low",  category: "unitstate", description: "Set selected builders to low priority — they will yield to high-priority builders. -Medium" },
+            { command: "priority 1",          label: "Builder Priority: High", category: "unitstate", description: "Set selected builders to high priority — they build faster relative to low-priority builders. -Medium" },
+            { command: "idlemode 0",          label: "Aircraft: Fly When Idle",  category: "unitstate", description: "Aircraft will continue flying when they have no orders. -Medium" },
+            { command: "idlemode 1",          label: "Aircraft: Land When Idle", category: "unitstate", description: "Aircraft will land automatically when they have no orders. -Medium" },
         ],
     },
     {
@@ -145,7 +151,9 @@ export const COMMAND_CATEGORIES: CommandCategoryWithMeta[] = [
             { command: "toggleoverview", label: "Toggle Overview", category: "camera", description: "Toggle the minimap overview or full-screen minimap display. -Medium" },
             ...Array.from({ length: 4 }, (_, i) => ({ command: `set_camera_anchor ${i + 1}`,   label: `Set Anchor ${i + 1}`,   category: "camera", description: `Save the current camera position to anchor slot ${i + 1}. -Medium` })),
             ...Array.from({ length: 4 }, (_, i) => ({ command: `focus_camera_anchor ${i + 1}`, label: `Focus Anchor ${i + 1}`, category: "camera", description: `Jump the camera to saved anchor position ${i + 1}. -Medium` })),
-            { command: "LastMsgPos", label: "Last Message Pos", category: "camera", description: "Jump the camera to the location of the last received alert or chat message. -High" },
+            { command: "LastMsgPos",   label: "Last Message Pos",      category: "camera", description: "Jump the camera to the location of the last received alert or chat message. -High" },
+            { command: "track",        label: "Track Unit",            category: "camera", description: "Lock the camera to follow the selected unit(s). -Medium" },
+            { command: "trackmode",    label: "Track Mode",            category: "camera", description: "Cycle between camera tracking modes (affects how groups of units are tracked). -Medium" },
         ],
     },
     {
@@ -199,7 +207,7 @@ export const COMMAND_CATEGORIES: CommandCategoryWithMeta[] = [
         color: "#e2e8f0",
         unitType: "all",
         commands: [
-            { command: "HideInterface",            label: "Hide Interface",        category: "ui", description: "Toggle visibility of all UI elements (widgets, panels, minimap). -High" },
+            { command: "HideInterface",            label: "Hide Interface",        category: "ui", description: "Toggle visibility of all UI elements (widgets, panels, minimap). -High", comment: "Intentionally unbound in Grid Keys — toggling the UI off is rarely useful mid-game" },
             { command: "togglelos",                label: "Toggle LOS",            category: "ui", description: "Cycle through LOS visualization modes: normal, line-of-sight overlay, radar overlay. -High" },
             { command: "ShowPathTraversability",   label: "Show Path Traversability", category: "ui", description: "Toggle an overlay showing which terrain is passable for ground units. -Medium" },
             { command: "ShowMetalMap",             label: "Show Metal Map",        category: "ui", description: "Toggle a metal deposit overlay showing where metal can be extracted on the map. -High" },
@@ -214,6 +222,9 @@ export const COMMAND_CATEGORIES: CommandCategoryWithMeta[] = [
             { command: "drawinmap",                label: "Draw In Map",           category: "ui", description: "Toggle map drawing mode to draw lines and arrows on the map for allies. -High" },
             { command: "fullscreen",               label: "Fullscreen",            category: "ui", description: "Toggle fullscreen mode. -High" },
             { command: "pause",                    label: "Pause",                 category: "ui", description: "Pause or unpause the game (only available if the host allows it). -High" },
+            { command: "attack_range_inc",         label: "Attack Range Display +", category: "ui", description: "Cycle to the next attack range display configuration for the unit type under the cursor. -Low" },
+            { command: "attack_range_dec",         label: "Attack Range Display −", category: "ui", description: "Cycle to the previous attack range display configuration for the unit type under the cursor. -Low" },
+            { command: "cursor_range_toggle",      label: "Cursor Range Toggle",   category: "ui", description: "Toggle display of the attack range of the unit currently under the mouse cursor. -Low" },
         ],
     },
     {
@@ -238,11 +249,11 @@ export const COMMAND_CATEGORIES: CommandCategoryWithMeta[] = [
             { command: "chat",            label: "Open Chat",      category: "chat", description: "Open the chat input box to send a message. -High" },
             { command: "chatswitchally", label: "Chat → Ally",    category: "chat", description: "Switch chat target to allies only. -High" },
             { command: "chatswitchspec", label: "Chat → Spec",    category: "chat", description: "Switch chat target to spectators only. -High" },
-            { command: "quitmessage",    label: "Quit Message",   category: "chat", description: "Send a predefined resignation message and leave the game. -Medium" },
-            { command: "quitmenu",       label: "Quit Menu",      category: "chat", description: "Open the resign / quit confirmation menu. -High" },
-            { command: "quitforce",      label: "Force Quit",     category: "chat", description: "Immediately exit the game without a confirmation prompt. -High" },
-            { command: "reloadforce",    label: "Force Reload",   category: "chat", description: "Force-reload and restart the current game session. -Medium" },
-            { command: "pastetext",      label: "Paste Text",     category: "chat", description: "Paste clipboard text into the active chat input box. -High" },
+            { command: "quitmessage",    label: "Quit Message",   category: "chat", description: "Send a predefined resignation message and leave the game. -Medium",  userRequirement: "deleted" },
+            { command: "quitmenu",       label: "Quit Menu",      category: "chat", description: "Open the resign / quit confirmation menu. -High",                    userRequirement: "devmode" },
+            { command: "quitforce",      label: "Force Quit",     category: "chat", description: "Immediately exit the game without a confirmation prompt. -High",     userRequirement: "devmode" },
+            { command: "reloadforce",    label: "Force Reload",   category: "chat", description: "Force-reload and restart the current game session. -Medium",         userRequirement: "devmode" },
+            { command: "pastetext",      label: "Paste Text",     category: "chat", description: "Paste clipboard text into the active chat input box. -High",         comment: "Typically handled at OS level" },
         ],
     },
 ];
@@ -263,8 +274,31 @@ export const COMMAND_UNIT_TYPE_MAP = new Map(
     COMMAND_CATEGORIES.flatMap((cat) => cat.commands.map((c) => [c.command, cat.unitType]))
 );
 
+// Labels for system commands that appear in uikeys but are not in the palette
+const COMMAND_LABEL_OVERRIDES: Record<string, string> = {
+    edit_home:      "Edit: Home",
+    edit_end:       "Edit: End",
+    edit_prev_line: "Edit: Previous Line",
+    edit_next_line: "Edit: Next Line",
+    edit_next_char: "Edit: Next Character",
+    edit_prev_char: "Edit: Previous Character",
+    edit_complete:  "Edit: Complete",
+    edit_backspace: "Edit: Backspace",
+    edit_delete:    "Edit: Delete",
+    edit_return:    "Edit: Return",
+    edit_escape:    "Edit: Escape",
+    pastetext:      "Paste Text",
+    sharedialog:    "Share Dialog",
+    viewfps:        "FPS Camera",
+    viewta:         "TA Camera",
+    viewspring:     "Spring Camera",
+    viewrot:        "Rotating Camera",
+    move:           "Move",
+    onoff:          "Toggle On/Off",
+};
+
 export function getCommandLabel(command: string): string {
-    return COMMAND_MAP.get(command)?.label ?? command;
+    return COMMAND_MAP.get(command)?.label ?? COMMAND_LABEL_OVERRIDES[command] ?? command;
 }
 
 export function getCommandDescription(command: string): string | undefined {
@@ -277,4 +311,12 @@ export function getCommandColor(command: string): string {
 
 export function getCommandUnitType(command: string): UnitType {
     return COMMAND_UNIT_TYPE_MAP.get(command) ?? "all";
+}
+
+export function getCommandUserRequirement(command: string): UserRequirement | undefined {
+    return COMMAND_MAP.get(command)?.userRequirement;
+}
+
+export function getCommandComment(command: string): string | undefined {
+    return COMMAND_MAP.get(command)?.comment;
 }

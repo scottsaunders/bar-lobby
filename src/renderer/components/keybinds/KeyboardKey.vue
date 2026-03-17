@@ -30,8 +30,8 @@
             <div class="key-top">
                 <span class="key-label">{{ keyDef.label }}</span>
                 <!-- Shared key indicators -->
-                <span v-if="hasConflict" class="conflict-icon" title="Two commands in the same context share this key — one may unexpectedly override the other">⚠</span>
-                <span v-else-if="isShared" class="shared-icon" title="This key is shared across different unit types — likely intentional">·</span>
+                <span v-if="hasConflict" class="conflict-icon" v-tooltip.top="'Two commands in the same context share this key — one may unexpectedly override the other'">⚠</span>
+                <span v-else-if="isShared" class="shared-icon" v-tooltip.top="'This key is shared across different unit types — likely intentional'">·</span>
             </div>
 
             <!-- Binding chip -->
@@ -39,14 +39,14 @@
                 v-if="primaryBinding"
                 class="binding-chip"
                 :style="{ '--chip-color': chipColor }"
-                :title="getCommandDescription(primaryBinding.command) ?? getCommandLabel(primaryBinding.command)"
+                v-tooltip.top="getCommandDescription(primaryBinding.command) ?? getCommandLabel(primaryBinding.command)"
             >
                 {{ getCommandLabel(primaryBinding.command) }}
             </div>
             <div
                 v-else-if="anyBinding"
                 class="binding-chip any-chip"
-                :title="getCommandDescription(anyBinding.command) ?? (getCommandLabel(anyBinding.command) + ' (Any+)')"
+                v-tooltip.top="getCommandDescription(anyBinding.command) ?? (getCommandLabel(anyBinding.command) + ' (Any+)')"
             >
                 {{ getCommandLabel(anyBinding.command) }}
             </div>
@@ -58,7 +58,7 @@
     import { computed, ref } from "vue";
     import type { KeyDef } from "@renderer/utils/uikeys/types";
     import { getCommandLabel, getCommandDescription, getCommandColor, getCommandUnitType } from "@renderer/utils/uikeys/commands";
-    import { keybindsStore, getExactBinding, getBindingsForCommand, modifierStateToArray, assignBinding, removeBinding } from "@renderer/store/keybinds.store";
+    import { keybindsStore, getExactBinding, getBindingsForCommand, modifierStateToArray, assignBinding, removeBinding, anyBindingsByKey, sharedKeysByKeyMod } from "@renderer/store/keybinds.store";
 
     const KEY_W = 56;
     const KEY_H = 76;
@@ -92,25 +92,12 @@
 
     const primaryBinding = computed(() => getExactBinding(props.keyDef.engineKey, activeModifiers.value));
 
-    const anyBinding = computed(() => {
-        if (!keybindsStore.parsed) return undefined;
-        return keybindsStore.parsed.bindings.find((b) => b.key === props.keyDef.engineKey && b.modifiers.includes("Any"));
-    });
+    const anyBinding = computed(() => anyBindingsByKey.value.get(props.keyDef.engineKey));
 
-    const sharedKeyEntry = computed(() =>
-        keybindsStore.sharedKeys.find(
-            (c) =>
-                c.key === props.keyDef.engineKey &&
-                c.modifiers
-                    .map((m) => m.toLowerCase())
-                    .sort()
-                    .join("+") ===
-                    activeModifiers.value
-                        .map((m) => m.toLowerCase())
-                        .sort()
-                        .join("+")
-        )
-    );
+    const sharedKeyEntry = computed(() => {
+        const modStr = activeModifiers.value.map((m) => m.toLowerCase()).sort().join("+");
+        return sharedKeysByKeyMod.value.get(`${modStr}|${props.keyDef.engineKey}`);
+    });
     const hasConflict = computed(() => sharedKeyEntry.value?.severity === "conflict");
     const isShared = computed(() => sharedKeyEntry.value?.severity === "shared");
 

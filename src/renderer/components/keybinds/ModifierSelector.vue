@@ -21,7 +21,7 @@
             <button
                 class="mod-btn any-btn"
                 :class="{ active: isAnyActive }"
-                title="Bindings that fire on keydown of a modifier key — active on every layer"
+                v-tooltip.bottom="'Bindings that fire on keydown of a modifier key — active on every layer'"
                 @click="toggleAny"
             >
                 Modifier Keys
