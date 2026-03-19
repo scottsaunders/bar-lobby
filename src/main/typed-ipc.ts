@@ -6,6 +6,7 @@ import type { BattleWithMetadata } from "@main/game/battle/battle-types";
 import type { DownloadInfo } from "@main/content/downloads";
 import type { EngineVersion } from "@main/content/engine/engine-version";
 import type { GameVersion } from "@main/content/game/game-version";
+import type { UnitData } from "@main/content/game/unit-data";
 import type { Info } from "@main/services/info.service";
 import type { IpcMain, IpcMainEvent, IpcMainInvokeEvent, IpcRenderer, IpcRendererEvent, WebContents } from "electron";
 import type { logLevels } from "@main/services/log.service";
@@ -64,6 +65,7 @@ export type IPCCommands = {
     "game:downloadGame": (version: string) => void;
     "game:getInstalledVersions": () => GameVersion[];
     "game:getScenarios": (version: string) => Scenario[];
+    "game:getUnits": (version: string) => UnitData[];
     "game:isVersionInstalled": (version: string) => boolean;
     "game:launchBattle": (battle: BattleWithMetadata) => Promise<void>;
     "game:launchMultiplayer": (settings: MultiplayerLaunchSettings) => void;

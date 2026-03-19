@@ -190,14 +190,15 @@ export const MOUSE_ROWS: KeyboardRow[] = [
             { id: "mouse1", label: "LMB", width: 1, engineKey: "mouse1" },
             { id: "mouse2", label: "RMB", width: 1, engineKey: "mouse2" },
             { id: "mouse3", label: "MMB", width: 1, engineKey: "mouse3" },
+            { id: "mouse4", label: "M4",  width: 1, engineKey: "mouse4" },
+            { id: "mouse5", label: "M5",  width: 1, engineKey: "mouse5" },
         ],
     },
     {
         keys: [
-            { id: "mouse4", label: "M4", width: 1, engineKey: "mouse4" },
-            { id: "mouse5", label: "M5", width: 1, engineKey: "mouse5" },
+            { id: "WheelUp",   label: "Wheel↑", width: 1, engineKey: "WheelUp" },
+            { id: "WheelDown", label: "Wheel↓", width: 1, engineKey: "WheelDown" },
         ],
-        indent: 0,
     },
 ];
 

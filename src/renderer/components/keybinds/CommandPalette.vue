@@ -56,6 +56,7 @@
                 <div
                     v-for="cmd in cat.commands"
                     :key="cmd.command"
+                    v-memo="[cmd.assigned, cmd.advLabel, cmd.bindingsKey, keybindsStore.selectedCommand === cmd.command, hoveredCommand === cmd.command, isDragging]"
                     class="command-item"
                     :class="{
                         'is-assigned': cmd.assigned,
@@ -63,13 +64,18 @@
                     }"
                     draggable="true"
                     v-tooltip.right="{ value: cmd.comment ? `${cmd.description ?? cmd.command}<br><br><em style='opacity:0.65'>${cmd.comment}</em>` : (cmd.description ?? cmd.command), escape: false, disabled: isDragging }"
+                    @mouseenter="hoveredCommand = cmd.command"
+                    @mouseleave="hoveredCommand = null"
                     @click="onCommandClick(cmd.command)"
                     @dragstart="onDragStart($event, cmd.command)"
                     @dragend="onDragEnd"
                 >
-                    <span class="cmd-label" :style="{ color: cat.color }">{{ cmd.label }}</span>
+                    <div class="cmd-left">
+                        <CommandIcon v-if="cmd.icon" :src="cmd.icon" :size="20" :playing="hoveredCommand === cmd.command" />
+                        <span class="cmd-label" :style="{ color: cat.color }">{{ cmd.label }}</span>
+                    </div>
                     <div class="cmd-bindings">
-                        <span v-for="b in getBindingsForCommand(cmd.command)" :key="b.id" class="binding-tag">
+                        <span v-for="b in cmd.displayBindings" :key="b.id" class="binding-tag">
                             {{ formatBinding(b) }}
                         </span>
                         <span v-if="cmd.userRequirement === 'widget'" class="widget-tag" v-tooltip.top="'Requires a Lua widget to be active'">Widget</span>
@@ -94,6 +100,8 @@
 <script lang="ts" setup>
     import { computed, ref } from "vue";
     import { COMMAND_CATEGORIES } from "@renderer/utils/uikeys/commands";
+    import { getCommandIcon, COMMAND_ICONS_ENABLED } from "@renderer/utils/uikeys/command-icons";
+    import CommandIcon from "./CommandIcon.vue";
     import { getBindingsForCommand, getAdvancedBindingsForCommand, removeBinding, keybindsStore, selectCommand } from "@renderer/store/keybinds.store";
     import { formatAdvancedBindingSteps } from "@renderer/utils/uikeys/key-formatter";
     import { formatBindingLabel } from "@renderer/utils/uikeys/key-formatter";
@@ -105,6 +113,7 @@
     const selectedCategory = ref<string | null>(null);
     const isDropTarget = ref(false);
     const isDragging = ref(false);
+    const hoveredCommand = ref<string | null>(null);
 
     const unboundCount = computed(() => {
         const unitType = keybindsStore.activeUnitType;
@@ -143,11 +152,18 @@
                         if (!q) return true;
                         return c.label.toLowerCase().includes(q) || c.command.toLowerCase().includes(q);
                     })
-                    .map((c) => ({
-                        ...c,
-                        assigned: isAssigned(c.command),
-                        advLabel: computeAdvancedLabel(c.command),
-                    })),
+                    .map((c) => {
+                        const displayBindings = getBindingsForCommand(c.command);
+                        return {
+                            ...c,
+                            assigned: isAssigned(c.command),
+                            advLabel: computeAdvancedLabel(c.command),
+                            displayBindings,
+                            // Stable key for v-memo: captures binding identity and key assignments
+                            bindingsKey: displayBindings.map((b) => `${b.id}:${b.key}`).join(","),
+                            icon: COMMAND_ICONS_ENABLED ? (getCommandIcon(c.command) ?? null) : null,
+                        };
+                    }),
             }))
             .filter((cat) => cat.commands.length > 0);
     });
@@ -403,6 +419,15 @@
             background: rgba(251, 191, 36, 0.12);
             outline: 1px solid rgba(251, 191, 36, 0.35);
         }
+    }
+
+    .cmd-left {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        min-width: 0;
+        flex-shrink: 1;
+        overflow: hidden;
     }
 
     .cmd-label {

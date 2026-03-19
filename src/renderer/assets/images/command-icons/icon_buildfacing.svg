@@ -1,0 +1,37 @@
+<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+<style>.Group_4_814 {
+	animation: 1.3s linear 0s infinite normal forwards running Group_4_814;
+	transform-box: fill-box;
+	transform-origin: 50% 50%;
+	transform: translateX(19.01px) translateY(19.01px);
+}
+@keyframes Group_4_814 {
+	0% {
+		transform: translateX(19.01px) translateY(19.01px) rotate(0deg);
+	}
+	69.23% {
+		transform: translateX(19.01px) translateY(19.01px) rotate(90deg);
+	}
+	100% {
+		transform: translateX(19.01px) translateY(19.01px) rotate(90deg);
+	}
+}.Ellipse_3_Stroke_771 {
+	animation: 1.3s linear 0s infinite normal forwards running Ellipse_3_Stroke_771;
+}
+@keyframes Ellipse_3_Stroke_771 {
+	0% {
+		opacity: 1;
+	}
+	38.46% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+</style><g clip-path="url(#clip_0_367)"><g transform="translate(19.01 19.01)" class="Group_4_814">
+<rect width="55.9828" height="55.9828" fill="#233622" stroke="#00FF00" stroke-width="2" transform="translate(0 57.98) rotate(-90)"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M0.331146 15L8.99139 2.24113e-05L17.6517 15L10.4914 15L10.4914 32.5H7.49141L7.4914 15L0.331146 15Z" fill="#CBFFC2" class="Ellipse_3_Stroke_771" transform="translate(20.33 0)"/></g></g>
+<defs><clipPath id="clip_0_367"><rect width="96" height="96"/></clipPath>
+</defs>
+</svg>

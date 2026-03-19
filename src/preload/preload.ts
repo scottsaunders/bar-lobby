@@ -9,6 +9,7 @@ import { Settings } from "@main/services/settings.service";
 import { EngineVersion } from "@main/content/engine/engine-version";
 import { GameVersion } from "@main/content/game/game-version";
 import { MapData, MapDownloadData } from "@main/content/maps/map-data";
+import { UnitData } from "@main/content/game/unit-data";
 import { DownloadInfo } from "@main/content/downloads";
 import { Info } from "@main/services/info.service";
 import { BattleWithMetadata } from "@main/game/battle/battle-types";
@@ -99,6 +100,7 @@ const gameApi = {
     // Content
     downloadGame: (version: string): Promise<void> => ipcRenderer.invoke("game:downloadGame", version),
     getScenarios: (version: string) => ipcRenderer.invoke("game:getScenarios", version),
+    getUnits: (version: string): Promise<UnitData[]> => ipcRenderer.invoke("game:getUnits", version),
     getInstalledVersions: (): Promise<GameVersion[]> => ipcRenderer.invoke("game:getInstalledVersions"),
     isVersionInstalled: (version: string): Promise<boolean> => ipcRenderer.invoke("game:isVersionInstalled", version),
     uninstallVersion: (version: string): Promise<void> => ipcRenderer.invoke("game:uninstallVersion", version),

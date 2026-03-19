@@ -79,6 +79,18 @@ export function useLiveKeyPreview() {
         if (key) keybindsStore.pressedKeys.delete(key);
     }
 
+    let wheelTimer: ReturnType<typeof setTimeout> | null = null;
+    function onWheel(e: WheelEvent) {
+        const key = e.deltaY < 0 ? "WheelUp" : "WheelDown";
+        keybindsStore.pressedKeys.add(key);
+        if (wheelTimer) clearTimeout(wheelTimer);
+        wheelTimer = setTimeout(() => {
+            keybindsStore.pressedKeys.delete("WheelUp");
+            keybindsStore.pressedKeys.delete("WheelDown");
+            wheelTimer = null;
+        }, 200);
+    }
+
     // Clear all state if window loses focus so keys don't get stuck
     function onBlur() {
         keybindsStore.pressedKeys.clear();
@@ -93,6 +105,7 @@ export function useLiveKeyPreview() {
         window.addEventListener("keyup", onKeyUp);
         window.addEventListener("mousedown", onMouseDown);
         window.addEventListener("mouseup", onMouseUp);
+        window.addEventListener("wheel", onWheel, { passive: true });
         window.addEventListener("blur", onBlur);
     });
 
@@ -101,7 +114,9 @@ export function useLiveKeyPreview() {
         window.removeEventListener("keyup", onKeyUp);
         window.removeEventListener("mousedown", onMouseDown);
         window.removeEventListener("mouseup", onMouseUp);
+        window.removeEventListener("wheel", onWheel);
         window.removeEventListener("blur", onBlur);
+        if (wheelTimer) clearTimeout(wheelTimer);
         keybindsStore.pressedKeys.clear();
     });
 }

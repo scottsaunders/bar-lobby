@@ -97,13 +97,27 @@ export const bindingsByKeyMod = computed((): Map<string, KeyBinding> => {
     return map;
 });
 
-/** key → Any+ binding */
+/** key → Any+ binding (single — last write wins) */
 export const anyBindingsByKey = computed((): Map<string, KeyBinding> => {
     const map = new Map<string, KeyBinding>();
     if (!keybindsStore.parsed) return map;
     for (const b of keybindsStore.parsed.bindings) {
         if (b.modifiers.length === 1 && b.modifiers[0].toLowerCase() === "any") {
             map.set(b.key, b);
+        }
+    }
+    return map;
+});
+
+/** key → all Any+ bindings (preserves all when a modifier key has multiple) */
+export const anyBindingsByKeyMulti = computed((): Map<string, KeyBinding[]> => {
+    const map = new Map<string, KeyBinding[]>();
+    if (!keybindsStore.parsed) return map;
+    for (const b of keybindsStore.parsed.bindings) {
+        if (b.modifiers.length === 1 && b.modifiers[0].toLowerCase() === "any") {
+            const arr = map.get(b.key);
+            if (arr) arr.push(b);
+            else map.set(b.key, [b]);
         }
     }
     return map;
@@ -283,18 +297,32 @@ export function getAdvancedBindingsForCommand(command: string): KeyBinding[] {
 }
 
 /**
- * Assign a command to a key with current modifiers.
- * If a binding already exists at that slot, it is removed (returned to sandbox).
- * Returns the displaced binding if any.
+ * Assign a command to a key — internal, no undo push or conflict detection.
+ * Handles Any+ bindings correctly.
+ * Returns the displaced binding if one was removed.
+ *
+ * NOTE: Uses direct array searches instead of the computed Maps so that we
+ * don't force an O(n) Map rebuild mid-mutation (the Maps were just invalidated
+ * by a prior removeBindingInternal call). The Maps will be rebuilt lazily once
+ * after all mutations are done.
  */
-export function assignBinding(key: string, modifiers: string[], command: string): KeyBinding | null {
-    if (!keybindsStore.parsed) return null;
-    pushUndo();
-
-    const existing = getExactBinding(key, modifiers);
-    if (existing) {
-        removeBindingInternal(existing.id);
+function assignBindingInternal(key: string, modifiers: string[], command: string): KeyBinding | null {
+    // Find existing binding at this slot (Any+ handled separately)
+    let existing: KeyBinding | undefined;
+    if (modifiers.length === 1 && modifiers[0].toLowerCase() === "any") {
+        existing = keybindsStore.parsed!.bindings.find(
+            (b) => b.modifiers.length === 1 && b.modifiers[0].toLowerCase() === "any" && b.key === key,
+        );
+    } else {
+        const modStr = modifiers.map((m) => m.toLowerCase()).sort().join("+");
+        existing = keybindsStore.parsed!.bindings.find(
+            (b) =>
+                !b.modifiers.includes("Any") &&
+                b.key === key &&
+                b.modifiers.map((m) => m.toLowerCase()).sort().join("+") === modStr,
+        );
     }
+    if (existing) removeBindingInternal(existing.id);
 
     const newBinding: KeyBinding = {
         id: `kb_${Date.now()}_${Math.random().toString(36).slice(2)}`,
@@ -307,10 +335,45 @@ export function assignBinding(key: string, modifiers: string[], command: string)
     };
     newBinding.raw = `bind ${modifiers.length > 0 ? modifiers.join("+") + "+" : ""}${key}  ${command}`;
 
-    keybindsStore.parsed.bindings.push(newBinding);
+    keybindsStore.parsed!.bindings.push(newBinding);
     keybindsStore.isDirty = true;
-    detectConflicts();
     return existing ?? null;
+}
+
+/**
+ * Assign a command to a key with current modifiers.
+ * If a binding already exists at that slot, it is removed (returned to sandbox).
+ * Returns the displaced binding if any.
+ */
+export function assignBinding(key: string, modifiers: string[], command: string): KeyBinding | null {
+    if (!keybindsStore.parsed) return null;
+    pushUndo();
+    const displaced = assignBindingInternal(key, modifiers, command);
+    detectConflicts();
+    return displaced;
+}
+
+/**
+ * Atomic drop operation — single undo snapshot for the full swap.
+ * Removes the source binding, assigns the command to the destination, and
+ * optionally swaps the displaced binding back to the source key.
+ */
+export function performDrop(
+    sourceBindingId: string | null,
+    destKey: string,
+    destModifiers: string[],
+    command: string,
+    sourceKey?: string,
+    sourceModifiers?: string[],
+): void {
+    if (!keybindsStore.parsed) return;
+    pushUndo();
+    if (sourceBindingId) removeBindingInternal(sourceBindingId);
+    const displaced = assignBindingInternal(destKey, destModifiers, command);
+    if (displaced && sourceKey && sourceModifiers) {
+        assignBindingInternal(sourceKey, sourceModifiers, displaced.command);
+    }
+    detectConflicts();
 }
 
 function removeBindingInternal(id: string): void {

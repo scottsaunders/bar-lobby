@@ -64,4 +64,5 @@ export interface CommandDef {
     description?: string;
     comment?: string; // design rationale / tooltip note (from keybind reference sheet)
     userRequirement?: UserRequirement;
+    icon?: string; // path to icon asset
 }

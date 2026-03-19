@@ -18,6 +18,8 @@
             ? { flex: '1', height: `${props.customHeight ?? KEY_H}px` }
             : { width: `${keyDef.width * KEY_W}px`, height: `${props.customHeight ?? KEY_H}px` }"
         :draggable="!!primaryBinding"
+        @mouseenter="isHovered = true"
+        @mouseleave="isHovered = false"
         @dragstart="onDragStart"
         @dragend="onDragEnd"
         @dragover.prevent="onDragOver"
@@ -41,14 +43,33 @@
                 :style="{ '--chip-color': chipColor }"
                 v-tooltip.top="getCommandDescription(primaryBinding.command) ?? getCommandLabel(primaryBinding.command)"
             >
-                {{ getCommandLabel(primaryBinding.command) }}
+                <CommandIcon v-if="primaryIcon" :src="primaryIcon" :size="20" :playing="isHovered" />
+                <span v-fit-text class="chip-label">{{ getCommandLabel(primaryBinding.command) }}</span>
             </div>
             <div
                 v-else-if="anyBinding"
                 class="binding-chip any-chip"
                 v-tooltip.top="getCommandDescription(anyBinding.command) ?? (getCommandLabel(anyBinding.command) + ' (Any+)')"
             >
-                {{ getCommandLabel(anyBinding.command) }}
+                <CommandIcon v-if="anyIcon" :src="anyIcon" :size="20" :playing="isHovered" />
+                <span v-fit-text class="chip-label">{{ getCommandLabel(anyBinding.command) }}</span>
+            </div>
+            <div
+                v-else-if="wheelModeBinding"
+                class="binding-chip wheel-mode-chip"
+                :style="{ '--chip-color': wheelModeColor }"
+                v-tooltip.top="`Hold modifier + scroll: ${getCommandDescription(wheelModeBinding.command) ?? getCommandLabel(wheelModeBinding.command)}`"
+            >
+                <CommandIcon v-if="wheelModeIcon" :src="wheelModeIcon" :size="20" :playing="isHovered" />
+                <span v-fit-text class="chip-label">{{ getCommandLabel(wheelModeBinding.command) }}</span>
+            </div>
+            <div
+                v-else-if="selectedCommandAction"
+                class="binding-chip selected-cmd-chip"
+                v-tooltip.top="selectedCommandAction.isDrag ? `Drag: ${selectedCommandAction.label}` : selectedCommandAction.label"
+            >
+                <span v-fit-text class="chip-label">{{ selectedCommandAction.label }}</span>
+                <span v-if="selectedCommandAction.isDrag" class="drag-indicator">drag</span>
             </div>
         </div>
     </div>
@@ -56,9 +77,14 @@
 
 <script lang="ts" setup>
     import { computed, ref } from "vue";
+    import { vFitText } from "@renderer/directives/fitText";
     import type { KeyDef } from "@renderer/utils/uikeys/types";
     import { getCommandLabel, getCommandDescription, getCommandColor, getCommandUnitType } from "@renderer/utils/uikeys/commands";
-    import { keybindsStore, getExactBinding, getBindingsForCommand, modifierStateToArray, assignBinding, removeBinding, anyBindingsByKey, sharedKeysByKeyMod } from "@renderer/store/keybinds.store";
+    import { getCommandIcon, COMMAND_ICONS_ENABLED } from "@renderer/utils/uikeys/command-icons";
+    import { getCommandMouseActions } from "@renderer/utils/uikeys/command-mouse-actions";
+    import type { CommandMouseActions } from "@renderer/utils/uikeys/command-mouse-actions";
+    import CommandIcon from "./CommandIcon.vue";
+    import { keybindsStore, getExactBinding, getBindingsForCommand, modifierStateToArray, performDrop, anyBindingsByKey, anyBindingsByKeyMulti, sharedKeysByKeyMod } from "@renderer/store/keybinds.store";
 
     const KEY_W = 56;
     const KEY_H = 76;
@@ -74,6 +100,7 @@
     }>();
 
     const isDragOver = ref(false);
+    const isHovered = ref(false);
 
     const activeModifiers = computed(() => modifierStateToArray(keybindsStore.activeModifiers));
 
@@ -90,9 +117,77 @@
         return flag ? !!keybindsStore.activeModifiers[flag] : false;
     });
 
-    const primaryBinding = computed(() => getExactBinding(props.keyDef.engineKey, activeModifiers.value));
+    const isAnyLayer = computed(() => keybindsStore.activeModifiers.any);
 
-    const anyBinding = computed(() => anyBindingsByKey.value.get(props.keyDef.engineKey));
+    // Commands that are "hold modifier + scroll wheel" gestures — displayed on wheel
+    // keys instead of the modifier key itself so the UI communicates the actual gesture.
+    const WHEEL_MODE_COMMANDS = new Set(["movetilt", "moverotate"]);
+    const WHEEL_KEYS = new Set(["WheelUp", "WheelDown"]);
+
+    // ModifierState flag → the engine key name that carries its Any+ bindings
+    const MODIFIER_FLAG_TO_ENGINE_KEY: Partial<Record<keyof typeof keybindsStore.activeModifiers, string>> = {
+        ctrl: "ctrl",
+        alt: "alt",
+        shift: "shift",
+        space: "space",
+    };
+
+    // In Any layer, primary binding IS the Any+ binding so it's fully editable.
+    // On modifier keys in the Any+ layer, skip wheel-mode commands so they don't
+    // show on the modifier key itself — they'll appear on WheelUp/WheelDown instead.
+    const primaryBinding = computed(() => {
+        if (isAnyLayer.value) {
+            if (props.keyDef.isModifier) {
+                const all = anyBindingsByKeyMulti.value.get(props.keyDef.engineKey) ?? [];
+                return all.find((b) => !WHEEL_MODE_COMMANDS.has(b.command)) ?? null;
+            }
+            return anyBindingsByKey.value.get(props.keyDef.engineKey) ?? null;
+        }
+        return getExactBinding(props.keyDef.engineKey, activeModifiers.value) ?? null;
+    });
+
+    // Only show the "secondary" any-chip when NOT in Any layer.
+    // Hide wheel-mode commands on modifier keys — they're shown on wheel keys instead.
+    const anyBinding = computed(() => {
+        if (isAnyLayer.value) return undefined;
+        const b = anyBindingsByKey.value.get(props.keyDef.engineKey);
+        if (b && props.keyDef.isModifier && WHEEL_MODE_COMMANDS.has(b.command)) return undefined;
+        return b;
+    });
+
+    // Virtual chip for WheelUp/WheelDown: shows the wheel-mode command (movetilt,
+    // moverotate) that is activated by holding the currently active modifier key.
+    // Only shown when the key has no real binding in the current layer.
+    const wheelModeBinding = computed(() => {
+        if (!WHEEL_KEYS.has(props.keyDef.engineKey)) return null;
+        if (primaryBinding.value || anyBinding.value) return null;
+        if (keybindsStore.activeModifiers.any) return null;
+        for (const [flag, engKey] of Object.entries(MODIFIER_FLAG_TO_ENGINE_KEY) as [keyof typeof keybindsStore.activeModifiers, string][]) {
+            if (!keybindsStore.activeModifiers[flag]) continue;
+            const bindings = anyBindingsByKeyMulti.value.get(engKey) ?? [];
+            const match = bindings.find((b) => WHEEL_MODE_COMMANDS.has(b.command));
+            if (match) return match;
+        }
+        return null;
+    });
+
+    // Mouse key → slot name in CommandMouseActions
+    const MOUSE_ACTION_SLOT: Partial<Record<string, keyof CommandMouseActions>> = {
+        mouse1: "mouse1",
+        mouse2: "mouse2",
+        mouse3: "mouse3",
+    };
+
+    // When a command is selected in the palette, show what LMB/RMB do for that
+    // command's cursor mode on the matching mouse key. Engine-level info only —
+    // these cannot be remapped and are shown purely for player education.
+    const selectedCommandAction = computed(() => {
+        if (!keybindsStore.selectedCommand) return null;
+        const slot = MOUSE_ACTION_SLOT[props.keyDef.engineKey];
+        if (!slot) return null;
+        if (primaryBinding.value || anyBinding.value || wheelModeBinding.value) return null;
+        return getCommandMouseActions(keybindsStore.selectedCommand)?.[slot] ?? null;
+    });
 
     const sharedKeyEntry = computed(() => {
         const modStr = activeModifiers.value.map((m) => m.toLowerCase()).sort().join("+");
@@ -105,6 +200,11 @@
         const cmd = primaryBinding.value?.command ?? anyBinding.value?.command;
         return cmd ? getCommandColor(cmd) : "#94a3b8";
     });
+
+    const primaryIcon = computed(() => COMMAND_ICONS_ENABLED && primaryBinding.value ? (getCommandIcon(primaryBinding.value.command) ?? null) : null);
+    const anyIcon = computed(() => COMMAND_ICONS_ENABLED && anyBinding.value ? (getCommandIcon(anyBinding.value.command) ?? null) : null);
+    const wheelModeIcon = computed(() => COMMAND_ICONS_ENABLED && wheelModeBinding.value ? (getCommandIcon(wheelModeBinding.value.command) ?? null) : null);
+    const wheelModeColor = computed(() => wheelModeBinding.value ? getCommandColor(wheelModeBinding.value.command) : "#94a3b8");
 
     // Light up when physically pressed
     const isPressed = computed(() => keybindsStore.pressedKeys.has(props.keyDef.engineKey));
@@ -152,23 +252,15 @@
         if (props.keyDef.isModifier) return;
 
         const command = e.dataTransfer?.getData("application/x-keybind-command") || e.dataTransfer?.getData("application/x-command");
-        const sourceBindingId = e.dataTransfer?.getData("application/x-keybind-id");
-        const sourceKey = e.dataTransfer?.getData("application/x-source-key");
+        const sourceBindingId = e.dataTransfer?.getData("application/x-keybind-id") || null;
+        const sourceKey = e.dataTransfer?.getData("application/x-source-key") || undefined;
         const sourceModifiersRaw = e.dataTransfer?.getData("application/x-source-modifiers");
         const sourceModifiers: string[] = sourceModifiersRaw ? JSON.parse(sourceModifiersRaw) : activeModifiers.value;
 
         if (!command) return;
 
-        if (sourceBindingId) {
-            removeBinding(sourceBindingId);
-        }
-
-        const displaced = assignBinding(props.keyDef.engineKey, activeModifiers.value, command);
-
-        // Swap: if a key-to-key drag displaced an existing binding, send it to the source key
-        if (displaced && sourceKey) {
-            assignBinding(sourceKey, sourceModifiers, displaced.command);
-        }
+        // Single undo snapshot covers the full swap
+        performDrop(sourceBindingId, props.keyDef.engineKey, activeModifiers.value, command, sourceKey, sourceModifiers);
     }
 
     function onClick() {
@@ -182,7 +274,8 @@
         padding: 2px;
         cursor: pointer;
         user-select: none;
-        transition: opacity 0.15s ease;
+        // opacity is GPU-composited — fine to transition even when many keys change at once
+        transition: opacity 0.12s ease;
 
         &.is-modifier {
             cursor: default;
@@ -206,13 +299,19 @@
         padding: 4px 5px;
         position: relative;
         overflow: hidden;
-        transition: background 0.12s ease, border-color 0.12s ease;
         box-sizing: border-box;
+        // Only animate box-shadow by default — it's GPU-composited and doesn't cause paint.
+        // background/border-color transitions are intentionally omitted here: when the user
+        // switches modifier layers, 40-60+ keys change state simultaneously and animating all
+        // of them causes visible jank. Those changes happen instantly; hover gets its own rule.
+        transition: box-shadow 0.15s ease;
     }
 
+    // Hover background/border animates smoothly — only ever one key at a time.
     .keyboard-key:hover:not(.is-modifier) .key-inner {
         background: rgba(255, 255, 255, 0.12);
         border-color: rgba(255, 255, 255, 0.25);
+        transition: background 0.08s ease, border-color 0.08s ease, box-shadow 0.15s ease;
     }
 
     .keyboard-key.has-binding .key-inner {
@@ -306,15 +405,59 @@
 
     .binding-chip {
         margin-top: 3px;
-        font-size: 11px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1px;
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    .chip-label {
+        font-size: 9px;
         font-weight: 700;
         color: var(--chip-color, #94a3b8);
         white-space: normal;
         word-break: break-word;
-        line-height: 1.25;
+        line-height: 1.2;
         text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
-        flex: 1;
-        min-height: 0;
+        text-align: center;
+        width: 100%;
+
+        // When no icon sibling, use normal size
+        .binding-chip:not(:has(.cmd-icon-wrap)) & {
+            font-size: 11px;
+        }
+    }
+
+    // Wheel-mode chip: shown on WheelUp/WheelDown to indicate a "hold modifier + scroll"
+    // gesture. Dashed border and reduced opacity distinguish it from direct bindings.
+    .wheel-mode-chip {
+        opacity: 0.6;
+        outline: 1px dashed rgba(255, 255, 255, 0.25);
+        outline-offset: 2px;
+        border-radius: 2px;
+    }
+
+    // Selected-command chip: shown on mouse keys when a command with a cursor
+    // mode is selected in the palette. Amber dashed border to match the
+    // "is-selected" highlight color used on the bound keyboard keys.
+    .selected-cmd-chip {
+        opacity: 0.7;
+        outline: 1px dashed rgba(251, 191, 36, 0.45);
+        outline-offset: 2px;
+        border-radius: 2px;
+        --chip-color: rgba(251, 191, 36, 0.8);
+    }
+
+    .drag-indicator {
+        font-size: 7px;
+        font-weight: 700;
+        color: rgba(251, 191, 36, 0.6);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        line-height: 1;
     }
 
     .any-chip {

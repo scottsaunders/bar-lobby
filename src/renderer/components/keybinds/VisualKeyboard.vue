@@ -38,9 +38,9 @@
             <!-- Mouse inset box -->
             <div class="keyboard-mouse-inset">
                 <span class="mouse-inset-label">Mouse</span>
-                <div class="mouse-row">
+                <div v-for="(row, i) in MOUSE_ROWS" :key="i" class="mouse-row">
                     <KeyboardKey
-                        v-for="keyDef in MOUSE_KEYS"
+                        v-for="keyDef in row.keys"
                         :key="keyDef.id"
                         :keyDef="keyDef"
                         :fill="true"
@@ -66,9 +66,6 @@
     // Slightly reduced key height for nav/numpad so they stack flush with the
     // main keyboard once the mouse inset box is added below them.
     const CLUSTER_KEY_H = 73;
-
-    // Flatten mouse rows into a single ordered list: LMB, RMB, MMB, M4, M5
-    const MOUSE_KEYS = MOUSE_ROWS.flatMap((r) => r.keys);
 
     const emit = defineEmits<{
         keyClicked: [key: string];

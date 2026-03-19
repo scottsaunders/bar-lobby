@@ -9,6 +9,7 @@ import * as path from "path";
 import util, { promisify } from "util";
 import zlib from "zlib";
 import { GameAI, GameVersion } from "@main/content/game/game-version";
+import { UnitData, UnitFaction, UnitType } from "@main/content/game/unit-data";
 import { parseLuaTable } from "@main/utils/parse-lua-table";
 import { parseLuaOptions } from "@main/utils/parse-lua-options";
 import { BufferStream } from "@main/utils/buffer-stream";
@@ -332,6 +333,121 @@ export class GameContentAPI extends PrDownloaderAPI<string, GameVersion> {
             });
         }
         return ais;
+    }
+
+    public async getUnits(gameVersion: string): Promise<UnitData[]> {
+        const version = this.availableVersions.values().find((v) => v.gameVersion === gameVersion);
+        if (!version) {
+            log.warn(`No installed version found for: ${gameVersion}`);
+            return [];
+        }
+        const packageMd5 = version.packageMd5;
+
+        const folderFactionMap: Record<string, UnitFaction> = {
+            ArmAircraft: "Armada",
+            ArmBots: "Armada",
+            ArmBuildings: "Armada",
+            ArmGantry: "Armada",
+            ArmHovercraft: "Armada",
+            ArmSeaplanes: "Armada",
+            ArmShips: "Armada",
+            ArmVehicles: "Armada",
+            CorAircraft: "Cortex",
+            CorBots: "Cortex",
+            CorBuildings: "Cortex",
+            CorGantry: "Cortex",
+            CorHovercraft: "Cortex",
+            CorSeaplanes: "Cortex",
+            CorShips: "Cortex",
+            CorVehicles: "Cortex",
+            Legion: "Legion",
+            Scavengers: "Scavengers",
+        };
+
+        const folderTypeMap: Record<string, UnitType> = {
+            ArmAircraft: "Aircraft",
+            ArmBots: "Bots",
+            ArmBuildings: "Buildings",
+            ArmGantry: "Gantry",
+            ArmHovercraft: "Hovercraft",
+            ArmSeaplanes: "Seaplanes",
+            ArmShips: "Ships",
+            ArmVehicles: "Vehicles",
+            CorAircraft: "Aircraft",
+            CorBots: "Bots",
+            CorBuildings: "Buildings",
+            CorGantry: "Gantry",
+            CorHovercraft: "Hovercraft",
+            CorSeaplanes: "Seaplanes",
+            CorShips: "Ships",
+            CorVehicles: "Vehicles",
+        };
+
+        const unitFiles = await this.getGameFiles(packageMd5, "units/**/*.lua", true);
+        const units: UnitData[] = [];
+
+        for (const unitFile of unitFiles) {
+            try {
+                // Derive faction/type from file path e.g. "units/ArmBots/armflea.lua"
+                const parts = unitFile.fileName.split("/");
+                const folder = parts.length >= 2 ? parts[1] : "";
+                const faction: UnitFaction = folderFactionMap[folder] ?? "Other";
+                const unitType: UnitType = folderTypeMap[folder] ?? "Other";
+
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const def: Record<string, any> = parseLuaTable(unitFile.data);
+
+                // BAR unit files use: return { armflea = { health=60, speed=132, ... } }
+                // The outer table has one key (the codename); the inner table is the unit def.
+                let unitDef = def;
+                let returnKey: string | undefined;
+                const keys = Object.keys(def);
+                if (keys.length === 1 && typeof def[keys[0]] === "object" && !Array.isArray(def[keys[0]])) {
+                    returnKey = keys[0];
+                    unitDef = def[keys[0]];
+                }
+
+                // Codename: prefer the return key (most reliable), then fallback to file name
+                const unitName: string = (returnKey ?? unitDef.unitname ?? path.parse(unitFile.fileName).name).toLowerCase();
+                // Display name: prefer `name` field, fallback to capitalized codename
+                const displayName: string = unitDef.name ?? unitName.charAt(0).toUpperCase() + unitName.slice(1);
+                const description: string = unitDef.description ?? "";
+
+                const techLevel = Number(unitDef.customparams?.techlevel ?? unitDef.customparams?.level ?? 1);
+
+                const weaponDefs: string[] = [];
+                if (Array.isArray(unitDef.weapons)) {
+                    for (const w of unitDef.weapons) {
+                        if (w?.def) weaponDefs.push(String(w.def));
+                    }
+                }
+
+                units.push({
+                    unitName,
+                    name: displayName,
+                    description,
+                    faction,
+                    unitType,
+                    techLevel,
+                    metalCost: Number(unitDef.metalcost ?? 0),
+                    energyCost: Number(unitDef.energycost ?? 0),
+                    buildTime: Number(unitDef.buildtime ?? 0),
+                    health: Number(unitDef.health ?? unitDef.maxdamage ?? 0),
+                    speed: Number(unitDef.speed ?? unitDef.maxvelocity ?? 0),
+                    sightRange: Number(unitDef.sightdistance ?? 0),
+                    radarRange: Number(unitDef.radardistance ?? unitDef.radardistancescan ?? 0),
+                    sonarRange: Number(unitDef.sonardistance ?? 0),
+                    buildPower: Number(unitDef.workertime ?? 0),
+                    buildRange: Number(unitDef.builddistance ?? unitDef.buildrange ?? 0),
+                    weaponDefs,
+                });
+            } catch (err) {
+                log.warn(`Skipping unit file ${unitFile.fileName}: ${err}`);
+            }
+        }
+
+        log.info(`Parsed ${units.length} / ${unitFiles.length} unit files from game version: ${gameVersion}`);
+        return units;
     }
 
     public async preloadPoolData() {

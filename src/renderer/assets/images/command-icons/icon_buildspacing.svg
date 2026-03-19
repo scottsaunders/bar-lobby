@@ -1,0 +1,86 @@
+<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+<style>.BuildObject_155 {
+	animation: 1.3s linear 0s infinite normal forwards running BuildObject_155;
+	transform-box: fill-box;
+	transform-origin: 50% 50%;
+	transform: translateX(14px) translateY(14px);
+}
+@keyframes BuildObject_155 {
+	0% {
+		transform: translateX(14px) translateY(14px);
+	}
+	38.46% {
+		transform: translateX(10px) translateY(10px);
+	}
+	76.92% {
+		transform: translateX(14px) translateY(14px);
+	}
+	100% {
+		transform: translateX(14px) translateY(14px);
+	}
+}.BuildObject_277 {
+	animation: 1.3s linear 0s infinite normal forwards running BuildObject_277;
+	transform-box: fill-box;
+	transform-origin: 50% 50%;
+	transform: translateX(14px) translateY(58px);
+}
+@keyframes BuildObject_277 {
+	0% {
+		transform: translateX(14px) translateY(58px);
+	}
+	38.46% {
+		transform: translateX(10px) translateY(62px);
+	}
+	76.92% {
+		transform: translateX(14px) translateY(58px);
+	}
+	100% {
+		transform: translateX(14px) translateY(58px);
+	}
+}.BuildObject_628 {
+	animation: 1.3s linear 0s infinite normal forwards running BuildObject_628;
+	transform-box: fill-box;
+	transform-origin: 50% 50%;
+	transform: translateX(58px) translateY(14px);
+}
+@keyframes BuildObject_628 {
+	0% {
+		transform: translateX(58px) translateY(14px);
+	}
+	38.46% {
+		transform: translateX(62px) translateY(10px);
+	}
+	76.92% {
+		transform: translateX(58px) translateY(14px);
+	}
+	100% {
+		transform: translateX(58px) translateY(14px);
+	}
+}.BuildObject_266 {
+	animation: 1.3s linear 0s infinite normal forwards running BuildObject_266;
+	transform-box: fill-box;
+	transform-origin: 50% 50%;
+	transform: translateX(58px) translateY(58px);
+}
+@keyframes BuildObject_266 {
+	0% {
+		transform: translateX(58px) translateY(58px);
+	}
+	38.46% {
+		transform: translateX(62px) translateY(62px);
+	}
+	76.92% {
+		transform: translateX(58px) translateY(58px);
+	}
+	100% {
+		transform: translateX(58px) translateY(58px);
+	}
+}
+</style><g clip-path="url(#clip_0_62)">
+<rect width="25" height="25" fill="#2B682A" fill-opacity="0.32" stroke="#00FF00" class="BuildObject_155"/>
+<rect width="25" height="25" fill="#2B682A" fill-opacity="0.32" stroke="#00FF00" class="BuildObject_277"/>
+<rect width="25" height="25" fill="#2B682A" fill-opacity="0.32" stroke="#00FF00" class="BuildObject_628"/>
+<rect width="25" height="25" fill="#2B682A" fill-opacity="0.32" stroke="#00FF00" class="BuildObject_266"/></g>
+<defs><clipPath id="clip_0_62"><rect width="96" height="96"/></clipPath>
+</defs>
+</svg>
