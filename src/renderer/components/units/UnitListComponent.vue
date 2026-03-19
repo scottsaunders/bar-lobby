@@ -125,8 +125,8 @@ const visibleUnits = computed(() => filteredUnits.value.slice(0, limit.value));
 
 .units-grid {
     display: grid;
-    gap: map.get($spacing, "sm");
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: map.get($spacing, "lg");
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     padding-right: map.get($spacing, "sm");
     padding-bottom: map.get($spacing, "lg");
 }
