@@ -34,6 +34,12 @@ export async function loadUnits(gameVersion: string) {
     unitsStore.isLoading = true;
     try {
         const units = await window.game.getUnits(gameVersion);
+        const enLang = await import("@renderer/assets/languages/en.json");
+        const nameMap = enLang.default.units.names as Record<string, string>;
+        for (const unit of units) {
+            const localized = nameMap[unit.unitName];
+            if (localized) unit.name = localized;
+        }
         unitsStore.units = units;
         unitsStore.loadedForVersion = gameVersion;
         unitsStore.isLoaded = true;

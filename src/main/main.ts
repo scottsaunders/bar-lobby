@@ -111,8 +111,9 @@ app.whenReady().then(async () => {
         const csp = {
             "default-src": ["'self'"],
             "style-src": ["'self'", "'unsafe-inline'"],
-            "img-src": ["'self'", "blob:", "data:"],
+            "img-src": ["'self'", "blob:", "data:", "https://raw.githubusercontent.com"],
             "media-src": ["'self'", "data:"],
+            "connect-src": ["'self'", "https://raw.githubusercontent.com", "blob:"],
         };
         // Those additional rules are needed when vue dev tools are injected.
         if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {

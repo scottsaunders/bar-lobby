@@ -9,7 +9,7 @@ import * as path from "path";
 import util, { promisify } from "util";
 import zlib from "zlib";
 import { GameAI, GameVersion } from "@main/content/game/game-version";
-import { UnitData, UnitFaction, UnitType } from "@main/content/game/unit-data";
+import { UnitData, UnitFaction, UnitType, WeaponData } from "@main/content/game/unit-data";
 import { parseLuaTable } from "@main/utils/parse-lua-table";
 import { parseLuaOptions } from "@main/utils/parse-lua-options";
 import { BufferStream } from "@main/utils/buffer-stream";
@@ -250,7 +250,7 @@ export class GameContentAPI extends PrDownloaderAPI<string, GameVersion> {
             for (const file of files) {
                 const sdpData = {
                     archivePath: file,
-                    fileName: path.parse(file).base,
+                    fileName: path.relative(customGameDir, file).replace(/\\/g, "/"),
                     crc32: "",
                     md5: "",
                     filesizeBytes: 0,
@@ -364,6 +364,8 @@ export class GameContentAPI extends PrDownloaderAPI<string, GameVersion> {
             Scavengers: "Scavengers",
         };
 
+        // Maps folder names to unit types. Legion/Scavengers use a two-level hierarchy
+        // e.g. units/Legion/LegionBots/legflea.lua → parts[1]="Legion", parts[2]="LegionBots"
         const folderTypeMap: Record<string, UnitType> = {
             ArmAircraft: "Aircraft",
             ArmBots: "Bots",
@@ -381,7 +383,52 @@ export class GameContentAPI extends PrDownloaderAPI<string, GameVersion> {
             CorSeaplanes: "Seaplanes",
             CorShips: "Ships",
             CorVehicles: "Vehicles",
+            // Legion subfolders
+            LegionAircraft: "Aircraft",
+            LegionBots: "Bots",
+            LegionBuildings: "Buildings",
+            LegionGantry: "Gantry",
+            LegionHovercraft: "Hovercraft",
+            LegionSeaplanes: "Seaplanes",
+            LegionShips: "Ships",
+            LegionVehicles: "Vehicles",
         };
+
+        // Load display names from language file (maps codename → display name)
+        // e.g. { "armaak": "Archangel", "armflea": "Tick", ... }
+        let langNames: Record<string, string> = {};
+        try {
+            const langFiles = await this.getGameFiles(packageMd5, "language/units.json", true);
+            if (langFiles.length > 0) {
+                langNames = JSON.parse(langFiles[0].data.toString("utf8"));
+                log.info(`Loaded ${Object.keys(langNames).length} unit display names from language file`);
+            }
+        } catch {
+            log.debug("No language/units.json found; will use name from unit def");
+        }
+
+        // Load and index all weapon defs for rich weapon stats
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const weaponDefMap: Record<string, Record<string, any>> = {};
+        try {
+            const weaponFiles = await this.getGameFiles(packageMd5, "weapondefs/**/*.lua", true);
+            for (const wf of weaponFiles) {
+                try {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    const wDef: Record<string, any> = parseLuaTable(wf.data);
+                    for (const [key, val] of Object.entries(wDef)) {
+                        if (val && typeof val === "object") {
+                            weaponDefMap[key.toLowerCase()] = val;
+                        }
+                    }
+                } catch {
+                    // skip unparseable weapon files
+                }
+            }
+            log.info(`Loaded ${Object.keys(weaponDefMap).length} weapon defs from weapondefs/ files`);
+        } catch {
+            log.debug("Could not load weapon defs");
+        }
 
         const unitFiles = await this.getGameFiles(packageMd5, "units/**/*.lua", true);
         const units: UnitData[] = [];
@@ -389,10 +436,32 @@ export class GameContentAPI extends PrDownloaderAPI<string, GameVersion> {
         for (const unitFile of unitFiles) {
             try {
                 // Derive faction/type from file path e.g. "units/ArmBots/armflea.lua"
+                // Legion uses two-level paths: "units/Legion/LegionBots/legflea.lua"
                 const parts = unitFile.fileName.split("/");
                 const folder = parts.length >= 2 ? parts[1] : "";
-                const faction: UnitFaction = folderFactionMap[folder] ?? "Other";
-                const unitType: UnitType = folderTypeMap[folder] ?? "Other";
+                const subfolder = parts.length >= 3 ? parts[2] : "";
+                const fileBaseName = path.parse(unitFile.fileName).name.toLowerCase();
+                const factionFromName = (n: string): UnitFaction => {
+                    if (n.startsWith("arm")) return "Armada";
+                    if (n.startsWith("cor")) return "Cortex";
+                    if (n.startsWith("leg")) return "Legion";
+                    if (n.startsWith("scav")) return "Scavengers";
+                    return "Other";
+                };
+                const typeFromSuffix = (f: string): UnitType | undefined => {
+                    const fl = f.toLowerCase();
+                    if (fl.endsWith("aircraft")) return "Aircraft";
+                    if (fl.endsWith("bots")) return "Bots";
+                    if (fl.endsWith("buildings")) return "Buildings";
+                    if (fl.endsWith("vehicles")) return "Vehicles";
+                    if (fl.endsWith("ships")) return "Ships";
+                    if (fl.endsWith("hovercraft")) return "Hovercraft";
+                    if (fl.endsWith("seaplanes")) return "Seaplanes";
+                    if (fl.endsWith("gantry")) return "Gantry";
+                    return undefined;
+                };
+                const faction: UnitFaction = folderFactionMap[folder] ?? factionFromName(fileBaseName);
+                const unitType: UnitType = folderTypeMap[folder] ?? folderTypeMap[subfolder] ?? typeFromSuffix(folder) ?? typeFromSuffix(subfolder) ?? "Other";
 
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const def: Record<string, any> = parseLuaTable(unitFile.data);
@@ -409,16 +478,64 @@ export class GameContentAPI extends PrDownloaderAPI<string, GameVersion> {
 
                 // Codename: prefer the return key (most reliable), then fallback to file name
                 const unitName: string = (returnKey ?? unitDef.unitname ?? path.parse(unitFile.fileName).name).toLowerCase();
-                // Display name: prefer `name` field, fallback to capitalized codename
-                const displayName: string = unitDef.name ?? unitName.charAt(0).toUpperCase() + unitName.slice(1);
-                const description: string = unitDef.description ?? "";
+                // Display name: prefer language file, then `name` field, then capitalized codename
+                const displayName: string = langNames[unitName] ?? (unitDef.name && typeof unitDef.name === "string" ? unitDef.name : null) ?? (unitName.charAt(0).toUpperCase() + unitName.slice(1));
+                const description: string = typeof unitDef.description === "string" ? unitDef.description : "";
 
                 const techLevel = Number(unitDef.customparams?.techlevel ?? unitDef.customparams?.level ?? 1);
 
+                // Build a per-unit weapon def lookup from the inline `weapondefs` table.
+                // BAR embeds weapon definitions directly inside the unit file under unitDef.weapondefs,
+                // keyed by the weapon def name (e.g. { LONGRANGEMISSILE: { damage: {...}, range: 1200, ... } }).
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const inlineWeaponDefs: Record<string, Record<string, any>> = {};
+                const rawInlineWds = unitDef.weapondefs;
+                if (rawInlineWds && typeof rawInlineWds === "object" && !Array.isArray(rawInlineWds)) {
+                    for (const [key, val] of Object.entries(rawInlineWds)) {
+                        if (val && typeof val === "object") {
+                            inlineWeaponDefs[key.toLowerCase()] = val as Record<string, unknown>;
+                        }
+                    }
+                }
+
+                // Parse weapon references and look up full stats from weapon defs.
+                // Prefer the inline weapondefs table; fall back to the global file-based map.
+                // unitDef.weapons is a Lua table with numeric bracket keys {[1]={def=...},[2]={def=...}}
+                // parseLuaTable returns this as a plain object, not a JS array, so Array.isArray fails
                 const weaponDefs: string[] = [];
-                if (Array.isArray(unitDef.weapons)) {
-                    for (const w of unitDef.weapons) {
-                        if (w?.def) weaponDefs.push(String(w.def));
+                const weapons: WeaponData[] = [];
+                const weaponsRaw = unitDef.weapons;
+                if (weaponsRaw && typeof weaponsRaw === "object") {
+                    const weaponEntries: unknown[] = Array.isArray(weaponsRaw) ? weaponsRaw : Object.values(weaponsRaw);
+                    for (const w of weaponEntries) {
+                        if (!w || typeof w !== "object" || !(w as Record<string, unknown>).def) continue;
+                        const defName = String((w as Record<string, unknown>).def);
+                        weaponDefs.push(defName);
+                        const wd = inlineWeaponDefs[defName.toLowerCase()] ?? weaponDefMap[defName.toLowerCase()];
+                        if (wd) {
+                            const damageTable = wd.damage;
+                            const damage = Number(
+                                damageTable && typeof damageTable === "object"
+                                    ? ((damageTable as Record<string, unknown>).default ?? Object.values(damageTable as object)[0] ?? 0)
+                                    : (damageTable ?? 0)
+                            );
+                            const reloadTime = Number(wd.reloadtime ?? wd.reload ?? 1);
+                            const range = Number(wd.range ?? 0);
+                            const dps = reloadTime > 0 ? Math.round(damage / reloadTime) : 0;
+                            weapons.push({
+                                name: defName,
+                                damage,
+                                range,
+                                reloadTime,
+                                dps,
+                                projectileSpeed: Number(wd.projectilespeed ?? wd.weaponvelocity ?? 0),
+                                aoe: Number(wd.areaofeffect ?? wd.aoe ?? 0),
+                                weaponType: String(wd.weapontype ?? wd.type ?? ""),
+                            });
+                        } else {
+                            // Weapon def not found; add with name only so ORDNANCE section still renders
+                            weapons.push({ name: defName, damage: 0, range: 0, reloadTime: 0, dps: 0, projectileSpeed: 0, aoe: 0, weaponType: "" });
+                        }
                     }
                 }
 
@@ -434,11 +551,16 @@ export class GameContentAPI extends PrDownloaderAPI<string, GameVersion> {
                     buildTime: Number(unitDef.buildtime ?? 0),
                     health: Number(unitDef.health ?? unitDef.maxdamage ?? 0),
                     speed: Number(unitDef.speed ?? unitDef.maxvelocity ?? 0),
+                    turnRate: Number(unitDef.turnrate ?? 0),
+                    acceleration: Number(unitDef.acceleration ?? 0),
+                    brakeRate: Number(unitDef.brakerate ?? 0),
                     sightRange: Number(unitDef.sightdistance ?? 0),
                     radarRange: Number(unitDef.radardistance ?? unitDef.radardistancescan ?? 0),
                     sonarRange: Number(unitDef.sonardistance ?? 0),
+                    armorType: String(unitDef.armortype ?? ""),
                     buildPower: Number(unitDef.workertime ?? 0),
                     buildRange: Number(unitDef.builddistance ?? unitDef.buildrange ?? 0),
+                    weapons,
                     weaponDefs,
                 });
             } catch (err) {

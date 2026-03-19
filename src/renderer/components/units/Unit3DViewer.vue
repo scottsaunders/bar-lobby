@@ -26,10 +26,38 @@ import { Icon } from "@iconify/vue";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import cubeIcon from "@iconify-icons/mdi/cube-outline";
 import mouseIcon from "@iconify-icons/mdi/mouse";
 
-const props = defineProps<{ unitName: string }>();
+import type { UnitFaction } from "@main/content/game/unit-data";
+
+const props = defineProps<{ unitName: string; faction?: UnitFaction }>();
+
+const factionTexPrefix: Record<string, string> = {
+    Armada: "arm",
+    Cortex: "cor",
+    Legion: "leg",
+    Scavengers: "scav",
+    Other: "arm",
+};
+
+const factionTeamColors: Record<string, number> = {
+    Armada: 0x0043ee,
+    Cortex: 0xff0000,
+    Legion: 0x00ff00,
+    Scavengers: 0xa855f7,
+    Other: 0x6b7280,
+};
+
+// Fallback solid color if textures fail to load
+const factionFallbackColors: Record<string, number> = {
+    Armada: 0x3b82f6,
+    Cortex: 0xef4444,
+    Legion: 0x22c55e,
+    Scavengers: 0xa855f7,
+    Other: 0x6b7280,
+};
 
 const containerRef = ref<HTMLDivElement | null>(null);
 const canvasRef = ref<HTMLCanvasElement | null>(null);
@@ -46,29 +74,33 @@ function setupScene(canvas: HTMLCanvasElement, container: HTMLDivElement) {
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.0;
 
     const { width, height } = container.getBoundingClientRect();
     renderer.setSize(width, height);
 
     scene = new THREE.Scene();
 
+    // PBR environment map — dramatically improves metal/roughness rendering
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+    scene.environmentIntensity = 0.4;
+    pmrem.dispose();
+
     camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 2000);
     camera.position.set(0, 50, 150);
 
-    // Lighting
-    const ambient = new THREE.AmbientLight(0xffffff, 0.6);
-    scene.add(ambient);
-
-    const sun = new THREE.DirectionalLight(0xfff5e0, 2.0);
+    // Key light (warm sun)
+    const sun = new THREE.DirectionalLight(0xfff5e0, 1.2);
     sun.position.set(80, 120, 60);
     sun.castShadow = true;
     scene.add(sun);
 
-    const fill = new THREE.DirectionalLight(0x8ab4f8, 0.5);
+    // Soft fill from opposite side
+    const fill = new THREE.DirectionalLight(0xacc8f0, 0.3);
     fill.position.set(-60, 20, -80);
     scene.add(fill);
 
@@ -111,39 +143,99 @@ async function loadModel(unitName: string) {
 
     state.value = "loading";
 
-    const url = `https://raw.githubusercontent.com/icexuick/BAR-modelviewer/main/${unitName}.glb`;
+    const glbUrl = `https://raw.githubusercontent.com/icexuick/BAR-modelviewer/main/${encodeURIComponent(unitName)}.glb`;
+    const texBase = "https://raw.githubusercontent.com/icexuick/BAR-modelviewer/main/tex/";
+    const prefix = factionTexPrefix[props.faction ?? "Other"] ?? "arm";
+    const teamColorHex = factionTeamColors[props.faction ?? "Other"] ?? 0x6b7280;
 
     try {
         const loader = new GLTFLoader();
-        const gltf = await new Promise<{ scene: THREE.Object3D }>((resolve, reject) => {
-            loader.load(url, resolve, undefined, reject);
-        });
+        const texLoader = new THREE.TextureLoader();
 
+        // Load GLB and all 4 faction texture sheets in parallel
+        const [gltf, colorTex, normalTex, otherTex, teamTex] = await Promise.all([
+            new Promise<{ scene: THREE.Object3D }>((resolve, reject) => {
+                loader.load(glbUrl, resolve, undefined, reject);
+            }),
+            texLoader.loadAsync(`${texBase}${prefix}_color.png`).catch(() => null),
+            texLoader.loadAsync(`${texBase}${prefix}_normal.png`).catch(() => null),
+            texLoader.loadAsync(`${texBase}${prefix}_other.png`).catch(() => null),
+            texLoader.loadAsync(`${texBase}${prefix}_team.png`).catch(() => null),
+        ]);
+
+        // GLTF UV coords expect flipY=false; TextureLoader defaults to true
+        for (const tex of [colorTex, normalTex, otherTex, teamTex]) {
+            if (tex) tex.flipY = false;
+        }
+        if (colorTex) colorTex.colorSpace = THREE.SRGBColorSpace;
+
+        const teamColor = new THREE.Color(teamColorHex);
         const model = gltf.scene;
         model.userData.isModel = true;
 
-        // Center and scale the model to fit comfortably
+        // Center and scale
         const box = new THREE.Box3().setFromObject(model);
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
         const maxDim = Math.max(size.x, size.y, size.z);
-        const targetSize = 80;
-        const scale = targetSize / (maxDim || 1);
+        const scale = 80 / (maxDim || 1);
 
         model.position.sub(center.multiplyScalar(scale));
         model.scale.setScalar(scale);
 
-        // Enable shadows on all meshes
+        // Apply PBR faction textures to every mesh
         model.traverse((child) => {
-            if ((child as THREE.Mesh).isMesh) {
-                child.castShadow = true;
-                child.receiveShadow = true;
+            const mesh = child as THREE.Mesh;
+            if (!mesh.isMesh) return;
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+
+            if (colorTex) {
+                const mat = new THREE.MeshStandardMaterial({
+                    map: colorTex,
+                    normalMap: normalTex ?? undefined,
+                    // _other.png packs: R=AO, G=Roughness, B=Metalness
+                    // Three.js reads roughness from G channel, metalness from B channel.
+                    // Set base values to 1.0 so the map drives the result fully;
+                    // fall back to conservative values if the texture didn't load.
+                    roughnessMap: otherTex ?? undefined,
+                    metalnessMap: otherTex ?? undefined,
+                    roughness: otherTex ? 1.0 : 0.7,
+                    metalness: otherTex ? 1.0 : 0.3,
+                });
+
+                // Blend team color onto team-masked areas via shader injection
+                if (teamTex) {
+                    const capturedTeam = teamTex;
+                    const capturedColor = teamColor;
+                    mat.onBeforeCompile = (shader) => {
+                        shader.uniforms.teamMap = { value: capturedTeam };
+                        shader.uniforms.teamColor = { value: capturedColor };
+                        shader.fragmentShader =
+                            "uniform sampler2D teamMap;\nuniform vec3 teamColor;\n" + shader.fragmentShader;
+                        shader.fragmentShader = shader.fragmentShader.replace(
+                            "#include <map_fragment>",
+                            `#include <map_fragment>
+                            vec4 teamMask = texture2D(teamMap, vMapUv);
+                            diffuseColor.rgb = mix(diffuseColor.rgb, diffuseColor.rgb * teamColor * 2.0, teamMask.r * 0.85);`
+                        );
+                    };
+                }
+
+                mesh.material = mat;
+            } else {
+                // Texture load failed — solid faction color fallback
+                mesh.material = new THREE.MeshStandardMaterial({
+                    color: factionFallbackColors[props.faction ?? "Other"] ?? 0x6b7280,
+                    metalness: 0.3,
+                    roughness: 0.65,
+                });
             }
         });
 
         scene.add(model);
 
-        // Reposition camera to frame the model
+        // Frame camera to model
         const scaledSize = size.clone().multiplyScalar(scale);
         const maxScaledDim = Math.max(scaledSize.x, scaledSize.y, scaledSize.z);
         const camDist = maxScaledDim * 2.2;

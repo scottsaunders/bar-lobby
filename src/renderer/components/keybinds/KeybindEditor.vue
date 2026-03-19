@@ -44,14 +44,14 @@
                 <div class="toolbar-spacer" />
 
                 <button v-if="trueConflicts.length > 0" class="sharedkey-btn is-conflict" :class="{ active: showConflicts }" @click="showConflicts = !showConflicts" v-tooltip.bottom="'Two or more commands in the same context share this key — one may override the other unexpectedly'">
-                    <Icon icon="mdi:alert" />
+                    <Icon :icon="alertIcon" />
                     {{ trueConflicts.length }} conflict{{ trueConflicts.length !== 1 ? "s" : "" }}
-                    <Icon :icon="showConflicts ? 'mdi:chevron-up' : 'mdi:chevron-down'" style="font-size: 14px; margin-left: 2px" />
+                    <Icon :icon="showConflicts ? chevronUpIcon : chevronDownIcon" style="font-size: 14px; margin-left: 2px" />
                 </button>
                 <button v-else-if="sharedKeys.length > 0" class="sharedkey-btn is-shared" :class="{ active: showConflicts }" @click="showConflicts = !showConflicts" v-tooltip.bottom="'Some keys are shared across unit type contexts — this is usually intentional'">
-                    <Icon icon="mdi:information-outline" />
+                    <Icon :icon="infoIcon" />
                     {{ sharedKeys.length }} shared key{{ sharedKeys.length !== 1 ? "s" : "" }}
-                    <Icon :icon="showConflicts ? 'mdi:chevron-up' : 'mdi:chevron-down'" style="font-size: 14px; margin-left: 2px" />
+                    <Icon :icon="showConflicts ? chevronUpIcon : chevronDownIcon" style="font-size: 14px; margin-left: 2px" />
                 </button>
 
                 <span v-if="keybindsStore.isDirty" class="dirty-dot">Unsaved changes</span>
@@ -69,8 +69,8 @@
             <!-- Shared keys panel -->
             <div v-if="showConflicts && keybindsStore.sharedKeys.length > 0" class="conflict-panel">
                 <div class="conflict-panel-header">
-                    <Icon v-if="trueConflicts.length > 0" icon="mdi:alert" style="color: #fbbf24" />
-                    <Icon v-else icon="mdi:information-outline" style="color: rgba(148,163,184,0.8)" />
+                    <Icon v-if="trueConflicts.length > 0" :icon="alertIcon" style="color: #fbbf24" />
+                    <Icon v-else :icon="infoIcon" style="color: rgba(148,163,184,0.8)" />
                     <span class="body-2-strong">Shared Keys</span>
                     <span class="caption-2" style="color: rgba(255,255,255,0.4)">
                         <template v-if="trueConflicts.length > 0">Conflicts may cause one command to unexpectedly override another. Shared keys across unit types are usually fine.</template>
@@ -226,6 +226,10 @@
     import { computed, nextTick, onMounted, ref, watch } from "vue";
     import { Icon } from "@iconify/vue";
     import undoIcon from "@iconify-icons/mdi/undo";
+    import alertIcon from "@iconify-icons/mdi/alert";
+    import infoIcon from "@iconify-icons/mdi/information-outline";
+    import chevronUpIcon from "@iconify-icons/mdi/chevron-up";
+    import chevronDownIcon from "@iconify-icons/mdi/chevron-down";
     import { keybindsStore, loadKeybinds, saveKeybinds, revertKeybinds, removeBinding, loadPreset, saveCustomPreset, updateCustomPreset, undo } from "@renderer/store/keybinds.store";
     import { engineKeyToLabel } from "@renderer/utils/uikeys/key-formatter";
     import { getCommandLabel, getCommandUnitType } from "@renderer/utils/uikeys/commands";

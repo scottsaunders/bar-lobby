@@ -112,10 +112,10 @@ const typeIcon = computed(() => {
         background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%);
     }
     &.faction-legion .faction-stripe {
-        background: linear-gradient(180deg, #a855f7 0%, #7e22ce 100%);
+        background: linear-gradient(180deg, #22c55e 0%, #15803d 100%);
     }
     &.faction-scavengers .faction-stripe {
-        background: linear-gradient(180deg, #f97316 0%, #c2410c 100%);
+        background: linear-gradient(180deg, #a855f7 0%, #7e22ce 100%);
     }
     &.faction-other .faction-stripe {
         background: linear-gradient(180deg, #6b7280 0%, #374151 100%);

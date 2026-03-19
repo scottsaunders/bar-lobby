@@ -15,7 +15,7 @@ SPDX-License-Identifier: MIT
         <div class="flex-col flex-grow fullheight">
             <div class="scroll-container" style="overflow-y: scroll" ref="el">
                 <div class="units-grid">
-                    <TransitionGroup name="units-list">
+                    <TransitionGroup name="units-list" @before-leave="onBeforeLeave">
                         <UnitOverviewCard
                             v-for="unit in visibleUnits"
                             :key="unit.unitName"
@@ -41,6 +41,15 @@ SPDX-License-Identifier: MIT
 
 <script lang="ts" setup>
 import { ref, computed, Ref } from "vue";
+
+function onBeforeLeave(el: Element) {
+    const htmlEl = el as HTMLElement;
+    const rect = htmlEl.getBoundingClientRect();
+    const parentRect = htmlEl.offsetParent!.getBoundingClientRect();
+    htmlEl.style.left = `${rect.left - parentRect.left}px`;
+    htmlEl.style.top = `${rect.top - parentRect.top}px`;
+    htmlEl.style.width = `${rect.width}px`;
+}
 import { Icon } from "@iconify/vue";
 import { useInfiniteScroll } from "@vueuse/core";
 import SearchBox from "@renderer/components/controls/SearchBox.vue";
@@ -136,12 +145,11 @@ const visibleUnits = computed(() => filteredUnits.value.slice(0, limit.value));
 .units-list-move,
 .units-list-enter-active,
 .units-list-leave-active {
-    transition: all 0.3s ease;
+    transition: all 0.5s ease;
 }
 .units-list-enter-from,
 .units-list-leave-to {
     opacity: 0;
-    transform: translateY(8px);
 }
 .units-list-leave-active {
     position: absolute;

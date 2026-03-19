@@ -27,12 +27,24 @@ export function parseLuaTable(luaFile: Buffer, options?: ParseLuaTableOptions): 
             throw new Error(`Could not find local statement for local table: ${options?.tableVariableName}`);
         }
     } else {
+        // Try LocalStatement first (e.g., local x = { ... })
         const localStatement = parsedLua.body.find((body) => body.type === "LocalStatement") as LocalStatement | undefined;
         if (localStatement) {
             tableConstructorExpression = localStatement?.init.find((obj) => obj.type === "TableConstructorExpression") as TableConstructorExpression | undefined;
-        } else {
+        }
+        // Fall through to ReturnStatement (e.g., return { ... })
+        if (!tableConstructorExpression) {
             const returnStatement = parsedLua.body.find((body) => body.type === "ReturnStatement") as ReturnStatement | undefined;
             tableConstructorExpression = returnStatement?.arguments.find((obj) => obj.type === "TableConstructorExpression") as TableConstructorExpression | undefined;
+        }
+        // Fall through to AssignmentStatement (e.g., WeaponDefs = { ... })
+        if (!tableConstructorExpression) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const assignmentStatement = parsedLua.body.find((body) => body.type === "AssignmentStatement") as any;
+            if (assignmentStatement) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                tableConstructorExpression = assignmentStatement.init?.find((init: any) => init.type === "TableConstructorExpression") as TableConstructorExpression | undefined;
+            }
         }
     }
 
@@ -50,6 +62,9 @@ function luaTableToObj(table: TableConstructorExpression): any {
             const key = field.key.name;
             const value = field.value;
             obj[key] = parseLuaAst(value);
+        } else if (field.type === "TableKey") {
+            const key = parseLuaAst(field.key);
+            if (key !== undefined) obj[String(key)] = parseLuaAst(field.value);
         } else if (field.type === "TableValue") {
             blocks.push(parseLuaAst(field.value));
         }
@@ -62,7 +77,7 @@ function parseLuaAst(value: Expression) {
         case "BinaryExpression":
             return parseBinaryExpression(value as unknown as BinaryExpression);
         case "StringLiteral": {
-            if (value.value) return value;
+            if (value.value) return value.value;
             const rawString = value.raw.slice(1, -1);
             return rawString.replaceAll(/\x5c(\d+)/g, ""); //Some values have a color code embedded for the old chobby text coloring lets strip that out
         }
@@ -79,14 +94,24 @@ function parseLuaAst(value: Expression) {
     }
 }
 
-function parseBinaryExpression(value: BinaryExpression): string {
+function parseBinaryExpression(value: BinaryExpression): string | number {
     const left = parseLuaAst(value.left);
     const right = parseLuaAst(value.right);
     if (value.operator === "..") {
         return `${left}${right}`;
     }
+    if (typeof left === "number" && typeof right === "number") {
+        switch (value.operator) {
+            case "+": return left + right;
+            case "-": return left - right;
+            case "*": return left * right;
+            case "/": return right !== 0 ? left / right : 0;
+            case "%": return right !== 0 ? left % right : 0;
+            case "^": return Math.pow(left, right);
+        }
+    }
     log.warn(`Unhandled BinaryExpression operator '${value.operator}'`);
-    return "";
+    return 0;
 }
 
 function parseUnaryExpression(value: UnaryExpression) {
