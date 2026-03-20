@@ -12,10 +12,30 @@ import { PRESET_MAP, type KeybindPreset } from "@renderer/utils/uikeys/presets";
 
 const CUSTOM_PRESETS_KEY = "bar-lobby-keybind-custom-presets";
 
+/** Migrate preset content to keep wheel bindings consistent with current defaults. */
+function migratePresetContent(content: string): string {
+    return content
+        // Plain WheelUp/Down → Any+WheelUp/Down with correct zoom direction
+        .replace(/^(\s*bind\s+)WheelUp(\s+)moveup\b/gm,    "$1Any+WheelUp$2movedown")
+        .replace(/^(\s*bind\s+)WheelDown(\s+)movedown\b/gm, "$1Any+WheelDown$2moveup")
+        .replace(/^(\s*bind\s+)WheelUp(\s+)movedown\b/gm,   "$1Any+WheelUp$2movedown")
+        .replace(/^(\s*bind\s+)WheelDown(\s+)moveup\b/gm,   "$1Any+WheelDown$2moveup")
+        // Any+Wheel with wrong direction
+        .replace(/^(\s*bind\s+Any\+WheelUp)(\s+)moveup\b/gm,    "$1$2movedown")
+        .replace(/^(\s*bind\s+Any\+WheelDown)(\s+)movedown\b/gm, "$1$2moveup");
+}
+
 function loadCustomPresetsFromStorage(): KeybindPreset[] {
     try {
         const raw = localStorage.getItem(CUSTOM_PRESETS_KEY);
-        return raw ? (JSON.parse(raw) as KeybindPreset[]) : [];
+        if (!raw) return [];
+        const presets = JSON.parse(raw) as KeybindPreset[];
+        const migrated = presets.map((p) => ({ ...p, content: migratePresetContent(p.content) }));
+        // Persist the migrated version immediately so it's not re-migrated next load
+        if (JSON.stringify(migrated) !== JSON.stringify(presets)) {
+            localStorage.setItem(CUSTOM_PRESETS_KEY, JSON.stringify(migrated));
+        }
+        return migrated;
     } catch {
         return [];
     }
@@ -49,9 +69,10 @@ export const keybindsStore = reactive({
     viewMode: "visual" as "visual" | "list" | "raw",
     searchQuery: "",
     selectedBindingId: null as string | null,
-    activeUnitType: "all" as "all" | "builder" | "combat",
+    activeUnitType: "all" as "all" | "builder" | "combat" | "factory",
     sharedKeys: [] as SharedKey[],
     selectedCommand: null as string | null,
+    selectedKey: null as string | null,
     activePreset: "custom" as string,
     showAdvanced: false,
     pressedKeys: new Set<string>(),

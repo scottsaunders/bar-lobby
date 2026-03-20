@@ -59,8 +59,13 @@ function fit(el: HTMLElement): void {
     // minor differences between canvas measurement and DOM text rendering.
     const targetW = parentW - 1;
 
-    function longestWordWidth(size: number): number {
+    // When white-space: nowrap the full text must fit on one line, so measure
+    // the entire string. Otherwise measure the longest individual word so that
+    // each word can wrap to its own line without overflowing the width.
+    const nowrap = style.whiteSpace === "nowrap";
+    function measureWidth(size: number): number {
         ctx!.font = `${fontWeight} ${size}px ${fontFamily}`;
+        if (nowrap) return ctx!.measureText(text).width;
         let max = 0;
         for (const w of words) {
             const ww = ctx!.measureText(w).width;
@@ -69,20 +74,20 @@ function fit(el: HTMLElement): void {
         return max;
     }
 
-    // Fast path: all words already fit at CSS default size
-    if (longestWordWidth(maxFontSize) <= targetW) {
+    // Fast path: text already fits at CSS default size
+    if (measureWidth(maxFontSize) <= targetW) {
         cache.set(el, { key: cacheKey, result: "" });
         return;
     }
 
-    // Binary-search for the largest font size where no word exceeds the chip width.
+    // Binary-search for the largest font size where text fits within the width.
     // All iterations are pure JS (canvas math) — zero forced DOM layout cycles.
     let lo = MIN_FONT_SIZE;
     let hi = maxFontSize;
 
     while (hi - lo > 0.5) {
         const mid = (lo + hi) / 2;
-        if (longestWordWidth(mid) <= targetW) {
+        if (measureWidth(mid) <= targetW) {
             lo = mid;
         } else {
             hi = mid;

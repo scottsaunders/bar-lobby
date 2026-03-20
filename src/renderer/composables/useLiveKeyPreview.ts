@@ -23,18 +23,13 @@ function physicalModifierState(e: KeyboardEvent | MouseEvent): ModifierState {
     };
 }
 
-export function useLiveKeyPreview() {
-    // Saved modifier state to restore when all physical modifiers are released
-    let savedModifiers: ModifierState | null = null;
+const MODIFIER_KEYS = new Set(["Shift", "Control", "Alt"]);
 
-    function syncModifiers(e: KeyboardEvent | MouseEvent) {
+export function useLiveKeyPreview() {
+    function syncModifiers(e: KeyboardEvent) {
         const anyMod = e.ctrlKey || e.shiftKey || e.altKey;
         if (anyMod) {
-            if (!savedModifiers) savedModifiers = { ...keybindsStore.activeModifiers };
             Object.assign(keybindsStore.activeModifiers, physicalModifierState(e));
-        } else if (savedModifiers) {
-            Object.assign(keybindsStore.activeModifiers, savedModifiers);
-            savedModifiers = null;
         } else {
             Object.assign(keybindsStore.activeModifiers, EMPTY_MODIFIER_STATE);
         }
@@ -43,8 +38,8 @@ export function useLiveKeyPreview() {
     function onKeyDown(e: KeyboardEvent) {
         if (isInputFocused()) return;
 
-        // Sync modifier layer
-        syncModifiers(e);
+        // Sync modifier layer only on first press (not key-repeat) of a modifier key
+        if (MODIFIER_KEYS.has(e.key) && !e.repeat) syncModifiers(e);
 
         // Track the pressed non-modifier key
         const key = eventToEngineKey(e);
@@ -66,7 +61,8 @@ export function useLiveKeyPreview() {
         if (!e.ctrlKey) keybindsStore.pressedKeys.delete("ctrl");
         if (!e.altKey) keybindsStore.pressedKeys.delete("alt");
 
-        syncModifiers(e);
+        // Sync modifier layer only when a modifier key itself is released
+        if (MODIFIER_KEYS.has(e.key)) syncModifiers(e);
     }
 
     function onMouseDown(e: MouseEvent) {
@@ -94,10 +90,7 @@ export function useLiveKeyPreview() {
     // Clear all state if window loses focus so keys don't get stuck
     function onBlur() {
         keybindsStore.pressedKeys.clear();
-        if (savedModifiers) {
-            Object.assign(keybindsStore.activeModifiers, savedModifiers);
-            savedModifiers = null;
-        }
+        Object.assign(keybindsStore.activeModifiers, EMPTY_MODIFIER_STATE);
     }
 
     onMounted(() => {

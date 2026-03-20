@@ -4,11 +4,19 @@
 <template>
     <div class="list-editor">
         <div class="list-toolbar flex-row gap-sm">
-            <input v-model="search" class="search-input" placeholder="Search commands..." />
             <select v-model="filterCategory" class="category-filter">
                 <option value="">All Categories</option>
                 <option v-for="cat in COMMAND_CATEGORIES" :key="cat.id" :value="cat.id">{{ cat.label }}</option>
             </select>
+            <input v-model="search" class="search-input" placeholder="Search commands..." />
+            <button
+                v-if="keybindsStore.parsed && keybindsStore.parsed.advancedBindings.length > 0"
+                class="btn-advanced-cta"
+                v-tooltip.bottom="`${keybindsStore.parsed.advancedBindings.length} chord/sequence binding${keybindsStore.parsed.advancedBindings.length !== 1 ? 's' : ''} not shown in the list`"
+                @click="keybindsStore.showAdvanced = true"
+            >
+                Advanced Key Sequences
+            </button>
         </div>
 
         <div class="list-scroll">
@@ -34,11 +42,12 @@
                             @click.self="selectCommand(cmd.command)"
                         >
                             <td class="col-category">
-                                <span class="caption-2" style="color: rgba(255,255,255,0.4)">{{ cat.label }}</span>
+                                <span class="cat-label" :style="{ color: cat.color }">{{ cat.label }}</span>
                             </td>
-                            <td class="col-command" v-tooltip.right="getCommandDescription(cmd.command) ?? cmd.command">
-                                <span class="body-2">{{ cmd.label }}</span>
-                                <span class="cmd-raw caption-2">{{ cmd.command }}</span>
+                            <td class="col-command">
+                                <span class="cmd-name" :style="{ color: cat.color }">{{ cmd.label }}</span>
+                                <span v-if="getCommandDescription(cmd.command)" class="cmd-description">{{ getCommandDescription(cmd.command) }}</span>
+                                <span class="cmd-raw">{{ cmd.command }}</span>
                             </td>
                             <td class="col-bindings">
                                 <div class="bindings-list">
@@ -197,6 +206,34 @@
         flex: 1;
     }
 
+    .category-filter {
+        appearance: none;
+        padding-right: 28px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(255,255,255,0.5)'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 9px center;
+        cursor: pointer;
+    }
+
+    .btn-advanced-cta {
+        padding: 6px 12px;
+        background: rgba(168, 85, 247, 0.2);
+        border: 1px solid rgba(168, 85, 247, 0.45);
+        border-radius: 4px;
+        color: rgba(216, 180, 254, 0.9);
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.1s;
+
+        &:hover {
+            background: rgba(168, 85, 247, 0.35);
+            color: #fff;
+        }
+    }
+
     .list-scroll {
         flex: 1;
         overflow-y: auto;
@@ -219,9 +256,9 @@
         th {
             text-align: left;
             padding: 6px 10px;
-            color: rgba(255, 255, 255, 0.4);
+            color: rgba(255, 255, 255, 0.55);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 11px;
+            font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.06em;
             position: sticky;
@@ -250,26 +287,43 @@
         }
 
         td {
-            padding: 7px 10px;
+            padding: 9px 10px;
             vertical-align: middle;
         }
     }
 
     .col-category {
-        width: 110px;
+        width: 130px;
+        white-space: nowrap;
+    }
+
+    .cat-label {
+        font-size: 12px;
+        font-weight: 600;
     }
 
     .col-command {
-        width: 200px;
         display: flex;
         flex-direction: column;
-        gap: 2px;
+        gap: 3px;
+        min-width: 280px;
+    }
+
+    .cmd-name {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .cmd-description {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.6);
+        line-height: 1.3;
     }
 
     .cmd-raw {
-        color: rgba(255, 255, 255, 0.25);
+        color: rgba(255, 255, 255, 0.4);
         font-family: monospace;
-        font-size: 9px;
+        font-size: 10px;
         display: block;
     }
 
@@ -283,12 +337,12 @@
     .binding-tag {
         display: inline-flex;
         align-items: center;
-        gap: 2px;
+        gap: 3px;
         background: rgba(37, 99, 235, 0.25);
         border: 1px solid rgba(37, 99, 235, 0.4);
         border-radius: 3px;
-        padding: 2px 6px;
-        font-size: 11px;
+        padding: 3px 8px;
+        font-size: 13px;
         font-family: monospace;
         color: rgba(150, 200, 255, 0.9);
     }
@@ -308,8 +362,9 @@
     }
 
     .unbound-label {
-        color: rgba(255, 255, 255, 0.2);
+        color: rgba(255, 255, 255, 0.35);
         font-style: italic;
+        font-size: 12px;
     }
 
     .btn-rebind {

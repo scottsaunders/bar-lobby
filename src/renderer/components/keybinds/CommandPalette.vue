@@ -392,14 +392,13 @@
 
     .category-header {
         padding: 8px 6px 4px;
-        color: var(--cat-color, rgba(255,255,255,0.4));
+        color: var(--cat-color, rgba(255,255,255,0.6));
         text-transform: uppercase;
         letter-spacing: 0.06em;
         font-size: 10px;
         font-weight: 700;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
+        border-bottom: 1px solid rgba(255,255,255,0.08);
         margin-bottom: 2px;
-        opacity: 0.8;
     }
 
     .command-item {
@@ -437,7 +436,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        opacity: 0.75;
+        opacity: 0.85;
 
         .command-item.is-assigned & { opacity: 1; }
     }

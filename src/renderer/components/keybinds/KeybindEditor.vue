@@ -39,6 +39,12 @@
                         <option v-for="p in keybindsStore.customPresets" :key="p.id" :value="p.id">★ {{ p.label }}</option>
                         <option value="custom" disabled style="color: rgba(255,255,255,0.3)">— Unsaved —</option>
                     </select>
+                    <button
+                        v-if="activeCustomPreset"
+                        class="btn-action btn-delete-preset"
+                        v-tooltip.bottom="`Delete preset '${activeCustomPreset.label}'`"
+                        @click="showDeletePresetDialog = true"
+                    ><Icon :icon="deleteIcon" /></button>
                 </div>
 
                 <div class="toolbar-spacer" />
@@ -140,7 +146,7 @@
                             <VisualKeyboard @keyClicked="onKeyClicked" />
                         </div>
                         <!-- Key inspector -->
-                        <KeyInspector v-if="selectedKey" :engineKey="selectedKey" @close="selectedKey = null" />
+                        <KeyInspector v-if="keybindsStore.selectedKey" :engineKey="keybindsStore.selectedKey" @close="keybindsStore.selectedKey = null" />
 
                         <!-- Legend -->
                         <div v-else class="legend">
@@ -155,9 +161,24 @@
 
             <!-- List mode -->
             <div v-else class="list-layout">
-                <ListEditor />
+                <AdvancedBindingsEditor v-if="keybindsStore.showAdvanced" @close="keybindsStore.showAdvanced = false" />
+                <ListEditor v-else />
             </div>
         </template>
+
+        <!-- Delete custom preset dialog -->
+        <div v-if="showDeletePresetDialog" class="dialog-backdrop" @click.self="showDeletePresetDialog = false">
+            <div class="dialog-panel">
+                <div class="dialog-title body-2-strong">Delete Preset</div>
+                <div class="dialog-body caption-1">
+                    Delete <strong>{{ activeCustomPreset?.label }}</strong>? This cannot be undone.
+                </div>
+                <div class="dialog-actions">
+                    <button class="btn-action" @click="showDeletePresetDialog = false">Cancel</button>
+                    <button class="btn-action btn-danger" @click="onConfirmDeletePreset">Delete</button>
+                </div>
+            </div>
+        </div>
 
         <!-- Restore defaults dialog -->
         <div v-if="showRestoreDialog" class="dialog-backdrop" @click.self="showRestoreDialog = false">
@@ -226,11 +247,12 @@
     import { computed, nextTick, onMounted, ref, watch } from "vue";
     import { Icon } from "@iconify/vue";
     import undoIcon from "@iconify-icons/mdi/undo";
+    import deleteIcon from "@iconify-icons/mdi/delete-outline";
     import alertIcon from "@iconify-icons/mdi/alert";
     import infoIcon from "@iconify-icons/mdi/information-outline";
     import chevronUpIcon from "@iconify-icons/mdi/chevron-up";
     import chevronDownIcon from "@iconify-icons/mdi/chevron-down";
-    import { keybindsStore, loadKeybinds, saveKeybinds, revertKeybinds, removeBinding, loadPreset, saveCustomPreset, updateCustomPreset, undo } from "@renderer/store/keybinds.store";
+    import { keybindsStore, loadKeybinds, saveKeybinds, revertKeybinds, removeBinding, loadPreset, saveCustomPreset, updateCustomPreset, deleteCustomPreset, undo } from "@renderer/store/keybinds.store";
     import { engineKeyToLabel } from "@renderer/utils/uikeys/key-formatter";
     import { getCommandLabel, getCommandUnitType } from "@renderer/utils/uikeys/commands";
     import { serializeUikeys } from "@renderer/utils/uikeys/serializer";
@@ -247,11 +269,11 @@
         { id: "all" as const,     label: "All Units" },
         { id: "combat" as const,  label: "Combat" },
         { id: "builder" as const, label: "Builder" },
+        { id: "factory" as const, label: "Factory" },
     ];
 
     const showConflicts = ref(false);
     const rawText = ref("");
-    const selectedKey = ref<string | null>(null);
 
     // Restore defaults dialog
     const showRestoreDialog = ref(false);
@@ -277,9 +299,19 @@
     const trueConflicts = computed(() => keybindsStore.sharedKeys.filter((e) => e.severity === "conflict"));
     const sharedKeys = computed(() => keybindsStore.sharedKeys.filter((e) => e.severity === "shared"));
 
+    const activeCustomPreset = computed(() =>
+        keybindsStore.customPresets.find((p) => p.id === keybindsStore.activePreset) ?? null
+    );
+    const showDeletePresetDialog = ref(false);
+
     onMounted(async () => { await loadKeybinds(); });
 
     function onRevert() { revertKeybinds(); }
+
+    function onConfirmDeletePreset() {
+        if (activeCustomPreset.value) deleteCustomPreset(activeCustomPreset.value.id);
+        showDeletePresetDialog.value = false;
+    }
 
     function onOpenRaw() {
         if (keybindsStore.parsed) rawText.value = serializeUikeys(keybindsStore.parsed);
@@ -293,13 +325,14 @@
     }
 
     function onKeyClicked(key: string) {
-        selectedKey.value = selectedKey.value === key ? null : key;
+        keybindsStore.selectedKey = keybindsStore.selectedKey === key ? null : key;
     }
 
     function closeAllDialogs() {
         if (showPresetConfirm.value) cancelPresetSwitch();
         if (showSaveDialog.value) showSaveDialog.value = false;
         if (showRestoreDialog.value) showRestoreDialog.value = false;
+        if (showDeletePresetDialog.value) showDeletePresetDialog.value = false;
     }
 
     function onPresetChange(e: Event) {
@@ -377,8 +410,8 @@
         align-items: center;
         flex-shrink: 0;
         padding: 8px 14px;
-        background: rgba(0, 0, 0, 0.3);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.03);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
         gap: 8px;
         flex-wrap: wrap;
     }
@@ -394,6 +427,13 @@
     .preset-label {
         color: rgba(255, 255, 255, 0.4);
         white-space: nowrap;
+    }
+
+    .btn-delete-preset {
+        padding: 4px 6px;
+        color: rgba(220, 80, 80, 0.7) !important;
+        border-color: rgba(220, 80, 80, 0.25) !important;
+        &:hover:not(:disabled) { background: rgba(220, 80, 80, 0.2) !important; color: #fff !important; }
     }
 
     .preset-select {
@@ -439,9 +479,9 @@
         align-items: center;
         gap: 5px;
         padding: 5px 10px;
-        background: rgba(255, 255, 255, 0.04);
+        background: rgba(255, 255, 255, 0.06);
         border: none;
-        color: rgba(255, 255, 255, 0.5);
+        color: rgba(255, 255, 255, 0.65);
         font-family: inherit;
         font-size: 12px;
         font-weight: 600;
@@ -449,8 +489,8 @@
         transition: all 0.15s ease;
         white-space: nowrap;
 
-        &:hover { background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.9); }
-        &.active { background: rgba(37, 99, 235, 0.4); color: #fff; }
+        &:hover { background: rgba(255, 255, 255, 0.13); color: rgba(255, 255, 255, 0.95); }
+        &.active { background: rgba(37, 99, 235, 0.5); color: #fff; }
         + .mode-tab, + .unit-tab { border-left: 1px solid rgba(255, 255, 255, 0.12); }
     }
 
@@ -461,17 +501,17 @@
         align-items: center;
         gap: 4px;
         padding: 4px 10px;
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 4px;
-        color: rgba(255, 255, 255, 0.7);
+        color: rgba(255, 255, 255, 0.85);
         font-family: inherit;
         font-size: 12px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.12s ease;
 
-        &:hover:not(:disabled) { background: rgba(255, 255, 255, 0.15); color: #fff; }
+        &:hover:not(:disabled) { background: rgba(255, 255, 255, 0.18); color: #fff; }
         &:disabled { opacity: 0.35; cursor: not-allowed; }
 
         &.btn-save {

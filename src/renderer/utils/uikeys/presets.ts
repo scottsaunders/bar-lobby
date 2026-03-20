@@ -63,6 +63,9 @@ bind          Any+right  moveright
 bind           Any+left  moveleft
 bind         Any+pageup  moveup
 bind       Any+pagedown  movedown
+bind         Any+WheelUp  movedown
+bind       Any+WheelDown  moveup
+bind             mouse3  move
 bind            Any+alt  movereset
 bind            Any+alt  moverotate
 bind           Any+ctrl  movetilt
@@ -379,6 +382,9 @@ bind          Any+right  moveright
 bind           Any+left  moveleft
 bind         Any+pageup  moveup
 bind       Any+pagedown  movedown
+bind         Any+WheelUp  movedown
+bind       Any+WheelDown  moveup
+bind             mouse3  move
 bind            Any+alt  movereset
 bind            Any+alt  moverotate
 bind           Any+ctrl  movetilt

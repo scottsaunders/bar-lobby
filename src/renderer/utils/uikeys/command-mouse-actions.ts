@@ -18,9 +18,11 @@ export interface MouseAction {
 }
 
 export interface CommandMouseActions {
-    mouse1?: MouseAction; // LMB
-    mouse2?: MouseAction; // RMB
-    mouse3?: MouseAction; // MMB
+    mouse1?: MouseAction;    // LMB
+    mouse2?: MouseAction;    // RMB
+    mouse3?: MouseAction;    // MMB
+    wheelUp?: MouseAction;   // Scroll wheel up
+    wheelDown?: MouseAction; // Scroll wheel down
 }
 
 export const COMMAND_MOUSE_ACTIONS: Record<string, CommandMouseActions> = {
@@ -35,6 +37,10 @@ export const COMMAND_MOUSE_ACTIONS: Record<string, CommandMouseActions> = {
     "settarget":         { mouse1: { label: "Set target" } },
     "settargetnoground": { mouse1: { label: "Set target" } },
 
+    // ── UI / drawing ─────────────────────────────────────────────────────────
+    "drawinmap":         { mouse1: { label: "Draw",  isDrag: true },    mouse3: { label: "Ping" }, wheelUp: { label: "Zoom in" }, wheelDown: { label: "Zoom out" } },
+    "drawlabel":         { mouse3: { label: "Ping" } },
+
     // ── Builder commands ─────────────────────────────────────────────────────
     "reclaim":           { mouse1: { label: "Reclaim" },                mouse2: { label: "Reclaim area",    isDrag: true } },
     "repair":            { mouse1: { label: "Repair" },                 mouse2: { label: "Repair area",     isDrag: true } },
@@ -47,4 +53,23 @@ export const COMMAND_MOUSE_ACTIONS: Record<string, CommandMouseActions> = {
 
 export function getCommandMouseActions(command: string): CommandMouseActions | undefined {
     return COMMAND_MOUSE_ACTIONS[command];
+}
+
+/**
+ * Engine-level camera / scroll behaviors per modifier layer.
+ * These are NOT in uikeys.txt — they are hardcoded in the engine.
+ * Key is sorted-lowercase modifier string (e.g. "", "ctrl", "alt+shift").
+ */
+const STATIC_MOUSE_LABELS: Record<string, Partial<Record<string, string>>> = {
+    "":           { WheelUp: "Zoom in",    WheelDown: "Zoom out",  mouse3: "Pan Camera"  },
+    "shift":      { WheelUp: "Zoom in",    WheelDown: "Zoom out",  mouse3: "Pan Camera"  },
+    "ctrl":       { WheelUp: "Tilt Down",  WheelDown: "Tilt Up",   mouse3: "Pan Camera"  },
+    "alt":        { WheelUp: "Quick Zoom", WheelDown: "Quick Zoom", mouse3: "Free Rotate" },
+    "ctrl+shift": { WheelUp: "Tilt Down",  WheelDown: "Tilt Up",   mouse3: "Pan Camera"  },
+    "alt+shift":  { WheelUp: "Quick Zoom", WheelDown: "Quick Zoom", mouse3: "Free Rotate" },
+};
+
+export function getStaticMouseLabel(modifiers: string[], engineKey: string): string | null {
+    const modStr = modifiers.map((m) => m.toLowerCase()).sort().join("+");
+    return STATIC_MOUSE_LABELS[modStr]?.[engineKey] ?? null;
 }

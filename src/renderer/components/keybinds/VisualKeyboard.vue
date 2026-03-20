@@ -44,7 +44,7 @@
                         :key="keyDef.id"
                         :keyDef="keyDef"
                         :fill="true"
-                        :customHeight="46"
+                        :customHeight="48"
                         @keyClicked="onKeyClicked"
                     />
                 </div>
@@ -63,9 +63,10 @@
     useLiveKeyPreview();
 
     const KEY_UNIT = 56;
-    // Slightly reduced key height for nav/numpad so they stack flush with the
-    // main keyboard once the mouse inset box is added below them.
-    const CLUSTER_KEY_H = 73;
+    // Nav/numpad key height is sized so that (5 rows × h + 4 × 2px gap) + 10px gap
+    // + mouse inset ≈ main keyboard height (6 rows × 74px + 5 × 2px = 454px),
+    // keeping both columns flush at the bottom.
+    const CLUSTER_KEY_H = 61;
 
     const emit = defineEmits<{
         keyClicked: [key: string];
@@ -108,11 +109,11 @@
     .visual-keyboard {
         display: flex;
         flex-direction: row;
-        align-items: flex-start;
+        align-items: stretch;
         gap: 16px;
         padding: 12px;
-        background: rgba(0, 0, 0, 0.35);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.14);
         border-radius: 8px;
         width: fit-content;
     }
@@ -129,7 +130,7 @@
     .keyboard-right {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        justify-content: space-between;
     }
 
     /* Nav and numpad side-by-side */
@@ -146,8 +147,8 @@
         flex-direction: column;
         gap: 6px;
         padding: 8px 10px;
-        background: rgba(255, 255, 255, 0.025);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.15);
         border-radius: 6px;
         position: relative;
     }

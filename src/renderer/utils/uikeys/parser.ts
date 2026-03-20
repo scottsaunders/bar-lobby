@@ -59,6 +59,11 @@ function parseBindLine(line: string): KeyBinding | null {
     // Normalize F-key names to uppercase (presets write "f5", layout uses "F5")
     if (/^f\d+$/i.test(key)) key = key.toUpperCase();
 
+    // Normalize wheel/mouse key casing to match keyboard layout engineKey definitions
+    const keyLower = key.toLowerCase();
+    if (keyLower === "wheelup") key = "WheelUp";
+    else if (keyLower === "wheeldown") key = "WheelDown";
+
     const advanced = isChord || isAdvancedBinding(modifiers, key);
 
     return {
