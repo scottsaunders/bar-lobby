@@ -284,7 +284,7 @@ const COMMAND_LABEL_OVERRIDES: Record<string, string> = {
 };
 
 export function getCommandLabel(command: string): string {
-    return COMMAND_MAP.get(command)?.label ?? COMMAND_LABEL_OVERRIDES[command] ?? parseSelectLabel(command) ?? command;
+    return COMMAND_MAP.get(command)?.label ?? COMMAND_LABEL_OVERRIDES[command] ?? parseSelectLabel(command) ?? formatRawCommand(command) ?? command;
 }
 
 /** Generate a short human-readable label for unrecognised `select ...` commands. */
@@ -292,26 +292,160 @@ function parseSelectLabel(command: string): string | null {
     if (!command.startsWith("select ")) return null;
     const filter = command.slice(7);
 
-    const isCycle = filter.includes("_SelectOne");
+    const isCycle = /_SelectOne\b|_SelectClosestToCursor/.test(filter);
     const verb = isCycle ? "Cycle" : "Select";
 
-    // Match the most descriptive filter token first
-    const FILTER_LABELS: [RegExp, string][] = [
-        [/_ManualFireUnit/, "Manual Fire"],
-        [/_Builder_Idle/,   "Idle Builder"],
-        [/_Builder/,        "Builder"],
-        [/_Transport_Idle/, "Idle Transport"],
-        [/_Transport/,      "Transport"],
-        [/_Waiting/,        "Waiting"],
-        [/_InPrevSel/,      "Prev Selection"],
-        [/_SelectPart_50/,  "Half of Prev"],
+    // Source scope
+    let source = "";
+    if (/^AllMap/.test(filter))              source = " (All)";
+    else if (/^Visible/.test(filter))        source = " (Vis)";
+    else if (/^FromMouse_\d+/.test(filter))  source = " (Near)";
+    else if (/^PrevSelection/.test(filter))  source = " (Prev)";
+
+    // Numeric / string filters — extract values for display
+    const relHealthMatch = filter.match(/_(?:Not_)?RelativeHealth_(\d+)/);
+    const notRelHealth   = filter.includes("_Not_RelativeHealth_");
+    const absHealthMatch = filter.match(/_AbsoluteHealth_(\d+)/);
+    const rangeMatch     = filter.match(/_WeaponRange_(\d+)/);
+    const notRangeMatch  = filter.match(/_Not_WeaponRange_(\d+)/);
+    const nameMatch      = filter.match(/_NameContain_(\w+)/);
+    const idCount        = (filter.match(/_IdMatches_/g) ?? []).length;
+
+    // Unit-type tokens in priority order — first match wins
+    const TOKEN_LABELS: [RegExp, string][] = [
+        [/_ManualFireUnit/,      "Manual Fire"],
+        [/_Builder_Not_Building/,"Idle Builder"],
+        [/_Builder_Idle/,        "Idle Builder"],
+        [/_Builder/,             "Builder"],
+        [/_Transport_Idle/,      "Idle Transport"],
+        [/_Transport/,           "Transport"],
+        [/_Waiting/,             "Waiting"],
+        [/_Commander/,           "Commander"],
+        [/_Aircraft_Weapons/,    "Fighter/Bomber"],
+        [/_Aircraft/,            "Aircraft"],
+        [/_SelectPart_50/,       "Half of Prev"],
+        [/_InPrevSel/,           "Prev Sel"],
+        [/_InHotkeyGroup/,       "Hotkey Group"],
+        [/_InGroup_\d+/,         "Group"],
     ];
 
-    for (const [pattern, label] of FILTER_LABELS) {
-        if (pattern.test(filter)) return `${verb}: ${label}`;
+    for (const [re, lbl] of TOKEN_LABELS) {
+        if (re.test(filter)) return `${verb}: ${lbl}${source}`;
     }
 
-    return `${verb}: Custom`;
+    // Numeric / string fallback labels
+    if (relHealthMatch) {
+        return `${verb}: HP ${notRelHealth ? "<" : ">"}${relHealthMatch[1]}%${source}`;
+    }
+    if (absHealthMatch) {
+        return `${verb}: HP >${absHealthMatch[1]}${source}`;
+    }
+    if (rangeMatch && notRangeMatch) {
+        return `${verb}: Range ${rangeMatch[1]}–${notRangeMatch[1]}${source}`;
+    }
+    if (rangeMatch) {
+        return `${verb}: Range >${rangeMatch[1]}${source}`;
+    }
+    if (nameMatch) {
+        return `${verb}: "${nameMatch[1]}"${source}`;
+    }
+    if (idCount === 1) return `${verb}: Unit Type${source}`;
+    if (idCount > 1)  return `${verb}: ${idCount} Types${source}`;
+
+    return `${verb}: Custom${source}`;
+}
+
+/** Generate a short human-readable label for any unrecognised command string. */
+function formatRawCommand(command: string): string | null {
+    // chain force/once step1 | step2 | …
+    const chainMatch = command.match(/^chain\s+(?:force|once)\s+([\s\S]+)$/);
+    if (chainMatch) {
+        const steps = chainMatch[1].split("|").map((s) => s.trim()).filter(Boolean);
+        const firstLabel = getCommandLabel(steps[0]);
+        return steps.length > 1 ? `Chain: ${firstLabel} +${steps.length - 1}` : `Chain: ${firstLabel}`;
+    }
+
+    // group add/set/select/focus/unset [N]
+    const groupMatch = command.match(/^group\s+(\w+)(?:\s+(\d+))?/);
+    if (groupMatch) {
+        const [, action, num] = groupMatch;
+        const ACTION_LABELS: Record<string, string> = {
+            add: "Add to", set: "Set", select: "Select", focus: "Focus", unset: "Clear",
+        };
+        const lbl = ACTION_LABELS[action] ?? toTitleWords(action);
+        return num !== undefined ? `${lbl} Group ${num}` : `Group: ${lbl}`;
+    }
+
+    // toggle <command>
+    if (command.startsWith("toggle ")) {
+        return `Toggle: ${getCommandLabel(command.slice(7))}`;
+    }
+
+    // firestate 0/1/2
+    if (command === "firestate 0") return "Fire: Hold";
+    if (command === "firestate 1") return "Fire: Return";
+    if (command === "firestate 2") return "Fire: Free";
+
+    // movestate 0/1/2
+    if (command === "movestate 0") return "Move: Hold";
+    if (command === "movestate 1") return "Move: Maneuver";
+    if (command === "movestate 2") return "Move: Roam";
+
+    // trajectory_toggle 0/1/2
+    if (command === "trajectory_toggle 0") return "Traj: Low";
+    if (command === "trajectory_toggle 1") return "Traj: High";
+    if (command === "trajectory_toggle 2") return "Traj: Toggle";
+
+    // priority 0/1
+    if (command === "priority 0") return "Priority: Low";
+    if (command === "priority 1") return "Priority: High";
+
+    // idlemode 0/1
+    if (command === "idlemode 0") return "Aircraft: Fly";
+    if (command === "idlemode 1") return "Aircraft: Land";
+
+    // squadwait / timewait / deathwait
+    const squadMatch = command.match(/^squadwait\s+(\d+)/);
+    if (squadMatch) return `Squad Wait (${squadMatch[1]})`;
+    const timeMatch = command.match(/^timewait\s+(\d+)/);
+    if (timeMatch) return `Time Wait (${timeMatch[1]}s)`;
+    if (command === "deathwait") return "Death Wait";
+
+    // showpathtype <type>
+    const pathMatch = command.match(/^showpathtype\s+(\S+)/);
+    if (pathMatch) return `Path: ${pathMatch[1]}`;
+
+    // set_camera_anchor / focus_camera_anchor
+    const setAnchorMatch = command.match(/^set_camera_anchor\s+(\d+)/);
+    if (setAnchorMatch) return `Set Anchor ${setAnchorMatch[1]}`;
+    const focusAnchorMatch = command.match(/^focus_camera_anchor\s+(\d+)/);
+    if (focusAnchorMatch) return `Go Anchor ${focusAnchorMatch[1]}`;
+
+    // selectcycle
+    if (command === "selectcycle restore") return "Cycle Sel ↩";
+    if (command.startsWith("selectcycle"))  return "Cycle Sel";
+
+    // closest_group_*
+    if (command.startsWith("closest_group_select append")) return "Find Group (Add)";
+    if (command.startsWith("closest_group_select"))        return "Find Group";
+    if (command.startsWith("closest_group_transfer"))      return "Transfer Group";
+
+    // commandinsert
+    if (command.startsWith("commandinsert")) return "Insert Cmd";
+
+    // selectbox_<filter> / selectbox <filter>
+    if (command.startsWith("selectbox_")) return toTitleWords(command.slice(10).split(" ")[0]);
+    if (command.startsWith("selectbox ")) return "Select Box";
+
+    // Underscore-separated unknown commands — better than raw code
+    const baseWord = command.split(" ")[0];
+    if (baseWord.includes("_")) return toTitleWords(baseWord);
+
+    return null;
+}
+
+function toTitleWords(s: string): string {
+    return s.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 export function getCommandDescription(command: string): string | undefined {

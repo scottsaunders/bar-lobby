@@ -23,25 +23,40 @@
                 v-for="binding in keybindsStore.parsed?.advancedBindings ?? []"
                 :key="binding.id"
                 class="binding-row"
+                :class="{ 'is-editing': editingId === binding.id }"
             >
-                <!-- Key sequence chips -->
-                <div class="key-sequence">
-                    <template v-for="(step, i) in formatSteps(binding)" :key="i">
-                        <span class="key-chip">{{ step }}</span>
-                        <span v-if="i < formatSteps(binding).length - 1" class="step-sep">then</span>
-                    </template>
-                </div>
+                <!-- Edit mode: inline input -->
+                <template v-if="editingId === binding.id">
+                    <div class="edit-form-row">
+                        <input
+                            v-model="editInput"
+                            class="add-input"
+                            spellcheck="false"
+                            @keydown.enter="onEditConfirm(binding.id)"
+                            @keydown.escape="onEditCancel"
+                            :ref="(el) => { if (editingId === binding.id) editInputRef = el as HTMLInputElement | null }"
+                        />
+                        <button class="btn-confirm" :disabled="!editInput.trim()" @click="onEditConfirm(binding.id)">Save</button>
+                        <button class="btn-cancel" @click="onEditCancel">Cancel</button>
+                    </div>
+                    <div v-if="editError" class="add-error caption-2">{{ editError }}</div>
+                </template>
 
-                <!-- Arrow -->
-                <span class="row-arrow">→</span>
-
-                <!-- Command label -->
-                <span class="command-label body-2" v-tooltip.top="binding.command">
-                    {{ getCommandLabel(binding.command) }}
-                </span>
-
-                <!-- Delete -->
-                <button class="btn-remove" v-tooltip.left="'Remove this binding'" @click="onRemove(binding.id)">×</button>
+                <!-- Normal display -->
+                <template v-else>
+                    <div class="key-sequence">
+                        <template v-for="(step, i) in formatSteps(binding)" :key="i">
+                            <span class="key-chip">{{ step }}</span>
+                            <span v-if="i < formatSteps(binding).length - 1" class="step-sep">then</span>
+                        </template>
+                    </div>
+                    <span class="row-arrow">→</span>
+                    <span class="command-label body-2" v-tooltip.top="binding.command">
+                        {{ getCommandLabel(binding.command) }}
+                    </span>
+                    <button class="btn-edit" v-tooltip.left="'Edit this binding'" @click="onEditStart(binding)">Edit</button>
+                    <button class="btn-remove" v-tooltip.left="'Remove this binding'" @click="onRemove(binding.id)">×</button>
+                </template>
             </div>
         </div>
 
@@ -51,9 +66,16 @@
                 <button class="btn-add" @click="showAdd = true">+ Add custom binding</button>
             </div>
             <div v-else class="add-form">
-                <div class="add-form-hint caption-2">
-                    Enter the full key combo and command, e.g. <code>Ctrl+sc_g,Ctrl+sc_g  guard</code>
-                    <br />You can omit the leading <code>bind</code> — it's added automatically.
+                <div class="add-form-hint">
+                    <div class="hint-example">
+                        <code>Ctrl+sc_g,Ctrl+sc_g  guard</code>
+                        <span class="hint-annotation">— hold Ctrl, press G twice → Guard</span>
+                    </div>
+                    <ul class="hint-tips">
+                        <li>Letters use <code>sc_</code> prefix: <code>sc_a</code>&thinsp;, <code>sc_g</code>&thinsp;, <code>sc_q</code></li>
+                        <li>Modifiers: <code>Ctrl</code>&thinsp;, <code>Shift</code>&thinsp;, <code>Alt</code>&thinsp;, <code>Any</code></li>
+                        <li>Command codes are shown in grey under each command in <strong>List view</strong></li>
+                    </ul>
                 </div>
                 <div class="add-form-row">
                     <input
@@ -78,7 +100,7 @@
     import { nextTick, ref } from "vue";
     import { keybindsStore, removeAdvancedBinding, addAdvancedBinding } from "@renderer/store/keybinds.store";
     import { formatAdvancedBindingSteps } from "@renderer/utils/uikeys/key-formatter";
-    import { COMMAND_CATEGORIES } from "@renderer/utils/uikeys/commands";
+    import { getCommandLabel } from "@renderer/utils/uikeys/commands";
     import type { KeyBinding } from "@renderer/utils/uikeys/types";
 
     const emit = defineEmits<{ (e: "close"): void }>();
@@ -88,11 +110,10 @@
     const addError = ref("");
     const addInputRef = ref<HTMLInputElement | null>(null);
 
-    const allCommands = COMMAND_CATEGORIES.flatMap((c) => c.commands);
-
-    function getCommandLabel(command: string): string {
-        return allCommands.find((c) => c.command === command)?.label ?? command;
-    }
+    const editingId = ref<string | null>(null);
+    const editInput = ref("");
+    const editError = ref("");
+    const editInputRef = ref<HTMLInputElement | null>(null);
 
     function formatSteps(binding: KeyBinding): string[] {
         return formatAdvancedBindingSteps(binding.raw);
@@ -100,6 +121,33 @@
 
     function onRemove(id: string) {
         removeAdvancedBinding(id);
+    }
+
+    async function onEditStart(binding: KeyBinding) {
+        showAdd.value = false;
+        editError.value = "";
+        editInput.value = binding.raw.replace(/^bind\s+/, "");
+        editingId.value = binding.id;
+        await nextTick();
+        editInputRef.value?.focus();
+    }
+
+    function onEditCancel() {
+        editingId.value = null;
+        editInput.value = "";
+        editError.value = "";
+    }
+
+    function onEditConfirm(id: string) {
+        editError.value = "";
+        const ok = addAdvancedBinding(editInput.value);
+        if (!ok) {
+            editError.value = "Could not parse that binding — check the syntax and try again.";
+            return;
+        }
+        removeAdvancedBinding(id);
+        editingId.value = null;
+        editInput.value = "";
     }
 
     async function onAddConfirm() {
@@ -114,6 +162,7 @@
     }
 
     async function openAdd() {
+        editingId.value = null;
         showAdd.value = true;
         await nextTick();
         addInputRef.value?.focus();
@@ -223,6 +272,35 @@
         text-overflow: ellipsis;
     }
 
+    .binding-row.is-editing {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+        border-color: rgba(37, 99, 235, 0.4);
+        background: rgba(37, 99, 235, 0.06);
+    }
+
+    .edit-form-row {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+    }
+
+    .btn-edit {
+        flex-shrink: 0;
+        background: none;
+        border: none;
+        color: rgba(255,255,255,0.3);
+        font-size: 11px;
+        font-family: inherit;
+        cursor: pointer;
+        padding: 2px 6px;
+        border-radius: 3px;
+        transition: all 0.1s;
+
+        &:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.08); }
+    }
+
     .btn-remove {
         flex-shrink: 0;
         background: none;
@@ -266,13 +344,51 @@
     }
 
     .add-form-hint {
-        color: rgba(255,255,255,0.35);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 10px 12px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 5px;
+        color: rgba(255,255,255,0.65);
+        font-size: 12px;
+
         code {
-            background: rgba(255,255,255,0.08);
-            padding: 1px 4px;
+            background: rgba(255,255,255,0.1);
+            padding: 1px 5px;
             border-radius: 3px;
             font-family: monospace;
-            font-size: 10px;
+            font-size: 11px;
+            color: rgba(180,210,255,0.9);
+        }
+    }
+
+    .hint-example {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .hint-annotation {
+        color: rgba(255,255,255,0.4);
+        font-style: italic;
+        font-size: 11px;
+    }
+
+    .hint-tips {
+        margin: 0;
+        padding: 0 0 0 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        font-size: 11px;
+        color: rgba(255,255,255,0.5);
+
+        strong {
+            color: rgba(255,255,255,0.75);
+            font-weight: 600;
         }
     }
 
