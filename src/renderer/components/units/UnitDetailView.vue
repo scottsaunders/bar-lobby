@@ -9,24 +9,23 @@ SPDX-License-Identifier: MIT
         <div class="scroll-container">
             <div class="detail-page">
 
-                <!-- Header -->
-                <div class="unit-header flex-row gap-lg flex-center-items">
-                    <Button class="icon" @click="$emit('close')">
+                <!-- Header — centered, full width -->
+                <div class="unit-header flex-col flex-center-items gap-sm">
+                    <Button class="icon back-btn" @click="$emit('close')">
                         <Icon :icon="arrowBack" :width="20" :height="20" />
                     </Button>
-                    <Icon :icon="typeIcon" :width="44" :height="44" class="header-type-icon" :style="{ color: factionColor }" />
-                    <div class="header-info flex-col gap-xs">
-                        <div class="header-badges flex-row gap-xs flex-center-items">
-                            <span class="badge tech-badge">T{{ unit.techLevel }}</span>
-                            <span class="badge type-badge">{{ unit.unitType.toUpperCase() }}</span>
-                            <span class="badge faction-badge" :class="`faction-${unit.faction.toLowerCase()}`">{{ unit.faction.toUpperCase() }}</span>
-                        </div>
-                        <h1 class="header-name">{{ unit.name.toUpperCase() }}</h1>
-                        <div v-if="unit.description" class="header-desc body-2">{{ unit.description }}</div>
+                    <div class="header-icon-wrap" :style="{ '--faction-color': factionColor }">
+                        <Icon :icon="typeIcon" :width="48" :height="48" :style="{ color: factionColor }" />
+                    </div>
+                    <h1 class="header-name">{{ unit.name.toUpperCase() }}</h1>
+                    <div class="header-sub flex-row gap-sm flex-center-items">
+                        <span class="badge tech-badge">T{{ unit.techLevel }}</span>
+                        <span v-if="unit.description" class="header-desc">{{ unit.description }}</span>
+                        <span v-else class="header-desc">{{ unit.unitType }} · {{ unit.faction }}</span>
                     </div>
                 </div>
 
-                <!-- Two-column layout -->
+                <!-- Three-column layout -->
                 <div class="main-layout">
 
                     <!-- Left: 3D viewer + balance chart -->
@@ -37,15 +36,11 @@ SPDX-License-Identifier: MIT
                         <div class="chart-wrap flex-col gap-xs">
                             <div class="section-label">BALANCE CHART</div>
                             <svg viewBox="0 0 240 240" class="balance-svg">
-                                <!-- Background rings -->
                                 <circle v-for="r in [16, 32, 49, 65]" :key="r" cx="120" cy="120" :r="r"
                                     fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
-                                <!-- Sectors -->
                                 <path v-for="s in chartSectors" :key="s.label" :d="s.path"
                                     :fill="s.color" fill-opacity="0.8" />
-                                <!-- Center dot -->
                                 <circle cx="120" cy="120" r="2" fill="rgba(255,255,255,0.25)" />
-                                <!-- Labels -->
                                 <text v-for="s in chartSectors" :key="'lbl'+s.label"
                                     :x="s.lx" :y="s.ly" class="chart-lbl"
                                     text-anchor="middle" dominant-baseline="middle">{{ s.label }}</text>
@@ -53,14 +48,15 @@ SPDX-License-Identifier: MIT
                         </div>
                     </div>
 
-                    <!-- Right: all data -->
-                    <div class="right-col flex-col gap-lg">
+                    <!-- Center: all stats -->
+                    <div class="center-col flex-col gap-lg">
 
                         <!-- COST -->
                         <div class="data-section flex-col gap-xs">
                             <div class="section-label">COST</div>
                             <div v-if="unit.metalCost > 0" class="stat-bar-row">
                                 <span class="sbar-label">METAL</span>
+                                <Icon :icon="metalIcon" :width="14" :height="14" class="sbar-icon" style="color: #94a3b8" />
                                 <div class="sbar-track">
                                     <div class="sbar-fill" :style="{ background: '#94a3b8', width: pct(unit.metalCost, maxStats.metal) }" />
                                 </div>
@@ -68,6 +64,7 @@ SPDX-License-Identifier: MIT
                             </div>
                             <div v-if="unit.energyCost > 0" class="stat-bar-row">
                                 <span class="sbar-label">ENERGY</span>
+                                <Icon :icon="energyIcon" :width="14" :height="14" class="sbar-icon" style="color: #fbbf24" />
                                 <div class="sbar-track">
                                     <div class="sbar-fill" :style="{ background: '#fbbf24', width: pct(unit.energyCost, maxStats.energy) }" />
                                 </div>
@@ -75,6 +72,7 @@ SPDX-License-Identifier: MIT
                             </div>
                             <div v-if="unit.buildTime > 0" class="stat-bar-row">
                                 <span class="sbar-label">BUILD TIME</span>
+                                <Icon :icon="clockIcon" :width="14" :height="14" class="sbar-icon" style="color: #a78bfa" />
                                 <div class="sbar-track">
                                     <div class="sbar-fill" :style="{ background: '#a78bfa', width: pct(unit.buildTime, maxStats.buildTime) }" />
                                 </div>
@@ -87,6 +85,7 @@ SPDX-License-Identifier: MIT
                             <div class="section-label">GENERAL STATS</div>
                             <div v-if="unit.health > 0" class="stat-bar-row">
                                 <span class="sbar-label">HEALTH</span>
+                                <Icon :icon="healthIcon" :width="14" :height="14" class="sbar-icon" style="color: #22c55e" />
                                 <div class="sbar-track">
                                     <div class="sbar-fill" :style="{ background: '#22c55e', width: pct(unit.health, maxStats.health) }" />
                                 </div>
@@ -94,6 +93,7 @@ SPDX-License-Identifier: MIT
                             </div>
                             <div v-if="unit.speed > 0" class="stat-bar-row">
                                 <span class="sbar-label">SPEED</span>
+                                <Icon :icon="speedIcon" :width="14" :height="14" class="sbar-icon" style="color: #38bdf8" />
                                 <div class="sbar-track">
                                     <div class="sbar-fill" :style="{ background: '#38bdf8', width: pct(unit.speed, maxStats.speed) }" />
                                 </div>
@@ -101,6 +101,7 @@ SPDX-License-Identifier: MIT
                             </div>
                             <div v-if="unit.sightRange > 0" class="stat-bar-row">
                                 <span class="sbar-label">SIGHT</span>
+                                <Icon :icon="sightIcon" :width="14" :height="14" class="sbar-icon" style="color: #e2e8f0" />
                                 <div class="sbar-track">
                                     <div class="sbar-fill" :style="{ background: '#e2e8f0', width: pct(unit.sightRange, maxStats.sight) }" />
                                 </div>
@@ -108,6 +109,7 @@ SPDX-License-Identifier: MIT
                             </div>
                             <div v-if="totalDPS > 0" class="stat-bar-row">
                                 <span class="sbar-label">DPS</span>
+                                <Icon :icon="dpsIcon" :width="14" :height="14" class="sbar-icon" style="color: #ef4444" />
                                 <div class="sbar-track">
                                     <div class="sbar-fill" :style="{ background: '#ef4444', width: pct(totalDPS, maxStats.dps) }" />
                                 </div>
@@ -115,53 +117,11 @@ SPDX-License-Identifier: MIT
                             </div>
                             <div v-if="maxRange > 0" class="stat-bar-row">
                                 <span class="sbar-label">RANGE</span>
+                                <Icon :icon="rangeIcon" :width="14" :height="14" class="sbar-icon" style="color: #f97316" />
                                 <div class="sbar-track">
                                     <div class="sbar-fill" :style="{ background: '#f97316', width: pct(maxRange, maxStats.range) }" />
                                 </div>
                                 <span class="sbar-value">{{ maxRange }}</span>
-                            </div>
-                        </div>
-
-                        <!-- ORDNANCE -->
-                        <div v-if="unit.weapons.length > 0" class="data-section flex-col gap-xs">
-                            <div class="section-label">ORDNANCE</div>
-                            <div class="ordnance-list flex-col gap-xs">
-                                <div v-for="wep in unit.weapons" :key="wep.name" class="weapon-card">
-                                    <div class="wep-header flex-row flex-center-items gap-sm"
-                                        @click="expandedWeapons[wep.name] = !expandedWeapons[wep.name]">
-                                        <Icon :icon="weaponIcon" :width="16" :height="16" class="wep-icon" />
-                                        <span class="wep-name body-2">{{ wep.name }}</span>
-                                        <span v-if="wep.weaponType" class="wep-type">{{ wep.weaponType }}</span>
-                                        <Icon :icon="expandedWeapons[wep.name] ? chevronUpIcon : chevronDownIcon"
-                                            :width="14" :height="14" class="wep-chevron" />
-                                    </div>
-                                    <div v-if="expandedWeapons[wep.name]" class="wep-stats">
-                                        <div v-if="wep.damage > 0" class="wep-stat">
-                                            <span class="wep-stat-lbl">DAMAGE</span>
-                                            <span>{{ wep.damage }}</span>
-                                        </div>
-                                        <div v-if="wep.dps > 0" class="wep-stat">
-                                            <span class="wep-stat-lbl">DPS</span>
-                                            <span>{{ wep.dps }}</span>
-                                        </div>
-                                        <div v-if="wep.range > 0" class="wep-stat">
-                                            <span class="wep-stat-lbl">RANGE</span>
-                                            <span>{{ wep.range }}</span>
-                                        </div>
-                                        <div v-if="wep.reloadTime > 0" class="wep-stat">
-                                            <span class="wep-stat-lbl">RELOAD</span>
-                                            <span>{{ wep.reloadTime.toFixed(1) }}s</span>
-                                        </div>
-                                        <div v-if="wep.aoe > 0" class="wep-stat">
-                                            <span class="wep-stat-lbl">AOE</span>
-                                            <span>{{ wep.aoe }}</span>
-                                        </div>
-                                        <div v-if="wep.projectileSpeed > 0" class="wep-stat">
-                                            <span class="wep-stat-lbl">PROJ SPD</span>
-                                            <span>{{ wep.projectileSpeed }}</span>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
@@ -170,6 +130,7 @@ SPDX-License-Identifier: MIT
                             <div class="section-label">CONSTRUCTION</div>
                             <div class="stat-bar-row">
                                 <span class="sbar-label">BUILD POWER</span>
+                                <Icon :icon="buildIcon" :width="14" :height="14" class="sbar-icon" style="color: #fb923c" />
                                 <div class="sbar-track">
                                     <div class="sbar-fill" :style="{ background: '#fb923c', width: pct(unit.buildPower, maxStats.buildPower) }" />
                                 </div>
@@ -177,6 +138,7 @@ SPDX-License-Identifier: MIT
                             </div>
                             <div v-if="unit.buildRange > 0" class="stat-bar-row">
                                 <span class="sbar-label">BUILD RANGE</span>
+                                <Icon :icon="rangeIcon" :width="14" :height="14" class="sbar-icon" style="color: #fb923c" />
                                 <div class="sbar-track">
                                     <div class="sbar-fill" :style="{ background: '#fb923c', width: pct(unit.buildRange, maxStats.buildRange) }" />
                                 </div>
@@ -189,6 +151,7 @@ SPDX-License-Identifier: MIT
                             <div class="section-label">SENSORS</div>
                             <div v-if="unit.radarRange > 0" class="stat-bar-row">
                                 <span class="sbar-label">RADAR</span>
+                                <Icon :icon="radarIcon" :width="14" :height="14" class="sbar-icon" style="color: #38bdf8" />
                                 <div class="sbar-track">
                                     <div class="sbar-fill" :style="{ background: '#38bdf8', width: pct(unit.radarRange, maxStats.radar) }" />
                                 </div>
@@ -196,6 +159,7 @@ SPDX-License-Identifier: MIT
                             </div>
                             <div v-if="unit.sonarRange > 0" class="stat-bar-row">
                                 <span class="sbar-label">SONAR</span>
+                                <Icon :icon="sonarIcon" :width="14" :height="14" class="sbar-icon" style="color: #34d399" />
                                 <div class="sbar-track">
                                     <div class="sbar-fill" :style="{ background: '#34d399', width: pct(unit.sonarRange, maxStats.sonar) }" />
                                 </div>
@@ -210,6 +174,52 @@ SPDX-License-Identifier: MIT
                         </div>
 
                     </div>
+
+                    <!-- Right: Ordnance -->
+                    <div v-if="unit.weapons.length > 0" class="right-col flex-col gap-xs">
+                        <div class="section-label">ORDNANCE</div>
+                        <div v-for="wep in unit.weapons" :key="wep.name" class="weapon-card">
+                            <div class="wep-header flex-row flex-center-items gap-sm"
+                                @click="expandedWeapons[wep.name] = !expandedWeapons[wep.name]">
+                                <div class="wep-thumb" :style="{ '--wep-color': weaponColor(wep) }">
+                                    <Icon :icon="weaponIcon" :width="22" :height="22" style="color: rgba(255,200,80,0.9)" />
+                                </div>
+                                <div class="wep-info flex-col gap-xs flex-grow">
+                                    <span class="wep-name">{{ wep.name.toUpperCase() }}</span>
+                                    <span v-if="wep.weaponType" class="wep-type">{{ wep.weaponType }}</span>
+                                </div>
+                                <Icon :icon="expandedWeapons[wep.name] ? chevronUpIcon : chevronDownIcon"
+                                    :width="14" :height="14" class="wep-chevron" />
+                            </div>
+                            <div v-if="expandedWeapons[wep.name]" class="wep-stats">
+                                <div v-if="wep.damage > 0" class="wep-stat">
+                                    <span class="wep-stat-lbl">DAMAGE</span>
+                                    <span>{{ wep.damage }}</span>
+                                </div>
+                                <div v-if="wep.dps > 0" class="wep-stat">
+                                    <span class="wep-stat-lbl">DPS</span>
+                                    <span>{{ wep.dps }}</span>
+                                </div>
+                                <div v-if="wep.range > 0" class="wep-stat">
+                                    <span class="wep-stat-lbl">RANGE</span>
+                                    <span>{{ wep.range }}</span>
+                                </div>
+                                <div v-if="wep.reloadTime > 0" class="wep-stat">
+                                    <span class="wep-stat-lbl">RELOAD</span>
+                                    <span>{{ wep.reloadTime.toFixed(1) }}s</span>
+                                </div>
+                                <div v-if="wep.aoe > 0" class="wep-stat">
+                                    <span class="wep-stat-lbl">AOE</span>
+                                    <span>{{ wep.aoe }}</span>
+                                </div>
+                                <div v-if="wep.projectileSpeed > 0" class="wep-stat">
+                                    <span class="wep-stat-lbl">PROJ SPD</span>
+                                    <span>{{ wep.projectileSpeed }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -235,6 +245,17 @@ import defaultIcon from "@iconify-icons/mdi/cube-outline";
 import weaponIcon from "@iconify-icons/mdi/target";
 import chevronUpIcon from "@iconify-icons/mdi/chevron-up";
 import chevronDownIcon from "@iconify-icons/mdi/chevron-down";
+import healthIcon from "@iconify-icons/mdi/heart";
+import speedIcon from "@iconify-icons/mdi/chevron-double-right";
+import sightIcon from "@iconify-icons/mdi/eye";
+import dpsIcon from "@iconify-icons/mdi/crosshairs";
+import rangeIcon from "@iconify-icons/mdi/arrow-top-right";
+import metalIcon from "@iconify-icons/mdi/triangle-outline";
+import energyIcon from "@iconify-icons/mdi/lightning-bolt";
+import clockIcon from "@iconify-icons/mdi/clock-outline";
+import buildIcon from "@iconify-icons/mdi/hammer";
+import radarIcon from "@iconify-icons/mdi/radar";
+import sonarIcon from "@iconify-icons/mdi/waves";
 
 const props = defineProps<{ unit: UnitData }>();
 defineEmits<{ (e: "close"): void }>();
@@ -271,6 +292,12 @@ const typeIcon = computed(() => {
     }
 });
 
+function weaponColor(wep: UnitData["weapons"][number]): string {
+    if (wep.aoe > 0) return "#f97316";
+    if ((wep.projectileSpeed ?? 0) === 0) return "#a78bfa";
+    return "#ef4444";
+}
+
 const totalDPS = computed(() => Math.round(props.unit.weapons.reduce((s, w) => s + w.dps, 0)));
 const maxRange = computed(() => props.unit.weapons.reduce((m, w) => Math.max(m, w.range), 0));
 
@@ -301,12 +328,8 @@ function pct(value: number, max: number): string {
     return `${Math.min(100, Math.max(1, (value / max) * 100)).toFixed(1)}%`;
 }
 
-// Fixed reference values for the balance chart — represent strong-but-not-extreme stats.
-// Using all-unit max causes buildings/commanders to dominate, making combat units appear near-zero.
 const CHART_REF = { health: 6000, dps: 500, range: 1800, sight: 1200, speed: 160 };
 
-// Polar area chart — 5 sectors clockwise from top-left matching BAR website axis layout:
-// HEALTH (top-left), DPS (top-right), RANGE (right), SIGHT (bottom), SPEED (left)
 const chartSectors = computed(() => {
     const cx = 120, cy = 120, R = 65, labelR = 91;
     const startAngle = (-162 * Math.PI) / 180;
@@ -361,25 +384,48 @@ const chartSectors = computed(() => {
 // ── Header ───────────────────────────────────────────────────────────────
 
 .unit-header {
+    position: relative;
     flex-shrink: 0;
+    text-align: center;
+    padding-top: map.get($spacing, "sm");
 }
 
-.header-type-icon {
-    flex-shrink: 0;
-    opacity: 0.9;
+.back-btn {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.header-icon-wrap {
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+    border: 1px solid color-mix(in srgb, var(--faction-color) 30%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 24px color-mix(in srgb, var(--faction-color) 20%, transparent);
 }
 
 .header-name {
-    font-size: 1.75rem;
+    font-size: 2.6rem;
     font-weight: 700;
-    letter-spacing: 0.07em;
+    letter-spacing: 0.1em;
     line-height: 1;
     margin: 0;
 }
 
+.header-sub {
+    justify-content: center;
+}
+
 .header-desc {
-    opacity: 0.45;
-    font-size: 0.8rem;
+    color: #22c55e;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    opacity: 0.9;
 }
 
 .badge {
@@ -392,27 +438,14 @@ const chartSectors = computed(() => {
 
 .tech-badge {
     background: rgba(255, 255, 255, 0.12);
-    color: rgba(255, 255, 255, 0.75);
-}
-
-.type-badge {
-    background: rgba(255, 255, 255, 0.07);
-    color: rgba(255, 255, 255, 0.45);
-}
-
-.faction-badge {
-    &.faction-armada   { background: rgba(96, 165, 250, 0.18); color: #93c5fd; }
-    &.faction-cortex   { background: rgba(248, 113, 113, 0.18); color: #fca5a5; }
-    &.faction-legion   { background: rgba(74, 222, 128, 0.18); color: #86efac; }
-    &.faction-scavengers { background: rgba(192, 132, 252, 0.18); color: #d8b4fe; }
-    &.faction-other    { background: rgba(107, 114, 128, 0.18); color: #9ca3af; }
+    color: rgba(255, 255, 255, 0.85);
 }
 
 // ── Main layout ──────────────────────────────────────────────────────────
 
 .main-layout {
     display: grid;
-    grid-template-columns: 300px 1fr;
+    grid-template-columns: 280px 1fr 260px;
     gap: map.get($spacing, "xl");
     align-items: start;
 }
@@ -441,11 +474,11 @@ const chartSectors = computed(() => {
 // ── Section shared ────────────────────────────────────────────────────────
 
 .section-label {
-    font-size: 0.68rem;
+    font-size: 0.78rem;
     font-weight: 700;
-    letter-spacing: 0.13em;
-    opacity: 0.38;
-    margin-bottom: 2px;
+    letter-spacing: 0.16em;
+    opacity: 0.45;
+    margin-bottom: 4px;
 }
 
 .data-section {
@@ -459,17 +492,23 @@ const chartSectors = computed(() => {
     display: flex;
     align-items: center;
     gap: map.get($spacing, "sm");
-    padding: 3px 0;
+    padding: 4px 0;
 }
 
 .sbar-label {
-    width: 82px;
+    width: 80px;
     flex-shrink: 0;
     font-size: 0.67rem;
     font-weight: 600;
     letter-spacing: 0.07em;
     opacity: 0.42;
     font-family: "Rajdhani", monospace;
+    text-align: right;
+}
+
+.sbar-icon {
+    flex-shrink: 0;
+    opacity: 0.75;
 }
 
 .sbar-track {
@@ -491,18 +530,22 @@ const chartSectors = computed(() => {
     width: 56px;
     flex-shrink: 0;
     text-align: right;
-    font-size: 0.82rem;
+    font-size: 0.88rem;
     font-variant-numeric: tabular-nums;
     font-weight: 600;
     opacity: 0.9;
 }
 
-// ── Ordnance ──────────────────────────────────────────────────────────────
+// ── Ordnance (right column) ───────────────────────────────────────────────
+
+.right-col {
+    // sticky at top while center scrolls, matches design intent
+}
 
 .weapon-card {
     background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
     overflow: hidden;
 }
 
@@ -517,23 +560,40 @@ const chartSectors = computed(() => {
     }
 }
 
-.wep-icon {
+.wep-thumb {
     flex-shrink: 0;
-    opacity: 0.4;
+    width: 64px;
+    height: 64px;
+    border-radius: 3px;
+    background: radial-gradient(
+        ellipse at center,
+        color-mix(in srgb, var(--wep-color, #ef4444) 25%, transparent) 0%,
+        rgba(10, 15, 28, 0.9) 100%
+    );
+    border: 1px solid color-mix(in srgb, var(--wep-color, #ef4444) 20%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wep-info {
+    min-width: 0;
 }
 
 .wep-name {
-    flex: 1;
-    font-size: 0.8rem;
-    font-family: monospace;
-    opacity: 0.85;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    opacity: 0.9;
+    line-height: 1.2;
 }
 
 .wep-type {
-    font-size: 0.65rem;
+    font-size: 0.62rem;
     opacity: 0.35;
     letter-spacing: 0.06em;
     font-weight: 600;
+    font-family: "Rajdhani", monospace;
 }
 
 .wep-chevron {

@@ -93,10 +93,14 @@ import { auth } from "@renderer/store/me.store";
 import { useLogInConfirmation } from "@renderer/composables/useLogInConfirmation";
 
 const matchmakingWidgetState = ref({
-    isVisible: false,
-    isSearching: false,
-    isMatchFound: false,
+    status: "idle" as "idle" | "searching" | "matchFound" | "waitingForPlayers" | "lost" | "gameStarting" | "cancelled",
     playersQueued: 42,
+    playersReady: 0,
+    totalPlayers: 2,
+    cancelReason: null as "intentional" | "server_error" | "party_user_left" | "ready_timeout" | null,
+    matchMap: "",
+    matchPlayers: [] as { name: string; team: 1 | 2 }[],
+    matchQueue: "duel",
 });
 
 provide("matchmakingWidgetState", matchmakingWidgetState);

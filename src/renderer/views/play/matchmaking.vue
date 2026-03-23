@@ -169,6 +169,7 @@ import { me } from "@renderer/store/me.store";
 import { db } from "@renderer/store/db";
 import { MapData } from "@main/content/maps/map-data";
 import { useImageBlobUrlCache } from "@renderer/composables/useImageBlobUrlCache";
+import type { MatchmakingMockState } from "@renderer/components/battle/matchmaking-mock-state";
 
 const { t } = useTypedI18n();
 const cache = useImageBlobUrlCache();
@@ -240,14 +241,10 @@ const mapDetailOpen = ref(false);
 const selectedMap = ref<MapData | null>(null);
 
 // Get shared mock state from App.vue (for prototyping)
-const matchmakingWidgetState = inject<Ref<{ isVisible: boolean; isSearching: boolean; isMatchFound: boolean; playersQueued: number }>>(
-    "matchmakingWidgetState",
-    ref({ isVisible: false, isSearching: false, isMatchFound: false, playersQueued: 42 })
-);
+const matchmakingState = inject<Ref<MatchmakingMockState>>("matchmakingWidgetState")!;
 
-// Use shared state so widget can reset the matchmaking page
-const isSearching = computed(() => matchmakingWidgetState?.value.isSearching || false);
-const playersQueued = computed(() => matchmakingWidgetState?.value.playersQueued || 0);
+const isSearching = computed(() => matchmakingState.value.status !== "idle");
+const playersQueued = computed(() => matchmakingState.value.playersQueued);
 
 const playerName = computed(() => me.username || "Player");
 
@@ -332,21 +329,50 @@ function openMapDetail(map: MapData) {
     mapDetailOpen.value = true;
 }
 
+const MOCK_OPPONENT_NAMES = ["Ares_VII", "NebulaCmdr", "IronTide", "VortexKing", "StarlightGG", "QuantumRex"];
+
 function handleJoinQueue() {
-    // Mock: set searching state for UI prototype
-    if (!matchmakingWidgetState?.value) return;
-    
-    matchmakingWidgetState.value.isVisible = true;
-    matchmakingWidgetState.value.isSearching = true;
-    matchmakingWidgetState.value.isMatchFound = false;
-    
-    // Mock: simulate finding a match after 3 seconds
+    const s = matchmakingState.value;
+    s.matchQueue = selectedQueue.value;
+    s.status = "searching";
+
+    // Mock: simulate finding a match after ~6 seconds
     setTimeout(() => {
-        if (matchmakingWidgetState?.value) {
-            matchmakingWidgetState.value.isSearching = false;
-            matchmakingWidgetState.value.isMatchFound = true;
+        if (matchmakingState.value.status !== "searching") return;
+
+        const maps = queueMaps[selectedQueue.value] ?? queueMaps["duel"];
+        const randomMap = maps[Math.floor(Math.random() * maps.length)];
+        const opponent = MOCK_OPPONENT_NAMES[Math.floor(Math.random() * MOCK_OPPONENT_NAMES.length)];
+        const totalPlayers = selectedQueue.value === "duel" ? 2 : selectedQueue.value === "ffa" ? 8 : 4;
+
+        s.matchMap = randomMap;
+        s.matchQueue = selectedQueue.value;
+        s.totalPlayers = totalPlayers;
+        s.playersReady = 0;
+
+        // Build mock teams
+        if (selectedQueue.value === "duel") {
+            s.matchPlayers = [
+                { name: me.username || "You", team: 1 },
+                { name: opponent, team: 2 },
+            ];
+        } else {
+            const half = Math.floor(totalPlayers / 2);
+            s.matchPlayers = [
+                { name: me.username || "You", team: 1 },
+                ...Array.from({ length: half - 1 }, (_, i) => ({
+                    name: MOCK_OPPONENT_NAMES[i % MOCK_OPPONENT_NAMES.length],
+                    team: 1 as const,
+                })),
+                ...Array.from({ length: half }, (_, i) => ({
+                    name: MOCK_OPPONENT_NAMES[(i + half) % MOCK_OPPONENT_NAMES.length],
+                    team: 2 as const,
+                })),
+            ];
         }
-    }, 3000);
+
+        s.status = "matchFound";
+    }, 6000);
 }
 
 // Watch for queue changes to load the correct maps
