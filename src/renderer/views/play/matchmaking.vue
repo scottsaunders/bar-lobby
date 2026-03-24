@@ -29,13 +29,16 @@ SPDX-License-Identifier: MIT
                                     :selected="selectedQueue === queue.id"
                                     :saturate="true"
                                     @click="() => (selectedQueue = queue.id)"
-                                    :class="{ disabled: isSearching }"
                                 >
                                     <template #media>
                                         <div class="queue-background" :style="getQueueBackgroundStyle(queue.id)"></div>
                                     </template>
                                     <template #content>
                                         <h3 class="title-3">{{ getQueueDisplayName(queue.id) }}</h3>
+                                        <div v-if="isQueueActive(queue.id)" class="queue-active-badge">
+                                            <span class="searching-dot"></span>
+                                            <span class="body-2">Searching</span>
+                                        </div>
                                     </template>
                                 </InteractiveTile>
                             </div>
@@ -129,7 +132,14 @@ SPDX-License-Identifier: MIT
                         <!-- Join Queue Button (Bottom Right) -->
                         <div class="join-queue-controls padding-left-xxl padding-right-xxl padding-top-lg padding-bottom-xxl">
                             <Button
-                                v-if="!isSearching"
+                                v-if="isQueueActive(selectedQueue)"
+                                class="grey large fullwidth"
+                                @click="handleLeaveQueue"
+                            >
+                                {{ t("lobby.multiplayer.ranked.buttons.leaveQueue") }}
+                            </Button>
+                            <Button
+                                v-else-if="canJoinQueue"
                                 class="green large fullwidth"
                                 @click="handleJoinQueue"
                             >
@@ -140,7 +150,7 @@ SPDX-License-Identifier: MIT
                                 class="grey large fullwidth"
                                 disabled
                             >
-                                {{ t("lobby.multiplayer.ranked.buttons.searchingForOpponent") }}
+                                Match in progress...
                             </Button>
                         </div>
                     </div>
@@ -243,7 +253,15 @@ const selectedMap = ref<MapData | null>(null);
 // Get shared mock state from App.vue (for prototyping)
 const matchmakingState = inject<Ref<MatchmakingMockState>>("matchmakingWidgetState")!;
 
-const isSearching = computed(() => matchmakingState.value.status !== "idle");
+const canJoinQueue = computed(() => {
+    const s = matchmakingState.value.status;
+    return s === "idle" || s === "searching";
+});
+
+function isQueueActive(queueId: string): boolean {
+    return matchmakingState.value.queues.includes(queueId);
+}
+
 const playersQueued = computed(() => matchmakingState.value.playersQueued);
 
 const playerName = computed(() => me.username || "Player");
@@ -330,28 +348,36 @@ function openMapDetail(map: MapData) {
 }
 
 const MOCK_OPPONENT_NAMES = ["Ares_VII", "NebulaCmdr", "IronTide", "VortexKing", "StarlightGG", "QuantumRex"];
+const mockTimerActive = ref(false);
 
 function handleJoinQueue() {
     const s = matchmakingState.value;
-    s.matchQueue = selectedQueue.value;
+    if (s.queues.includes(selectedQueue.value)) return;
+    s.queues.push(selectedQueue.value);
     s.status = "searching";
 
-    // Mock: simulate finding a match after ~6 seconds
-    setTimeout(() => {
-        if (matchmakingState.value.status !== "searching") return;
+    // Only one timer at a time — it picks a random queue when it fires
+    if (mockTimerActive.value) return;
+    mockTimerActive.value = true;
 
-        const maps = queueMaps[selectedQueue.value] ?? queueMaps["duel"];
+    setTimeout(() => {
+        mockTimerActive.value = false;
+        const currentQueues = matchmakingState.value.queues;
+        if (currentQueues.length === 0 || matchmakingState.value.status !== "searching") return;
+
+        // Pick a random winning queue from all currently active queues
+        const winningQueue = currentQueues[Math.floor(Math.random() * currentQueues.length)];
+        const maps = queueMaps[winningQueue] ?? queueMaps["duel"];
         const randomMap = maps[Math.floor(Math.random() * maps.length)];
         const opponent = MOCK_OPPONENT_NAMES[Math.floor(Math.random() * MOCK_OPPONENT_NAMES.length)];
-        const totalPlayers = selectedQueue.value === "duel" ? 2 : selectedQueue.value === "ffa" ? 8 : 4;
+        const totalPlayers = winningQueue === "duel" ? 2 : winningQueue === "ffa" ? 8 : 4;
 
         s.matchMap = randomMap;
-        s.matchQueue = selectedQueue.value;
+        s.matchQueue = winningQueue;
         s.totalPlayers = totalPlayers;
         s.playersReady = 0;
 
-        // Build mock teams
-        if (selectedQueue.value === "duel") {
+        if (winningQueue === "duel") {
             s.matchPlayers = [
                 { name: me.username || "You", team: 1 },
                 { name: opponent, team: 2 },
@@ -373,6 +399,13 @@ function handleJoinQueue() {
 
         s.status = "matchFound";
     }, 6000);
+}
+
+function handleLeaveQueue() {
+    const s = matchmakingState.value;
+    const idx = s.queues.indexOf(selectedQueue.value);
+    if (idx !== -1) s.queues.splice(idx, 1);
+    if (s.queues.length === 0) s.status = "idle";
 }
 
 // Watch for queue changes to load the correct maps
@@ -424,12 +457,28 @@ onMounted(() => {
     .interactive-tile {
         height: 100%;
     }
+}
 
-    .interactive-tile.disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        pointer-events: none;
-    }
+.queue-active-badge {
+    display: flex;
+    align-items: center;
+    gap: map.get($spacing, "xs");
+    margin-top: map.get($spacing, "xxs");
+    color: #22c55e;
+}
+
+.searching-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #22c55e;
+    flex-shrink: 0;
+    animation: searching-pulse 1.4s infinite ease-in-out;
+}
+
+@keyframes searching-pulse {
+    0%, 80%, 100% { opacity: 0.3; transform: scale(0.75); }
+    40%           { opacity: 1;   transform: scale(1); }
 }
 
 .queue-background {

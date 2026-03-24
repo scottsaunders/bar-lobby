@@ -51,7 +51,13 @@ SPDX-License-Identifier: MIT
             </div>
             <Settings v-model="settingsOpen" />
             <ServerSettings v-model="serverSettingsOpen" />
-            <MatchmakingProgressWidget />
+            <div class="matchmaking-widgets-stack">
+                <MatchmakingProgressWidget
+                    v-for="queueId in matchmakingWidgetState.queues"
+                    :key="queueId"
+                    :queue-id="queueId"
+                />
+            </div>
             <LogInConfirmationModal v-model="logInConfirmationIsOpen" :intendedRoute="logInConfirmationIntendedRoute" />
         </template>
     </div>
@@ -94,6 +100,7 @@ import { useLogInConfirmation } from "@renderer/composables/useLogInConfirmation
 
 const matchmakingWidgetState = ref({
     status: "idle" as "idle" | "searching" | "matchFound" | "waitingForPlayers" | "lost" | "gameStarting" | "cancelled",
+    queues: [] as string[],
     playersQueued: 42,
     playersReady: 0,
     totalPlayers: 2,
@@ -221,6 +228,17 @@ function onIntroEnd() {
     bottom: 1px;
     @extend .caption-1 !optional;
     color: rgba(255, 255, 255, 0.3);
+}
+
+.matchmaking-widgets-stack {
+    position: fixed;
+    bottom: map.get($spacing, "xl");
+    right: map.get($spacing, "xl");
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: map.get($spacing, "sm");
+    z-index: 10;
 }
 
 .splash-options {

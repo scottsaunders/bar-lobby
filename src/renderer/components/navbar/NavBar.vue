@@ -77,7 +77,7 @@ SPDX-License-Identifier: MIT
                 </div>
             </div>
             <div class="secondary">
-                <div class="secondary-left flex-row flex-left">
+                <div class="secondary-left flex-row">
                     <Button 
                         v-for="view in secondaryRoutes" 
                         :key="view.path" 
@@ -88,7 +88,7 @@ SPDX-License-Identifier: MIT
                         {{ view.meta.title ?? view.name }}
                     </Button>
                 </div>
-                <div class="secondary-right flex-row flex-right">
+                <div class="secondary-right flex-row">
                     <ServerStatus v-if="settingsStore.devMode" />
                     <Button 
                         v-if="me.isAuthenticated" 
@@ -533,7 +533,14 @@ function prefetchRoute(path: string) {
             box-sizing: border-box;
         }
     }
+    &-left {
+        flex: 1;
+        min-width: 0;
+    }
     &-right {
+        flex: 1;
+        min-width: 0;
+        justify-content: flex-end;
         .button {
             padding: 0;
             :deep(.button-content) {

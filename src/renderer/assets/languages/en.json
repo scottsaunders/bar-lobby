@@ -2006,6 +2006,7 @@
                 "queueError": "Error loading queues",
                 "buttons": {
                     "searchGame": "Search game",
+                    "leaveQueue": "Leave queue",
                     "joinRequested": "Joining queue",
                     "searchingForOpponent": "Searching for opponent",
                     "matchFound": "Match found",

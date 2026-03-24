@@ -8,6 +8,7 @@ export type CancelReason = "intentional" | "server_error" | "party_user_left" | 
 
 export interface MatchmakingMockState {
     status: MatchmakingMockStatus;
+    queues: string[];
     playersQueued: number;
     playersReady: number;
     totalPlayers: number;

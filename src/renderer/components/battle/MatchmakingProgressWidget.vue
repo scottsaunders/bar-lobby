@@ -7,9 +7,9 @@ SPDX-License-Identifier: MIT
 <template>
     <Transition name="slide-up">
         <div v-if="isVisible" class="matchmaking-widget">
-            <!-- Match Found expansion (above the status bar) -->
+            <!-- Match Found expansion — only on the queue that found the match -->
             <Transition name="expand-down">
-                <div v-if="status === 'matchFound'" class="match-found-body flex-col">
+                <div v-if="status === 'matchFound' && !isPaused" class="match-found-body flex-col">
                     <!-- Map Preview -->
                     <div class="map-preview" :style="mapBgStyle">
                         <div class="map-preview-overlay flex-col gap-xs">
@@ -57,7 +57,8 @@ SPDX-License-Identifier: MIT
             <div class="status-bar flex-row gap-md flex-center-items">
                 <!-- Indicator -->
                 <div class="status-indicator">
-                    <div v-if="status === 'searching'" class="searching-dots">
+                    <div v-if="isPaused" class="state-icon pause-icon caption-1-stronger">⏸</div>
+                    <div v-else-if="status === 'searching'" class="searching-dots">
                         <span></span><span></span><span></span>
                     </div>
                     <div v-else-if="status === 'waitingForPlayers'" class="waiting-dots">
@@ -71,7 +72,7 @@ SPDX-License-Identifier: MIT
 
                 <!-- Text -->
                 <div class="status-text-section flex-col gap-xxs flex-grow">
-                    <div class="body-1-strong status-text">{{ statusText }}</div>
+                    <div class="body-1-strong status-text">{{ displayStatusText }}</div>
 
                     <div v-if="status === 'searching' && playersQueued" class="body-2 sub-text">
                         {{ playersQueued }} players in queue
@@ -102,6 +103,8 @@ import { db } from "@renderer/store/db";
 import { useImageBlobUrlCache } from "@renderer/composables/useImageBlobUrlCache";
 import type { MatchmakingMockState } from "./matchmaking-mock-state";
 
+const props = defineProps<{ queueId: string }>();
+
 const state = inject<Ref<MatchmakingMockState>>("matchmakingWidgetState")!;
 const cache = useImageBlobUrlCache();
 
@@ -117,7 +120,15 @@ const playersReady = computed(() => state.value.playersReady);
 const totalPlayers = computed(() => state.value.totalPlayers);
 const cancelReason = computed(() => state.value.cancelReason);
 
-const isVisible = computed(() => state.value.status !== "idle");
+// This widget is visible whenever its queue is in the active queues array
+const isVisible = computed(() => state.value.queues.includes(props.queueId));
+
+// Paused: another queue found a match, this one is waiting
+const isPaused = computed(() => {
+    const s = state.value.status;
+    return (s === "matchFound" || s === "waitingForPlayers" || s === "lost" || s === "gameStarting")
+        && state.value.matchQueue !== props.queueId;
+});
 
 const team1 = computed(() => state.value.matchPlayers.filter((p) => p.team === 1));
 const team2 = computed(() => state.value.matchPlayers.filter((p) => p.team === 2));
@@ -137,14 +148,19 @@ const queueLabel = computed(() => {
 
 const statusText = computed(() => {
     switch (status.value) {
-        case "searching":       return "Searching for match...";
-        case "matchFound":      return "Match found — respond now";
+        case "searching":         return "Searching for match...";
+        case "matchFound":        return "Match found — respond now";
         case "waitingForPlayers": return "Waiting for all players...";
-        case "lost":            return "A player didn't accept. Resuming search...";
-        case "gameStarting":    return "Game starting!";
-        case "cancelled":       return "Matchmaking cancelled";
-        default:                return "";
+        case "lost":              return "A player didn't accept. Resuming search...";
+        case "gameStarting":      return "Game starting!";
+        case "cancelled":         return "Matchmaking cancelled";
+        default:                  return "";
     }
+});
+
+const displayStatusText = computed(() => {
+    if (isPaused.value) return `Paused · match found in ${queueLabel.value}`;
+    return statusText.value;
 });
 
 const cancelReasonLabel = computed(() => {
@@ -157,8 +173,11 @@ const cancelReasonLabel = computed(() => {
     }
 });
 
-const showCancelButton = computed(() => status.value === "searching" || status.value === "waitingForPlayers");
-const cancelButtonLabel = computed(() => (status.value === "waitingForPlayers" ? "Cancel" : "Leave Queue"));
+const showCancelButton = computed(() => isPaused.value || status.value === "searching" || status.value === "waitingForPlayers");
+const cancelButtonLabel = computed(() => {
+    if (status.value === "waitingForPlayers") return "Cancel";
+    return "Leave Queue";
+});
 
 const mapBgStyle = computed(() => {
     if (mapImageUrl.value) return `background-image: url('${mapImageUrl.value}');`;
@@ -229,6 +248,7 @@ function handleAccept() {
                 state.value.status = "gameStarting";
                 setTimeout(() => {
                     state.value.status = "idle";
+                    state.value.queues = [];
                     state.value.playersReady = 0;
                     hasShownLost.value = false;
                 }, 2500);
@@ -239,10 +259,21 @@ function handleAccept() {
 
 function handleDecline() {
     clearCountdown();
+    // Keep only this queue visible for the cancelled message; others disappear
+    state.value.queues = [props.queueId];
     triggerCancelled("intentional");
 }
 
 function handleCancel() {
+    if (isPaused.value || status.value === "searching") {
+        // Just leave this specific queue silently
+        const idx = state.value.queues.indexOf(props.queueId);
+        if (idx !== -1) state.value.queues.splice(idx, 1);
+        if (state.value.queues.length === 0) state.value.status = "idle";
+        return;
+    }
+    // waitingForPlayers — cancel the whole match flow
+    state.value.queues = [props.queueId];
     triggerCancelled("intentional");
 }
 
@@ -252,6 +283,7 @@ function triggerCancelled(reason: MatchmakingMockState["cancelReason"]) {
     state.value.playersReady = 0;
     setTimeout(() => {
         state.value.status = "idle";
+        state.value.queues = [];
         state.value.cancelReason = null;
     }, 3000);
 }
@@ -276,11 +308,7 @@ onUnmounted(() => clearCountdown());
 @use "@renderer/styles/spacing" as *;
 
 .matchmaking-widget {
-    position: fixed;
-    bottom: map.get($spacing, "xl");
-    right: map.get($spacing, "xl");
     width: 500px;
-    z-index: 10;
     background: rgba(8, 12, 18, 0.96);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 4px;
@@ -372,6 +400,7 @@ onUnmounted(() => clearCountdown());
 .lost-icon   { @extend .state-icon; background: #ef4444; }
 .go-icon     { @extend .state-icon; background: #22c55e; }
 .cancel-icon { @extend .state-icon; background: rgba(255, 255, 255, 0.25); }
+.pause-icon  { @extend .state-icon; background: rgba(255, 255, 255, 0.15); color: rgba(255, 255, 255, 0.6); font-size: 10px; }
 
 // Match found body
 .match-found-body {
