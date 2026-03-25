@@ -89,6 +89,7 @@ SPDX-License-Identifier: MIT
                     </Button>
                 </div>
                 <div class="secondary-right flex-row">
+                    <MatchmakingNavIndicator />
                     <ServerStatus v-if="settingsStore.devMode" />
                     <Button 
                         v-if="me.isAuthenticated" 
@@ -146,6 +147,7 @@ import { settingsStore } from "@renderer/store/settings.store";
 import { downloadsStore } from "@renderer/store/downloads.store";
 import { me } from "@renderer/store/me.store";
 import ServerStatus from "@renderer/components/navbar/ServerStatus.vue";
+import MatchmakingNavIndicator from "@renderer/components/navbar/MatchmakingNavIndicator.vue";
 import { useLogInConfirmation } from "@renderer/composables/useLogInConfirmation";
 
 defineProps<{

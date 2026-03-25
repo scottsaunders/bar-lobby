@@ -51,13 +51,7 @@ SPDX-License-Identifier: MIT
             </div>
             <Settings v-model="settingsOpen" />
             <ServerSettings v-model="serverSettingsOpen" />
-            <div class="matchmaking-widgets-stack">
-                <MatchmakingProgressWidget
-                    v-for="queueId in matchmakingWidgetState.queues"
-                    :key="queueId"
-                    :queue-id="queueId"
-                />
-            </div>
+            <MatchFoundOverlay />
             <LogInConfirmationModal v-model="logInConfirmationIsOpen" :intendedRoute="logInConfirmationIntendedRoute" />
         </template>
     </div>
@@ -91,7 +85,7 @@ import { playRandomMusic } from "@renderer/utils/play-random-music";
 import { runInit } from "@renderer/utils/background-init";
 import { settingsStore } from "./store/settings.store";
 import { infosStore } from "@renderer/store/infos.store";
-import MatchmakingProgressWidget from "@renderer/components/battle/MatchmakingProgressWidget.vue";
+import MatchFoundOverlay from "@renderer/components/battle/MatchFoundOverlay.vue";
 import { battleStore } from "@renderer/store/battle.store";
 import { useGlobalKeybindings } from "@renderer/composables/useGlobalKeybindings";
 import { me } from "@renderer/store/me.store";
@@ -228,17 +222,6 @@ function onIntroEnd() {
     bottom: 1px;
     @extend .caption-1 !optional;
     color: rgba(255, 255, 255, 0.3);
-}
-
-.matchmaking-widgets-stack {
-    position: fixed;
-    bottom: map.get($spacing, "xl");
-    right: map.get($spacing, "xl");
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: map.get($spacing, "sm");
-    z-index: 10;
 }
 
 .splash-options {

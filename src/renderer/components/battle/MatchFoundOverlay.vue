@@ -6,12 +6,14 @@ SPDX-License-Identifier: MIT
 
 <template>
     <Transition name="match-found">
-        <div v-if="status === 'matchFound'" class="match-found-backdrop flex-center">
+        <div v-if="showOverlay" class="match-found-backdrop">
             <div class="match-found-card flex-col">
                 <!-- Map Preview -->
                 <div class="map-preview" :style="mapBgStyle">
                     <div class="map-preview-overlay flex-col gap-xs">
-                        <div class="found-label caption-1-stronger">MATCH FOUND</div>
+                        <div class="found-label caption-1-stronger">
+                            {{ status === "waitingForPlayers" ? "MATCH ACCEPTED" : "MATCH FOUND" }}
+                        </div>
                         <div class="map-name title-1">{{ state.matchMap || "Unknown Map" }}</div>
                         <div class="queue-label body-2">{{ queueLabel }}</div>
                     </div>
@@ -19,7 +21,6 @@ SPDX-License-Identifier: MIT
 
                 <!-- Players -->
                 <div class="players-section flex-row flex-center-items padding-xl gap-xl">
-                    <!-- Team 1 -->
                     <div class="team team-left flex-col gap-sm flex-grow">
                         <div
                             v-for="player in team1"
@@ -35,7 +36,6 @@ SPDX-License-Identifier: MIT
                         <span class="vs-text">VS</span>
                     </div>
 
-                    <!-- Team 2 -->
                     <div class="team team-right flex-col gap-sm flex-grow flex-align-end">
                         <div
                             v-for="player in team2"
@@ -48,19 +48,33 @@ SPDX-License-Identifier: MIT
                     </div>
                 </div>
 
-                <!-- Countdown -->
-                <div class="countdown-section flex-col gap-sm padding-left-xl padding-right-xl">
+                <!-- Countdown (matchFound phase) -->
+                <div v-if="status === 'matchFound'" class="bottom-section flex-col gap-sm padding-left-xl padding-right-xl">
                     <div class="flex-row flex-space-between flex-center-items">
-                        <span class="body-2 countdown-label">Time to accept</span>
+                        <span class="body-2 section-label">Time to accept</span>
                         <span class="body-1-strong countdown-value" :class="{ urgent: countdown <= 5 }">{{ countdown }}s</span>
                     </div>
                     <Progress :percent="countdownProgress" :height="6" themed />
                 </div>
 
+                <!-- Ready progress (waitingForPlayers phase) -->
+                <div v-if="status === 'waitingForPlayers'" class="bottom-section flex-col gap-sm padding-left-xl padding-right-xl">
+                    <div class="flex-row flex-space-between flex-center-items">
+                        <span class="body-2 section-label">Waiting for players</span>
+                        <span class="body-1-strong">{{ state.playersReady }} / {{ state.totalPlayers }} ready</span>
+                    </div>
+                    <Progress :percent="readyProgress" :height="6" themed />
+                </div>
+
                 <!-- Action Buttons -->
                 <div class="action-buttons flex-row gap-md padding-xl">
-                    <Button class="red large flex-grow" @click="handleDecline">Decline</Button>
-                    <Button class="green large flex-grow" @click="handleAccept">Accept</Button>
+                    <template v-if="status === 'matchFound'">
+                        <Button class="red large flex-grow" @click="handleDecline">Decline</Button>
+                        <Button class="green large flex-grow" @click="handleAccept">Accept</Button>
+                    </template>
+                    <template v-else-if="status === 'waitingForPlayers'">
+                        <Button class="grey large flex-grow" @click="handleCancel">Cancel</Button>
+                    </template>
                 </div>
             </div>
         </div>
@@ -71,7 +85,6 @@ SPDX-License-Identifier: MIT
 import { computed, inject, onUnmounted, ref, type Ref, watch } from "vue";
 import Progress from "@renderer/components/common/Progress.vue";
 import Button from "@renderer/components/controls/Button.vue";
-import { me } from "@renderer/store/me.store";
 import { db } from "@renderer/store/db";
 import { useImageBlobUrlCache } from "@renderer/composables/useImageBlobUrlCache";
 import type { MatchmakingMockState } from "./matchmaking-mock-state";
@@ -87,6 +100,8 @@ const hasShownLost = ref(false);
 
 const status = computed(() => state.value.status);
 
+const showOverlay = computed(() => status.value === "matchFound" || status.value === "waitingForPlayers");
+
 const team1 = computed(() => state.value.matchPlayers.filter((p) => p.team === 1));
 const team2 = computed(() => state.value.matchPlayers.filter((p) => p.team === 2));
 
@@ -101,6 +116,9 @@ const queueLabel = computed(() => {
 });
 
 const countdownProgress = computed(() => (COUNTDOWN_SECONDS - countdown.value) / COUNTDOWN_SECONDS);
+const readyProgress = computed(() =>
+    state.value.totalPlayers > 0 ? state.value.playersReady / state.value.totalPlayers : 0
+);
 
 const mapBgStyle = computed(() => {
     if (mapImageUrl.value) {
@@ -154,31 +172,25 @@ function handleAccept() {
     state.value.status = "waitingForPlayers";
     state.value.playersReady = 1;
 
-    // Simulate the other player(s) accepting after a short delay
     setTimeout(() => {
         state.value.playersReady = state.value.totalPlayers;
 
         if (!hasShownLost.value) {
-            // First accept: simulate a "lost" event (someone dropped) to show that flow
             hasShownLost.value = true;
             setTimeout(() => {
                 state.value.status = "lost";
-                // Resume searching after showing the lost message
                 setTimeout(() => {
                     state.value.status = "searching";
                     state.value.playersReady = 0;
-                    // Find another match shortly after
-                    setTimeout(() => {
-                        triggerMatchFound();
-                    }, 4000);
+                    setTimeout(() => triggerMatchFound(), 4000);
                 }, 2500);
             }, 1500);
         } else {
-            // Second accept: all ready, game starts
             setTimeout(() => {
                 state.value.status = "gameStarting";
                 setTimeout(() => {
                     state.value.status = "idle";
+                    state.value.queues = [];
                     state.value.playersReady = 0;
                     hasShownLost.value = false;
                 }, 2500);
@@ -189,6 +201,12 @@ function handleAccept() {
 
 function handleDecline() {
     clearCountdown();
+    state.value.queues = [state.value.matchQueue];
+    triggerCancelled("intentional");
+}
+
+function handleCancel() {
+    state.value.queues = [state.value.matchQueue];
     triggerCancelled("intentional");
 }
 
@@ -198,6 +216,7 @@ function triggerCancelled(reason: MatchmakingMockState["cancelReason"]) {
     state.value.playersReady = 0;
     setTimeout(() => {
         state.value.status = "idle";
+        state.value.queues = [];
         state.value.cancelReason = null;
     }, 3000);
 }
@@ -229,6 +248,9 @@ onUnmounted(() => {
     z-index: 20;
     background: rgba(0, 0, 0, 0.75);
     backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .match-found-card {
@@ -311,13 +333,13 @@ onUnmounted(() => {
     letter-spacing: 0.05em;
 }
 
-.countdown-section {
+.bottom-section {
     padding-top: map.get($spacing, "md");
     padding-bottom: map.get($spacing, "md");
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.countdown-label {
+.section-label {
     color: rgba(255, 255, 255, 0.6);
 }
 
@@ -332,19 +354,14 @@ onUnmounted(() => {
 }
 
 @keyframes pulse-urgent {
-    from {
-        opacity: 0.7;
-    }
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0.7; }
+    to   { opacity: 1; }
 }
 
 .action-buttons {
     flex-shrink: 0;
 }
 
-// Transition
 .match-found-enter-active,
 .match-found-leave-active {
     transition: all 0.25s ease-out;
