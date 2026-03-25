@@ -27,6 +27,7 @@ SPDX-License-Identifier: MIT
                 </div>
                 <div class="drag-window-area"></div>
                 <div class="primary-right">
+                    <PartyWidget />
                     <DownloadsButton
                         v-if="hasActiveDownload"
                         v-tooltip.bottom="t('lobby.navbar.tooltips.downloads')"
@@ -97,7 +98,8 @@ SPDX-License-Identifier: MIT
                         @click="profileOpen = true; profileUserId = me.userId?.toString()"
                     >
                         <div class="flex-row flex-center gap-sm">
-                            <Icon :icon="account" :height="20" />
+                            <img v-if="(me as any).avatarUrl" :src="(me as any).avatarUrl" class="nav-avatar" />
+                            <Icon v-else :icon="account" :height="20" />
                             <div>{{ me.username }}</div>
                         </div>
                     </Button>
@@ -148,6 +150,7 @@ import { downloadsStore } from "@renderer/store/downloads.store";
 import { me } from "@renderer/store/me.store";
 import ServerStatus from "@renderer/components/navbar/ServerStatus.vue";
 import MatchmakingNavIndicator from "@renderer/components/navbar/MatchmakingNavIndicator.vue";
+import PartyWidget from "@renderer/components/party/PartyWidget.vue";
 import { useLogInConfirmation } from "@renderer/composables/useLogInConfirmation";
 
 defineProps<{
@@ -564,6 +567,13 @@ function prefetchRoute(path: string) {
 }
 .user {
     text-transform: unset;
+}
+.nav-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
 }
 .unread-dot {
     position: absolute;

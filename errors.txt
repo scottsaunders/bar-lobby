@@ -3414,3 +3414,633 @@ Context: game process stderr
 Error: [t=00:00:17.481764][f=-000001] [Start Position Suggestions] Warning: No modoption start position data found
 
 ==================================================
+
+
+=== Error at 2026-03-25T18:51:06.309Z ===
+Context: game process stderr
+Error: [t=00:00:01.840219] Warning: [ArchiveData] version "1" included in name "Supreme_Crossing_V1"
+[t=00:00:01.840293] Warning: [AS::ScanArchive] set the 'mapfile' key in mapinfo.lua of archive "C:\Users\scopa\OneDrive\Documents\GitHub\bar-lobby\assets\maps\supreme_crossing_v1.sd7" for faster loading!
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:06.313Z ===
+Context: game process stderr
+Error: [t=00:00:01.841784] Warning: [ArchiveData] version "2.0" included in name "Carrot Mountains v2.0"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:07.781Z ===
+Context: game process stderr
+Error: [t=00:00:01.111944] Warning: [ArchiveData] version "1" included in name "Supreme_Crossing_V1"
+[t=00:00:01.112006] Warning: [AS::ScanArchive] set the 'mapfile' key in mapinfo.lua of archive "C:\Users\scopa\OneDrive\Documents\GitHub\bar-lobby\assets\maps\supreme_crossing_v1.sd7" for faster loading!
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:07.782Z ===
+Context: game process stderr
+Error: [t=00:00:01.113062] Warning: [ArchiveData] version "2.0" included in name "Carrot Mountains v2.0"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:22.592Z ===
+Context: game process stderr
+Error: [t=00:00:15.922465][f=-000001] Warning: [UDPListener::TryBindSocket] opening socket on loopback address, other users will not be able to connect!
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:22.607Z ===
+Context: game process stderr
+Error: [t=00:00:18.137980][f=-000001] Warning: [UDPListener::TryBindSocket] opening socket on loopback address, other users will not be able to connect!
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:22.827Z ===
+Context: game process stderr
+Error: [t=00:00:16.157889][f=-000001] Error: [SetConfigInt] key "AdvSky" is read-only
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:24.672Z ===
+Context: game process stderr
+Error: [t=00:00:18.002277][f=-000001] Warning: [CSMFReadMap::CreateSplatDetailTextures] Invalid SMF splatDetailTex maps/iwantDNTS.tga. Creating fallback texture
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:25.259Z ===
+Context: game process stderr
+Error: [t=00:00:20.790421][f=-000001] Error: [SetConfigInt] key "AdvSky" is read-only
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:25.433Z ===
+Context: game process stderr
+Error: [t=00:00:18.764096][f=-000001] [featuredefs_post.lua] Warning: Removing feature def, corfast_dead, for having invalid model that would crash the engine, Units/corfast_dead.s3o
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:25.435Z ===
+Context: game process stderr
+Error: [t=00:00:18.764672][f=-000001] [featuredefs_post.lua] Warning: Removing feature def, corhack_dead, for having invalid model that would crash the engine, Units/corfast_dead.s3o
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:25.455Z ===
+Context: game process stderr
+Error: [t=00:00:18.785600][f=-000001] [defs.lua] Error: Failed to load weaponDefs
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:25.459Z ===
+Context: game process stderr
+Error: [t=00:00:18.789924][f=-000001] Error: [Game::Load][1] forced quit with exception "Defs-Parser: [pcall] error 2 ("[string "gamedata/defs.lua"]:44: [string "gamedata/defs.lua"]:31: error = 2, gamedata/weaponDefs.lua, error = 2, gamedata/weapondefs_post.lua, [string "gamedata/alldefs_post.lua"]:1853: attempt to call field 'clamp' (a nil value)
+
+") in gamedata/defs.lua"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:25.918Z ===
+Context: game process stderr
+Error: [t=00:00:19.249281][f=-000001] Error: [LoadFeatureDefsFromMap] unknown map default feature-type "rock1" (only "treetype" and "geovent" are recognized)
+[t=00:00:19.249299][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "rock1"
+[t=00:00:19.249320][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "rock1"
+[t=00:00:19.249326][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "rock1"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:25.920Z ===
+Context: game process stderr
+Error: [t=00:00:19.249337][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "rock1"
+[t=00:00:19.249343][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "rock1"
+[t=00:00:19.249349][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "rock1"
+[t=00:00:19.249355][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "rock1"
+[t=00:00:19.249360][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "rock1"
+[t=00:00:19.249369][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "rock1"
+[t=00:00:19.249381][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "rock1"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.397Z ===
+Context: game process stderr
+Error: [t=00:00:20.727699][f=-000001] Warning: Could not load ground decal "scars/scar1_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.459Z ===
+Context: game process stderr
+Error: [t=00:00:20.788877][f=-000001] Warning: Could not load ground decal "scars/scar2_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.479Z ===
+Context: game process stderr
+Error: [t=00:00:20.809704][f=-000001] Warning: Could not load ground decal "scars/scar3_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.483Z ===
+Context: game process stderr
+Error: [t=00:00:20.813614][f=-000001] Warning: Could not load ground decal "scars/scar4_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.486Z ===
+Context: game process stderr
+Error: [t=00:00:20.817024][f=-000001] Warning: Could not load ground decal "scars/scar5_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.490Z ===
+Context: game process stderr
+Error: [t=00:00:20.820694][f=-000001] Warning: Could not load ground decal "scars/scar6_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.495Z ===
+Context: game process stderr
+Error: [t=00:00:20.825787][f=-000001] Warning: Could not load ground decal "bitmaps/scars/scar1_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.562Z ===
+Context: game process stderr
+Error: [t=00:00:20.892319][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/arm_acv_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.566Z ===
+Context: game process stderr
+Error: [t=00:00:20.896381][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/arm_acv_tracks_2_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.576Z ===
+Context: game process stderr
+Error: [t=00:00:20.906618][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/arm_stumpy_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.579Z ===
+Context: game process stderr
+Error: [t=00:00:20.910073][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armacv_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.584Z ===
+Context: game process stderr
+Error: [t=00:00:20.915226][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armbull_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.588Z ===
+Context: game process stderr
+Error: [t=00:00:20.919237][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armcroc_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.593Z ===
+Context: game process stderr
+Error: [t=00:00:20.924052][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armgremlin_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.596Z ===
+Context: game process stderr
+Error: [t=00:00:20.926552][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armmart_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.599Z ===
+Context: game process stderr
+Error: [t=00:00:20.930231][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armpincer_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.604Z ===
+Context: game process stderr
+Error: [t=00:00:20.934677][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armsam_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.606Z ===
+Context: game process stderr
+Error: [t=00:00:20.937105][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armseer_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.617Z ===
+Context: game process stderr
+Error: [t=00:00:20.947771][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armstump_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.619Z ===
+Context: game process stderr
+Error: [t=00:00:20.949808][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armyork_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.626Z ===
+Context: game process stderr
+Error: [t=00:00:20.956343][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/bigfoot_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.627Z ===
+Context: game process stderr
+Error: [t=00:00:20.958324][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/bottrack1_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.634Z ===
+Context: game process stderr
+Error: [t=00:00:20.965289][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/comtrack_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.638Z ===
+Context: game process stderr
+Error: [t=00:00:20.968980][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/corparrowtracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.642Z ===
+Context: game process stderr
+Error: [t=00:00:20.973175][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/corwidetracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.648Z ===
+Context: game process stderr
+Error: [t=00:00:20.979194][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/raptortrack_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.650Z ===
+Context: game process stderr
+Error: [t=00:00:20.981192][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/raptortrackpointy_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:27.657Z ===
+Context: game process stderr
+Error: [t=00:00:20.987868][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/stdtank_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:33.824Z ===
+Context: game process stderr
+Error: [t=00:00:29.354777][f=-000001] Warning: [CSMFReadMap::CreateSplatDetailTextures] Invalid SMF splatDetailTex maps/iwantDNTS.tga. Creating fallback texture
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:34.528Z ===
+Context: game process stderr
+Error: [t=00:00:30.059336][f=-000001] [featuredefs_post.lua] Warning: Removing feature def, corfast_dead, for having invalid model that would crash the engine, Units/corfast_dead.s3o
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:34.529Z ===
+Context: game process stderr
+Error: [t=00:00:30.059762][f=-000001] [featuredefs_post.lua] Warning: Removing feature def, corhack_dead, for having invalid model that would crash the engine, Units/corfast_dead.s3o
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:34.544Z ===
+Context: game process stderr
+Error: [t=00:00:30.075185][f=-000001] [defs.lua] Error: Failed to load weaponDefs
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:34.548Z ===
+Context: game process stderr
+Error: [t=00:00:30.078884][f=-000001] Error: [Game::Load][1] forced quit with exception "Defs-Parser: [pcall] error 2 ("[string "gamedata/defs.lua"]:44: [string "gamedata/defs.lua"]:31: error = 2, gamedata/weaponDefs.lua, error = 2, gamedata/weapondefs_post.lua, [string "gamedata/alldefs_post.lua"]:1853: attempt to call field 'clamp' (a nil value)
+
+") in gamedata/defs.lua"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:34.780Z ===
+Context: game process stderr
+Error: [t=00:00:30.310840][f=-000001] Error: [LoadFeatureDefsFromMap] unknown map default feature-type "rock1" (only "treetype" and "geovent" are recognized)
+[t=00:00:30.310857][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "rock1"
+[t=00:00:30.310872][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "rock1"
+[t=00:00:30.310878][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "rock1"
+[t=00:00:30.310888][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "rock1"
+[t=00:00:30.310893][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "rock1"
+[t=00:00:30.310899][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "rock1"
+[t=00:00:30.310904][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "rock1"
+[t=00:00:30.310910][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "rock1"
+[t=00:00:30.310916][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "rock1"
+[t=00:00:30.310927][f=-000001] Error: [GetFeatureDef] could not find FeatureDef "rock1"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:35.474Z ===
+Context: game process stderr
+Error: [t=00:00:28.804267][f=-000001] Fatal: [ExitSpringProcess] errorMsg="Errors:
+Defs-Parser: [pcall] error 2 ("[string "gamedata/defs.lua"]:44: [string "gamedata/defs.lua"]:31: error = 2, gamedata/weaponDefs.lua, error = 2, gamedata/weapondefs_post.lua, [string "gamedata/alldefs_post.lua"]:1853: attempt to call field 'clamp' (a nil value)
+
+") in gamedata/defs.lua" msgCaption="Recoil: caught content_error(s)" mainThread=1
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:35.475Z ===
+Context: game process stderr
+Error: [t=00:00:28.805343][f=-000001] Error: [Watchdog::ClearTimer(id)] Invalid thread 4 (_threadId=0000000000000000)
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:35.945Z ===
+Context: game process stderr
+Error: [t=00:00:31.475672][f=-000001] Warning: Could not load ground decal "scars/scar1_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:35.999Z ===
+Context: game process stderr
+Error: [t=00:00:31.530530][f=-000001] Warning: Could not load ground decal "scars/scar2_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.016Z ===
+Context: game process stderr
+Error: [t=00:00:31.546868][f=-000001] Warning: Could not load ground decal "scars/scar3_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.019Z ===
+Context: game process stderr
+Error: [t=00:00:31.549576][f=-000001] Warning: Could not load ground decal "scars/scar4_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.021Z ===
+Context: game process stderr
+Error: [t=00:00:31.552667][f=-000001] Warning: Could not load ground decal "scars/scar5_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.024Z ===
+Context: game process stderr
+Error: [t=00:00:31.555487][f=-000001] Warning: Could not load ground decal "scars/scar6_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.027Z ===
+Context: game process stderr
+Error: [t=00:00:31.558208][f=-000001] Warning: Could not load ground decal "bitmaps/scars/scar1_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.083Z ===
+Context: game process stderr
+Error: [t=00:00:31.614034][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/arm_acv_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.085Z ===
+Context: game process stderr
+Error: [t=00:00:31.616417][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/arm_acv_tracks_2_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.088Z ===
+Context: game process stderr
+Error: [t=00:00:31.619023][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/arm_stumpy_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.089Z ===
+Context: game process stderr
+Error: [t=00:00:31.620622][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armacv_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.091Z ===
+Context: game process stderr
+Error: [t=00:00:31.622653][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armbull_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.093Z ===
+Context: game process stderr
+Error: [t=00:00:31.624636][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armcroc_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.095Z ===
+Context: game process stderr
+Error: [t=00:00:31.626580][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armgremlin_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.097Z ===
+Context: game process stderr
+Error: [t=00:00:31.628046][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armmart_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.098Z ===
+Context: game process stderr
+Error: [t=00:00:31.629349][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armpincer_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.100Z ===
+Context: game process stderr
+Error: [t=00:00:31.631265][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armsam_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.101Z ===
+Context: game process stderr
+Error: [t=00:00:31.632315][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armseer_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.103Z ===
+Context: game process stderr
+Error: [t=00:00:31.633910][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armstump_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.104Z ===
+Context: game process stderr
+Error: [t=00:00:31.635321][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/armyork_tracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.105Z ===
+Context: game process stderr
+Error: [t=00:00:31.636403][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/bigfoot_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.106Z ===
+Context: game process stderr
+Error: [t=00:00:31.637507][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/bottrack1_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.107Z ===
+Context: game process stderr
+Error: [t=00:00:31.638417][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/comtrack_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.110Z ===
+Context: game process stderr
+Error: [t=00:00:31.641782][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/corparrowtracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.113Z ===
+Context: game process stderr
+Error: [t=00:00:31.644459][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/corwidetracks_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.114Z ===
+Context: game process stderr
+Error: [t=00:00:31.645640][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/raptortrack_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.115Z ===
+Context: game process stderr
+Error: [t=00:00:31.646678][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/raptortrackpointy_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:36.116Z ===
+Context: game process stderr
+Error: [t=00:00:31.647566][f=-000001] Warning: Could not load ground decal "bitmaps/tracks/stdtank_normal.bmp"
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:39.154Z ===
+Context: game process stderr
+Error: [t=00:00:32.467222] Error: [Watchdog::DeregisterThread] invalid thread number 0
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:40.415Z ===
+Context: game process exit
+Error: Game process exited with code: 4294966293
+Stack:
+Error: Game process exited with code: 4294966293
+    at ChildProcess.<anonymous> (C:\Users\scopa\OneDrive\Documents\GitHub\bar-lobby\src\main\game\game.ts:157:43)
+    at ChildProcess.emit (node:events:518:28)
+    at ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+==================================================
+
+
+=== Error at 2026-03-25T18:51:42.338Z ===
+Context: game process stderr
+Error: [t=00:00:37.869073][f=-000001] Fatal: [ExitSpringProcess] errorMsg="Errors:
+Defs-Parser: [pcall] error 2 ("[string "gamedata/defs.lua"]:44: [string "gamedata/defs.lua"]:31: error = 2, gamedata/weaponDefs.lua, error = 2, gamedata/weapondefs_post.lua, [string "gamedata/alldefs_post.lua"]:1853: attempt to call field 'clamp' (a nil value)
+
+") in gamedata/defs.lua" msgCaption="Recoil: caught content_error(s)" mainThread=1
+[t=00:00:37.869137][f=-000001] Error: [Watchdog::ClearTimer(id)] Invalid thread 4 (_threadId=0000000000000000)
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:44.635Z ===
+Context: game process stderr
+Error: [t=00:00:40.165177] Error: [Watchdog::DeregisterThread] invalid thread number 0
+
+==================================================
+
+
+=== Error at 2026-03-25T18:51:45.717Z ===
+Context: game process exit
+Error: Game process exited with code: 4294966293
+Stack:
+Error: Game process exited with code: 4294966293
+    at ChildProcess.<anonymous> (C:\Users\scopa\OneDrive\Documents\GitHub\bar-lobby\src\main\game\game.ts:157:43)
+    at ChildProcess.emit (node:events:518:28)
+    at ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+==================================================

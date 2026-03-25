@@ -69,6 +69,7 @@ SPDX-License-Identifier: MIT
                                     optionLabel="name"
                                 />
                             </div>
+                            <SoloModePartyNotice />
                             <DownloadContentButton
                                 v-if="map"
                                 :maps="[map.springName]"
@@ -92,6 +93,7 @@ SPDX-License-Identifier: MIT
 import { computed, ref, watch } from "vue";
 
 import Button from "@renderer/components/controls/Button.vue";
+import SoloModePartyNotice from "@renderer/components/party/SoloModePartyNotice.vue";
 import Select from "@renderer/components/controls/Select.vue";
 import InteractiveTile from "@renderer/components/common/InteractiveTile.vue";
 import StatusCard from "@renderer/components/common/StatusCard.vue";

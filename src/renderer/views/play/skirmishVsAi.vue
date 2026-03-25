@@ -136,31 +136,35 @@ SPDX-License-Identifier: MIT
                 </div>
                 <!-- Bottom Row: Button Panel -->
                 <Panel class="bottom-action-panel" no-padding>
-                    <div class="bottom-action-content flex-row flex-space-between padding-left-xxl padding-right-xxl padding-top-xxl padding-bottom-xxl">
-                        <Button class="blue large subtitle-1" @click="generateRandomSkirmish">
-                        Generate Random Skirmish
-                    </Button>
-                    <div v-if="map" style="display: flex; align-items: center;">
-                        <Button v-if="gameStore.status === GameStatus.LOADING" class="grey large" disabled>{{
-                            t("lobby.components.battle.offlineBattleComponent.gameIsStarting")
-                        }}</Button>
-                        <Button v-else-if="gameStore.status === GameStatus.RUNNING" class="grey large" disabled>{{
-                            t("lobby.components.battle.offlineBattleComponent.gameIsRunning")
-                        }}</Button>
-                        <DownloadContentButton
-                            v-else
-                            :maps="[map.springName]"
-                            :engines="battleStore.battleOptions.engineVersion ? [battleStore.battleOptions.engineVersion] : []"
-                            :games="battleStore.battleOptions.gameVersion ? [battleStore.battleOptions.gameVersion] : []"
-                            download-text="Download Map"
-                            class="large"
-                            @click="battleActions.startBattle"
-                            >Start Game</DownloadContentButton
-                        >
-                    </div>
-                        <Button v-else class="green large" disabled>{{
-                            t("lobby.components.battle.offlineBattleComponent.startTheGame")
-                        }}</Button>
+                    <div class="bottom-action-content flex-col gap-md padding-left-xxl padding-right-xxl padding-top-xxl padding-bottom-xxl">
+                        <SoloModePartyNotice />
+                        <div class="bottom-action-row flex-row flex-space-between">
+                            <Button class="blue large subtitle-1" @click="generateRandomSkirmish">
+                                Generate Random Skirmish
+                            </Button>
+                            <div v-if="map" style="display: flex; align-items: center;">
+                                <Button v-if="gameStore.status === GameStatus.LOADING" class="grey large" disabled>
+                                    {{ t("lobby.components.battle.offlineBattleComponent.gameIsStarting") }}
+                                </Button>
+                                <Button v-else-if="gameStore.status === GameStatus.RUNNING" class="grey large" disabled>
+                                    {{ t("lobby.components.battle.offlineBattleComponent.gameIsRunning") }}
+                                </Button>
+                                <DownloadContentButton
+                                    v-else
+                                    :maps="[map.springName]"
+                                    :engines="battleStore.battleOptions.engineVersion ? [battleStore.battleOptions.engineVersion] : []"
+                                    :games="battleStore.battleOptions.gameVersion ? [battleStore.battleOptions.gameVersion] : []"
+                                    download-text="Download Map"
+                                    class="large"
+                                    @click="battleActions.startBattle"
+                                >
+                                    Start Game
+                                </DownloadContentButton>
+                            </div>
+                            <Button v-else class="green large" disabled>
+                                {{ t("lobby.components.battle.offlineBattleComponent.startTheGame") }}
+                            </Button>
+                        </div>
                     </div>
                 </Panel>
             </div>
@@ -213,6 +217,7 @@ import { settingsStore } from "@renderer/store/settings.store";
 import GameModeComponent from "@renderer/components/battle/GameModeComponent.vue";
 import { GameStatus, gameStore } from "@renderer/store/game.store";
 import DownloadContentButton from "@renderer/components/controls/DownloadContentButton.vue";
+import SoloModePartyNotice from "@renderer/components/party/SoloModePartyNotice.vue";
 import { enginesStore } from "@renderer/store/engine.store";
 import TerrainIcon from "@renderer/components/maps/filters/TerrainIcon.vue";
 import personIcon from "@iconify-icons/mdi/person-multiple";
@@ -745,9 +750,15 @@ onMounted(async () => {
 
 .bottom-action-content {
     display: flex;
+    flex-direction: column;
+    gap: map.get($spacing, "md");
+}
+
+.bottom-action-row {
+    display: flex;
     align-items: center;
     gap: map.get($spacing, "lg");
-    
+
     // Override DownloadContentButton wrapper width in button bar
     :deep(.download-button-wrapper) {
         width: auto;

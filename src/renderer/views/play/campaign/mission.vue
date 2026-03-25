@@ -84,6 +84,7 @@ SPDX-License-Identifier: MIT
                             <MapSimplePreview v-if="map" :map="map" />
                         </div>
                         <div class="mission-controls flex-col gap-md padding-left-xxl padding-right-xxl padding-top-lg padding-bottom-xxl">
+                            <SoloModePartyNotice />
                             <Button v-if="!missionData.locked" class="green large fullwidth" @click="startMission">
                                 {{ missionData.completed ? 'Replay Mission' : 'Start Mission' }}
                             </Button>
@@ -106,6 +107,7 @@ import arrowLeftIcon from "@iconify-icons/mdi/arrow-left";
 import checkIcon from "@iconify-icons/mdi/check-circle";
 
 import Button from "@renderer/components/controls/Button.vue";
+import SoloModePartyNotice from "@renderer/components/party/SoloModePartyNotice.vue";
 import Panel from "@renderer/components/common/Panel.vue";
 import StatusCard from "@renderer/components/common/StatusCard.vue";
 import MapSimplePreview from "@renderer/components/maps/MapSimplePreview.vue";

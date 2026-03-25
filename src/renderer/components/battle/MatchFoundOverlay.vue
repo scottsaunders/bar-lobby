@@ -18,7 +18,14 @@ SPDX-License-Identifier: MIT
                             <span class="badge-dot" />
                         </div>
                         <div class="mode-name">{{ queueLabel }}</div>
-                        <div v-if="status === 'lost'" class="hero-sub-message">A player didn't accept &mdash; returning to queue</div>
+                        <div v-if="status === 'lost'" class="hero-sub-message">
+                            <template v-if="lostDeclinedPartyMember">
+                                {{ lostDeclinedPartyMember }} (party) didn't accept &mdash; returning to queue
+                            </template>
+                            <template v-else>
+                                A player didn't accept &mdash; returning to queue
+                            </template>
+                        </div>
                         <div v-if="status === 'gameStarting'" class="hero-sub-message launching">Launching game&hellip;</div>
                     </div>
                 </div>
@@ -39,6 +46,25 @@ SPDX-License-Identifier: MIT
                         <span class="body-1-strong">{{ state.playersReady }} / {{ state.totalPlayers }} ready</span>
                     </div>
                     <Progress :percent="readyProgress" :height="6" themed />
+
+                    <!-- Party member ready status -->
+                    <div v-if="partyMembersInMatch.length > 0" class="party-ready-row flex-row flex-center-items gap-sm">
+                        <span class="party-ready-label">Party:</span>
+                        <div class="party-ready-members flex-row gap-xs">
+                            <div
+                                v-for="member in partyMembersInMatch"
+                                :key="member.id"
+                                class="party-ready-member flex-row flex-center-items gap-xs"
+                                :class="{ ready: partyMemberReady[member.id] }"
+                            >
+                                <div class="party-ready-avatar" :style="{ background: member.avatarColor }">
+                                    {{ member.name[0] }}
+                                </div>
+                                <span class="party-ready-name">{{ member.name }}</span>
+                                <span class="party-ready-check">{{ partyMemberReady[member.id] ? '✓' : '…' }}</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Action Buttons -->
@@ -56,9 +82,11 @@ import { computed, inject, onUnmounted, ref, type Ref, watch } from "vue";
 import Progress from "@renderer/components/common/Progress.vue";
 import Button from "@renderer/components/controls/Button.vue";
 import type { MatchmakingMockState } from "./matchmaking-mock-state";
+import type { PartyMockState } from "@renderer/components/party/party-mock-state";
 import heroBg from "@renderer/assets/images/backgrounds/BAR4K_Loadingscreen_1.jpg";
 
 const state = inject<Ref<MatchmakingMockState>>("matchmakingWidgetState")!;
+const partyState = inject<Ref<PartyMockState>>("partyState")!;
 
 const COUNTDOWN_SECONDS = 30;
 const countdown = ref(COUNTDOWN_SECONDS);
@@ -129,16 +157,37 @@ function clearCountdown() {
 
 const hasShownLost = ref(false);
 
+// Party-aware ready tracking: map memberId → accepted
+const partyMemberReady = ref<Record<string, boolean>>({});
+const lostDeclinedPartyMember = ref<string | null>(null);
+
+const partyMembersInMatch = computed(() => {
+    if (!partyState.value.inParty) return [];
+    return partyState.value.members.filter((m) => !m.isMe && m.status !== "offline");
+});
+
 function handleAccept() {
     clearCountdown();
     state.value.status = "waitingForPlayers";
     state.value.playersReady = 1;
+    lostDeclinedPartyMember.value = null;
+
+    // Simulate party members accepting one by one
+    partyMemberReady.value = {};
+    partyMembersInMatch.value.forEach((m, i) => {
+        setTimeout(() => {
+            partyMemberReady.value[m.id] = true;
+        }, 400 + i * 350);
+    });
 
     setTimeout(() => {
         state.value.playersReady = state.value.totalPlayers;
 
         if (!hasShownLost.value) {
             hasShownLost.value = true;
+            // Pick a party member as the "decliner" for the demo, or generic if no party
+            const decliner = partyMembersInMatch.value[0];
+            lostDeclinedPartyMember.value = decliner?.name ?? null;
             setTimeout(() => {
                 state.value.status = "lost";
                 setTimeout(() => {
@@ -352,6 +401,61 @@ onUnmounted(() => {
 @keyframes pulse-urgent {
     from { opacity: 0.7; }
     to   { opacity: 1; }
+}
+
+.party-ready-row {
+    padding-top: map.get($spacing, "xs");
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.party-ready-label {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.35);
+    flex-shrink: 0;
+}
+
+.party-ready-members {
+    flex-wrap: wrap;
+}
+
+.party-ready-member {
+    padding: 2px map.get($spacing, "xs");
+    border-radius: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    transition: all 0.3s ease;
+
+    &.ready {
+        border-color: rgba(34, 197, 94, 0.3);
+        background: rgba(34, 197, 94, 0.06);
+    }
+}
+
+.party-ready-avatar {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    font-size: 8px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.party-ready-name {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.party-ready-check {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.3);
+
+    .ready & {
+        color: #22c55e;
+    }
 }
 
 .match-found-enter-active,

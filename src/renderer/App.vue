@@ -86,6 +86,7 @@ import { runInit } from "@renderer/utils/background-init";
 import { settingsStore } from "./store/settings.store";
 import { infosStore } from "@renderer/store/infos.store";
 import MatchFoundOverlay from "@renderer/components/battle/MatchFoundOverlay.vue";
+import type { PartyMockState } from "@renderer/components/party/party-mock-state";
 import { battleStore } from "@renderer/store/battle.store";
 import { useGlobalKeybindings } from "@renderer/composables/useGlobalKeybindings";
 import { me } from "@renderer/store/me.store";
@@ -105,6 +106,12 @@ const matchmakingWidgetState = ref({
 });
 
 provide("matchmakingWidgetState", matchmakingWidgetState);
+
+const partyState = ref<PartyMockState>({
+    inParty: false,
+    members: [],
+});
+provide("partyState", partyState);
 
 const router = useRouter();
 const videoVisible = toRef(!toValue(settingsStore.skipIntro));

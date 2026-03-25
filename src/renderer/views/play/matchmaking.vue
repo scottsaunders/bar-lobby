@@ -39,6 +39,9 @@ SPDX-License-Identifier: MIT
                                             <span class="searching-dot"></span>
                                             <span class="body-2">Searching</span>
                                         </div>
+                                        <div v-else-if="!isQueueCompatible(queue.id)" class="queue-compat-badge">
+                                            <span class="body-2">Party too large</span>
+                                        </div>
                                     </template>
                                 </InteractiveTile>
                             </div>
@@ -138,6 +141,15 @@ SPDX-License-Identifier: MIT
                             >
                                 {{ t("lobby.multiplayer.ranked.buttons.leaveQueue") }}
                             </Button>
+                            <div v-else-if="canJoinQueue && !isQueueCompatible(selectedQueue)" class="party-compat-warning flex-col gap-sm">
+                                <Button class="grey large fullwidth" disabled>
+                                    Party too large for {{ getQueueDisplayName(selectedQueue) }}
+                                </Button>
+                                <div class="compat-hint">
+                                    {{ getQueueDisplayName(selectedQueue) }} supports up to {{ QUEUE_MAX_PARTY[selectedQueue] }} player{{ QUEUE_MAX_PARTY[selectedQueue] === 1 ? '' : 's' }} —
+                                    your party has {{ partySize }} active member{{ partySize === 1 ? '' : 's' }}.
+                                </div>
+                            </div>
                             <Button
                                 v-else-if="canJoinQueue"
                                 class="green large fullwidth"
@@ -180,6 +192,8 @@ import { db } from "@renderer/store/db";
 import { MapData } from "@main/content/maps/map-data";
 import { useImageBlobUrlCache } from "@renderer/composables/useImageBlobUrlCache";
 import type { MatchmakingMockState } from "@renderer/components/battle/matchmaking-mock-state";
+import type { PartyMockState } from "@renderer/components/party/party-mock-state";
+import { QUEUE_MAX_PARTY } from "@renderer/components/party/party-mock-state";
 
 const { t } = useTypedI18n();
 const cache = useImageBlobUrlCache();
@@ -252,6 +266,16 @@ const selectedMap = ref<MapData | null>(null);
 
 // Get shared mock state from App.vue (for prototyping)
 const matchmakingState = inject<Ref<MatchmakingMockState>>("matchmakingWidgetState")!;
+const partyState = inject<Ref<PartyMockState>>("partyState")!;
+
+const partySize = computed(() => {
+    if (!partyState.value.inParty) return 1;
+    return partyState.value.members.filter((m) => m.status !== "offline").length;
+});
+
+function isQueueCompatible(queueId: string): boolean {
+    return partySize.value <= (QUEUE_MAX_PARTY[queueId] ?? 1);
+}
 
 const canJoinQueue = computed(() => {
     const s = matchmakingState.value.status;
@@ -479,6 +503,26 @@ onMounted(() => {
 @keyframes searching-pulse {
     0%, 80%, 100% { opacity: 0.3; transform: scale(0.75); }
     40%           { opacity: 1;   transform: scale(1); }
+}
+
+.queue-compat-badge {
+    display: flex;
+    align-items: center;
+    gap: map.get($spacing, "xs");
+    margin-top: map.get($spacing, "xxs");
+    color: #f59e0b;
+    font-size: 0.75rem;
+}
+
+.party-compat-warning {
+    width: 100%;
+}
+
+.compat-hint {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.45);
+    line-height: 1.4;
+    text-align: center;
 }
 
 .queue-background {
