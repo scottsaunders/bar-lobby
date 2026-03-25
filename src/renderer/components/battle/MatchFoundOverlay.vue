@@ -7,49 +7,24 @@ SPDX-License-Identifier: MIT
 <template>
     <Transition name="match-found">
         <div v-if="showOverlay" class="match-found-backdrop">
-            <div class="match-found-card flex-col">
-                <!-- Map Preview -->
-                <div class="map-preview" :style="mapBgStyle">
-                    <div class="map-preview-overlay flex-col gap-xs">
-                        <div class="found-label caption-1-stronger">
-                            {{ status === "waitingForPlayers" ? "MATCH ACCEPTED" : "MATCH FOUND" }}
+            <div class="match-found-card flex-col" :class="{ 'card-glow': status === 'matchFound' }">
+                <!-- Hero -->
+                <div class="hero-section flex-col flex-center gap-lg" :style="heroBgStyle">
+                    <div class="hero-overlay" />
+                    <div class="hero-content flex-col flex-center gap-lg">
+                        <div class="status-badge" :class="heroBadgeClass">
+                            <span class="badge-dot" />
+                            {{ heroBadgeText }}
+                            <span class="badge-dot" />
                         </div>
-                        <div class="map-name title-1">{{ state.matchMap || "Unknown Map" }}</div>
-                        <div class="queue-label body-2">{{ queueLabel }}</div>
-                    </div>
-                </div>
-
-                <!-- Players -->
-                <div class="players-section flex-row flex-center-items padding-xl gap-xl">
-                    <div class="team team-left flex-col gap-sm flex-grow">
-                        <div
-                            v-for="player in team1"
-                            :key="player.name"
-                            class="player-entry flex-row gap-sm flex-center-items"
-                        >
-                            <div class="player-avatar team1-color"></div>
-                            <span class="body-1-strong">{{ player.name }}</span>
-                        </div>
-                    </div>
-
-                    <div class="vs-divider flex-col flex-center">
-                        <span class="vs-text">VS</span>
-                    </div>
-
-                    <div class="team team-right flex-col gap-sm flex-grow flex-align-end">
-                        <div
-                            v-for="player in team2"
-                            :key="player.name"
-                            class="player-entry flex-row gap-sm flex-center-items"
-                        >
-                            <span class="body-1-strong">{{ player.name }}</span>
-                            <div class="player-avatar team2-color"></div>
-                        </div>
+                        <div class="mode-name">{{ queueLabel }}</div>
+                        <div v-if="status === 'lost'" class="hero-sub-message">A player didn't accept &mdash; returning to queue</div>
+                        <div v-if="status === 'gameStarting'" class="hero-sub-message launching">Launching game&hellip;</div>
                     </div>
                 </div>
 
                 <!-- Countdown (matchFound phase) -->
-                <div v-if="status === 'matchFound'" class="bottom-section flex-col gap-sm padding-left-xl padding-right-xl">
+                <div v-if="status === 'matchFound'" class="info-section flex-col gap-sm">
                     <div class="flex-row flex-space-between flex-center-items">
                         <span class="body-2 section-label">Time to accept</span>
                         <span class="body-1-strong countdown-value" :class="{ urgent: countdown <= 5 }">{{ countdown }}s</span>
@@ -58,7 +33,7 @@ SPDX-License-Identifier: MIT
                 </div>
 
                 <!-- Ready progress (waitingForPlayers phase) -->
-                <div v-if="status === 'waitingForPlayers'" class="bottom-section flex-col gap-sm padding-left-xl padding-right-xl">
+                <div v-if="status === 'waitingForPlayers'" class="info-section flex-col gap-sm">
                     <div class="flex-row flex-space-between flex-center-items">
                         <span class="body-2 section-label">Waiting for players</span>
                         <span class="body-1-strong">{{ state.playersReady }} / {{ state.totalPlayers }} ready</span>
@@ -67,14 +42,9 @@ SPDX-License-Identifier: MIT
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="action-buttons flex-row gap-md padding-xl">
-                    <template v-if="status === 'matchFound'">
-                        <Button class="red large flex-grow" @click="handleDecline">Decline</Button>
-                        <Button class="green large flex-grow" @click="handleAccept">Accept</Button>
-                    </template>
-                    <template v-else-if="status === 'waitingForPlayers'">
-                        <Button class="grey large flex-grow" @click="handleCancel">Cancel</Button>
-                    </template>
+                <div v-if="status === 'matchFound'" class="action-buttons flex-row gap-md">
+                    <Button class="red large flex-grow" @click="handleDecline">Decline</Button>
+                    <Button class="green large flex-grow" @click="handleAccept">Accept</Button>
                 </div>
             </div>
         </div>
@@ -85,25 +55,35 @@ SPDX-License-Identifier: MIT
 import { computed, inject, onUnmounted, ref, type Ref, watch } from "vue";
 import Progress from "@renderer/components/common/Progress.vue";
 import Button from "@renderer/components/controls/Button.vue";
-import { db } from "@renderer/store/db";
-import { useImageBlobUrlCache } from "@renderer/composables/useImageBlobUrlCache";
 import type { MatchmakingMockState } from "./matchmaking-mock-state";
+import heroBg from "@renderer/assets/images/backgrounds/BAR4K_Loadingscreen_1.jpg";
 
 const state = inject<Ref<MatchmakingMockState>>("matchmakingWidgetState")!;
-const cache = useImageBlobUrlCache();
 
 const COUNTDOWN_SECONDS = 30;
 const countdown = ref(COUNTDOWN_SECONDS);
 const countdownInterval = ref<number | null>(null);
-const mapImageUrl = ref<string | null>(null);
-const hasShownLost = ref(false);
 
 const status = computed(() => state.value.status);
+const showOverlay = computed(() =>
+    status.value === "matchFound" ||
+    status.value === "waitingForPlayers" ||
+    status.value === "lost" ||
+    status.value === "gameStarting"
+);
 
-const showOverlay = computed(() => status.value === "matchFound" || status.value === "waitingForPlayers");
+const heroBadgeText = computed(() => {
+    if (status.value === "waitingForPlayers") return "MATCH ACCEPTED";
+    if (status.value === "lost") return "MATCH CANCELLED";
+    if (status.value === "gameStarting") return "GAME STARTING";
+    return "MATCH FOUND";
+});
 
-const team1 = computed(() => state.value.matchPlayers.filter((p) => p.team === 1));
-const team2 = computed(() => state.value.matchPlayers.filter((p) => p.team === 2));
+const heroBadgeClass = computed(() => ({
+    accepted: status.value === "waitingForPlayers",
+    lost: status.value === "lost",
+    launching: status.value === "gameStarting",
+}));
 
 const queueLabel = computed(() => {
     const labels: Record<string, string> = {
@@ -115,38 +95,18 @@ const queueLabel = computed(() => {
     return labels[state.value.matchQueue] ?? state.value.matchQueue;
 });
 
+const heroBgStyle = `background-image: url('${heroBg}');`;
+
 const countdownProgress = computed(() => (COUNTDOWN_SECONDS - countdown.value) / COUNTDOWN_SECONDS);
 const readyProgress = computed(() =>
     state.value.totalPlayers > 0 ? state.value.playersReady / state.value.totalPlayers : 0
 );
-
-const mapBgStyle = computed(() => {
-    if (mapImageUrl.value) {
-        return `background-image: url('${mapImageUrl.value}');`;
-    }
-    return "background-image: url('/src/renderer/assets/images/backgrounds/5.jpg');";
-});
-
-async function loadMapImage() {
-    const springName = state.value.matchMap;
-    if (!springName) return;
-    try {
-        let map = await db.maps.get(springName);
-        if (!map) map = await db.nonLiveMaps.get(springName);
-        if (map?.imagesBlob?.preview) {
-            mapImageUrl.value = cache.get(springName, map.imagesBlob.preview);
-        }
-    } catch {
-        // fallback to default background
-    }
-}
 
 watch(
     () => status.value,
     (s) => {
         if (s === "matchFound") {
             countdown.value = COUNTDOWN_SECONDS;
-            loadMapImage();
             countdownInterval.value = window.setInterval(() => {
                 countdown.value--;
                 if (countdown.value <= 0) {
@@ -166,6 +126,8 @@ function clearCountdown() {
         countdownInterval.value = null;
     }
 }
+
+const hasShownLost = ref(false);
 
 function handleAccept() {
     clearCountdown();
@@ -201,11 +163,6 @@ function handleAccept() {
 
 function handleDecline() {
     clearCountdown();
-    state.value.queues = [state.value.matchQueue];
-    triggerCancelled("intentional");
-}
-
-function handleCancel() {
     state.value.queues = [state.value.matchQueue];
     triggerCancelled("intentional");
 }
@@ -254,93 +211,117 @@ onUnmounted(() => {
 }
 
 .match-found-card {
-    width: 580px;
-    background: rgba(10, 14, 20, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    width: 460px;
+    background: rgba(10, 14, 20, 0.97);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 4px;
     overflow: hidden;
-    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(34, 197, 94, 0.2);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.8);
+    transition: box-shadow 0.4s ease;
+
+    &.card-glow {
+        box-shadow:
+            0 8px 40px rgba(0, 0, 0, 0.8),
+            0 0 0 1px rgba(34, 197, 94, 0.35),
+            0 0 40px rgba(34, 197, 94, 0.08);
+    }
 }
 
-.map-preview {
-    height: 200px;
+
+.hero-section {
     position: relative;
+    height: 200px;
     background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background-position: center 30%;
     flex-shrink: 0;
 }
 
-.map-preview-overlay {
+.hero-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(10, 14, 20, 0.95) 0%, rgba(0, 0, 0, 0.3) 60%, transparent 100%);
-    padding: map.get($spacing, "xl");
-    justify-content: flex-end;
+    background:
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(10, 14, 20, 0.92) 100%);
 }
 
-.found-label {
+.hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: map.get($spacing, "sm");
+    padding: map.get($spacing, "xxs") map.get($spacing, "md");
+    border-radius: 999px;
+    border: 1px solid rgba(34, 197, 94, 0.5);
+    background: rgba(34, 197, 94, 0.08);
     color: #22c55e;
-    letter-spacing: 0.1em;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
+    animation: badge-pulse 2s ease-in-out infinite;
+
+    &.accepted {
+        border-color: rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.8);
+        animation: none;
+    }
+
+    &.lost {
+        border-color: rgba(251, 146, 60, 0.5);
+        background: rgba(251, 146, 60, 0.08);
+        color: #fb923c;
+        animation: none;
+    }
+
+    &.launching {
+        border-color: rgba(34, 197, 94, 0.7);
+        background: rgba(34, 197, 94, 0.12);
+        color: #22c55e;
+        animation: badge-pulse-fast 1s ease-in-out infinite;
+    }
 }
 
-.map-name {
-    color: rgba(255, 255, 255, 0.95);
+.hero-sub-message {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.55);
+    letter-spacing: 0.02em;
+
+    &.launching {
+        color: rgba(34, 197, 94, 0.7);
+    }
 }
 
-.queue-label {
-    color: rgba(255, 255, 255, 0.6);
-}
-
-.players-section {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.team {
-    min-width: 0;
-}
-
-.player-entry {
-    min-width: 0;
-}
-
-.player-avatar {
-    width: 28px;
-    height: 28px;
+.badge-dot {
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
+    background: currentColor;
     flex-shrink: 0;
 }
 
-.team1-color {
-    background: rgba(37, 99, 235, 0.8);
-    border: 1px solid rgba(37, 99, 235, 1);
-}
-
-.team2-color {
-    background: rgba(220, 38, 38, 0.8);
-    border: 1px solid rgba(220, 38, 38, 1);
-}
-
-.vs-divider {
-    padding: 0 map.get($spacing, "sm");
-}
-
-.vs-text {
-    font-size: 1.25rem;
+.mode-name {
+    font-family: "Rajdhani", monospace;
+    font-size: 2rem;
     font-weight: 700;
-    color: rgba(255, 255, 255, 0.3);
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.95);
+    text-transform: uppercase;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
 }
 
-.bottom-section {
-    padding-top: map.get($spacing, "md");
-    padding-bottom: map.get($spacing, "md");
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+.info-section {
+    padding: map.get($spacing, "md") map.get($spacing, "xl");
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .section-label {
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.55);
 }
 
 .countdown-value {
@@ -353,13 +334,24 @@ onUnmounted(() => {
     }
 }
 
+.action-buttons {
+    padding: map.get($spacing, "lg") map.get($spacing, "xl");
+    flex-shrink: 0;
+}
+
+@keyframes badge-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+    50%       { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+}
+
+@keyframes badge-pulse-fast {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5); }
+    50%       { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+}
+
 @keyframes pulse-urgent {
     from { opacity: 0.7; }
     to   { opacity: 1; }
-}
-
-.action-buttons {
-    flex-shrink: 0;
 }
 
 .match-found-enter-active,
