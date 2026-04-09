@@ -1422,7 +1422,7 @@ h2 {
 :deep(.button.quick-play-button) {
     .p-button {
         text-transform: uppercase;
-        font-family: Rajdhani;
+        font-family: inherit;
         font-weight: bold;
         font-size: 1.4rem;
         padding: 10px 40px;
@@ -1444,7 +1444,7 @@ h2 {
 // Native button with quick-play-button class (for Ready state)
 button.quick-play-button {
     align-self: center;
-    font-family: Rajdhani;
+    font-family: inherit;
     font-weight: bold;
     font-size: 1.4rem;
     padding: 10px 40px;
@@ -1486,7 +1486,7 @@ button.quick-play-button {
 // Quick Download Button
 :deep(.button.quick-download-button) {
     .p-button {
-        font-family: Rajdhani;
+        font-family: inherit;
         font-weight: bold;
         font-size: 1.4rem;
         padding: 10px 40px;
@@ -1503,7 +1503,7 @@ button.quick-play-button {
 :deep(.button.cancel-button) {
     .p-button {
         text-transform: uppercase;
-        font-family: Rajdhani;
+        font-family: inherit;
         font-weight: bold;
         font-size: 1.5rem;
         padding: 20px 40px;

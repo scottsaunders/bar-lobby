@@ -24,13 +24,15 @@ const inParty = computed(() => partyState?.value.inParty ?? false);
 </script>
 
 <style lang="scss" scoped>
+@use "sass:map";
+@use "@renderer/styles/spacing" as *;
+
 .solo-party-notice {
     background: rgba(245, 158, 11, 0.1);
     border: 1px solid rgba(245, 158, 11, 0.3);
     border-radius: 3px;
-    padding: 8px 12px;
-    font-size: 13px;
-    font-family: Montserrat, sans-serif;
+    padding: map.get($spacing, "sm") map.get($spacing, "md");
+    font-size: 14px;
     font-weight: 500;
     color: rgba(245, 158, 11, 0.9);
     line-height: 1.4;

@@ -65,9 +65,9 @@ function onCancel() {
 
 .quick-download-button {
     align-self: center;
-    font-family: Rajdhani;
+    font-family: inherit;
     font-weight: bold;
-    font-size: 1.4rem; /* off-scale (~22.4px) — Rajdhani display font, intentional */
+    font-size: 1.4rem; /* off-scale (~22.4px) — intentional for prominent button */
     padding: map.get($spacing, "sm") 40px; /* 40px: off-scale — intentional for wide button padding */
     color: #fff;
     border: none;
@@ -83,9 +83,9 @@ function onCancel() {
 
 .quick-play-button {
     align-self: center;
-    font-family: Rajdhani;
+    font-family: inherit;
     font-weight: bold;
-    font-size: 1.4rem; /* off-scale (~22.4px) — Rajdhani display font, intentional */
+    font-size: 1.4rem; /* off-scale (~22.4px) — intentional for prominent button */
     padding: map.get($spacing, "sm") 40px; /* 40px: off-scale — intentional for wide button padding */
     color: #fff;
     background: linear-gradient(90deg, #22c55e, #16a34a);

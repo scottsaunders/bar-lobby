@@ -466,7 +466,7 @@ const chartSectors = computed(() => {
 .chart-lbl {
     fill: rgba(255, 255, 255, 0.45);
     font-size: 9px;
-    font-family: "Rajdhani", monospace;
+
     letter-spacing: 0.07em;
     font-weight: 700;
 }
@@ -502,7 +502,7 @@ const chartSectors = computed(() => {
     font-weight: 600;
     letter-spacing: 0.07em;
     opacity: 0.42;
-    font-family: "Rajdhani", monospace;
+
     text-align: right;
 }
 
@@ -593,7 +593,7 @@ const chartSectors = computed(() => {
     opacity: 0.35;
     letter-spacing: 0.06em;
     font-weight: 600;
-    font-family: "Rajdhani", monospace;
+
 }
 
 .wep-chevron {
@@ -624,7 +624,7 @@ const chartSectors = computed(() => {
     opacity: 0.38;
     letter-spacing: 0.08em;
     font-weight: 700;
-    font-family: "Rajdhani", monospace;
+
 }
 
 // ── Codename ──────────────────────────────────────────────────────────────
@@ -641,7 +641,7 @@ const chartSectors = computed(() => {
     opacity: 0.28;
     font-weight: 700;
     letter-spacing: 0.1em;
-    font-family: "Rajdhani", monospace;
+
 }
 
 .cod-val {

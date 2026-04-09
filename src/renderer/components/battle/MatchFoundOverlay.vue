@@ -354,7 +354,6 @@ onUnmounted(() => {
 }
 
 .mode-name {
-    font-family: "Rajdhani", monospace;
     font-size: 2rem;
     font-weight: 700;
     letter-spacing: 0.06em;

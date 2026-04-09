@@ -119,22 +119,20 @@ function goToMatchmaking() {
 .mm-text {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: map.get($spacing, "xxs");
     flex: 1;
     min-width: 0;
 }
 
 .mm-queues {
-    font-family: Montserrat, sans-serif;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     line-height: 1.3;
     color: rgba(255, 255, 255, 0.95);
 }
 
 .mm-status {
-    font-family: Montserrat, sans-serif;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 400;
     line-height: 1.3;
     color: rgba(255, 255, 255, 0.45);

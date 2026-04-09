@@ -46,10 +46,10 @@ SPDX-License-Identifier: MIT
                         <div v-if="messagesUnread" class="unread-dot"></div>
                     </Button>
                     <Button
-                        v-if="settingsStore.devMode"
+                        v-if="me.isAuthenticated"
                         v-tooltip.bottom="t('lobby.navbar.tooltips.friends')"
-                        v-click-away:friends="() => (friendsOpen = false)"
-                        :class="['icon', 'dev-only', { active: friendsOpen }]"
+                        v-click-away:friends="() => toggleFriendsNav.value?.(false)"
+                        class="icon"
                         @click="handleFriendsClick"
                     >
                         <Icon :icon="accountMultiple" :height="40" />
@@ -108,7 +108,6 @@ SPDX-License-Identifier: MIT
         </div>
 
         <TransitionGroup name="slide-right">
-            <Friends v-show="friendsOpen" key="friends" v-model="friendsOpen" v-click-away:friends="() => (friendsOpen = false)" />
             <Downloads
                 v-show="downloadsOpen"
                 key="downloads"
@@ -142,7 +141,6 @@ import Button from "@renderer/components/controls/Button.vue";
 import Downloads from "@renderer/components/navbar/Downloads.vue";
 import DownloadsButton from "@renderer/components/navbar/DownloadsButton.vue";
 import Exit from "@renderer/components/navbar/Exit.vue";
-import Friends from "@renderer/components/navbar/Friends.vue";
 import ProfileModal from "@renderer/components/navbar/ProfileModal.vue";
 import { useRouter } from "vue-router";
 import { settingsStore } from "@renderer/store/settings.store";
@@ -240,7 +238,7 @@ const secondaryRoutes = computed(() => {
 });
 const hasActiveDownload = computed(() => downloadsStore.mapDownloads.length > 0);
 const messagesOpenRef = inject<Ref<boolean>>("messagesOpen")!;
-const friendsOpen = ref(false);
+const toggleFriendsNav = inject<Ref<((open?: boolean) => void) | undefined>>("toggleFriends", ref(undefined));
 
 function openMessages() {
     messagesOpenRef.value = true;
@@ -271,7 +269,7 @@ function handleFriendsClick() {
         openLogInConfirmation(router.currentRoute.value);
         return;
     }
-    friendsOpen.value = !friendsOpen.value;
+    toggleFriendsNav.value?.();
 }
 
 const messagesUnread = computed(() => {
@@ -338,7 +336,6 @@ function prefetchRoute(path: string) {
         transform 0.3s,
         opacity 0.3s;
     z-index: 2;
-    font-family: Rajdhani, sans-serif;
     &.hidden {
         opacity: 0;
         transform: translateY(-100%);
@@ -397,7 +394,6 @@ function prefetchRoute(path: string) {
         :deep(.button-content) {
             font-size: 20px; // Intentional: :deep() override — 20px/regular is off-scale (subtitle-1 is 20px/semibold)
             font-weight: 400; // Intentional: regular weight for nav buttons, not semibold
-            font-family: Montserrat, sans-serif;
             line-height: 1.3;
         }
         :deep(.p-button) {
@@ -515,7 +511,6 @@ function prefetchRoute(path: string) {
         :deep(.button-content) {
             font-size: 14px; // Intentional: :deep() override — can't add utility class to inner component element
             font-weight: 400; // Intentional: body-2 equivalent (14px/regular)
-            font-family: Montserrat, sans-serif;
             line-height: 1.4;
         }
         :deep(> button) {
@@ -550,7 +545,6 @@ function prefetchRoute(path: string) {
             padding: 0;
             :deep(.button-content) {
                 @extend .body-1 !optional; // 16px - for player name and server status
-                font-family: Montserrat, sans-serif;
                 line-height: 1.4;
             }
         }

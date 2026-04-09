@@ -32,7 +32,6 @@ function onMouseEnter() {
     border-radius: 3px;
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    font-family: Montserrat, sans-serif;
     line-height: 1.4;
     backdrop-filter: blur(5px);
     filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.8));

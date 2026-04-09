@@ -31,7 +31,6 @@ defineProps<{
     min-width: 720px;
     max-width: 720px;
     background: rgba(0, 0, 0, 0.95);
-    font-family: Montserrat;
     display: flex;
     flex-direction: column;
     min-height: 0;

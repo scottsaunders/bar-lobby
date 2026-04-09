@@ -22,6 +22,17 @@ SPDX-License-Identifier: MIT
             <!-- Left sidebar: vertical list of conversations -->
             <div class="sidebar flex-col">
                 <div class="sidebar-list flex-col flex-grow gap-xxs padding-md">
+                    <!-- Party chat (pinned, shown when in a party) -->
+                    <button
+                        v-if="partyState?.inParty"
+                        type="button"
+                        class="sidebar-item sidebar-party body-2"
+                        :class="{ active: activeConversation?.type === 'party-chat' }"
+                        @click="activeConversation = { type: 'party-chat' }"
+                    >
+                        <span class="party-dot">♛</span>
+                        <span class="sidebar-item-label">Party Chat</span>
+                    </button>
                     <!-- Chat rooms -->
                     <!-- Native button intentional: sidebar navigation list items with left-aligned text, hover/active states, and inline child elements — Button component's Control wrapper (audio, centered text, background) is structurally incompatible -->
                     <button
@@ -75,6 +86,23 @@ SPDX-License-Identifier: MIT
             <div class="main flex-col flex-grow min-width-0">
                 <!-- Message list or new-DM form -->
                 <div class="messages-scroll flex-grow overflow-y-auto">
+                    <!-- Party chat -->
+                    <template v-if="activeConversation?.type === 'party-chat'">
+                        <div class="messages-scroll-inner">
+                            <div class="party-chat-header">
+                                <span class="party-chat-crown">♛</span> Party Chat
+                                <span class="party-chat-members">{{ partyState?.members.length ?? 0 }} members</span>
+                            </div>
+                            <div
+                                v-for="(msg, i) in MOCK_PARTY_MESSAGES"
+                                :key="'party-msg-' + i"
+                                :class="['message-bubble', { fromMe: msg.fromMe }]"
+                            >
+                                <div v-if="!msg.fromMe" class="bubble-sender">{{ msg.senderName }}</div>
+                                <Markdown :source="msg.text" />
+                            </div>
+                        </div>
+                    </template>
                     <!-- Room messages (column-reverse so newest is at bottom, same as original ChatComponent) -->
                     <template v-if="activeConversation?.type === 'room'">
                         <div class="messages-scroll-inner messages-scroll-room">
@@ -141,6 +169,15 @@ SPDX-License-Identifier: MIT
                         @keydown.enter.stop.prevent="onMainInputEnter"
                     />
                 </div>
+                <div v-if="activeConversation?.type === 'party-chat'" class="input-bar flex-row flex-center-items">
+                    <input
+                        v-model="partyInput"
+                        type="text"
+                        class="input-field body-2"
+                        placeholder="Message your party..."
+                        @keydown.enter.stop.prevent="partyInput = ''"
+                    />
+                </div>
             </div>
             </div>
         </div>
@@ -160,12 +197,14 @@ import { Message } from "@renderer/model/messages";
 import { me } from "@renderer/store/me.store";
 import { chatActions, ChatRoom, chatStore } from "@renderer/store/chat.store";
 import { useTypedI18n } from "@renderer/i18n";
+import type { PartyMockState } from "@renderer/components/party/party-mock-state";
 
 const { t } = useTypedI18n();
 
 type ActiveConversation =
     | { type: "room"; id: string }
     | { type: "dm"; userId: number }
+    | { type: "party-chat" }
     | { type: "new-dm" };
 
 const props = defineProps<{
@@ -175,6 +214,17 @@ const props = defineProps<{
 const emits = defineEmits<{
     (event: "update:modelValue", open: boolean): void;
 }>();
+
+const partyState = inject<Ref<PartyMockState>>("partyState");
+
+const MOCK_PARTY_MESSAGES = [
+    { senderName: "StarCrusher", fromMe: false, text: "ready when you are" },
+    { senderName: "NovaByte",    fromMe: false, text: "need 2 more minutes, finishing a skirmish" },
+    { senderName: "You",         fromMe: true,  text: "no rush, I'll queue us up when you're back" },
+    { senderName: "StarCrusher", fromMe: false, text: "nice, let's go ranked after this" },
+];
+
+const partyInput = ref("");
 
 const directMessages = ref(new Map<number, Message[]>());
 const activeConversation = ref<ActiveConversation | null>(null);
@@ -198,12 +248,16 @@ const toggleMessages = inject<Ref<(open?: boolean, userId?: number) => void>>("t
 const toggleFriends = inject<Ref<(open?: boolean) => void>>("toggleFriends")!;
 const toggleDownloads = inject<Ref<(open?: boolean) => void>>("toggleDownloads")!;
 
-toggleMessages.value = async (open?: boolean, userIdToActivate?: number) => {
+toggleMessages.value = async (open?: boolean, userIdToActivate?: number | string) => {
     if (open) {
         toggleFriends.value(false);
         toggleDownloads.value(false);
     }
     emits("update:modelValue", open ?? !props.modelValue);
+    if (open && userIdToActivate === "party-chat") {
+        activeConversation.value = { type: "party-chat" };
+        return;
+    }
     if (open && userIdToActivate != null) {
         const userId = typeof userIdToActivate === "string" ? parseInt(userIdToActivate, 10) : userIdToActivate;
         if (!directMessages.value.has(userId)) {
@@ -388,6 +442,24 @@ function startNewDm() {
     min-height: 0;
 }
 
+.sidebar-party {
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    background: rgba(245, 158, 11, 0.06);
+    border-radius: 4px;
+    margin-bottom: map.get($spacing, "xs");
+
+    &:hover { background: rgba(245, 158, 11, 0.1); }
+    &.active {
+        background: rgba(245, 158, 11, 0.12);
+        border-color: rgba(245, 158, 11, 0.45);
+    }
+
+    .party-dot {
+        font-size: 10px;
+        color: #f59e0b;
+    }
+}
+
 .sidebar-item {
     display: flex;
     align-items: center;
@@ -533,5 +605,35 @@ function startNewDm() {
 
 .min-width-0 {
     min-width: 0;
+}
+
+.party-chat-header {
+    display: flex;
+    align-items: center;
+    gap: map.get($spacing, "xs");
+    padding: map.get($spacing, "sm") 0 map.get($spacing, "md");
+    font-size: 14px;
+    font-weight: 700;
+    color: #f59e0b;
+    border-bottom: 1px solid rgba(245, 158, 11, 0.2);
+    margin-bottom: map.get($spacing, "sm");
+}
+
+.party-chat-crown {
+    font-size: 12px;
+}
+
+.party-chat-members {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.bubble-sender {
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: map.get($spacing, "xxs");
 }
 </style>

@@ -18,11 +18,11 @@ SPDX-License-Identifier: MIT
 
 <style lang="scss" scoped>
 .a {
-    font-family: Rajdhani, sans-serif;
+
     font-size: 18px;
 }
 .b {
-    font-family: Rajdhani, sans-serif;
+
     font-size: 16px;
 }
 </style>

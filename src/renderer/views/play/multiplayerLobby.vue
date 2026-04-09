@@ -731,7 +731,6 @@ onMounted(async () => {
             .label {
                 font-size: 20px; /* intentional: :deep() override, matches subtitle-1 */
                 font-weight: 600; /* intentional: :deep() override, matches subtitle-1 */
-                font-family: Montserrat, sans-serif;
                 line-height: 1.4;
                 padding-left: map.get($spacing, "xl");
                 padding-right: map.get($spacing, "xl");

@@ -34,7 +34,12 @@ SPDX-License-Identifier: MIT
                 <!-- Header -->
                 <div class="panel-header flex-row flex-space-between flex-center-items">
                     <span class="panel-title">PARTY</span>
-                    <span class="panel-count">{{ state.members.length }} / 8</span>
+                    <div class="flex-row flex-center-items gap-xs">
+                        <button class="chat-btn" title="Party Chat" @click.stop="openPartyChat">
+                            <Icon :icon="chatGroupIcon" :height="15" />
+                        </button>
+                        <span class="panel-count">{{ state.members.length }} / 8</span>
+                    </div>
                 </div>
 
                 <!-- Member list -->
@@ -94,12 +99,15 @@ SPDX-License-Identifier: MIT
 import { Icon } from "@iconify/vue";
 import dotsVerticalIcon from "@iconify-icons/mdi/dots-vertical";
 import informationOutlineIcon from "@iconify-icons/mdi/information-outline";
+import chatGroupIcon from "@iconify-icons/mdi/chat-processing-outline";
 import { computed, inject, ref, type Ref } from "vue";
 import { useRouter } from "vue-router";
 import ContextMenu from "primevue/contextmenu";
 import type { PartyMockState, PartyMember } from "./party-mock-state";
 import { MOCK_INVITABLE_FRIENDS, ME_PARTY_MEMBER } from "./party-mock-state";
 import { me } from "@renderer/store/me.store";
+
+const toggleMessages = inject<Ref<((open?: boolean, thread?: string) => void) | undefined>>("toggleMessages", ref(undefined));
 
 const state = inject<Ref<PartyMockState>>("partyState")!;
 const panelOpen = ref(false);
@@ -197,6 +205,11 @@ function messagePlayer(_member: PartyMember) {
     // TODO: open DM with member
 }
 
+function openPartyChat() {
+    panelOpen.value = false;
+    toggleMessages.value?.("party-chat" as any);
+}
+
 function addFriend(_member: PartyMember) {
     // TODO: send friend request
 }
@@ -290,14 +303,12 @@ $panel-width: 280px;
 .party-label {
     font-size: 15px;
     font-weight: 600;
-    font-family: Montserrat, sans-serif;
     color: rgba(255, 255, 255, 0.9);
     line-height: 1.3;
 }
 
 .party-count {
-    font-size: 12px;
-    font-family: Montserrat, sans-serif;
+    font-size: 11px;
     color: rgba(255, 255, 255, 0.4);
     line-height: 1.3;
 }
@@ -339,14 +350,12 @@ $panel-width: 280px;
 .panel-title {
     font-size: 11px;
     font-weight: 700;
-    font-family: Montserrat, sans-serif;
     letter-spacing: 0.12em;
     color: rgba(255, 255, 255, 0.4);
 }
 
 .panel-count {
     font-size: 11px;
-    font-family: Montserrat, sans-serif;
     color: rgba(255, 255, 255, 0.3);
 }
 
@@ -390,14 +399,13 @@ $panel-width: 280px;
 }
 
 .member-info {
-    gap: 2px;
+    gap: map.get($spacing, "xxs");
     min-width: 0;
 }
 
 .member-name {
     font-size: 14px;
     font-weight: 600;
-    font-family: Montserrat, sans-serif;
     color: rgba(255, 255, 255, 0.9);
     white-space: nowrap;
     overflow: hidden;
@@ -410,7 +418,6 @@ $panel-width: 280px;
 
 .member-status {
     font-size: 12px;
-    font-family: Montserrat, sans-serif;
     line-height: 1.3;
 
     &.online   { color: #22c55e; }
@@ -459,7 +466,6 @@ $panel-width: 280px;
 .game-tooltip-type {
     font-size: 10px;
     font-weight: 700;
-    font-family: Montserrat, sans-serif;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.35);
@@ -468,7 +474,6 @@ $panel-width: 280px;
 .game-tooltip-name {
     font-size: 13px;
     font-weight: 600;
-    font-family: Montserrat, sans-serif;
     color: rgba(255, 255, 255, 0.9);
 }
 
@@ -478,9 +483,9 @@ $panel-width: 280px;
     border: 1px solid rgba(34, 197, 94, 0.3);
     border-radius: 3px;
     color: #22c55e;
+    font-family: inherit;
     font-size: 12px;
     font-weight: 600;
-    font-family: Montserrat, sans-serif;
     padding: map.get($spacing, "xxs") map.get($spacing, "sm");
     cursor: pointer;
     text-align: center;
@@ -522,9 +527,9 @@ $panel-width: 280px;
     width: 100%;
     padding: map.get($spacing, "xs") map.get($spacing, "sm");
     border-radius: 3px;
+    font-family: inherit;
     font-size: 13px;
     font-weight: 600;
-    font-family: Montserrat, sans-serif;
     cursor: pointer;
     border: 1px solid transparent;
     text-align: left;
@@ -548,6 +553,24 @@ $panel-width: 280px;
             background: rgba(239, 68, 68, 0.12);
             border-color: rgba(239, 68, 68, 0.4);
         }
+    }
+}
+
+.chat-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.35);
+    cursor: pointer;
+    padding: map.get($spacing, "xxs");
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+
+    &:hover {
+        color: rgba(255, 255, 255, 0.8);
+        background: rgba(255, 255, 255, 0.08);
     }
 }
 

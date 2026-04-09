@@ -22,6 +22,7 @@ SPDX-License-Identifier: MIT
             <PromptContainer />
             <NavBar :class="{ hidden: empty }" />
             <Messages v-show="messagesOpen" v-model="messagesOpen" v-click-away:messages="closeMessages" />
+            <FriendsMockPanel v-show="friendsMockOpen" v-model="friendsMockOpen" v-click-away:friends="() => (friendsMockOpen = false)" />
             <div class="lobby-version">
                 {{ infosStore.lobby.version }}
             </div>
@@ -75,6 +76,7 @@ import IntroVideo from "@renderer/components/misc/IntroVideo.vue";
 import SplashScreen from "@renderer/components/misc/SplashScreen.vue";
 import NavBar from "@renderer/components/navbar/NavBar.vue";
 import Messages from "@renderer/components/navbar/Messages.vue";
+import FriendsMockPanel from "@renderer/components/navbar/FriendsMockPanel.vue";
 import Settings from "@renderer/components/navbar/Settings.vue";
 import ServerSettings from "@renderer/components/navbar/ServerSettings.vue";
 import Notifications from "@renderer/components/notifications/Notifications.vue";
@@ -136,6 +138,8 @@ provide("messagesOpen", messagesOpen);
 function closeMessages() {
     messagesOpen.value = false;
 }
+
+const friendsMockOpen = ref(false);
 
 useGlobalKeybindings({ exitOpen });
 
