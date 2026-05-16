@@ -145,7 +145,7 @@ SPDX-License-Identifier: MIT
                                 <Button class="grey large fullwidth" disabled>
                                     Party too large for {{ getQueueDisplayName(selectedQueue) }}
                                 </Button>
-                                <div class="compat-hint">
+                                <div class="compat-hint caption-1">
                                     {{ getQueueDisplayName(selectedQueue) }} supports up to {{ QUEUE_MAX_PARTY[selectedQueue] }} player{{ QUEUE_MAX_PARTY[selectedQueue] === 1 ? '' : 's' }} —
                                     your party has {{ partySize }} active member{{ partySize === 1 ? '' : 's' }}.
                                 </div>
@@ -511,7 +511,6 @@ onMounted(() => {
     gap: map.get($spacing, "xs");
     margin-top: map.get($spacing, "xxs");
     color: #f59e0b;
-    font-size: 0.75rem;
 }
 
 .party-compat-warning {
@@ -519,7 +518,6 @@ onMounted(() => {
 }
 
 .compat-hint {
-    font-size: 0.75rem;
     color: rgba(255, 255, 255, 0.45);
     line-height: 1.4;
     text-align: center;
